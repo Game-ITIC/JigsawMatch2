@@ -51,10 +51,10 @@ public class Counter_ : MonoBehaviour
 		if (name == "Limit") {
 			if (LevelManager.Instance.limitType == LIMIT.MOVES) {
 				txt.text = "" + LevelManager.THIS.Limit;
-				txt.transform.GetComponent<RectTransform>().anchoredPosition = new Vector3(-460, -42, 0);
+				//txt.transform.GetComponent<RectTransform>().anchoredPosition = new Vector3(-460, -42, 0);
 				//txt.transform.localScale = Vector3.one;
 				if (LevelManager.THIS.Limit <= 5) {
-					txt.color = Color.red;
+					//txt.color = Color.red;
 					//txt.GetComponent<Outline>().effectColor = new Color(214 / 255, 0, 196 / 255);
 					if (!alert) {
 						alert = true;
@@ -63,7 +63,7 @@ public class Counter_ : MonoBehaviour
 
 				} else {
 					alert = false;
-					txt.color = new Color(214f / 255f, 0, 196f / 255f);
+					//txt.color = new Color(214f / 255f, 0, 196f / 255f);
 					//txt.GetComponent<Outline>().effectColor = new Color(148f / 255f, 61f / 255f, 95f / 255f);
 				}
 
@@ -71,10 +71,10 @@ public class Counter_ : MonoBehaviour
 				int minutes = Mathf.FloorToInt(LevelManager.THIS.Limit / 60F);
 				int seconds = Mathf.FloorToInt(LevelManager.THIS.Limit - minutes * 60);
 				txt.text = "" + string.Format("{0:00}:{1:00}", minutes, seconds);
-				txt.transform.localScale = Vector3.one * 0.35f;
-				txt.transform.GetComponent<RectTransform>().anchoredPosition = new Vector3(-445, -42, 0);
+				//txt.transform.localScale = Vector3.one * 0.35f;
+				//txt.transform.GetComponent<RectTransform>().anchoredPosition = new Vector3(-445, -42, 0);
 				if (LevelManager.THIS.Limit <= 30 && LevelManager.THIS.gameStatus == GameState.Playing) {
-					txt.color = Color.red;
+					//txt.color = Color.red;
 					//txt.GetComponent<Outline>().effectColor = Color.white;
 					if (lastTime + 30f < Time.time) {
 						lastTime = Time.time;
@@ -82,7 +82,7 @@ public class Counter_ : MonoBehaviour
 					}
 
 				} else {
-					txt.color = new Color(214f / 255f, 0, 196f / 255f);
+					//txt.color = new Color(214f / 255f, 0, 196f / 255f);
 					//txt.GetComponent<Outline>().effectColor = new Color(148f / 255f, 61f / 255f, 95f / 255f);
 				}
 
