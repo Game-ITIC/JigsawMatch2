@@ -21,7 +21,6 @@ public class Counter_ : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.Log("OnEnable called");
         lastTime = 0;
         UpdateText();
         alert = false;
