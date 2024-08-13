@@ -1309,17 +1309,18 @@ public class LevelManager : MonoBehaviour
 
 	IEnumerator PreWinAnimationsCor()
 	{
-		if (!InitScript.Instance.losingLifeEveryGame)
-			InitScript.Instance.AddLife(1);
-		SoundBase.Instance.PlaySound(SoundBase.Instance.complete[1]);
-		GameObject.Find("Level/Canvas").transform.Find("PreCompleteBanner").gameObject.SetActive(true);//1.4.5
-		yield return new WaitForSeconds(3);
-		GameObject.Find("Level/Canvas").transform.Find("PreCompleteBanner").gameObject.SetActive(false);//1.4.5
-		Vector3 pos1 = GameObject.Find("Limit").transform.position;
+        if (!InitScript.Instance.losingLifeEveryGame)
+            InitScript.Instance.AddLife(1);
 
-		yield return new WaitForSeconds(1);
+        SoundBase.Instance.PlaySound(SoundBase.Instance.complete[1]);
+        GameObject.Find("Level/Canvas").transform.Find("PreCompleteBanner").gameObject.SetActive(true);
+        yield return new WaitForSeconds(3);
+        GameObject.Find("Level/Canvas").transform.Find("PreCompleteBanner").gameObject.SetActive(false);
+        Vector3 pos1 = GameObject.Find("Limit").transform.position;
 
-		int countFlowers = limitType == LIMIT.MOVES ? Mathf.Clamp(Limit, 0, 8) : 3;
+        yield return new WaitForSeconds(1);
+
+        int countFlowers = limitType == LIMIT.MOVES ? Mathf.Clamp(Limit, 0, 8) : 3;
 		List<Item> items = GetRandomItems(limitType == LIMIT.MOVES ? Mathf.Clamp(Limit, 0, 8) : 3);
 		for (int i = 1; i <= countFlowers; i++)
 		{
@@ -1356,19 +1357,26 @@ public class LevelManager : MonoBehaviour
 		while (dragBlocked)
 			yield return new WaitForSeconds(0.2f);
 
-		//        GameObject.Find("Canvas").transform.Find("CompleteLabel").gameObject.SetActive(false);
-		//        SoundBase.Instance.PlaySound(SoundBase.Instance.complete[0]);
+        //        GameObject.Find("Canvas").transform.Find("CompleteLabel").gameObject.SetActive(false);
+        //        SoundBase.Instance.PlaySound(SoundBase.Instance.complete[0]);
 
-		//        GameObject.Find("Canvas").transform.Find("PreCompleteBanner").gameObject.SetActive(true);
-		//        yield return new WaitForSeconds(3);
-		//        GameObject.Find("Canvas").transform.Find("PreCompleteBanner").gameObject.SetActive(false);
-		if (PlayerPrefs.GetInt(string.Format("Level.{0:000}.StarsCount", currentLevel), 0) < stars)
-			PlayerPrefs.SetInt(string.Format("Level.{0:000}.StarsCount", currentLevel), stars);
-		if (Score > PlayerPrefs.GetInt("Score" + currentLevel))
-		{
-			PlayerPrefs.SetInt("Score" + currentLevel, Score);
-		}
-		LevelsMap.SetActive(false);//1.4.4
+        //        GameObject.Find("Canvas").transform.Find("PreCompleteBanner").gameObject.SetActive(true);
+        //        yield return new WaitForSeconds(3);
+        //        GameObject.Find("Canvas").transform.Find("PreCompleteBanner").gameObject.SetActive(false);
+        Debug.Log($"Current level: {currentLevel}, Stars: {stars}");
+
+        if (PlayerPrefs.GetInt(string.Format("Level.{0:000}.StarsCount", currentLevel), 0) < stars)
+        {
+            PlayerPrefs.SetInt(string.Format("Level.{0:000}.StarsCount", currentLevel), stars);
+            Debug.Log($"Stars saved: {stars} for level {currentLevel}");
+        }
+
+        if (Score > PlayerPrefs.GetInt("Score" + currentLevel))
+        {
+            PlayerPrefs.SetInt("Score" + currentLevel, Score);
+        }
+
+        LevelsMap.SetActive(false);//1.4.4
 		LevelsMap.SetActive(true);//1.4.4
 #if PLAYFAB || GAMESPARKS
 		NetworkManager.dataManager.SetPlayerScore(currentLevel, Score);

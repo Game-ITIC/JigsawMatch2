@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class MapLevel : MonoBehaviour {
 	private Vector3 _originalScale;
@@ -68,16 +69,24 @@ public class MapLevel : MonoBehaviour {
 			transform.localScale = _originalScale;
 	}
 
-	#endregion
+    #endregion
 
-	public void UpdateState (int starsCount, bool isLocked) {
-		StarsCount = starsCount;
-		UpdateStars (starsCount);
-		IsLocked = isLocked;
-		Lock.gameObject.SetActive (isLocked);
-	}
+    public void UpdateState(int starsCount, bool isLocked)
+    {
+        StarsCount = starsCount;
+        UpdateStars(starsCount);
+        IsLocked = isLocked;
+        Lock.gameObject.SetActive(isLocked);
 
-	public void UpdateStars (int starsCount) {
+        StarModel starModel = FindObjectOfType<StarModel>();
+        if (starModel != null)
+        {
+            // Добавляем проверку на дублирование
+            starModel.AddStarsFromLevel(Number, starsCount);
+        }
+    }
+
+    public void UpdateStars (int starsCount) {
 		Star1?.gameObject.SetActive (starsCount >= 1);
 		Star2?.gameObject.SetActive (starsCount >= 2);
 		Star3?.gameObject.SetActive (starsCount >= 3);
