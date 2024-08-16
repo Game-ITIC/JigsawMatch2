@@ -14,12 +14,20 @@ using UnityEngine.Advertisements;
 
 public class AnimationManager : MonoBehaviour
 {
+    public static AnimationManager THIS; 
+
     public bool PlayOnEnable = true;
     bool WaitForPickupFriends;
     public GameObject fireworkPrefab;
 
     bool WaitForAksFriends;
     System.Collections.Generic.Dictionary<string, string> parameters;
+
+    private void Start()
+    {
+        THIS = this;
+    }
+
 
     void OnEnable()
     {

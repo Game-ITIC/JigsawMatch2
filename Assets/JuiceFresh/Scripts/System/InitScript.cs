@@ -597,7 +597,7 @@ public class InitScript : MonoBehaviour
             }
             else
             {
-                //BuyLifeShop();
+                AnimationManager.THIS.BuyLifeShop();
             }
         }
     }
