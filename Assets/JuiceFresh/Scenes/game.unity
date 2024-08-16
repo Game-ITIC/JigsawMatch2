@@ -1251,7 +1251,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8ef1181270f085c499fc9dd013fd76eb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c2dc44a779df04428bad657ce7a6e35e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14407,6 +14407,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11415860, guid: 105903d664c39294e926aed54de8b6c8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18620,6 +18624,15 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 045b1a17bc5268b419f9a7fa7af3c2ba, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: c9f6d0e7bc8541498c9a4799ba184ede,
+        type: 3}
+    - target: {fileID: 11400000, guid: 045b1a17bc5268b419f9a7fa7af3c2ba, type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 58
+      objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: 045b1a17bc5268b419f9a7fa7af3c2ba, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -18691,6 +18704,10 @@ PrefabInstance:
     - target: {fileID: 22400000, guid: 045b1a17bc5268b419f9a7fa7af3c2ba, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22400002, guid: 045b1a17bc5268b419f9a7fa7af3c2ba, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 223.86
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22544,8 +22561,8 @@ Transform:
   m_GameObject: {fileID: 1022839108}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -2.6681, y: -2.6391, z: 0}
+  m_LocalScale: {x: 0.333, y: 0.3402, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 657762515}
@@ -22591,7 +22608,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 7
-  m_Sprite: {fileID: 21300000, guid: 62fbc730cec8ce84bb1dc4d475f12def, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cb82ea32da8a39241b1105814d8a218d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -30587,9 +30604,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Text
       objectReference: {fileID: 0}
+    - target: {fileID: 120472, guid: a8088f5845f57544e806e54bb1a317ce, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 146320, guid: a8088f5845f57544e806e54bb1a317ce, type: 3}
       propertyPath: m_Name
       value: CanvasTutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 11415378, guid: a8088f5845f57544e806e54bb1a317ce, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11466602, guid: a8088f5845f57544e806e54bb1a317ce, type: 3}
       propertyPath: m_Text
@@ -44402,7 +44427,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8ef1181270f085c499fc9dd013fd76eb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c2dc44a779df04428bad657ce7a6e35e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

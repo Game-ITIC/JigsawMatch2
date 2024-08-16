@@ -584,11 +584,21 @@ public class InitScript : MonoBehaviour
         {
             PlayerPrefs.SetInt("OpenLevel", args.Number);
             PlayerPrefs.Save();
-            LevelManager.THIS.MenuPlayEvent();
+            //LevelManager.THIS.MenuPlayEvent();
             LevelManager.THIS.LoadLevel();
             openLevel = args.Number;
             //  currentTarget = targets[args.Number];
-            GameObject.Find("CanvasGlobal").transform.Find("MenuPlay").gameObject.SetActive(true);
+            //GameObject.Find("CanvasGlobal").transform.Find("MenuPlay").gameObject.SetActive(true);
+            if (InitScript.lifes > 0)
+            {
+                //InitScript.Instance.SpendLife(1);
+                LevelManager.THIS.gameStatus = GameState.PrepareGame;
+                //Application.LoadLevel( "game" );
+            }
+            else
+            {
+                //BuyLifeShop();
+            }
         }
     }
 
