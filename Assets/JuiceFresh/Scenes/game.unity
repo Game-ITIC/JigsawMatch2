@@ -12472,20 +12472,20 @@ MonoBehaviour:
   enableUnityAds: 0
   enableGoogleMobileAds: 0
   enableChartboostAds: 0
-  rewardedVideoZone: rewardedVideoZone
+  rewardedVideoZone: 
   nonRewardedVideoZone: defaultZone
   ShowChartboostAdsEveryLevel: 1
   ShowAdmobAdsEveryLevel: 2
-  admobUIDAndroid: ca-app-pub-9974681578637939/2945375868
-  admobUIDIOS: ca-app-pub-9974681578637939/7955828264
+  admobUIDAndroid: 
+  admobUIDIOS: 
   ShowRateEvery: 5
-  RateURL: market://details?q=pname:com.mycopmany.myapp/
+  RateURL: 
   RateURLIOS: 
   rewardedGems: 5
   losingLifeEveryGame: 0
-  facebookButton: {fileID: 1163204533}
-  admobRewardedUIDAndroid: ca-app-pub-9974681578637939/5210526556
-  admobRewardedUIDIOS: ca-app-pub-9974681578637939/5210526556
+  facebookButton: {fileID: 0}
+  admobRewardedUIDAndroid: 
+  admobRewardedUIDIOS: 
 --- !u!120 &511786110
 LineRenderer:
   serializedVersion: 2
@@ -39448,7 +39448,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1816569334
 RectTransform:
   m_ObjectHideFlags: 0
