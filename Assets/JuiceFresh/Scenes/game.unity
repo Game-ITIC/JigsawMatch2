@@ -13945,7 +13945,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -15502,10 +15502,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 641363274}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: CloseMenu
-        m_Mode: 1
+      - m_Target: {fileID: 641363272}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -19057,6 +19057,7 @@ GameObject:
   - component: {fileID: 820827807}
   - component: {fileID: 820827809}
   - component: {fileID: 820827808}
+  - component: {fileID: 820827810}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -19121,6 +19122,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 820827806}
   m_CullTransparentMesh: 1
+--- !u!111 &820827810
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820827806}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: a59c8170f5d4c11408cf5715954a15a0, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: a59c8170f5d4c11408cf5715954a15a0, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &825215777
 GameObject:
   m_ObjectHideFlags: 0
@@ -19660,14 +19677,14 @@ RectTransform:
   m_GameObject: {fileID: 863753172}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.4545203, y: 1.4545203, z: 1.2121003}
+  m_LocalScale: {x: 1.5701547, y: 1.5701547, z: 1.3084621}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1075431069}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 425, y: 409}
+  m_AnchoredPosition: {x: 414, y: 421}
   m_SizeDelta: {x: 117, y: 121}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &863753174
@@ -19698,7 +19715,7 @@ Animation:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 863753172}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Animation: {fileID: 7400000, guid: 91f2e7807b706b842a4cc9240e99bb7b, type: 2}
   m_Animations:
@@ -19751,10 +19768,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 285581707}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: CloseMenu
-        m_Mode: 1
+      - m_Target: {fileID: 285581705}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -24004,6 +24021,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 863753173}
   - {fileID: 1347495108}
   - {fileID: 1719641598}
   - {fileID: 1810212881}
@@ -24012,7 +24030,6 @@ RectTransform:
   - {fileID: 1949251351}
   - {fileID: 1338873315}
   - {fileID: 1913010884}
-  - {fileID: 863753173}
   - {fileID: 1595662233}
   - {fileID: 523520124}
   - {fileID: 1356905187}
