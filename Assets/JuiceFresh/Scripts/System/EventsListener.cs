@@ -47,6 +47,8 @@ public class EventsListener : MonoBehaviour {
     }
     void OnWin() {
         AnalyticsEvent("OnWin", LevelManager.THIS.currentLevel);
+        InitScript.Instance.AddGems(10);
+        //InitScript.Instance.AddStars(3);
     }
     void OnLose() {
         AnalyticsEvent("OnLose", LevelManager.THIS.currentLevel);
