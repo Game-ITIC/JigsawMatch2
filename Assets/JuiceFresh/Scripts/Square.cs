@@ -193,7 +193,7 @@ public class Square : MonoBehaviour {
 
     public void HighLight(bool on, float col = 0.5f) {
         if (on) {
-            GetComponent<SpriteRenderer>().color = new Color(col, col, col);
+            GetComponent<SpriteRenderer>().color = new Color(col, 0.65f, 0);
             if (!hightlighted)
                 StartCoroutine(AnimateHighlight(col));
         }
@@ -205,11 +205,11 @@ public class Square : MonoBehaviour {
         SetActiveCage(on);
     }
 
-    IEnumerator AnimateHighlight(float col = 0.5f) {
-        GetComponent<SpriteRenderer>().color = new Color(col, col, col);
+    IEnumerator AnimateHighlight(float col = 0.8f) {
+        GetComponent<SpriteRenderer>().color = new Color(col, 0.65f, 0);
         while (hightlighted) {
             yield return new WaitForSeconds(0.3f);
-            GetComponent<SpriteRenderer>().color = new Color(col, col, col);
+            GetComponent<SpriteRenderer>().color = new Color(col, 0.65f, 0);
             yield return new WaitForSeconds(0.3f);
             GetComponent<SpriteRenderer>().color = new Color(col - 0.1f, col - 0.1f, col - 0.1f);
         }

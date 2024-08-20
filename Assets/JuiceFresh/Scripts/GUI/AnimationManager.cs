@@ -14,12 +14,20 @@ using UnityEngine.Advertisements;
 
 public class AnimationManager : MonoBehaviour
 {
+    public static AnimationManager THIS; 
+
     public bool PlayOnEnable = true;
     bool WaitForPickupFriends;
     public GameObject fireworkPrefab;
 
     bool WaitForAksFriends;
     System.Collections.Generic.Dictionary<string, string> parameters;
+
+    private void Start()
+    {
+        THIS = this;
+    }
+
 
     void OnEnable()
     {
@@ -390,7 +398,8 @@ public class AnimationManager : MonoBehaviour
             if (PlayerPrefs.GetInt("OpenLevel") + 1 <= LevelsMap._instance.GetMapLevels().Count)
             {
                 PlayerPrefs.SetInt("OpenLevel", LevelManager.THIS.currentLevel + 1);
-                GameObject.Find("CanvasGlobal").transform.Find("MenuPlay").gameObject.SetActive(true);
+                //GameObject.Find("CanvasGlobal").transform.Find("MenuPlay").gameObject.SetActive(true);
+                LevelManager.THIS.gameStatus = GameState.PrepareGame;
             }
             else
             {
@@ -638,7 +647,7 @@ public class AnimationManager : MonoBehaviour
         }
         else
         {
-            GameObject.Find("CanvasGlobal").transform.Find("GemsShop").gameObject.SetActive(true);
+            //GameObject.Find("CanvasGlobal").transform.Find("GemsShop").gameObject.SetActive(true);
         }
 
     }

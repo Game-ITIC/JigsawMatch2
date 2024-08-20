@@ -4,13 +4,13 @@ using UnityEngine.UI;
 
 public class LifeShop : MonoBehaviour
 {
-	public int CostIfRefill = 12;
+	public int CostIfRefill = 5;
 	// Use this for initialization
 	void OnEnable ()
 	{
 		transform.Find ("Image/BuyLife/Price").GetComponent<Text> ().text = "" + CostIfRefill;
-		if (!LevelManager.THIS.enableInApps)
-			transform.Find ("Image/BuyLife").gameObject.SetActive (false);
+		//if (!LevelManager.THIS.enableInApps)
+			//transform.Find ("Image/BuyLife").gameObject.SetActive (false);
 		
 	}
 	

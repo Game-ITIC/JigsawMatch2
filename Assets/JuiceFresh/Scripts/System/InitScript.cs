@@ -106,6 +106,7 @@ public class InitScript : MonoBehaviour
     public int FirstGems = 20;
     public static int Gems;
     public static int waitedPurchaseGems;
+    public static int Stars;
     private int BoostExtraMoves;
     private int BoostPackages;
     private int BoostStripes;
@@ -157,13 +158,16 @@ public class InitScript : MonoBehaviour
 
         DateOfExit = PlayerPrefs.GetString("DateOfExit", "");
         Gems = PlayerPrefs.GetInt("Gems");
+        Stars = PlayerPrefs.GetInt("Stars");
         lifes = PlayerPrefs.GetInt("Lifes");
         if (PlayerPrefs.GetInt("Lauched") == 0)
         {    //First lauching
             lifes = CapOfLife;
             PlayerPrefs.SetInt("Lifes", lifes);
             Gems = FirstGems;
+            Stars = 0;
             PlayerPrefs.SetInt("Gems", Gems);
+            PlayerPrefs.SetInt("Stars", Stars);
             PlayerPrefs.SetInt("Music", 1);
             PlayerPrefs.SetInt("Sound", 1);
 
@@ -446,6 +450,23 @@ public class InitScript : MonoBehaviour
 #endif
     }
 
+    public void SetStars(int count)
+    {//1.3.3
+        Stars = count;
+        PlayerPrefs.SetInt("Stars", Stars);
+        PlayerPrefs.Save();
+    }
+
+    public void AddStars(int count)
+    {
+        Stars += count;
+        PlayerPrefs.SetInt("Stars", Stars);
+        PlayerPrefs.Save();
+#if PLAYFAB || GAMESPARKS
+		NetworkManager.currencyManager.IncBalance (count);
+#endif
+    }
+
     public void SpendGems(int count)
     {
         SoundBase.Instance.PlaySound(SoundBase.Instance.cash);
@@ -584,11 +605,21 @@ public class InitScript : MonoBehaviour
         {
             PlayerPrefs.SetInt("OpenLevel", args.Number);
             PlayerPrefs.Save();
-            LevelManager.THIS.MenuPlayEvent();
+            //LevelManager.THIS.MenuPlayEvent();
             LevelManager.THIS.LoadLevel();
             openLevel = args.Number;
             //  currentTarget = targets[args.Number];
-            GameObject.Find("CanvasGlobal").transform.Find("MenuPlay").gameObject.SetActive(true);
+            //GameObject.Find("CanvasGlobal").transform.Find("MenuPlay").gameObject.SetActive(true);
+            if (InitScript.lifes > 0)
+            {
+                //InitScript.Instance.SpendLife(1);
+                LevelManager.THIS.gameStatus = GameState.PrepareGame;
+                //Application.LoadLevel( "game" );
+            }
+            else
+            {
+                AnimationManager.THIS.BuyLifeShop();
+            }
         }
     }
 
