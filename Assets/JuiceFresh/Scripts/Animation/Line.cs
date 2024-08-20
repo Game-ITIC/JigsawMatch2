@@ -64,13 +64,12 @@ public class Line : MonoBehaviour
         GameObject newLine = Instantiate(transform.GetChild(0).gameObject) as GameObject;
         newLine.transform.SetParent(transform);
         lines.Add(newLine.GetComponent<LineRenderer>());
-
     }
+
 
     void SetSorting(LineRenderer lr)
     {
         lr.sortingLayerID = 0;
         lr.sortingOrder = 1;
-
     }
 }

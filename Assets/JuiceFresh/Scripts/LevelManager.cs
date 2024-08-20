@@ -1508,7 +1508,8 @@ public class LevelManager : MonoBehaviour
 									int selectingSoundNum = Mathf.Clamp(destroyAnyway.Count - 1, 0, 9);
 									SoundBase.Instance.PlaySound(SoundBase.Instance.selecting[selectingSoundNum]);
 									if ((destroyAnyway.Count % (extraItemEvery + extraCageAddItem) == 0) && item.square.cageHP <= 0)
-										item.SetLight();
+										//item.SetLight();
+										Debug.Log("setlight");
 									else if ((destroyAnyway.Count % (extraItemEvery + extraCageAddItem) == 0) && item.square.cageHP > 0)
 										extraCageAddItem += 1;
 									if (item.currentType == ItemsTypes.HORIZONTAL_STRIPPED)
