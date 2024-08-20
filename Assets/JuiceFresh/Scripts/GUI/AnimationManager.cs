@@ -647,7 +647,7 @@ public class AnimationManager : MonoBehaviour
         }
         else
         {
-            GameObject.Find("CanvasGlobal").transform.Find("GemsShop").gameObject.SetActive(true);
+            //GameObject.Find("CanvasGlobal").transform.Find("GemsShop").gameObject.SetActive(true);
         }
 
     }
