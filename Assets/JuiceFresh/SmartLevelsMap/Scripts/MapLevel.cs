@@ -28,7 +28,8 @@ public class MapLevel : MonoBehaviour {
 
 	public void Awake () {
 		_originalScale = transform.localScale;
-	}
+      
+    }
 
 	#region Enable click
 
@@ -78,13 +79,16 @@ public class MapLevel : MonoBehaviour {
         IsLocked = isLocked;
         Lock.gameObject.SetActive(isLocked);
 
-        StarModel starModel = FindObjectOfType<StarModel>();
+        // Убедитесь, что StarModel корректно инициализирован
+        StarModel starModel = StarModel.instance;
+
         if (starModel != null)
         {
-            // Добавляем проверку на дублирование
-            starModel.AddStarsFromLevel(Number, starsCount);
+            // Убедитесь, что количество звёзд обновляется правильно
+            starModel.SetTotalStars(starModel.GetTotalStars() + starsCount);
         }
     }
+
 
     public void UpdateStars (int starsCount) {
 		Star1?.gameObject.SetActive (starsCount >= 1);

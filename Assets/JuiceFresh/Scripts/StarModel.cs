@@ -4,17 +4,26 @@ using System.Collections.Generic;
 
 public class StarModel : MonoBehaviour
 {
+    public static StarModel instance;
+
     public Text totalStarsText; // Ссылка на текстовый элемент, который будет отображать количество звезд
     private int _totalStars; // Переменная для хранения общего количества звезд
     private HashSet<int> processedLevels = new HashSet<int>(); // Хранит номера уровней, которые уже были учтены
 
+    private void Start()
+    {
+        instance = this;
+        UpdateStarsDisplay(); // Обновление текста при старте
+    }
+
+    // Метод для добавления звёзд с уровня
     public void AddStarsFromLevel(int levelNumber, int starsCount)
     {
         // Проверяем, был ли этот уровень уже обработан
         if (!processedLevels.Contains(levelNumber))
         {
             _totalStars += starsCount;
-            processedLevels.Add(levelNumber); // Добавляем уровень в список обработанных
+            processedLevels.Add(levelNumber);
             UpdateStarsDisplay();
         }
         else
@@ -23,14 +32,20 @@ public class StarModel : MonoBehaviour
         }
     }
 
-    public void ResetStars()
+    // Метод для получения общего количества звёзд
+    public int GetTotalStars()
     {
-        _totalStars = 0;
-        processedLevels.Clear(); // Очищаем список обработанных уровней
+        return _totalStars;
+    }
+
+    // Метод для установки и отображения конкретного значения звёзд
+    public void SetTotalStars(int totalStars)
+    {
+        _totalStars = totalStars;
         UpdateStarsDisplay();
     }
 
-    private void UpdateStarsDisplay()
+    public void UpdateStarsDisplay()
     {
         if (totalStarsText != null)
         {

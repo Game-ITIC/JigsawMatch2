@@ -17,11 +17,11 @@ namespace JuiceFresh.Scripts.System
             else if(THIS != this) Destroy(gameObject);
         }
 
-        public void CheckInternet(bool showPopup, Action<bool> result=null)
+        /*public void CheckInternet(bool showPopup, Action<bool> result=null)
         {
             StartCoroutine(_CheckInternet(showPopup, result));
-        }
-        IEnumerator _CheckInternet(bool showPopup, Action<bool> result=null)
+        }*/
+        /*IEnumerator _CheckInternet(bool showPopup, Action<bool> result=null)
         {
             WWW www = new WWW("http://85.119.150.22/gettime.php");
             yield return www;
@@ -33,6 +33,6 @@ namespace JuiceFresh.Scripts.System
                 result?.Invoke(false);
             }
             else result?.Invoke(true);
-        }
+        }*/
     }
 }

@@ -399,14 +399,14 @@ public class InitScript : MonoBehaviour
         }
     }
 
-    public void ShowRate()
+   /* public void ShowRate()
     {
         InternetChecker.THIS.CheckInternet(true, (isConnected) =>
         {
             if (isConnected) rate.SetActive(true);
         });
     }
-
+*/
 
     public void CheckRewardedAds()
     {

@@ -140,6 +140,7 @@ public class Counter_ : MonoBehaviour
         }
         if (name == "CountStar")
         {
+            StarModel.instance.UpdateStarsDisplay();
             txt.text = "" + (LevelManager.THIS.stars) + "/" + (int)LevelManager.THIS.starsTargetCount;
             if (LevelManager.THIS.stars == (int)LevelManager.THIS.starsTargetCount)
                 parentGUI.Done();
