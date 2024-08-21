@@ -6,29 +6,59 @@ public class StarModel : MonoBehaviour
 {
     public static StarModel instance;
 
-    public Text totalStarsText; // Ссылка на текстовый элемент, который будет отображать количество звезд
-    private int _totalStars; // Переменная для хранения общего количества звезд
-    private HashSet<int> processedLevels = new HashSet<int>(); // Хранит номера уровней, которые уже были учтены
+    public Text totalStarsText; // Текстовый элемент для отображения общего количества звёзд
+    private int _totalStars; // Переменная для хранения общего количества звёзд
+    private Dictionary<int, int> levelStars = new Dictionary<int, int>(); // Хранит количество звёзд для каждого пройденного уровня
 
-    private void Start()
+    private void Awake()
     {
-        instance = this;
-        UpdateStarsDisplay(); // Обновление текста при старте
-    }
-
-    // Метод для добавления звёзд с уровня
-    public void AddStarsFromLevel(int levelNumber, int starsCount)
-    {
-        // Проверяем, был ли этот уровень уже обработан
-        if (!processedLevels.Contains(levelNumber))
+        // Инициализация Singleton
+        if (instance == null)
         {
-            _totalStars += starsCount;
-            processedLevels.Add(levelNumber);
-            UpdateStarsDisplay();
+            instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Debug.Log($"Stars for level {levelNumber} have already been added.");
+            Destroy(gameObject);
+        }
+    }
+
+    private void Start()
+    {
+        UpdateStarsDisplay(); // Обновление текста при старте
+    }
+
+    // Метод для добавления звёзд после завершения уровня
+    public void AddStarsFromLevel(int levelNumber, int starsCount)
+    {
+        // Проверяем, был ли уровень уже пройден
+        if (levelStars.ContainsKey(levelNumber))
+        {
+            // Если уровень уже пройден, добавляем только разницу в звёздах, если новых больше
+            int existingStars = levelStars[levelNumber];
+            if (starsCount > existingStars)
+            {
+                int additionalStars = starsCount - existingStars;
+                _totalStars += additionalStars;
+                levelStars[levelNumber] = starsCount;
+            }
+        }
+        else
+        {
+            // Если уровень пройден впервые, добавляем звёзды
+            _totalStars += starsCount;
+            levelStars[levelNumber] = starsCount;
+        }
+
+        UpdateStarsDisplay();
+    }
+
+    private void UpdateStarsDisplay()
+    {
+        if (totalStarsText != null)
+        {
+            totalStarsText.text = _totalStars.ToString();
         }
     }
 
@@ -38,18 +68,11 @@ public class StarModel : MonoBehaviour
         return _totalStars;
     }
 
-    // Метод для установки и отображения конкретного значения звёзд
-    public void SetTotalStars(int totalStars)
+    // Метод для сброса звёзд (при необходимости)
+    public void ResetStars()
     {
-        _totalStars = totalStars;
+        _totalStars = 0;
+        levelStars.Clear();
         UpdateStarsDisplay();
-    }
-
-    public void UpdateStarsDisplay()
-    {
-        if (totalStarsText != null)
-        {
-            totalStarsText.text = _totalStars.ToString();
-        }
     }
 }

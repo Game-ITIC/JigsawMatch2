@@ -73,20 +73,15 @@ public class MapLevel : MonoBehaviour {
     #endregion
 
     public void UpdateState(int starsCount, bool isLocked)
-    {
+    {	
         StarsCount = starsCount;
         UpdateStars(starsCount);
         IsLocked = isLocked;
         Lock.gameObject.SetActive(isLocked);
 
-        // Убедитесь, что StarModel корректно инициализирован
         StarModel starModel = StarModel.instance;
+        starModel.AddStarsFromLevel(this.Number, starsCount);
 
-        if (starModel != null)
-        {
-            // Убедитесь, что количество звёзд обновляется правильно
-            starModel.SetTotalStars(starModel.GetTotalStars() + starsCount);
-        }
     }
 
 
