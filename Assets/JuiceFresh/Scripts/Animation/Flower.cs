@@ -47,7 +47,7 @@ public class Flower : MonoBehaviour {
         if (directFly)
             speed *= 10;
         float fracJourney = 0;
-        GetComponent<ParticleSystem>().gravityModifier = 0.1f;
+        //GetComponent<ParticleSystem>().gravityModifier = 0.1f;
         GetComponent<ParticleSystem>().Play();
 
         //        iTween.MoveTo(gameObject, iTween.Hash("position", pos2, "time", 1, "oncomplete", "AnimCallBack"));
