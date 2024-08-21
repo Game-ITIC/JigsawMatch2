@@ -525,7 +525,7 @@ public class LevelManager : MonoBehaviour
 		aspect = (float)Math.Round(aspect, 2);
 		if (enable)
 		{
-			InternetChecker.THIS.CheckInternet(true);
+			//InternetChecker.THIS.CheckInternet(true);
 			GetComponent<Camera>().orthographicSize = 10.25f;
 			
 			if (aspect == 1.6f)

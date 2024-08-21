@@ -17019,7 +17019,6 @@ GameObject:
   - component: {fileID: 651643598}
   - component: {fileID: 651643601}
   - component: {fileID: 651643600}
-  - component: {fileID: 651643599}
   m_Layer: 5
   m_Name: StarsT
   m_TagString: Untagged
@@ -17046,20 +17045,6 @@ RectTransform:
   m_AnchoredPosition: {x: 76, y: 15}
   m_SizeDelta: {x: 1751, y: 518}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &651643599
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 651643597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1af3fdd4a574aeb4185645b99379ce26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ingrTrackNumber: 0
-  totalCount: 0
 --- !u!114 &651643600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27606,7 +27591,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -26.150406, y: 95}
+  m_AnchoredPosition: {x: -26.15039, y: 95}
   m_SizeDelta: {x: 142.29996, y: 240}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1289045752
