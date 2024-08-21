@@ -22,7 +22,6 @@ public class Line : MonoBehaviour
         {
             lines.Add(item.GetComponent<LineRenderer>());
         }
-
     }
 
     // Update is called once per frame
