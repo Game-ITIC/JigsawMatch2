@@ -18976,6 +18976,26 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: appearStipedColorBomb
+      value: 
+      objectReference: {fileID: 8300000, guid: 91069ece592264b42b302a6160868b76, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: complete.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: db02e9c6cfb078c4b904810abe587c50, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: complete.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: db02e9c6cfb078c4b904810abe587c50, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: gameOver.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 385f8b2e53685fd47837651c2ff7a7b8, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: gameOver.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 385f8b2e53685fd47837651c2ff7a7b8, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
       propertyPath: selecting.Array.data[0]
       value: 
       objectReference: {fileID: 8300000, guid: 0e3365611843c8e4197a7b599e6b9ff7, type: 3}

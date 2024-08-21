@@ -440,14 +440,17 @@ public class LevelManager : MonoBehaviour
 			{
 				MusicBase.Instance.GetComponent<AudioSource>().Stop();
 				StartCoroutine(PreWinAnimationsCor());
-			}
+                MusicBase.Instance.GetComponent<AudioSource>().loop = true;
+                MusicBase.Instance.GetComponent<AudioSource>().clip = MusicBase.Instance.music[1];
+                MusicBase.Instance.GetComponent<AudioSource>().Play();
+            }
 			else if (value == GameState.Win)
 			{
 				passLevelCounter++;
 				OnMenuComplete();
 				GameObject.Find("CanvasGlobal").transform.Find("MenuComplete").gameObject.SetActive(true);
 				OnWin();
-			}
+            }
 			InitScript.Instance.CheckAdsEvents(value);
 
 
