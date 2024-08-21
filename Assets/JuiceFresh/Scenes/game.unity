@@ -14576,6 +14576,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Level01
       objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 105903d664c39294e926aed54de8b6c8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100012, guid: 105903d664c39294e926aed54de8b6c8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100024, guid: 105903d664c39294e926aed54de8b6c8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 105903d664c39294e926aed54de8b6c8, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
