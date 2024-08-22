@@ -2,17 +2,14 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public enum BoostType
 {
-    ExtraMoves,
-    Stripes,
-    ExtraTime,
-    Bomb,
-    Colorful_bomb,
     Shovel,
-    Energy,
-    None
+    Energy, 
+    Bomb,
+    ExtraMoves
 }
 
 public class BoostShop : MonoBehaviour
@@ -42,12 +39,35 @@ public class BoostShop : MonoBehaviour
     {
         boostType = _boostType;
         gameObject.SetActive(true);
-        icon.sprite = boostProducts[(int)_boostType].icon;
-        description.text = boostProducts[(int)_boostType].description;
-        for (int i = 0; i < 3; i++)
+        //icon.sprite = boostProducts[(int)_boostType].icon;
+        //description.text = boostProducts[(int)_boostType].description;
+        //for (int i = 0; i < 1; i++)
+        //{
+        //    transform.Find("Image/BuyBoost" + (i + 1) + "/Count").GetComponent<Text>().text = "x" + boostProducts[(int)_boostType].count[i];
+        //    transform.Find("Image/BuyBoost" + (i + 1) + "/Price").GetComponent<Text>().text = "" + boostProducts[(int)_boostType].GemPrices[i];
+        //}
+        var boostProduct = boostProducts[(int)_boostType];
+        icon.sprite = boostProduct.icon;
+        description.text = boostProduct.description;
+        var countTextTransform = transform.Find("Image/BuyBoost1/Count");
+        var priceTextTransform = transform.Find("Image/BuyBoost1/Price");
+
+        if (countTextTransform != null)
         {
-            transform.Find("Image/BuyBoost" + (i + 1) + "/Count").GetComponent<Text>().text = "x" + boostProducts[(int)_boostType].count[i];
-            transform.Find("Image/BuyBoost" + (i + 1) + "/Price").GetComponent<Text>().text = "" + boostProducts[(int)_boostType].GemPrices[i];
+            var countText = countTextTransform.GetComponent<Text>();
+            if (countText != null)
+            {
+                countText.text = "x" + boostProduct.count[0]; // Access the first element
+            }
+        }
+
+        if (priceTextTransform != null)
+        {
+            var priceText = priceTextTransform.GetComponent<Text>();
+            if (priceText != null)
+            {
+                priceText.text = "" + boostProduct.GemPrices[0]; // Access the first element
+            }
         }
     }
 

@@ -142,8 +142,8 @@ public class LevelManager : MonoBehaviour
 	public BoostIcon AvctivatedBoostView;
 	//currently active boost
 	public BoostIcon activatedBoost;
-	public string androidSharingPath;
-	public string iosSharingPath;
+	//public string androidSharingPath;
+	//public string iosSharingPath;
 
 	// field of getting and setting currently activated boost
 	public BoostIcon ActivatedBoost
@@ -178,7 +178,7 @@ public class LevelManager : MonoBehaviour
 
 			if (activatedBoost != null)
 			{
-				if (activatedBoost.type == BoostType.ExtraMoves || activatedBoost.type == BoostType.ExtraTime)
+				if (activatedBoost.type == BoostType.ExtraMoves)
 				{
 					if (LevelManager.Instance.limitType == LIMIT.MOVES)
 						LevelManager.THIS.Limit += 5;
@@ -2192,7 +2192,7 @@ public class LevelManager : MonoBehaviour
 		bool NoBoosts = true;
 		if (BoostColorfullBomb > 0)
 		{
-			InitScript.Instance.SpendBoost(BoostType.Colorful_bomb);
+			//InitScript.Instance.SpendBoost(BoostType.Colorful_bomb);
 			GameObject colorMix = Instantiate(Resources.Load("Prefabs/Effects/colorful_mix")) as GameObject;
 			colorMix.transform.position = Vector3.zero + Vector3.up * -5f;
 			BoostColorfullBomb = 0;
@@ -2200,7 +2200,7 @@ public class LevelManager : MonoBehaviour
 		}
 		if (BoostStriped > 0)
 		{
-			InitScript.Instance.SpendBoost(BoostType.Stripes);
+			//InitScript.Instance.SpendBoost(BoostType.Stripes);
 			foreach (Item item in GetRandomItems(BoostStriped))
 			{
 				item.nextType = (ItemsTypes)UnityEngine.Random.Range(1, 3);
