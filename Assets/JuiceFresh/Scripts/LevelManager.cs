@@ -440,9 +440,6 @@ public class LevelManager : MonoBehaviour
 			{
 				MusicBase.Instance.GetComponent<AudioSource>().Stop();
 				StartCoroutine(PreWinAnimationsCor());
-                MusicBase.Instance.GetComponent<AudioSource>().loop = true;
-                MusicBase.Instance.GetComponent<AudioSource>().clip = MusicBase.Instance.music[1];
-                MusicBase.Instance.GetComponent<AudioSource>().Play();
             }
 			else if (value == GameState.Win)
 			{
@@ -1322,6 +1319,9 @@ public class LevelManager : MonoBehaviour
         Vector3 pos1 = GameObject.Find("Limit").transform.position;
 
         yield return new WaitForSeconds(1);
+        MusicBase.Instance.GetComponent<AudioSource>().loop = true;
+        MusicBase.Instance.GetComponent<AudioSource>().clip = MusicBase.Instance.music[0];
+        MusicBase.Instance.GetComponent<AudioSource>().Play();
 
         int countFlowers = limitType == LIMIT.MOVES ? Mathf.Clamp(Limit, 0, 8) : 3;
 		List<Item> items = GetRandomItems(limitType == LIMIT.MOVES ? Mathf.Clamp(Limit, 0, 8) : 3);

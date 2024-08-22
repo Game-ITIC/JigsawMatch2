@@ -18968,6 +18968,14 @@ PrefabInstance:
       objectReference: {fileID: 24316226, guid: 71219333dfa1d41a0a002394723a2c6d,
         type: 2}
     - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: click
+      value: 
+      objectReference: {fileID: 8300000, guid: be4c40b6cf52705408165e1baf670ec0, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: timeOut
+      value: 
+      objectReference: {fileID: 8300000, guid: 1812f29ffb05ff4448a81b97d8eca826, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
       propertyPath: pops.Array.data[0]
       value: 
       objectReference: {fileID: 8300000, guid: 90e40ff8d3aacf4449918375ffc242eb, type: 3}
@@ -18984,6 +18992,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 90e40ff8d3aacf4449918375ffc242eb, type: 3}
     - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: star.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 4ec8bfb06436136439072c04568122fe, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: star.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 4ec8bfb06436136439072c04568122fe, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: star.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 4ec8bfb06436136439072c04568122fe, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
       propertyPath: selecting.Array.size
       value: 10
       objectReference: {fileID: 0}
@@ -18994,11 +19014,11 @@ PrefabInstance:
     - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
       propertyPath: complete.Array.data[0]
       value: 
-      objectReference: {fileID: 8300000, guid: db02e9c6cfb078c4b904810abe587c50, type: 3}
+      objectReference: {fileID: 8300000, guid: 94af71b253179da458a1b8ee6ff79c72, type: 3}
     - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
       propertyPath: complete.Array.data[1]
       value: 
-      objectReference: {fileID: 8300000, guid: db02e9c6cfb078c4b904810abe587c50, type: 3}
+      objectReference: {fileID: 8300000, guid: 94af71b253179da458a1b8ee6ff79c72, type: 3}
     - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
       propertyPath: gameOver.Array.data[0]
       value: 
@@ -27623,7 +27643,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -26.150406, y: 95}
+  m_AnchoredPosition: {x: -26.15039, y: 95}
   m_SizeDelta: {x: 142.29996, y: 240}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1289045752
