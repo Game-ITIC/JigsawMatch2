@@ -45,7 +45,17 @@ public class GUIEvents : MonoBehaviour {
 
 	}
 
-	public void FaceBookLogin () {
+	public void ParkSceneLoader()
+	{
+        SceneManager.LoadScene("Park");
+    }
+
+    public void GameSceneLoader()
+    {
+        SceneManager.LoadScene("game");
+    }
+
+    public void FaceBookLogin () {
 #if FACEBOOK
 		FacebookManager.THIS.CallFBLogin ();
 
