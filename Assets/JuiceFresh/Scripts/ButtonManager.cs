@@ -35,7 +35,7 @@ public class ButtonManager : MonoBehaviour
             if (isUnlocked && action.objectToUnlock != null)
             {
                 action.objectToUnlock.SetActive(true);
-                action.targetButton.interactable = false; // Отключаем кнопку
+                DisableButton(action.targetButton); // Полностью отключаем кнопку
             }
 
             if (action.targetButton != null)
@@ -70,8 +70,8 @@ public class ButtonManager : MonoBehaviour
                 action.objectToUnlock.SetActive(true);
             }
 
-            // Отключаем кнопку после покупки
-            action.targetButton.interactable = false;
+            // Полностью отключаем кнопку после покупки
+            DisableButton(action.targetButton);
 
             // Обновляем UI после траты звёзд
             UpdateStarsDisplay();
@@ -81,6 +81,12 @@ public class ButtonManager : MonoBehaviour
         {
             Debug.Log("Not enough stars to unlock the object.");
         }
+    }
+
+    private void DisableButton(Button button)
+    {
+        button.interactable = false; // Отключаем взаимодействие
+        button.gameObject.SetActive(false); // Отключаем объект кнопки
     }
 
     private void UpdateStarsDisplay()
