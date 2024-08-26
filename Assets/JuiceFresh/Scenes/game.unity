@@ -12770,8 +12770,8 @@ MonoBehaviour:
   targetDiscriptions:
   - 'Achieve score of %n '
   - Destroy all blocks
-  - Get required butterflies
   - Bring insects till the bottom
+  - Get required butterflies
   - Destroy honey blocks
   - Get rid of bombs
   - 'Achieve number of stars: %s '
