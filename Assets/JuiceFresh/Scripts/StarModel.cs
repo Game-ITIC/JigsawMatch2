@@ -26,6 +26,9 @@ public class StarModel : MonoBehaviour
 
     private void Start()
     {
+        int spentStars = PlayerPrefs.GetInt("TotalSpentStars", 0); // Загружаем количество потраченных звезд
+        _totalStars = PlayerPrefs.GetInt("TotalStars", 0) - spentStars; // Вычитаем потраченные звезды
+        _totalStars = Mathf.Max(0, _totalStars); // Убедимся, что не уйдем в отрицательные значения
         UpdateStarsDisplay(); // Обновление текста при старте
     }
 
@@ -35,7 +38,6 @@ public class StarModel : MonoBehaviour
         // Проверяем, был ли уровень уже пройден
         if (levelStars.ContainsKey(levelNumber))
         {
-            // Если уровень уже пройден, добавляем только разницу в звёздах, если новых больше
             int existingStars = levelStars[levelNumber];
             if (starsCount > existingStars)
             {
@@ -46,11 +48,11 @@ public class StarModel : MonoBehaviour
         }
         else
         {
-            // Если уровень пройден впервые, добавляем звёзды
             _totalStars += starsCount;
             levelStars[levelNumber] = starsCount;
         }
 
+        SaveTotalStars();
         UpdateStarsDisplay();
     }
 
@@ -74,5 +76,12 @@ public class StarModel : MonoBehaviour
         _totalStars = 0;
         levelStars.Clear();
         UpdateStarsDisplay();
+    }
+
+    public void SaveTotalStars()
+    {
+        PlayerPrefs.SetInt("TotalStars", _totalStars);
+        PlayerPrefs.Save();
+        Debug.Log($"Total stars saved: {_totalStars}");
     }
 }
