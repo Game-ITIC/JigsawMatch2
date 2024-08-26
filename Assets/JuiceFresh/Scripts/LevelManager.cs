@@ -403,13 +403,13 @@ public class LevelManager : MonoBehaviour
 					PlayerPrefs.SetInt("OpenLevelTest", 0);
 					PlayerPrefs.Save();
 				}
-#if UNITY_ANDROID || UNITY_IOS || UNITY_WINRT
-				if (passLevelCounter > 0 && InitScript.Instance.ShowRateEvery > 0)
-				{
-					if (passLevelCounter % InitScript.Instance.ShowRateEvery == 0 && InitScript.Instance.ShowRateEvery > 0 && PlayerPrefs.GetInt("Rated", 0) == 0)
-						InitScript.Instance.ShowRate();
-				}
-#endif
+//#if UNITY_ANDROID || UNITY_IOS || UNITY_WINRT
+//				if (passLevelCounter > 0 && InitScript.Instance.ShowRateEvery > 0)
+//				{
+//					if (passLevelCounter % InitScript.Instance.ShowRateEvery == 0 && InitScript.Instance.ShowRateEvery > 0 && PlayerPrefs.GetInt("Rated", 0) == 0)
+//						InitScript.Instance.ShowRate();
+//				}
+//#endif
 
 			}
 			else if (value == GameState.Pause)
@@ -448,7 +448,7 @@ public class LevelManager : MonoBehaviour
 				GameObject.Find("CanvasGlobal").transform.Find("MenuComplete").gameObject.SetActive(true);
 				OnWin();
             }
-			InitScript.Instance.CheckAdsEvents(value);
+			//InitScript.Instance.CheckAdsEvents(value);
 
 
 		}

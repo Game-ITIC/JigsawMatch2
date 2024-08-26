@@ -19221,13 +19221,81 @@ PrefabInstance:
       objectReference: {fileID: 24316226, guid: 71219333dfa1d41a0a002394723a2c6d,
         type: 2}
     - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: cash
+      value: 
+      objectReference: {fileID: 8300000, guid: de1d0b4afcf8e8444afea2bd314e6373, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: alert
+      value: 
+      objectReference: {fileID: 8300000, guid: feb14b24708694e469bebaec80f9c6dc, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
       propertyPath: click
       value: 
       objectReference: {fileID: 8300000, guid: be4c40b6cf52705408165e1baf670ec0, type: 3}
     - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: shovel
+      value: 
+      objectReference: {fileID: 8300000, guid: 5239aad7aabf9ea4892de5418f47ea2e, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: noMatch
+      value: 
+      objectReference: {fileID: 8300000, guid: 5239aad7aabf9ea4892de5418f47ea2e, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
       propertyPath: timeOut
       value: 
       objectReference: {fileID: 8300000, guid: 1812f29ffb05ff4448a81b97d8eca826, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: iceCrack
+      value: 
+      objectReference: {fileID: 8300000, guid: a57ae2fff65435641a2e27ac64aee51c, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: boostBomb
+      value: 
+      objectReference: {fileID: 8300000, guid: f1b351dc21279004880dcccaf322e9a5, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: explosion
+      value: 
+      objectReference: {fileID: 8300000, guid: f1b351dc21279004880dcccaf322e9a5, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: wrongMatch
+      value: 
+      objectReference: {fileID: 8300000, guid: 5239aad7aabf9ea4892de5418f47ea2e, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: getStarIngr
+      value: 
+      objectReference: {fileID: 8300000, guid: a57ae2fff65435641a2e27ac64aee51c, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: appearPackage
+      value: 
+      objectReference: {fileID: 8300000, guid: f1b351dc21279004880dcccaf322e9a5, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: block_destroy
+      value: 
+      objectReference: {fileID: 8300000, guid: f1b351dc21279004880dcccaf322e9a5, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: colorBombExpl
+      value: 
+      objectReference: {fileID: 8300000, guid: f1b351dc21279004880dcccaf322e9a5, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: destroyPackage
+      value: 
+      objectReference: {fileID: 8300000, guid: f1b351dc21279004880dcccaf322e9a5, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: boostColorReplace
+      value: 
+      objectReference: {fileID: 8300000, guid: f1b351dc21279004880dcccaf322e9a5, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: strippedExplosion
+      value: 
+      objectReference: {fileID: 8300000, guid: a57ae2fff65435641a2e27ac64aee51c, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: drop.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 5239aad7aabf9ea4892de5418f47ea2e, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: drop.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 5239aad7aabf9ea4892de5418f47ea2e, type: 3}
     - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
       propertyPath: pops.Array.data[0]
       value: 
@@ -19257,6 +19325,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 4ec8bfb06436136439072c04568122fe, type: 3}
     - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: swish.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: de1d0b4afcf8e8444afea2bd314e6373, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: swish.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: de1d0b4afcf8e8444afea2bd314e6373, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
       propertyPath: selecting.Array.size
       value: 10
       objectReference: {fileID: 0}
@@ -19264,6 +19340,14 @@ PrefabInstance:
       propertyPath: appearStipedColorBomb
       value: 
       objectReference: {fileID: 8300000, guid: 91069ece592264b42b302a6160868b76, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: destroy.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: f1b351dc21279004880dcccaf322e9a5, type: 3}
+    - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
+      propertyPath: destroy.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: f1b351dc21279004880dcccaf322e9a5, type: 3}
     - target: {fileID: 11400000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
       propertyPath: complete.Array.data[0]
       value: 

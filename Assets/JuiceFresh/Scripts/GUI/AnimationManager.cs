@@ -145,30 +145,30 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
-    public void ShowAds()
-    {
-        if (name == "GemsShop")
-            InitScript.Instance.currentReward = RewardedAdsType.GetGems;
-        else if (name == "LiveShop")
-            InitScript.Instance.currentReward = RewardedAdsType.GetLifes;
-        else if (name == "MenuFailed")
-            InitScript.Instance.currentReward = RewardedAdsType.GetGoOn;
-        InitScript.Instance.ShowRewardedAds();
-        if (name != "MenuFailed")
-            CloseMenu();
-    }
+    //public void ShowAds()
+    //{
+    //    if (name == "GemsShop")
+    //        InitScript.Instance.currentReward = RewardedAdsType.GetGems;
+    //    else if (name == "LiveShop")
+    //        InitScript.Instance.currentReward = RewardedAdsType.GetLifes;
+    //    else if (name == "MenuFailed")
+    //        InitScript.Instance.currentReward = RewardedAdsType.GetGoOn;
+    //    InitScript.Instance.ShowRewardedAds();
+    //    if (name != "MenuFailed")
+    //        CloseMenu();
+    //}
 
-    public void GoRate()
-    {
-#if UNITY_ANDROID
-        Application.OpenURL(InitScript.Instance.RateURL);
-#elif UNITY_IOS
-		Application.OpenURL (InitScript.Instance.RateURLIOS);
-#endif
+//    public void GoRate()
+//    {
+//#if UNITY_ANDROID
+//        Application.OpenURL(InitScript.Instance.RateURL);
+//#elif UNITY_IOS
+//		Application.OpenURL (InitScript.Instance.RateURLIOS);
+//#endif
 
-        PlayerPrefs.SetInt("Rated", 1);
-        PlayerPrefs.Save();
-    }
+//        PlayerPrefs.SetInt("Rated", 1);
+//        PlayerPrefs.Save();
+//    }
 
     void OnDisable()
     {
