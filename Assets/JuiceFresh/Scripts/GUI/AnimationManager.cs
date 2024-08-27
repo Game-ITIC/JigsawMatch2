@@ -193,7 +193,7 @@ public class AnimationManager : MonoBehaviour
         }
         if (name == "Reward")
         {
-            StartCoroutine(FireworkParticles());
+            //StartCoroutine(FireworkParticles());
         }
         if (name == "MenuPlay")
         {
@@ -319,28 +319,29 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
-    IEnumerator FireworkParticles()
-    {
-        GameObject firework = Instantiate(fireworkPrefab, UnityEngine.Random.insideUnitCircle * 10, Quaternion.identity) as GameObject;
-        GameObject firework1 = Instantiate(fireworkPrefab, UnityEngine.Random.insideUnitCircle * 10, Quaternion.identity) as GameObject;
-        for (int i = 0; i < 10; i++)
-        {
-            yield return new WaitForSeconds(0.5f);
-            firework.transform.position = UnityEngine.Random.insideUnitCircle * 10;
-            firework.GetComponent<ParticleSystem>().Stop();
-            firework.GetComponent<ParticleSystem>().Play();
-            yield return new WaitForSeconds(0.5f);
-            firework1.transform.position = UnityEngine.Random.insideUnitCircle * 10;
-            firework1.GetComponent<ParticleSystem>().Stop();
-            firework1.GetComponent<ParticleSystem>().Play();
+    //IEnumerator FireworkParticles()
+    //{
+    //    GameObject firework = Instantiate(fireworkPrefab, UnityEngine.Random.insideUnitCircle * 10, Quaternion.identity) as GameObject;
+    //    GameObject firework1 = Instantiate(fireworkPrefab, UnityEngine.Random.insideUnitCircle * 10, Quaternion.identity) as GameObject;
+    //    for (int i = 0; i < 10; i++)
+    //    {
+    //        yield return new WaitForSeconds(0.5f);
+    //        firework.transform.position = UnityEngine.Random.insideUnitCircle * 10;
+    //        firework.GetComponent<ParticleSystem>().Stop();
+    //        firework.GetComponent<ParticleSystem>().Play();
+    //        yield return new WaitForSeconds(0.5f);
+    //        firework1.transform.position = UnityEngine.Random.insideUnitCircle * 10;
+    //        firework1.GetComponent<ParticleSystem>().Stop();
+    //        firework1.GetComponent<ParticleSystem>().Play();
 
-        }
-        Destroy(firework, 1);
-        Destroy(firework1, 1);
-    }
+    //    }
+    //    Destroy(firework, 1);
+    //    Destroy(firework1, 1);
+    //}
 
     IEnumerator MenuComplete()
     {
+        TinySauce.OnGameFinished(LevelManager.THIS.currentLevel);
         for (int i = 1; i <= LevelManager.Instance.stars; i++)
         {
             //  SoundBase.Instance.audio.PlayOneShot( SoundBase.Instance.scoringStar );
@@ -348,7 +349,7 @@ public class AnimationManager : MonoBehaviour
             SoundBase.Instance.PlaySound(SoundBase.Instance.star[i - 1]);
             yield return new WaitForSeconds(0.5f);
         }
-        StartCoroutine(FireworkParticles());
+        //StartCoroutine(FireworkParticles());
 
     }
 

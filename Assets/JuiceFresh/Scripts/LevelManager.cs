@@ -482,6 +482,7 @@ public class LevelManager : MonoBehaviour
 
 	public void LoadLevel()
 	{
+		TinySauce.OnGameStarted(currentLevel);
 		currentLevel = PlayerPrefs.GetInt("OpenLevel");// TargetHolder.level;
 		if (currentLevel == 0)
 			currentLevel = 1;

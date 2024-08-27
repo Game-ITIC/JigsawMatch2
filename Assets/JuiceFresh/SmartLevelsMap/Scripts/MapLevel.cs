@@ -28,7 +28,6 @@ public class MapLevel : MonoBehaviour {
 
 	public void Awake () {
 		_originalScale = transform.localScale;
-      
     }
 
 	#region Enable click

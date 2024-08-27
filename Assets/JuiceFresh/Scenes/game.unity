@@ -19336,8 +19336,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 496c2613b88ebfe46a163b65c615e3c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerIconPrefab: {fileID: 168812, guid: 5bb5c9d6858cc014eb85e2e15f284848, type: 3}
-  playerIconsList: []
 --- !u!111 &839427252
 Animation:
   m_ObjectHideFlags: 0
@@ -36698,7 +36696,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bb8c293915578a41bfe8875631dd758, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avatars: []
 --- !u!1 &1672437367
 GameObject:
   m_ObjectHideFlags: 0
@@ -46693,8 +46690,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 496c2613b88ebfe46a163b65c615e3c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerIconPrefab: {fileID: 168812, guid: 5bb5c9d6858cc014eb85e2e15f284848, type: 3}
-  playerIconsList: []
 --- !u!114 &2138366509
 MonoBehaviour:
   m_ObjectHideFlags: 0
