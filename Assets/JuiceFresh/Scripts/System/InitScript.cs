@@ -445,9 +445,9 @@ public class InitScript : MonoBehaviour
         Gems += count;
         PlayerPrefs.SetInt("Gems", Gems);
         PlayerPrefs.Save();
-#if PLAYFAB || GAMESPARKS
-		NetworkManager.currencyManager.IncBalance (count);
-#endif
+//#if PLAYFAB || GAMESPARKS
+//		NetworkManager.currencyManager.IncBalance (count);
+//#endif
     }
 
     public void SetStars(int count)

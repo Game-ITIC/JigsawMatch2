@@ -35,7 +35,7 @@ public class EventsListener : MonoBehaviour {
     void OnMapState() {
     }
     void OnEnterGame() {
-        AnalyticsEvent("OnEnterGame", LevelManager.THIS.currentLevel);
+        //AnalyticsEvent("OnEnterGame", LevelManager.THIS.currentLevel);
     }
     void OnLevelLoaded() {
     }
@@ -46,24 +46,25 @@ public class EventsListener : MonoBehaviour {
     void OnStartPlay() {
     }
     void OnWin() {
-        AnalyticsEvent("OnWin", LevelManager.THIS.currentLevel);
-        InitScript.Instance.AddGems(10);
+        //AnalyticsEvent("OnWin", LevelManager.THIS.currentLevel);
+        InitScript.Instance.AddGems(15);
         //InitScript.Instance.AddStars(3);
     }
     void OnLose() {
-        AnalyticsEvent("OnLose", LevelManager.THIS.currentLevel);
+        //AnalyticsEvent("OnLose", LevelManager.THIS.currentLevel);
     }
 
     #endregion
 
-    void AnalyticsEvent(string _event, int level) {
-#if UNITY_ANALYTICS
-        Dictionary<string, object> dic = new Dictionary<string, object>();
-        dic.Add(_event, level);
-        Analytics.CustomEvent(_event, dic);
+//    void AnalyticsEvent(string _event, int level)
+//    {
+//#if UNITY_ANALYTICS
+//        Dictionary<string, object> dic = new Dictionary<string, object>();
+//        dic.Add(_event, level);
+//        Analytics.CustomEvent(_event, dic);
 
-#endif
-    }
+//#endif
+//    }
 
 
 }

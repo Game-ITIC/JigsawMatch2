@@ -6897,7 +6897,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72b3ffbc7b1aad348823056c48c0819c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CostIfRefill: 5
+  CostIfRefill: 50
 --- !u!1 &287649485
 GameObject:
   m_ObjectHideFlags: 0
@@ -12708,7 +12708,7 @@ MonoBehaviour:
   currentReward: 0
   CapOfLife: 5
   TotalTimeForRestLifeHours: 0
-  TotalTimeForRestLifeMin: 15
+  TotalTimeForRestLifeMin: 5
   TotalTimeForRestLifeSec: 0
   FirstGems: 5
   adsEvents:
@@ -12971,11 +12971,11 @@ MonoBehaviour:
   lastDraggedItem: {fileID: 0}
   destroyAnyway: []
   popupScore: {fileID: 100000, guid: 045b1a17bc5268b419f9a7fa7af3c2ba, type: 3}
-  scoreForItem: 100
+  scoreForItem: 80
   scoreForBlock: 100
   scoreForWireBlock: 100
-  scoreForSolidBlock: 100
-  scoreForThrivingBlock: 100
+  scoreForSolidBlock: 120
+  scoreForThrivingBlock: 150
   limitType: 1
   Limit: 60
   TargetScore: 1000
@@ -18382,7 +18382,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 764257762}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24392190, guid: 71219333dfa1d41a0a002394723a2c6d,
     type: 2}
@@ -19213,7 +19213,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8200000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8200000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
       propertyPath: OutputAudioMixerGroup

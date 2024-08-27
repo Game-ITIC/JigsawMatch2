@@ -112,26 +112,26 @@ public class AnimationManager : MonoBehaviour
         if (transform.Find("Image/Video") != null)
         {
 
-#if UNITY_ADS
-            InitScript.Instance.rewardedVideoZone = "rewardedVideo";
+//#if UNITY_ADS
+//            InitScript.Instance.rewardedVideoZone = "rewardedVideo";
 
-            if (transform.Find("Image/Video/AdsNotAvailable") != null)
-            {//1.4.8
-                if (!InitScript.Instance.enableUnityAds || !InitScript.Instance.GetRewardedUnityAdsReady())
-                    transform.Find("Image/Video/AdsNotAvailable").gameObject.SetActive(true);
-                else
-                    transform.Find("Image/Video/AdsNotAvailable").gameObject.SetActive(false);
-            }
-#elif GOOGLE_MOBILE_ADS
-            bool stillShow = true;
-#if UNITY_ADS
-        stillShow = !InitScript.Instance.GetRewardedUnityAdsReady ();
-#endif
-            if (!InitScript.Instance.enableGoogleMobileAds || !RewAdmobManager.THIS.IsRewardedAdIsLoaded() || !stillShow)
-                transform.Find("Image/Video").gameObject.SetActive(false);
-#else
-            transform.Find("Image/Video").gameObject.SetActive(false);
-#endif
+//            if (transform.Find("Image/Video/AdsNotAvailable") != null)
+//            {//1.4.8
+//                if (!InitScript.Instance.enableUnityAds || !InitScript.Instance.GetRewardedUnityAdsReady())
+//                    transform.Find("Image/Video/AdsNotAvailable").gameObject.SetActive(true);
+//                else
+//                    transform.Find("Image/Video/AdsNotAvailable").gameObject.SetActive(false);
+//            }
+//#elif GOOGLE_MOBILE_ADS
+//            bool stillShow = true;
+//#if UNITY_ADS
+//        stillShow = !InitScript.Instance.GetRewardedUnityAdsReady ();
+//#endif
+//            if (!InitScript.Instance.enableGoogleMobileAds || !RewAdmobManager.THIS.IsRewardedAdIsLoaded() || !stillShow)
+//                transform.Find("Image/Video").gameObject.SetActive(false);
+//#else
+//            transform.Find("Image/Video").gameObject.SetActive(false);
+//#endif
         }
     }
 
