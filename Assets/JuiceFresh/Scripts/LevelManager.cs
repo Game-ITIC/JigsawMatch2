@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 using System.Collections.Generic;
-using JuiceFresh.Scripts.System;
+//using JuiceFresh.Scripts.System;
 using UnityEngine.UI;
 
 public class SquareBlocks
@@ -609,22 +609,22 @@ public class LevelManager : MonoBehaviour
 
 		if (Level.gameObject.activeSelf)
 			Level.gameObject.SetActive(false);
-#if FACEBOOK
-		FacebookEnable = true;//1.3.2
-		if (FacebookEnable)
-			FacebookManager.THIS.CallFBInit();
+//#if FACEBOOK
+//		FacebookEnable = true;//1.3.2
+//		if (FacebookEnable)
+//			FacebookManager.THIS.CallFBInit();
 
-#else
-		FacebookEnable = false;
+//#else
+//		FacebookEnable = false;
 
-#endif
-#if UNITY_INAPPS
+//#endif
+//#if UNITY_INAPPS
 
-		gameObject.AddComponent<UnityInAppsIntegration> ();
-		enableInApps = true;//1.3
-#else
-		enableInApps = false;
-#endif
+//		gameObject.AddComponent<UnityInAppsIntegration> ();
+//		enableInApps = true;//1.3
+//#else
+//		enableInApps = false;
+//#endif
 
 		THIS = this;
 		Instance = this;
@@ -646,11 +646,11 @@ public class LevelManager : MonoBehaviour
 		}
 		passLevelCounter = 0;
 
-#if UNITY_INAPPS
-		if (GetComponent<UnityInAppsIntegration> () == null)
-			gameObject.AddComponent<UnityInAppsIntegration> ();
+//#if UNITY_INAPPS
+//		if (GetComponent<UnityInAppsIntegration> () == null)
+//			gameObject.AddComponent<UnityInAppsIntegration> ();
 		
-#endif
+//#endif
 
 	}
 
@@ -1381,11 +1381,11 @@ public class LevelManager : MonoBehaviour
 
         LevelsMap.SetActive(false);//1.4.4
 		LevelsMap.SetActive(true);//1.4.4
-#if PLAYFAB || GAMESPARKS
-		NetworkManager.dataManager.SetPlayerScore(currentLevel, Score);
-		NetworkManager.dataManager.SetPlayerLevel(currentLevel + 1);
-		NetworkManager.dataManager.SetStars();
-#endif
+//#if PLAYFAB || GAMESPARKS
+//		NetworkManager.dataManager.SetPlayerScore(currentLevel, Score);
+//		NetworkManager.dataManager.SetPlayerLevel(currentLevel + 1);
+//		NetworkManager.dataManager.SetStars();
+//#endif
 
 		gameStatus = GameState.Win;
 	}

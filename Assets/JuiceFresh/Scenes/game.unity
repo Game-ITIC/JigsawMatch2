@@ -12711,44 +12711,9 @@ MonoBehaviour:
   TotalTimeForRestLifeMin: 5
   TotalTimeForRestLifeSec: 0
   FirstGems: 5
-  adsEvents:
-  - gameEvent: 5
-    adType: 1
-    everyLevel: 4
-    calls: 0
-  - gameEvent: 8
-    adType: 0
-    everyLevel: 3
-    calls: 0
-  - gameEvent: 17
-    adType: 1
-    everyLevel: 4
-    calls: 0
-  - gameEvent: 6
-    adType: 0
-    everyLevel: 3
-    calls: 0
-  - gameEvent: 0
-    adType: 2
-    everyLevel: 5
-    calls: 0
-  enableUnityAds: 0
-  enableGoogleMobileAds: 0
-  enableChartboostAds: 0
-  rewardedVideoZone: 
-  nonRewardedVideoZone: defaultZone
-  ShowChartboostAdsEveryLevel: 1
-  ShowAdmobAdsEveryLevel: 2
-  admobUIDAndroid: 
-  admobUIDIOS: 
   ShowRateEvery: 5
-  RateURL: 
-  RateURLIOS: 
   rewardedGems: 5
   losingLifeEveryGame: 0
-  facebookButton: {fileID: 0}
-  admobRewardedUIDAndroid: 
-  admobRewardedUIDIOS: 
 --- !u!120 &511786110
 LineRenderer:
   serializedVersion: 2
@@ -18382,7 +18347,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 764257762}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24392190, guid: 71219333dfa1d41a0a002394723a2c6d,
     type: 2}
@@ -19213,7 +19178,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8200000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8200000, guid: c8003baa1f5c64645a6884376b315d2a, type: 3}
       propertyPath: OutputAudioMixerGroup
@@ -20022,6 +19987,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerIconPrefab: {fileID: 168812, guid: 5bb5c9d6858cc014eb85e2e15f284848, type: 3}
+  playerIconsList: []
 --- !u!111 &839427252
 Animation:
   m_ObjectHideFlags: 0
@@ -47634,6 +47600,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerIconPrefab: {fileID: 168812, guid: 5bb5c9d6858cc014eb85e2e15f284848, type: 3}
+  playerIconsList: []
 --- !u!114 &2138366509
 MonoBehaviour:
   m_ObjectHideFlags: 0

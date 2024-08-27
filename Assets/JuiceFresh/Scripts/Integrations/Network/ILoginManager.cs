@@ -1,10 +1,10 @@
 ﻿
-public interface ILoginManager {
-	void LoginWithFB (string accessToken, string titleId);
+//public interface ILoginManager {
+//	void LoginWithFB (string accessToken, string titleId);
 
-	void UpdateName (string userName);
+//	void UpdateName (string userName);
 
-	bool IsYou (string playFabId);
-}
+//	bool IsYou (string playFabId);
+//}
 
 

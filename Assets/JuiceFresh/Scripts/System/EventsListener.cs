@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-#if UNITY_ANALYTICS
-using UnityEngine.Analytics;
-#endif
+//#if UNITY_ANALYTICS
+//using UnityEngine.Analytics;
+//#endif
 
 public class EventsListener : MonoBehaviour {
 

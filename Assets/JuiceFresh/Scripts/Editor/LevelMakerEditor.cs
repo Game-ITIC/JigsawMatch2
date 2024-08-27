@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using UnityEngine.UI;
 using System.Reflection;
-using JuiceFresh.Scripts.Integrations;
+//using JuiceFresh.Scripts.Integrations;
 using UnityEditor.SceneManagement;
 
 public class LevelMakerEditor : EditorWindow
@@ -83,7 +83,7 @@ public class LevelMakerEditor : EditorWindow
 
 	}
 
-	List<AdEvents> oldList;
+	//List<AdEvents> oldList;
 
 	int NumIngredients;
 	private bool initDone;
@@ -105,25 +105,25 @@ public class LevelMakerEditor : EditorWindow
 			initscript = Camera.main.GetComponent<InitScript>();
 			ingr = initscript.collectedIngredients.ToArray();
 			Initialize();
-			unityAdsSettings = Resources.Load<UnityAdsID>("UnityAdsID");
+			//unityAdsSettings = Resources.Load<UnityAdsID>("UnityAdsID");
 			LoadDataFromLocal(levelNumber);
 		}
 		if (EditorSceneManager.GetActiveScene().name == "game")
 		{
 			NumIngredients = lm.NumIngredients;
 
-			if (oldList == null)
-			{
-				oldList = new List<AdEvents>();
-				oldList.Clear();
-				for (int i = 0; i < initscript.adsEvents.Count; i++)
-				{
-					oldList.Add(new AdEvents());
-					oldList[i].adType = initscript.adsEvents[i].adType;
-					oldList[i].everyLevel = initscript.adsEvents[i].everyLevel;
-					oldList[i].gameEvent = initscript.adsEvents[i].gameEvent;
-				}
-			}
+			//if (oldList == null)
+			//{
+			//	oldList = new List<AdEvents>();
+			//	oldList.Clear();
+			//	for (int i = 0; i < initscript.adsEvents.Count; i++)
+			//	{
+			//		oldList.Add(new AdEvents());
+			//		oldList[i].adType = initscript.adsEvents[i].adType;
+			//		oldList[i].everyLevel = initscript.adsEvents[i].everyLevel;
+			//		oldList[i].gameEvent = initscript.adsEvents[i].gameEvent;
+			//	}
+			//}
 
 
 			//squareTex = Resources.Load("Blocks/square") as Texture;
@@ -237,15 +237,15 @@ public class LevelMakerEditor : EditorWindow
 		}
 		else if (selected == 3)
 		{
-			if (EditorSceneManager.GetActiveScene().name == "game")
-				GUIInappSettings();
+			if (EditorSceneManager.GetActiveScene().name == "game") { }
+				//GUIInappSettings();
 			else
 				GUIShowWarning();
 		}
 		else if (selected == 4)
 		{
-			if (EditorSceneManager.GetActiveScene().name == "game")
-				GUIAds();
+			if (EditorSceneManager.GetActiveScene().name == "game") { }
+				//GUIAds();
 			else
 				GUIShowWarning();
 		}
@@ -265,15 +265,15 @@ public class LevelMakerEditor : EditorWindow
 		}
 		else if (selected == 7)
 		{
-			GUIHelp();
+			//GUIHelp();
 		}
 
 		GUI.EndScrollView();
 		if (GUI.changed && !EditorApplication.isPlaying)
 			EditorSceneManager.MarkAllScenesDirty();
 
-		if (enableGoogleAdsProcessing)
-			RunOnceGoogle();
+		//if (enableGoogleAdsProcessing) { }
+			//RunOnceGoogle();
 
 		//if (enableChartboostAdsProcessing)
 		//    RunOnceChartboost();
@@ -288,29 +288,29 @@ public class LevelMakerEditor : EditorWindow
 
 	}
 
-	void SetScriptingDefineSymbols()
-	{
-		string defines = "";
-		if (initscript.enableUnityAds)
-			defines = defines + "; UNITY_ADS";
-		if (initscript.enableGoogleMobileAds)
-			defines = defines + "; GOOGLE_MOBILE_ADS";
-		if (initscript.enableChartboostAds)
-			defines = defines + "; CHARTBOOST_ADS";
-		if (lm.FacebookEnable)
-		{
-			defines = defines + "; FACEBOOK";
-			if (Directory.Exists("Assets/PlayFabSDK"))
-				defines = defines + "; PLAYFAB";
-		}
-		if (lm.enableInApps)
-			defines = defines + "; UNITY_INAPPS";
+	//void SetScriptingDefineSymbols()
+	//{
+	//	string defines = "";
+	//	if (initscript.enableUnityAds)
+	//		defines = defines + "; UNITY_ADS";
+	//	if (initscript.enableGoogleMobileAds)
+	//		defines = defines + "; GOOGLE_MOBILE_ADS";
+	//	if (initscript.enableChartboostAds)
+	//		defines = defines + "; CHARTBOOST_ADS";
+	//	if (lm.FacebookEnable)
+	//	{
+	//		defines = defines + "; FACEBOOK";
+	//		if (Directory.Exists("Assets/PlayFabSDK"))
+	//			defines = defines + "; PLAYFAB";
+	//	}
+	//	if (lm.enableInApps)
+	//		defines = defines + "; UNITY_INAPPS";
 
-		PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, defines);
-		PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, defines);
-		PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.WP8, defines);
+	//	PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, defines);
+	//	PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, defines);
+	//	PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.WP8, defines);
 
-	}
+	//}
 
 	#region GUIRate
 
@@ -326,14 +326,14 @@ public class LevelMakerEditor : EditorWindow
 		});
 		GUILayout.Label(" level (0 = disable)", EditorStyles.label, new GUILayoutOption[] { GUILayout.Width(150) });
 		GUILayout.EndHorizontal();
-		initscript.RateURL = EditorGUILayout.TextField("URL", initscript.RateURL, new GUILayoutOption[] {
-			GUILayout.Width (220),
-			GUILayout.MaxWidth (220)
-		});
-		initscript.RateURLIOS = EditorGUILayout.TextField("URL iOS", initscript.RateURLIOS, new GUILayoutOption[] {
-			GUILayout.Width (220),
-			GUILayout.MaxWidth (220)
-		});
+		//initscript.RateURL = EditorGUILayout.TextField("URL", initscript.RateURL, new GUILayoutOption[] {
+		//	GUILayout.Width (220),
+		//	GUILayout.MaxWidth (220)
+		//});
+		//initscript.RateURLIOS = EditorGUILayout.TextField("URL iOS", initscript.RateURLIOS, new GUILayoutOption[] {
+		//	GUILayout.Width (220),
+		//	GUILayout.MaxWidth (220)
+		//});
 
 	}
 
@@ -421,359 +421,359 @@ public class LevelMakerEditor : EditorWindow
 
 	#region ads_settings
 
-	void RunOnceGoogle()
-	{
-		if (Directory.Exists("Assets/PlayServicesResolver"))
-		{
-			Debug.Log("assets try reimport");
-#if GOOGLE_MOBILE_ADS && UNITY_ANDROID
-			//			GooglePlayServices.PlayServicesResolver.MenuResolve ();1.4.5
-			Debug.Log("assets reimorted");
-			enableGoogleAdsProcessing = false;
-#endif
-		}
+//	void RunOnceGoogle()
+//	{
+//		if (Directory.Exists("Assets/PlayServicesResolver"))
+//		{
+//			Debug.Log("assets try reimport");
+//#if GOOGLE_MOBILE_ADS && UNITY_ANDROID
+//			//			GooglePlayServices.PlayServicesResolver.MenuResolve ();1.4.5
+//			Debug.Log("assets reimorted");
+//			enableGoogleAdsProcessing = false;
+//#endif
+//		}
 
 
-	}
+//	}
 
-	void GUIAds()
-	{
-
-
-		bool oldenableAds = initscript.enableUnityAds;
-
-		GUILayout.Label("Ads settings:", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });
-		GUILayout.BeginHorizontal();
-
-		//UNITY ADS
-
-		//		initscript.enableUnityAds = EditorGUILayout.Toggle ("Enable Unity ads", initscript.enableUnityAds, new GUILayoutOption[] {//1.3
-		//			GUILayout.Width (200)
-		//		});
-		GUILayout.Label("Unity ads", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });//1.3
-		GUILayout.Label("Install: Windows->\n Services->Ads - OFF", new GUILayoutOption[] { GUILayout.Width(130) });
-
-		if (GUILayout.Button("Help", new GUILayoutOption[] { GUILayout.Width(80) }))
-		{
-			Application.OpenURL("https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0");
-		}
-
-		GUILayout.EndHorizontal();
-		GUILayout.Space(10);
-		//		}
-		GUILayout.BeginHorizontal();
-		GUILayout.Space(20);
-		EditorGUI.BeginChangeCheck();
-		unityAdsSettings.androidID = EditorGUILayout.TextField("Android ID ", unityAdsSettings.androidID , new GUILayoutOption[] {
-			GUILayout.Width (220),
-			GUILayout.MaxWidth (220)
-		});
-		GUILayout.EndHorizontal();
-		GUILayout.BeginHorizontal();
-		GUILayout.Space(20);
-		unityAdsSettings.iOSID = EditorGUILayout.TextField("iOS ID", unityAdsSettings.iOSID , new GUILayoutOption[] {
-			GUILayout.Width (220),
-			GUILayout.MaxWidth (220)
-		});
-		if(EditorGUI.EndChangeCheck())
-			EditorUtility.SetDirty(unityAdsSettings);
-		GUILayout.EndHorizontal();
-		GUILayout.Space(10);
+//	void GUIAds()
+//	{
 
 
-		//		if (oldenableAds != initscript.enableUnityAds)//1.3
-		//			SetScriptingDefineSymbols ();
-		//		if (initscript.enableUnityAds) {
-		GUILayout.BeginHorizontal();
-		initscript.rewardedGems = EditorGUILayout.IntField("Rewarded gems", initscript.rewardedGems, new GUILayoutOption[] {
-			GUILayout.Width (200),
-			GUILayout.MaxWidth (200)
-		});
-		GUILayout.EndHorizontal();
+//		bool oldenableAds = initscript.enableUnityAds;
 
-		GUILayout.Space(20);
+//		GUILayout.Label("Ads settings:", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });
+//		GUILayout.BeginHorizontal();
+
+//		//UNITY ADS
+
+//		//		initscript.enableUnityAds = EditorGUILayout.Toggle ("Enable Unity ads", initscript.enableUnityAds, new GUILayoutOption[] {//1.3
+//		//			GUILayout.Width (200)
+//		//		});
+//		GUILayout.Label("Unity ads", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });//1.3
+//		GUILayout.Label("Install: Windows->\n Services->Ads - OFF", new GUILayoutOption[] { GUILayout.Width(130) });
+
+//		if (GUILayout.Button("Help", new GUILayoutOption[] { GUILayout.Width(80) }))
+//		{
+//			Application.OpenURL("https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0");
+//		}
+
+//		GUILayout.EndHorizontal();
+//		GUILayout.Space(10);
+//		//		}
+//		GUILayout.BeginHorizontal();
+//		GUILayout.Space(20);
+//		EditorGUI.BeginChangeCheck();
+//		unityAdsSettings.androidID = EditorGUILayout.TextField("Android ID ", unityAdsSettings.androidID , new GUILayoutOption[] {
+//			GUILayout.Width (220),
+//			GUILayout.MaxWidth (220)
+//		});
+//		GUILayout.EndHorizontal();
+//		GUILayout.BeginHorizontal();
+//		GUILayout.Space(20);
+//		unityAdsSettings.iOSID = EditorGUILayout.TextField("iOS ID", unityAdsSettings.iOSID , new GUILayoutOption[] {
+//			GUILayout.Width (220),
+//			GUILayout.MaxWidth (220)
+//		});
+//		if(EditorGUI.EndChangeCheck())
+//			EditorUtility.SetDirty(unityAdsSettings);
+//		GUILayout.EndHorizontal();
+//		GUILayout.Space(10);
+
+
+//		//		if (oldenableAds != initscript.enableUnityAds)//1.3
+//		//			SetScriptingDefineSymbols ();
+//		//		if (initscript.enableUnityAds) {
+//		GUILayout.BeginHorizontal();
+//		initscript.rewardedGems = EditorGUILayout.IntField("Rewarded gems", initscript.rewardedGems, new GUILayoutOption[] {
+//			GUILayout.Width (200),
+//			GUILayout.MaxWidth (200)
+//		});
+//		GUILayout.EndHorizontal();
+
+//		GUILayout.Space(20);
 
 		
-		//GOOGLE MOBILE ADS
+//		//GOOGLE MOBILE ADS
 
-		bool oldenableGoogleMobileAds = initscript.enableGoogleMobileAds;
-		GUILayout.BeginHorizontal();
-		//		initscript.enableGoogleMobileAds = EditorGUILayout.Toggle ("Enable Google Mobile Ads", initscript.enableGoogleMobileAds, new GUILayoutOption[] {//1.3
-		//			GUILayout.Width (50),
-		//			GUILayout.MaxWidth (200)
-		//		});
-		GUILayout.Label("Google mobile ads", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });//1.3
-		if (GUILayout.Button("Install", new GUILayoutOption[] { GUILayout.Width(100) }))
-		{
-			Application.OpenURL("https://github.com/googleads/googleads-mobile-unity/releases");//1.3
-		}
-		if (GUILayout.Button("Help", new GUILayoutOption[] { GUILayout.Width(80) }))
-		{
-			Application.OpenURL("https://docs.google.com/document/d/1I69mo9yLzkg35wtbHpsQd3Ke1knC5pf7G1Wag8MdO-M/edit?usp=sharing");
-		}
+//		bool oldenableGoogleMobileAds = initscript.enableGoogleMobileAds;
+//		GUILayout.BeginHorizontal();
+//		//		initscript.enableGoogleMobileAds = EditorGUILayout.Toggle ("Enable Google Mobile Ads", initscript.enableGoogleMobileAds, new GUILayoutOption[] {//1.3
+//		//			GUILayout.Width (50),
+//		//			GUILayout.MaxWidth (200)
+//		//		});
+//		GUILayout.Label("Google mobile ads", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });//1.3
+//		if (GUILayout.Button("Install", new GUILayoutOption[] { GUILayout.Width(100) }))
+//		{
+//			Application.OpenURL("https://github.com/googleads/googleads-mobile-unity/releases");//1.3
+//		}
+//		if (GUILayout.Button("Help", new GUILayoutOption[] { GUILayout.Width(80) }))
+//		{
+//			Application.OpenURL("https://docs.google.com/document/d/1I69mo9yLzkg35wtbHpsQd3Ke1knC5pf7G1Wag8MdO-M/edit?usp=sharing");
+//		}
 
-		GUILayout.EndHorizontal();
+//		GUILayout.EndHorizontal();
 
-		GUILayout.Space(10);
-		//		if (oldenableGoogleMobileAds != initscript.enableGoogleMobileAds) {//1.3
-		//
-		//			SetScriptingDefineSymbols ();
-		//			if (initscript.enableGoogleMobileAds) {
-		//				enableGoogleAdsProcessing = true;
-		//			}
-		//		}
-		//		if (initscript.enableGoogleMobileAds) {
+//		GUILayout.Space(10);
+//		//		if (oldenableGoogleMobileAds != initscript.enableGoogleMobileAds) {//1.3
+//		//
+//		//			SetScriptingDefineSymbols ();
+//		//			if (initscript.enableGoogleMobileAds) {
+//		//				enableGoogleAdsProcessing = true;
+//		//			}
+//		//		}
+//		//		if (initscript.enableGoogleMobileAds) {
 
-		GUILayout.BeginHorizontal();
-		GUILayout.Space(20);
-		initscript.admobUIDAndroid = EditorGUILayout.TextField("Admob Interstitial ID Android ", initscript.admobUIDAndroid, new GUILayoutOption[] {
-			GUILayout.Width (220),
-			GUILayout.MaxWidth (220)
-		});
-		GUILayout.EndHorizontal();
-		GUILayout.BeginHorizontal();
-		GUILayout.Space(20);
-		initscript.admobUIDIOS = EditorGUILayout.TextField("Admob Interstitial ID iOS", initscript.admobUIDIOS, new GUILayoutOption[] {
-			GUILayout.Width (220),
-			GUILayout.MaxWidth (220)
-		});
-		GUILayout.EndHorizontal();
-		GUILayout.Space(10);
-		GUILayout.BeginHorizontal();
-		GUILayout.Space(20);
-		initscript.admobRewardedUIDAndroid = EditorGUILayout.TextField("Admob Rewarded ID Android ", initscript.admobRewardedUIDAndroid, new GUILayoutOption[] {
-			GUILayout.Width (220),
-			GUILayout.MaxWidth (220)
-		});
-		GUILayout.EndHorizontal();
-		GUILayout.BeginHorizontal();
-		GUILayout.Space(20);
-		initscript.admobRewardedUIDIOS = EditorGUILayout.TextField("Admob Rewarded ID iOS", initscript.admobRewardedUIDIOS, new GUILayoutOption[] {
-			GUILayout.Width (220),
-			GUILayout.MaxWidth (220)
-		});
-		GUILayout.EndHorizontal();
-		//		}
+//		GUILayout.BeginHorizontal();
+//		GUILayout.Space(20);
+//		initscript.admobUIDAndroid = EditorGUILayout.TextField("Admob Interstitial ID Android ", initscript.admobUIDAndroid, new GUILayoutOption[] {
+//			GUILayout.Width (220),
+//			GUILayout.MaxWidth (220)
+//		});
+//		GUILayout.EndHorizontal();
+//		GUILayout.BeginHorizontal();
+//		GUILayout.Space(20);
+//		initscript.admobUIDIOS = EditorGUILayout.TextField("Admob Interstitial ID iOS", initscript.admobUIDIOS, new GUILayoutOption[] {
+//			GUILayout.Width (220),
+//			GUILayout.MaxWidth (220)
+//		});
+//		GUILayout.EndHorizontal();
+//		GUILayout.Space(10);
+//		GUILayout.BeginHorizontal();
+//		GUILayout.Space(20);
+//		initscript.admobRewardedUIDAndroid = EditorGUILayout.TextField("Admob Rewarded ID Android ", initscript.admobRewardedUIDAndroid, new GUILayoutOption[] {
+//			GUILayout.Width (220),
+//			GUILayout.MaxWidth (220)
+//		});
+//		GUILayout.EndHorizontal();
+//		GUILayout.BeginHorizontal();
+//		GUILayout.Space(20);
+//		initscript.admobRewardedUIDIOS = EditorGUILayout.TextField("Admob Rewarded ID iOS", initscript.admobRewardedUIDIOS, new GUILayoutOption[] {
+//			GUILayout.Width (220),
+//			GUILayout.MaxWidth (220)
+//		});
+//		GUILayout.EndHorizontal();
+//		//		}
 
-		//CHARTBOOST ADS
+//		//CHARTBOOST ADS
 
-		GUILayout.BeginHorizontal();
-		bool oldenableChartboostAds = initscript.enableChartboostAds;
-		//		initscript.enableChartboostAds = EditorGUILayout.Toggle ("Enable Chartboost Ads", initscript.enableChartboostAds, new GUILayoutOption[] {
-		//			GUILayout.Width (50),
-		//			GUILayout.MaxWidth (200)
-		//		});
-		GUILayout.Label("Chartboost ads", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });//1.3
-		if (GUILayout.Button("Install", new GUILayoutOption[] { GUILayout.Width(100) }))
-		{
-			Application.OpenURL("http://www.chartboo.st/sdk/unity");//1.3
-		}
-		if (GUILayout.Button("Help", new GUILayoutOption[] { GUILayout.Width(80) }))
-		{
-			Application.OpenURL("https://docs.google.com/document/d/1ibnQbuxFgI4izzyUtT45WH5m1ab3R5d1E3ke3Wrb10Y");
-		}
+//		GUILayout.BeginHorizontal();
+//		bool oldenableChartboostAds = initscript.enableChartboostAds;
+//		//		initscript.enableChartboostAds = EditorGUILayout.Toggle ("Enable Chartboost Ads", initscript.enableChartboostAds, new GUILayoutOption[] {
+//		//			GUILayout.Width (50),
+//		//			GUILayout.MaxWidth (200)
+//		//		});
+//		GUILayout.Label("Chartboost ads", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });//1.3
+//		if (GUILayout.Button("Install", new GUILayoutOption[] { GUILayout.Width(100) }))
+//		{
+//			Application.OpenURL("http://www.chartboo.st/sdk/unity");//1.3
+//		}
+//		if (GUILayout.Button("Help", new GUILayoutOption[] { GUILayout.Width(80) }))
+//		{
+//			Application.OpenURL("https://docs.google.com/document/d/1ibnQbuxFgI4izzyUtT45WH5m1ab3R5d1E3ke3Wrb10Y");
+//		}
 
-		GUILayout.EndHorizontal();
+//		GUILayout.EndHorizontal();
 
-		GUILayout.Space(10);
-		//		if (oldenableChartboostAds != initscript.enableChartboostAds) {//1.3
-		//			SetScriptingDefineSymbols ();
-		//			if (initscript.enableChartboostAds) {
-		//				//enableChartboostAdsProcessing = true;
-		//			}
-		//
-		//		}
-		//		if (initscript.enableChartboostAds) {
-		GUILayout.BeginHorizontal();
-		GUILayout.Space(20);
-		EditorGUILayout.LabelField("menu Chartboost->Edit settings", new GUILayoutOption[] {
-			GUILayout.Width (50),
-			GUILayout.MaxWidth (200)
-		});
-		GUILayout.EndHorizontal();
-		GUILayout.BeginHorizontal();
-		GUILayout.Space(20);
-		EditorGUILayout.LabelField("Put ad ID to appropriate platform to prevent crashing!", EditorStyles.boldLabel, new GUILayoutOption[] {
-			GUILayout.Width (100),
-			GUILayout.MaxWidth (400)
-		});
-		GUILayout.EndHorizontal();
+//		GUILayout.Space(10);
+//		//		if (oldenableChartboostAds != initscript.enableChartboostAds) {//1.3
+//		//			SetScriptingDefineSymbols ();
+//		//			if (initscript.enableChartboostAds) {
+//		//				//enableChartboostAdsProcessing = true;
+//		//			}
+//		//
+//		//		}
+//		//		if (initscript.enableChartboostAds) {
+//		GUILayout.BeginHorizontal();
+//		GUILayout.Space(20);
+//		EditorGUILayout.LabelField("menu Chartboost->Edit settings", new GUILayoutOption[] {
+//			GUILayout.Width (50),
+//			GUILayout.MaxWidth (200)
+//		});
+//		GUILayout.EndHorizontal();
+//		GUILayout.BeginHorizontal();
+//		GUILayout.Space(20);
+//		EditorGUILayout.LabelField("Put ad ID to appropriate platform to prevent crashing!", EditorStyles.boldLabel, new GUILayoutOption[] {
+//			GUILayout.Width (100),
+//			GUILayout.MaxWidth (400)
+//		});
+//		GUILayout.EndHorizontal();
 
-		GUILayout.Space(10);
-		//		}
-
-
-		GUILayout.Space(10);
-
-		GUILayout.Label("Ads controller:", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });
-
-		EditorGUILayout.Space();
-
-		GUILayout.Label("Event:               Status:                            Show after n call:", new GUILayoutOption[] { GUILayout.Width(350) });
+//		GUILayout.Space(10);
+//		//		}
 
 
+//		GUILayout.Space(10);
 
-		foreach (AdEvents item in initscript.adsEvents)
-		{
-			EditorGUILayout.BeginHorizontal();
-			item.gameEvent = (GameState)EditorGUILayout.EnumPopup(item.gameEvent, new GUILayoutOption[] { GUILayout.Width(100) });
-			item.adType = (AdType)EditorGUILayout.EnumPopup(item.adType, new GUILayoutOption[] { GUILayout.Width(150) });
-			item.everyLevel = EditorGUILayout.IntPopup(item.everyLevel, new string[] {
-				"1",
-				"2",
-				"3",
-				"4",
-				"5",
-				"6",
-				"7",
-				"8",
-				"9",
-				"10"
-			}, new int[] {
-				1,
-				2,
-				3,
-				4,
-				5,
-				6,
-				7,
-				8,
-				9,
-				10
-			}, new GUILayoutOption[] { GUILayout.Width(100) });
+//		GUILayout.Label("Ads controller:", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });
 
-			EditorGUILayout.EndHorizontal();
+//		EditorGUILayout.Space();
 
-		}
-		EditorGUILayout.Space();
-
-		EditorGUILayout.BeginHorizontal();
-		if (GUILayout.Button("Add"))
-		{
-			AdEvents adevent = new AdEvents();
-			adevent.everyLevel = 1;
-			initscript.adsEvents.Add(adevent);
-
-		}
-		if (GUILayout.Button("Delete"))
-		{
-			if (initscript.adsEvents.Count > 0)
-				initscript.adsEvents.Remove(initscript.adsEvents[initscript.adsEvents.Count - 1]);
-
-		}
-
-
-		GUILayout.Space(10);
+//		GUILayout.Label("Event:               Status:                            Show after n call:", new GUILayoutOption[] { GUILayout.Width(350) });
 
 
 
-	}
+//		foreach (AdEvents item in initscript.adsEvents)
+//		{
+//			EditorGUILayout.BeginHorizontal();
+//			item.gameEvent = (GameState)EditorGUILayout.EnumPopup(item.gameEvent, new GUILayoutOption[] { GUILayout.Width(100) });
+//			item.adType = (AdType)EditorGUILayout.EnumPopup(item.adType, new GUILayoutOption[] { GUILayout.Width(150) });
+//			item.everyLevel = EditorGUILayout.IntPopup(item.everyLevel, new string[] {
+//				"1",
+//				"2",
+//				"3",
+//				"4",
+//				"5",
+//				"6",
+//				"7",
+//				"8",
+//				"9",
+//				"10"
+//			}, new int[] {
+//				1,
+//				2,
+//				3,
+//				4,
+//				5,
+//				6,
+//				7,
+//				8,
+//				9,
+//				10
+//			}, new GUILayoutOption[] { GUILayout.Width(100) });
+
+//			EditorGUILayout.EndHorizontal();
+
+//		}
+//		EditorGUILayout.Space();
+
+//		EditorGUILayout.BeginHorizontal();
+//		if (GUILayout.Button("Add"))
+//		{
+//			AdEvents adevent = new AdEvents();
+//			adevent.everyLevel = 1;
+//			initscript.adsEvents.Add(adevent);
+
+//		}
+//		if (GUILayout.Button("Delete"))
+//		{
+//			if (initscript.adsEvents.Count > 0)
+//				initscript.adsEvents.Remove(initscript.adsEvents[initscript.adsEvents.Count - 1]);
+
+//		}
+
+
+//		GUILayout.Space(10);
+
+
+
+//	}
 
 	#endregion
 
 	#region inapps_settings
 
-	void GUIInappSettings()
-	{
+	//void GUIInappSettings()
+	//{
 
-		GUILayout.Label("In-apps settings:", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });
+	//	GUILayout.Label("In-apps settings:", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });
 
-		if (GUILayout.Button("Reset to default", new GUILayoutOption[] { GUILayout.Width(150) }))
-		{
-			ResetInAppsSettings();
-		}
+	//	if (GUILayout.Button("Reset to default", new GUILayoutOption[] { GUILayout.Width(150) }))
+	//	{
+	//		ResetInAppsSettings();
+	//	}
 
-		GUILayout.Space(10);
+	//	GUILayout.Space(10);
 
-		bool oldenableInApps = lm.enableInApps;
+	//	bool oldenableInApps = lm.enableInApps;
 
-		GUILayout.BeginHorizontal();
-		//		lm.enableInApps = EditorGUILayout.Toggle ("Enable In-apps", lm.enableInApps, new GUILayoutOption[] {//1.3
-		//			GUILayout.Width (180)
-		//		});
-		if (GUILayout.Button("Help", new GUILayoutOption[] { GUILayout.Width(80) }))
-		{
-			Application.OpenURL("https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0#bookmark=id.b1efplsspes5");
-		}
-		GUILayout.EndHorizontal();
-
-
-		GUILayout.BeginHorizontal();
-		GUILayout.Space(20);
-		GUILayout.Label("Install: Windows->Services->\n In-app Purchasing - ON->Import", new GUILayoutOption[] { GUILayout.Width(400) });
-		GUILayout.EndHorizontal();
-
-		GUILayout.Space(10);
-
-		GUILayout.Space(10);
-
-		//		if (oldenableInApps != lm.enableInApps) {//1.3
-		//			SetScriptingDefineSymbols ();
-		//		}
+	//	GUILayout.BeginHorizontal();
+	//	//		lm.enableInApps = EditorGUILayout.Toggle ("Enable In-apps", lm.enableInApps, new GUILayoutOption[] {//1.3
+	//	//			GUILayout.Width (180)
+	//	//		});
+	//	//if (GUILayout.Button("Help", new GUILayoutOption[] { GUILayout.Width(80) }))
+	//	//{
+	//	//	Application.OpenURL("https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0#bookmark=id.b1efplsspes5");
+	//	//}
+	//	GUILayout.EndHorizontal();
 
 
-		GUILayout.BeginHorizontal();
-		GUILayout.Space(30);
-		GUILayout.BeginVertical();
-		for (int i = 0; i < lm.InAppIDs.Length; i++)
-		{
-			lm.InAppIDs[i] = EditorGUILayout.TextField("Product id " + (i + 1), lm.InAppIDs[i], new GUILayoutOption[] {
-				GUILayout.Width (300),
-				GUILayout.MaxWidth (300)
-			});
+	//	GUILayout.BeginHorizontal();
+	//	GUILayout.Space(20);
+	//	GUILayout.Label("Install: Windows->Services->\n In-app Purchasing - ON->Import", new GUILayoutOption[] { GUILayout.Width(400) });
+	//	GUILayout.EndHorizontal();
 
-		}
-		GUILayout.Space(10);
+	//	GUILayout.Space(10);
 
-		GUILayout.Label("Android:", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });
+	//	GUILayout.Space(10);
 
-		GUILayout.BeginHorizontal();
-		GUILayout.Space(30);
+	//	//		if (oldenableInApps != lm.enableInApps) {//1.3
+	//	//			SetScriptingDefineSymbols ();
+	//	//		}
 
-		GUILayout.BeginVertical();
-		GUILayout.Space(10);
-		// GUILayout.Label(" Put Google license key into the field \n from the google play account ", EditorStyles.label, new GUILayoutOption[] { GUILayout.Width(300) });
-		// GUILayout.Space(10);
 
-		// lm.GoogleLicenseKey = EditorGUILayout.TextField("Google license key", lm.GoogleLicenseKey, new GUILayoutOption[] {
-		//     GUILayout.Width (300),
-		//     GUILayout.MaxWidth (300)
-		// });
+	//	GUILayout.BeginHorizontal();
+	//	GUILayout.Space(30);
+	//	GUILayout.BeginVertical();
+	//	for (int i = 0; i < lm.InAppIDs.Length; i++)
+	//	{
+	//		lm.InAppIDs[i] = EditorGUILayout.TextField("Product id " + (i + 1), lm.InAppIDs[i], new GUILayoutOption[] {
+	//			GUILayout.Width (300),
+	//			GUILayout.MaxWidth (300)
+	//		});
 
-		GUILayout.Space(10);
-		if (GUILayout.Button("Android account help", new GUILayoutOption[] { GUILayout.Width(400) }))
-		{
-			Application.OpenURL("http://developer.android.com/google/play/billing/billing_admin.html");
-		}
-		GUILayout.EndVertical();
-		GUILayout.EndHorizontal();
-		GUILayout.EndVertical();
-		GUILayout.EndHorizontal();
+	//	}
+	//	GUILayout.Space(10);
 
-		GUILayout.BeginHorizontal();
-		GUILayout.Space(30);
-		GUILayout.BeginVertical();
+	//	GUILayout.Label("Android:", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });
 
-		GUILayout.Space(10);
-		GUILayout.Label("iOS:", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });
-		GUILayout.BeginHorizontal();
-		GUILayout.Space(30);
+	//	GUILayout.BeginHorizontal();
+	//	GUILayout.Space(30);
 
-		GUILayout.BeginVertical();
+	//	GUILayout.BeginVertical();
+	//	GUILayout.Space(10);
+	//	// GUILayout.Label(" Put Google license key into the field \n from the google play account ", EditorStyles.label, new GUILayoutOption[] { GUILayout.Width(300) });
+	//	// GUILayout.Space(10);
 
-		// GUILayout.Label(" StoreKit library must be added \n to the XCode project, generated by Unity ", EditorStyles.label, new GUILayoutOption[] { GUILayout.Width(300) });
-		GUILayout.Space(10);
-		if (GUILayout.Button("iOS account help", new GUILayoutOption[] { GUILayout.Width(400) }))
-		{
-			Application.OpenURL("https://developer.apple.com/library/ios/qa/qa1329/_index.html");
-		}
-		GUILayout.EndVertical();
+	//	// lm.GoogleLicenseKey = EditorGUILayout.TextField("Google license key", lm.GoogleLicenseKey, new GUILayoutOption[] {
+	//	//     GUILayout.Width (300),
+	//	//     GUILayout.MaxWidth (300)
+	//	// });
 
-		GUILayout.EndHorizontal();
-		GUILayout.EndVertical();
-		GUILayout.EndHorizontal();
+	//	GUILayout.Space(10);
+	//	if (GUILayout.Button("Android account help", new GUILayoutOption[] { GUILayout.Width(400) }))
+	//	{
+	//		Application.OpenURL("http://developer.android.com/google/play/billing/billing_admin.html");
+	//	}
+	//	GUILayout.EndVertical();
+	//	GUILayout.EndHorizontal();
+	//	GUILayout.EndVertical();
+	//	GUILayout.EndHorizontal();
 
-	}
+	//	GUILayout.BeginHorizontal();
+	//	GUILayout.Space(30);
+	//	GUILayout.BeginVertical();
+
+	//	GUILayout.Space(10);
+	//	GUILayout.Label("iOS:", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });
+	//	GUILayout.BeginHorizontal();
+	//	GUILayout.Space(30);
+
+	//	GUILayout.BeginVertical();
+
+	//	// GUILayout.Label(" StoreKit library must be added \n to the XCode project, generated by Unity ", EditorStyles.label, new GUILayoutOption[] { GUILayout.Width(300) });
+	//	GUILayout.Space(10);
+	//	if (GUILayout.Button("iOS account help", new GUILayoutOption[] { GUILayout.Width(400) }))
+	//	{
+	//		Application.OpenURL("https://developer.apple.com/library/ios/qa/qa1329/_index.html");
+	//	}
+	//	GUILayout.EndVertical();
+
+	//	GUILayout.EndHorizontal();
+	//	GUILayout.EndVertical();
+	//	GUILayout.EndHorizontal();
+
+	//}
 
 	void ResetInAppsSettings()
 	{
@@ -785,28 +785,28 @@ public class LevelMakerEditor : EditorWindow
 
 	#endregion
 
-	void GUIHelp()
-	{
-		GUILayout.Label("Juice Fresh game template - v 1.5.", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(350) });
-		GUILayout.Space(10);
+	//void GUIHelp()
+	//{
+	//	GUILayout.Label("Juice Fresh game template - v 1.5.", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(350) });
+	//	GUILayout.Space(10);
 
-		GUILayout.Label("Please read our documentation:", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(200) });
-		if (GUILayout.Button("DOCUMENTATION", new GUILayoutOption[] { GUILayout.Width(150) }))
-		{
-			Application.OpenURL("https://docs.google.com/document/d/1ex3rvCDWAc3geATi66s3lpBzwzhJbjd4A2Fo19HgdcQ/edit");
-		}
-		GUILayout.Space(10);
-		GUILayout.Label("To start work with project - \n go to Editor Section of this menu", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(350) });
-		GUILayout.Space(10);
-		GUILayout.Label("To get support you should provide \n ORDER NUMBER (asset store) \n or NICKNAME and DATE of purchase (other stores):", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(350) });
-		GUILayout.Space(10);
-		GUILayout.TextArea("info@candy-smith.com", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(350) });
+	//	GUILayout.Label("Please read our documentation:", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(200) });
+	//	if (GUILayout.Button("DOCUMENTATION", new GUILayoutOption[] { GUILayout.Width(150) }))
+	//	{
+	//		Application.OpenURL("https://docs.google.com/document/d/1ex3rvCDWAc3geATi66s3lpBzwzhJbjd4A2Fo19HgdcQ/edit");
+	//	}
+	//	GUILayout.Space(10);
+	//	GUILayout.Label("To start work with project - \n go to Editor Section of this menu", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(350) });
+	//	GUILayout.Space(10);
+	//	GUILayout.Label("To get support you should provide \n ORDER NUMBER (asset store) \n or NICKNAME and DATE of purchase (other stores):", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(350) });
+	//	GUILayout.Space(10);
+	//	GUILayout.TextArea("info@candy-smith.com", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(350) });
 
-	}
+	//}
 
 	#region settings
 	private bool share_settings;
-	private UnityAdsID unityAdsSettings;
+	//private UnityAdsID unityAdsSettings;
 
 	void GUISettings()
 	{
@@ -827,81 +827,81 @@ public class LevelMakerEditor : EditorWindow
 
 		GUILayout.Space(10);
 
-		bool oldFacebookEnable = lm.FacebookEnable;
+		//bool oldFacebookEnable = lm.FacebookEnable;
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("Facebook", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });//1.6.1
-		if (GUILayout.Button("Install", new GUILayoutOption[] { GUILayout.Width(70) }))
-		{
-			Application.OpenURL("https://developers.facebook.com/docs/unity/downloads");
-		}
-		if (GUILayout.Button("Account", new GUILayoutOption[] { GUILayout.Width(70) }))
-		{
-			Application.OpenURL("https://developers.facebook.com");
-		}
-		if (GUILayout.Button("Help", new GUILayoutOption[] { GUILayout.Width(60) }))
-		{
-			Application.OpenURL("https://docs.google.com/document/d/1bTNdM3VSg8qu9nWwO7o7WeywMPhVLVl8E_O0gMIVIw0/edit?usp=sharing");
-		}
+		//GUILayout.Label("Facebook", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });//1.6.1
+		//if (GUILayout.Button("Install", new GUILayoutOption[] { GUILayout.Width(70) }))
+		//{
+		//	Application.OpenURL("https://developers.facebook.com/docs/unity/downloads");
+		//}
+		//if (GUILayout.Button("Account", new GUILayoutOption[] { GUILayout.Width(70) }))
+		//{
+		//	Application.OpenURL("https://developers.facebook.com");
+		//}
+		//if (GUILayout.Button("Help", new GUILayoutOption[] { GUILayout.Width(60) }))
+		//{
+		//	Application.OpenURL("https://docs.google.com/document/d/1bTNdM3VSg8qu9nWwO7o7WeywMPhVLVl8E_O0gMIVIw0/edit?usp=sharing");
+		//}
 		GUILayout.EndHorizontal();
 
-#if FACEBOOK
-		// share_settings = EditorGUILayout.Foldout(share_settings, "Share settings:");
-		// if (share_settings)
-		// {
-		// 	GUILayout.BeginHorizontal();
-		// 	GUILayout.Space(30);
-		// 	GUILayout.BeginVertical();
-		// 	{
-		// 		lm.androidSharingPath = EditorGUILayout.TextField("Android path", lm.androidSharingPath, new GUILayoutOption[] { GUILayout.MaxWidth(500) });
-		// 		lm.iosSharingPath = EditorGUILayout.TextField("iOS path", lm.iosSharingPath, new GUILayoutOption[] { GUILayout.MaxWidth(500) });
-		// 	}
-		// 	GUILayout.EndVertical();
-		// 	GUILayout.EndHorizontal();
+//#if FACEBOOK
+//		// share_settings = EditorGUILayout.Foldout(share_settings, "Share settings:");
+//		// if (share_settings)
+//		// {
+//		// 	GUILayout.BeginHorizontal();
+//		// 	GUILayout.Space(30);
+//		// 	GUILayout.BeginVertical();
+//		// 	{
+//		// 		lm.androidSharingPath = EditorGUILayout.TextField("Android path", lm.androidSharingPath, new GUILayoutOption[] { GUILayout.MaxWidth(500) });
+//		// 		lm.iosSharingPath = EditorGUILayout.TextField("iOS path", lm.iosSharingPath, new GUILayoutOption[] { GUILayout.MaxWidth(500) });
+//		// 	}
+//		// 	GUILayout.EndVertical();
+//		// 	GUILayout.EndHorizontal();
 
-		// 	GUILayout.Space(10);
-		// }
-#endif
+//		// 	GUILayout.Space(10);
+//		// }
+//#endif
 
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("Leadboard Gamesparks", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });//1.6.1
-		if (GUILayout.Button("Install", new GUILayoutOption[] { GUILayout.Width(70) }))
-		{
-			Application.OpenURL("https://docs.gamesparks.com/sdk-center/unity.html");
-		}
-		if (GUILayout.Button("Account", new GUILayoutOption[] { GUILayout.Width(70) }))
-		{
-			Application.OpenURL("https://portal.gamesparks.net");
-		}
-		if (GUILayout.Button("Help", new GUILayoutOption[] { GUILayout.Width(60) }))
-		{
-			Application.OpenURL("https://docs.google.com/document/d/1JcQfiiD2ALz6v_i9UIcG93INWZKC7z6FHXH_u6w9A8E");
-		}
+		//GUILayout.Label("Leadboard Gamesparks", EditorStyles.boldLabel, new GUILayoutOption[] { GUILayout.Width(150) });//1.6.1
+		//if (GUILayout.Button("Install", new GUILayoutOption[] { GUILayout.Width(70) }))
+		//{
+		//	Application.OpenURL("https://docs.gamesparks.com/sdk-center/unity.html");
+		//}
+		//if (GUILayout.Button("Account", new GUILayoutOption[] { GUILayout.Width(70) }))
+		//{
+		//	Application.OpenURL("https://portal.gamesparks.net");
+		//}
+		//if (GUILayout.Button("Help", new GUILayoutOption[] { GUILayout.Width(60) }))
+		//{
+		//	Application.OpenURL("https://docs.google.com/document/d/1JcQfiiD2ALz6v_i9UIcG93INWZKC7z6FHXH_u6w9A8E");
+		//}
 		GUILayout.EndHorizontal();
-#if GAMESPARKS
-		GUILayout.BeginHorizontal();
-		{
-            GUILayout.Space(150);
-			if(GUILayout.Button("Create game", GUILayout.Width(100)))//1.4.9
-			{
-				GamesparksConfiguration window = ScriptableObject.CreateInstance<GamesparksConfiguration>();
-				window.position = new Rect(Screen.width / 2, Screen.height / 2, 250, 200);
-				window.ShowPopup();
-			}
+//#if GAMESPARKS
+//		GUILayout.BeginHorizontal();
+//		{
+//            GUILayout.Space(150);
+//			if(GUILayout.Button("Create game", GUILayout.Width(100)))//1.4.9
+//			{
+//				GamesparksConfiguration window = ScriptableObject.CreateInstance<GamesparksConfiguration>();
+//				window.position = new Rect(Screen.width / 2, Screen.height / 2, 250, 200);
+//				window.ShowPopup();
+//			}
 		
-		}
-		GUILayout.EndHorizontal();
-#endif
+//		}
+//		GUILayout.EndHorizontal();
+//#endif
 
 		//		if (oldFacebookEnable != lm.FacebookEnable) {//1.3
 		//			SetScriptingDefineSymbols ();
 		//		}
-		if (lm.FacebookEnable)
-		{
-			GUILayout.BeginHorizontal();
-			GUILayout.Space(20);
-			GUILayout.Label("menu Facebook-> Edit settings", new GUILayoutOption[] { GUILayout.Width(300) });
-			GUILayout.EndHorizontal();
-		}
+		//if (lm.FacebookEnable)
+		//{
+		//	GUILayout.BeginHorizontal();
+		//	GUILayout.Space(20);
+		//	GUILayout.Label("menu Facebook-> Edit settings", new GUILayoutOption[] { GUILayout.Width(300) });
+		//	GUILayout.EndHorizontal();
+		//}
 
 		GUILayout.Space(10);
 

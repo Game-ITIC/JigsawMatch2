@@ -1,4 +1,4 @@
-﻿public interface IAvatarLoader
-{
-    void ShowPicture();
-}
+﻿//public interface IAvatarLoader
+//{
+//    void ShowPicture();
+//}
