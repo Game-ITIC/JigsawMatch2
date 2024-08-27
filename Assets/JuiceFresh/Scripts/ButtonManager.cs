@@ -22,6 +22,8 @@ public class ButtonManager : MonoBehaviour
         [HideInInspector]
         public string unlockID; // Уникальный ID для сохранения состояния разблокировки
         public GameObject[] objectsToUnlock; // Массив объектов для случайного разблокирования
+        [HideInInspector]
+        public string objectsStateID; // ID для сохранения состояния объектов
     }
 
     public StarAction[] starActions;
@@ -34,6 +36,15 @@ public class ButtonManager : MonoBehaviour
     {
         totalSpentStars = PlayerPrefs.GetInt("TotalSpentStars", 0); // Загружаем количество потраченных звезд
 
+        // Инициализация состояния основных кнопок и апгрейдов
+        InitializeStarActions();
+        InitializeUpgradeActions();
+
+        UpdateStarsDisplay(); // Обновляем UI при старте
+    }
+
+    private void InitializeStarActions()
+    {
         foreach (var action in starActions)
         {
             // Автозаполнение unlockID на основе имени кнопки или объекта
@@ -49,7 +60,7 @@ public class ButtonManager : MonoBehaviour
                 action.objectToUnlock.SetActive(true);
                 DisableButton(action.targetButton); // Полностью отключаем кнопку
 
-                // Включаем кнопку апгрейда, если есть
+                // Включаем кнопку апгрейда, если она есть
                 if (action.upgradeButton != null)
                 {
                     action.upgradeButton.gameObject.SetActive(true);
@@ -61,7 +72,10 @@ public class ButtonManager : MonoBehaviour
                 action.targetButton.onClick.AddListener(() => HandleButtonClick(action));
             }
         }
+    }
 
+    private void InitializeUpgradeActions()
+    {
         foreach (var action in upgradeActions)
         {
             // Автозаполнение unlockID на основе имени кнопки или объекта
@@ -70,11 +84,23 @@ public class ButtonManager : MonoBehaviour
                 action.unlockID = action.upgradeButton.name + "_upgrade_unlocked";
             }
 
-            // Проверяем, было ли уже разблокировано
-            bool isUnlocked = PlayerPrefs.GetInt(action.unlockID, 0) == 1;
-            if (isUnlocked)
+            // Генерация уникального ID для хранения состояния объектов апгрейда
+            if (string.IsNullOrEmpty(action.objectsStateID))
             {
+                action.objectsStateID = action.upgradeButton.name + "_objects_state";
+            }
+
+            // Проверяем, было ли уже разблокировано
+            bool isUpgradeUnlocked = PlayerPrefs.GetInt(action.unlockID, 0) == 1;
+
+            if (isUpgradeUnlocked)
+            {
+                EnableAllObjects(action);
                 DisableButton(action.upgradeButton); // Полностью отключаем кнопку
+            }
+            else
+            {
+                LoadObjectsState(action);
             }
 
             if (action.upgradeButton != null)
@@ -82,8 +108,6 @@ public class ButtonManager : MonoBehaviour
                 action.upgradeButton.onClick.AddListener(() => HandleUpgradeButtonClick(action));
             }
         }
-
-        UpdateStarsDisplay(); // Обновляем UI при старте
     }
 
     private void HandleButtonClick(StarAction action)
@@ -148,7 +172,9 @@ public class ButtonManager : MonoBehaviour
                 GameObject objectToUnlock = inactiveObjects[Random.Range(0, inactiveObjects.Length)];
                 objectToUnlock.SetActive(true);
 
-                // Если все объекты активированы, отключаем кнопку
+                SaveObjectsState(action);
+
+                // Если все объекты активированы, сохраняем состояние и отключаем кнопку
                 if (System.Array.FindAll(action.objectsToUnlock, obj => !obj.activeSelf).Length == 0)
                 {
                     PlayerPrefs.SetInt(action.unlockID, 1);
@@ -165,6 +191,33 @@ public class ButtonManager : MonoBehaviour
         else
         {
             Debug.Log("Not enough stars to unlock an upgrade.");
+        }
+    }
+
+    private void SaveObjectsState(UpgradeAction action)
+    {
+        string state = "";
+        foreach (var obj in action.objectsToUnlock)
+        {
+            state += obj.activeSelf ? "1" : "0";
+        }
+        PlayerPrefs.SetString(action.objectsStateID, state);
+    }
+
+    private void LoadObjectsState(UpgradeAction action)
+    {
+        string state = PlayerPrefs.GetString(action.objectsStateID, new string('0', action.objectsToUnlock.Length));
+        for (int i = 0; i < action.objectsToUnlock.Length; i++)
+        {
+            action.objectsToUnlock[i].SetActive(state[i] == '1');
+        }
+    }
+
+    private void EnableAllObjects(UpgradeAction action)
+    {
+        foreach (var obj in action.objectsToUnlock)
+        {
+            obj.SetActive(true);
         }
     }
 
