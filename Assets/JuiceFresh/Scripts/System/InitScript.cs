@@ -3,18 +3,18 @@ using System.Collections;
 using System;
 
 using System.Collections.Generic;
-using JuiceFresh.Scripts.System;
-#if UNITY_ADS
-using JuiceFresh.Scripts.Integrations;
-using UnityEngine.Advertisements;
-#endif
+//using JuiceFresh.Scripts.System;
+//#if UNITY_ADS
+//using JuiceFresh.Scripts.Integrations;
+//using UnityEngine.Advertisements;
+//#endif
 
-#if CHARTBOOST_ADS
-using ChartboostSDK;
-#endif
-#if  GOOGLE_MOBILE_ADS
-using GoogleMobileAds.Api;
-#endif
+//#if CHARTBOOST_ADS
+//using ChartboostSDK;
+//#endif
+//#if  GOOGLE_MOBILE_ADS
+//using GoogleMobileAds.Api;
+//#endif
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -115,37 +115,37 @@ public class InitScript : MonoBehaviour
     private int BoostColorful_bomb;
     private int BoostHand;
     private int BoostRandom_color;
-    public List<AdEvents> adsEvents = new List<AdEvents>();
+    //public List<AdEvents> adsEvents = new List<AdEvents>();
 
     public static bool sound = false;
     public static bool music = false;
-    private bool adsReady;
-    public bool enableUnityAds;
-    public bool enableGoogleMobileAds;
-    public bool enableChartboostAds;
-    public string rewardedVideoZone;
-    public string nonRewardedVideoZone;
-    public int ShowChartboostAdsEveryLevel;
-    public int ShowAdmobAdsEveryLevel;
-    private bool leftControl;
-#if GOOGLE_MOBILE_ADS
-	private InterstitialAd interstitial;
-	private AdRequest requestAdmob;
-#endif
-    public string admobUIDAndroid;
-    public string admobUIDIOS;
+//    private bool adsReady;
+//    public bool enableUnityAds;
+//    public bool enableGoogleMobileAds;
+//    public bool enableChartboostAds;
+//    public string rewardedVideoZone;
+//    public string nonRewardedVideoZone;
+//    public int ShowChartboostAdsEveryLevel;
+//    public int ShowAdmobAdsEveryLevel;
+      private bool leftControl;
+//#if GOOGLE_MOBILE_ADS
+//	private InterstitialAd interstitial;
+//	private AdRequest requestAdmob;
+//#endif
+//    public string admobUIDAndroid;
+//    public string admobUIDIOS;
 
     public int ShowRateEvery;
-    public string RateURL;
-    public string RateURLIOS;
+    //public string RateURL;
+    //public string RateURLIOS;
     private GameObject rate;
     public int rewardedGems = 5;
     public bool losingLifeEveryGame;
     public static Sprite profilePic;
-    public GameObject facebookButton;
+    //public GameObject facebookButton;
     //1.3.3
-    public string admobRewardedUIDAndroid;
-    public string admobRewardedUIDIOS;
+    //public string admobRewardedUIDAndroid;
+    //public string admobRewardedUIDIOS;
 
     // Use this for initialization
     void Awake()
@@ -180,7 +180,7 @@ public class InitScript : MonoBehaviour
         //rate.transform.localPosition = Vector3.zero;
         //rate.GetComponent<RectTransform>().anchoredPosition = (Resources.Load("Prefabs/Rate") as GameObject).GetComponent<RectTransform>().anchoredPosition;
         //rate.transform.localScale = Vector3.one;
-        gameObject.AddComponent<InternetChecker>();
+        //gameObject.AddComponent<InternetChecker>();
         GameObject.Find("Music").GetComponent<AudioSource>().volume = PlayerPrefs.GetInt("Music");
         SoundBase.Instance.GetComponent<AudioSource>().volume = PlayerPrefs.GetInt("Sound");
 //#if UNITY_ADS//1.3
@@ -462,9 +462,9 @@ public class InitScript : MonoBehaviour
         Stars += count;
         PlayerPrefs.SetInt("Stars", Stars);
         PlayerPrefs.Save();
-#if PLAYFAB || GAMESPARKS
-		NetworkManager.currencyManager.IncBalance (count);
-#endif
+//#if PLAYFAB || GAMESPARKS
+//		NetworkManager.currencyManager.IncBalance (count);
+//#endif
     }
 
     public void SpendGems(int count)
@@ -473,9 +473,9 @@ public class InitScript : MonoBehaviour
         Gems -= count;
         PlayerPrefs.SetInt("Gems", Gems);
         PlayerPrefs.Save();
-#if PLAYFAB || GAMESPARKS
-		NetworkManager.currencyManager.DecBalance (count);
-#endif
+//#if PLAYFAB || GAMESPARKS
+//		NetworkManager.currencyManager.DecBalance (count);
+//#endif
     }
 
 
@@ -530,9 +530,9 @@ public class InitScript : MonoBehaviour
     {
         PlayerPrefs.SetInt("" + boostType, count);
         PlayerPrefs.Save();
-#if PLAYFAB || GAMESPARKS
-		NetworkManager.dataManager.SetBoosterData ();
-#endif
+//#if PLAYFAB || GAMESPARKS
+//		NetworkManager.dataManager.SetBoosterData ();
+//#endif
 
         //   ReloadBoosts();
     }
@@ -541,9 +541,9 @@ public class InitScript : MonoBehaviour
     {
         PlayerPrefs.SetInt("" + boostType, PlayerPrefs.GetInt("" + boostType) - 1);
         PlayerPrefs.Save();
-#if PLAYFAB || GAMESPARKS
-		NetworkManager.dataManager.SetBoosterData ();
-#endif
+//#if PLAYFAB || GAMESPARKS
+//		NetworkManager.dataManager.SetBoosterData ();
+//#endif
 
     }
     //void ReloadBoosts()
@@ -638,10 +638,10 @@ public class InitScript : MonoBehaviour
         PlayerPrefs.SetInt("Lifes", lifes);
         PlayerPrefs.SetString("DateOfExit", DateTime.Now.ToString());
         PlayerPrefs.Save();
-#if GOOGLE_MOBILE_ADS
-		interstitial.OnAdLoaded -= HandleInterstitialLoaded;
-		interstitial.OnAdFailedToLoad -= HandleInterstitialFailedToLoad;
-#endif
+//#if GOOGLE_MOBILE_ADS
+//		interstitial.OnAdLoaded -= HandleInterstitialLoaded;
+//		interstitial.OnAdFailedToLoad -= HandleInterstitialFailedToLoad;
+//#endif
 
     }
 

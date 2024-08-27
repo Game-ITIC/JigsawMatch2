@@ -5,19 +5,19 @@ using UnityEngine.SceneManagement;
 public class GUIEvents : MonoBehaviour {
 
 	void Start () {
-		if (name == "FaceBook") {//1.3
-//            if (PlayerPrefs.GetInt("Facebook_Logged") == 1) {
-//                FaceBookLogin();
-//            }
-		}
+//		if (name == "FaceBook") {//1.3
+////            if (PlayerPrefs.GetInt("Facebook_Logged") == 1) {
+////                FaceBookLogin();
+////            }
+//		}
 
 	}
 
 	void Update () {
-		if (name == "FaceBook" || name == "Share" || name == "FaceBookLogout") {
-			if (!LevelManager.THIS.FacebookEnable)
-				gameObject.SetActive (false);
-		}
+		//if (name == "FaceBook" || name == "Share" || name == "FaceBookLogout") {
+		//	if (!LevelManager.THIS.FacebookEnable)
+		//		gameObject.SetActive (false);
+		//}
 	}
 
 	public void Settings (GameObject settings) {
@@ -55,49 +55,49 @@ public class GUIEvents : MonoBehaviour {
         SceneManager.LoadScene("game");
     }
 
-    public void FaceBookLogin () {
-#if FACEBOOK
-		FacebookManager.THIS.CallFBLogin ();
+//    public void FaceBookLogin () {
+//#if FACEBOOK
+//		FacebookManager.THIS.CallFBLogin ();
 
-		// GameSparksIntegration.THIS.CallFBLogin();
-#endif
-	}
+//		// GameSparksIntegration.THIS.CallFBLogin();
+//#endif
+//	}
 
-	public void FaceBookLogout () { //1.3.3
-		#if FACEBOOK
-		FacebookManager.THIS.CallFBLogout ();
+//	public void FaceBookLogout () { //1.3.3
+//		#if FACEBOOK
+//		FacebookManager.THIS.CallFBLogout ();
 
-		#endif
-	}
+//		#endif
+//	}
 
 
-	public void FaceBookLoginWithPublishPerm () {
-#if FACEBOOK
+//	public void FaceBookLoginWithPublishPerm () {
+//#if FACEBOOK
 
-		FacebookManager.THIS.CallFBLoginForPublish ();
-#endif
-	}
+//		FacebookManager.THIS.CallFBLoginForPublish ();
+//#endif
+//	}
 
-	public void Share () {
-#if FACEBOOK
+//	public void Share () {
+//#if FACEBOOK
 
-		FacebookManager.THIS.Share ();
-#endif
-	}
+//		FacebookManager.THIS.Share ();
+//#endif
+//	}
 
-	public void ApiRequest () {
-#if FACEBOOK
+//	public void ApiRequest () {
+//#if FACEBOOK
 
-		FacebookManager.THIS.ReadScores ();
-#endif
-	}
+//		FacebookManager.THIS.ReadScores ();
+//#endif
+//	}
 
-	public void ApiPost () {
-#if FACEBOOK
+//	public void ApiPost () {
+//#if FACEBOOK
 
-		FacebookManager.THIS.SaveScores ();
-#endif
-	}
+//		FacebookManager.THIS.SaveScores ();
+//#endif
+//	}
 
 
 }

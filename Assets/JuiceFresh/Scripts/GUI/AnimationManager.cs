@@ -3,11 +3,11 @@ using System.Collections;
 using System;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using JuiceFresh.Scripts.System;
+//using JuiceFresh.Scripts.System;
 
-#if UNITY_ADS
-using UnityEngine.Advertisements;
-#endif
+//#if UNITY_ADS
+//using UnityEngine.Advertisements;
+//#endif
 
 
 
@@ -17,10 +17,10 @@ public class AnimationManager : MonoBehaviour
     public static AnimationManager THIS; 
 
     public bool PlayOnEnable = true;
-    bool WaitForPickupFriends;
+    //bool WaitForPickupFriends;
     public GameObject fireworkPrefab;
 
-    bool WaitForAksFriends;
+    //bool WaitForAksFriends;
     System.Collections.Generic.Dictionary<string, string> parameters;
 
     private void Start()
@@ -73,7 +73,7 @@ public class AnimationManager : MonoBehaviour
         if (name == "PreFailed")
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.gameOver[0]);
-            transform.Find("Video").gameObject.SetActive(false);
+            //transform.Find("Video").gameObject.SetActive(false);
             transform.Find("Buy").GetComponent<Button>().interactable = true;
 
             GetComponent<Animation>().Play();
@@ -109,8 +109,8 @@ public class AnimationManager : MonoBehaviour
             }
 
         }
-        if (transform.Find("Image/Video") != null)
-        {
+        //if (transform.Find("Image/Video") != null)
+        //{
 
 //#if UNITY_ADS
 //            InitScript.Instance.rewardedVideoZone = "rewardedVideo";
@@ -132,7 +132,7 @@ public class AnimationManager : MonoBehaviour
 //#else
 //            transform.Find("Image/Video").gameObject.SetActive(false);
 //#endif
-        }
+        //}
     }
 
     void Update()
@@ -172,10 +172,10 @@ public class AnimationManager : MonoBehaviour
 
     void OnDisable()
     {
-        if (transform.Find("Image/Video") != null)
-        {
-            transform.Find("Image/Video").gameObject.SetActive(true);
-        }
+        //if (transform.Find("Image/Video") != null)
+        //{
+        //    transform.Find("Image/Video").gameObject.SetActive(true);
+        //}
 
         //if( PlayOnEnable )
         //{
@@ -198,8 +198,8 @@ public class AnimationManager : MonoBehaviour
         if (name == "MenuPlay")
         {
             //            InitScript.Instance.currentTarget = InitScript.Instance.targets[PlayerPrefs.GetInt( "OpenLevel" )];
-            transform.Find("Image/Boost1").GetComponent<BoostIcon>().InitBoost();
-            transform.Find("Image/Boost2").GetComponent<BoostIcon>().InitBoost();
+            //transform.Find("Image/Boost1").GetComponent<BoostIcon>().InitBoost();
+            //transform.Find("Image/Boost2").GetComponent<BoostIcon>().InitBoost();
             // transform.Find("Image/Boost3").GetComponent<BoostIcon>().InitBoost();
 
         }
@@ -296,26 +296,26 @@ public class AnimationManager : MonoBehaviour
         if (name == "MenuFailed")
         {
             GetComponent<Animation>()["bannerFailed"].speed = 0;
-#if UNITY_ADS
+//#if UNITY_ADS
 
-            if (InitScript.Instance.enableUnityAds)
-            {
+//            if (InitScript.Instance.enableUnityAds)
+//            {
 
-                if (InitScript.Instance.GetRewardedUnityAdsReady())
-                {
-                    transform.Find("Image/Video").gameObject.SetActive(true);
-                }
-            }
-#elif GOOGLE_MOBILE_ADS
-            if (InitScript.Instance.enableGoogleMobileAds)
-            {
-                if (RewAdmobManager.THIS.IsRewardedAdIsLoaded())
-                {
-                    transform.Find("Video").gameObject.SetActive(true);
-                }
-            }
+//                if (InitScript.Instance.GetRewardedUnityAdsReady())
+//                {
+//                    transform.Find("Image/Video").gameObject.SetActive(true);
+//                }
+//            }
+//#elif GOOGLE_MOBILE_ADS
+//            if (InitScript.Instance.enableGoogleMobileAds)
+//            {
+//                if (RewAdmobManager.THIS.IsRewardedAdIsLoaded())
+//                {
+//                    transform.Find("Video").gameObject.SetActive(true);
+//                }
+//            }
 
-#endif
+//#endif
         }
     }
 
@@ -364,11 +364,11 @@ public class AnimationManager : MonoBehaviour
         scores.text = "" + LevelManager.Score;
     }
 
-    public void Info()
-    {
-        GameObject.Find("CanvasGlobal").transform.Find("Tutorial").gameObject.SetActive(true);
-        CloseMenu();
-    }
+    //public void Info()
+    //{
+    //    GameObject.Find("CanvasGlobal").transform.Find("Tutorial").gameObject.SetActive(true);
+    //    CloseMenu();
+    //}
 
 
 
@@ -415,10 +415,10 @@ public class AnimationManager : MonoBehaviour
                 LevelManager.THIS.gameStatus = GameState.Map;
             keepGaming = false;
         }
-        if (gameObject.name == "Tutorial")
-        {
-            //LevelManager.Instance.gameStatus = GameState.WaitForPopup;
-        }
+        //if (gameObject.name == "Tutorial")
+        //{
+        //    //LevelManager.Instance.gameStatus = GameState.WaitForPopup;
+        //}
 
         if (Application.loadedLevelName == "game")
         {
@@ -554,72 +554,72 @@ public class AnimationManager : MonoBehaviour
         if (pack.name == "Pack1")
         {
             InitScript.waitedPurchaseGems = int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
-#if UNITY_WEBPLAYER || UNITY_WEBGL
-			InitScript.Instance.PurchaseSucceded ();
-			CloseMenu ();
-			return;
-#endif
-#if UNITY_INAPPS
-			UnityInAppsIntegration.THIS.BuyProductID (LevelManager.THIS.InAppIDs [0]);
-#elif AMAZON
-			AmazonInapps.THIS.Purchase (LevelManager.THIS.InAppIDs [0]);
-#else
-            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//1.4.9
-#endif
+//#if UNITY_WEBPLAYER || UNITY_WEBGL
+//			InitScript.Instance.PurchaseSucceded ();
+//			CloseMenu ();
+//			return;
+//#endif
+//#if UNITY_INAPPS
+//			UnityInAppsIntegration.THIS.BuyProductID (LevelManager.THIS.InAppIDs [0]);
+//#elif AMAZON
+//			AmazonInapps.THIS.Purchase (LevelManager.THIS.InAppIDs [0]);
+//#else
+//            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//1.4.9
+//#endif
 
         }
 
         if (pack.name == "Pack2")
         {
             InitScript.waitedPurchaseGems = int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
-#if UNITY_WEBPLAYER || UNITY_WEBGL
-			InitScript.Instance.PurchaseSucceded ();
-			CloseMenu ();
-			return;
-#endif
-#if UNITY_INAPPS
-			UnityInAppsIntegration.THIS.BuyProductID (LevelManager.THIS.InAppIDs [1]);
-#elif AMAZON
-			AmazonInapps.THIS.Purchase (LevelManager.THIS.InAppIDs [1]);
-#else
-            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//1.4.9
-#endif
+//#if UNITY_WEBPLAYER || UNITY_WEBGL
+//			InitScript.Instance.PurchaseSucceded ();
+//			CloseMenu ();
+//			return;
+//#endif
+//#if UNITY_INAPPS
+//			UnityInAppsIntegration.THIS.BuyProductID (LevelManager.THIS.InAppIDs [1]);
+//#elif AMAZON
+//			AmazonInapps.THIS.Purchase (LevelManager.THIS.InAppIDs [1]);
+//#else
+//            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//1.4.9
+//#endif
 
 
         }
         if (pack.name == "Pack3")
         {
             InitScript.waitedPurchaseGems = int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
-#if UNITY_WEBPLAYER || UNITY_WEBGL
-			InitScript.Instance.PurchaseSucceded ();
-			CloseMenu ();
-			return;
-#endif
-#if UNITY_INAPPS
-			UnityInAppsIntegration.THIS.BuyProductID (LevelManager.THIS.InAppIDs [2]);
-#elif AMAZON
-			AmazonInapps.THIS.Purchase (LevelManager.THIS.InAppIDs [2]);
-#else
-            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//1.4.9
-#endif
+//#if UNITY_WEBPLAYER || UNITY_WEBGL
+//			InitScript.Instance.PurchaseSucceded ();
+//			CloseMenu ();
+//			return;
+//#endif
+//#if UNITY_INAPPS
+//			UnityInAppsIntegration.THIS.BuyProductID (LevelManager.THIS.InAppIDs [2]);
+//#elif AMAZON
+//			AmazonInapps.THIS.Purchase (LevelManager.THIS.InAppIDs [2]);
+//#else
+//            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//1.4.9
+//#endif
 
 
         }
         if (pack.name == "Pack4")
         {
             InitScript.waitedPurchaseGems = int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
-#if UNITY_WEBPLAYER || UNITY_WEBGL
-			InitScript.Instance.PurchaseSucceded ();
-			CloseMenu ();
-			return;
-#endif
-#if UNITY_INAPPS
-			UnityInAppsIntegration.THIS.BuyProductID (LevelManager.THIS.InAppIDs [3]);
-#elif AMAZON
-			AmazonInapps.THIS.Purchase (LevelManager.THIS.InAppIDs [3]);
-#else
-            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//1.4.9
-#endif
+//#if UNITY_WEBPLAYER || UNITY_WEBGL
+//			InitScript.Instance.PurchaseSucceded ();
+//			CloseMenu ();
+//			return;
+//#endif
+//#if UNITY_INAPPS
+//			UnityInAppsIntegration.THIS.BuyProductID (LevelManager.THIS.InAppIDs [3]);
+//#elif AMAZON
+//			AmazonInapps.THIS.Purchase (LevelManager.THIS.InAppIDs [3]);
+//#else
+//            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//1.4.9
+//#endif
 
 
         }
