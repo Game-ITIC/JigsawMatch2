@@ -183,67 +183,67 @@ public class InitScript : MonoBehaviour
         gameObject.AddComponent<InternetChecker>();
         GameObject.Find("Music").GetComponent<AudioSource>().volume = PlayerPrefs.GetInt("Music");
         SoundBase.Instance.GetComponent<AudioSource>().volume = PlayerPrefs.GetInt("Sound");
-#if UNITY_ADS//1.3
-		enableUnityAds = true;
-        var unityAds = Resources.Load<UnityAdsID>("UnityAdsID");
-        #if UNITY_ANDROID
-            Advertisement.Initialize(unityAds.androidID,false);
-        #elif UNITY_IOS
-            Advertisement.Initialize(unityAds.iOSID,false);
-        #endif
-#else
-        enableUnityAds = false;
-#endif
-#if CHARTBOOST_ADS//1.4.1
-		enableChartboostAds = true;
-#else
-        enableChartboostAds = false;
-#endif
+//#if UNITY_ADS//1.3
+//		enableUnityAds = true;
+//        var unityAds = Resources.Load<UnityAdsID>("UnityAdsID");
+//        #if UNITY_ANDROID
+//            Advertisement.Initialize(unityAds.androidID,false);
+//        #elif UNITY_IOS
+//            Advertisement.Initialize(unityAds.iOSID,false);
+//        #endif
+//#else
+//        enableUnityAds = false;
+//#endif
+//#if CHARTBOOST_ADS//1.4.1
+//		enableChartboostAds = true;
+//#else
+//        enableChartboostAds = false;
+//#endif
 
 
-#if FACEBOOK
-		FacebookManager fbManager = gameObject.AddComponent<FacebookManager> ();//1.3.3
-		fbManager.facebookButton = facebookButton;//1.3.3
-#endif
+//#if FACEBOOK
+//		FacebookManager fbManager = gameObject.AddComponent<FacebookManager> ();//1.3.3
+//		fbManager.facebookButton = facebookButton;//1.3.3
+//#endif
 
-#if GOOGLE_MOBILE_ADS
-		enableGoogleMobileAds = true;//1.3
-#if UNITY_ANDROID
-        MobileAds.Initialize(admobUIDAndroid);
-        interstitial = new InterstitialAd(admobUIDAndroid);
-#elif UNITY_IOS
-        MobileAds.Initialize(admobUIDIOS);
-        interstitial = new InterstitialAd(admobUIDIOS);
-#else
-        MobileAds.Initialize(admobUIDAndroid);
-		interstitial = new InterstitialAd (admobUIDAndroid);
-#endif
+//#if GOOGLE_MOBILE_ADS
+//		enableGoogleMobileAds = true;//1.3
+//#if UNITY_ANDROID
+//        MobileAds.Initialize(admobUIDAndroid);
+//        interstitial = new InterstitialAd(admobUIDAndroid);
+//#elif UNITY_IOS
+//        MobileAds.Initialize(admobUIDIOS);
+//        interstitial = new InterstitialAd(admobUIDIOS);
+//#else
+//        MobileAds.Initialize(admobUIDAndroid);
+//		interstitial = new InterstitialAd (admobUIDAndroid);
+//#endif
 
-		// Create an empty ad request.
-		requestAdmob = new AdRequest.Builder ().Build ();
-		// Load the interstitial with the request.
-		interstitial.LoadAd (requestAdmob);
-		interstitial.OnAdLoaded += HandleInterstitialLoaded;
-		interstitial.OnAdFailedToLoad += HandleInterstitialFailedToLoad;
-#else
-        enableGoogleMobileAds = false; //1.3
-#endif
+//		// Create an empty ad request.
+//		requestAdmob = new AdRequest.Builder ().Build ();
+//		// Load the interstitial with the request.
+//		interstitial.LoadAd (requestAdmob);
+//		interstitial.OnAdLoaded += HandleInterstitialLoaded;
+//		interstitial.OnAdFailedToLoad += HandleInterstitialFailedToLoad;
+//#else
+//        enableGoogleMobileAds = false; //1.3
+//#endif
         Transform canvas = GameObject.Find("CanvasGlobal").transform;
         foreach (Transform item in canvas)
         {
             item.gameObject.SetActive(false);
         }
     }
-#if GOOGLE_MOBILE_ADS
+//#if GOOGLE_MOBILE_ADS
 	
-	public void HandleInterstitialLoaded (object sender, EventArgs args) {
-		print ("HandleInterstitialLoaded event received.");
-	}
+//	public void HandleInterstitialLoaded (object sender, EventArgs args) {
+//		print ("HandleInterstitialLoaded event received.");
+//	}
 
-	public void HandleInterstitialFailedToLoad (object sender, AdFailedToLoadEventArgs args) {
-		print ("HandleInterstitialFailedToLoad event received with message: " + args.Message);
-	}
-#endif
+//	public void HandleInterstitialFailedToLoad (object sender, AdFailedToLoadEventArgs args) {
+//		print ("HandleInterstitialFailedToLoad event received with message: " + args.Message);
+//	}
+//#endif
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.LeftControl))
@@ -275,129 +275,129 @@ public class InitScript : MonoBehaviour
 
     public bool GetRewardedUnityAdsReady()
     {
-#if UNITY_ADS
+//#if UNITY_ADS
 
-		rewardedVideoZone = "rewardedVideo";
-		if (Advertisement.IsReady (rewardedVideoZone)) {
-			return true;
-		} else {
-			rewardedVideoZone = "rewardedVideoZone";
-			if (Advertisement.IsReady (rewardedVideoZone)) {
-				return true;
-			}
-		}
-#endif
+//		rewardedVideoZone = "rewardedVideo";
+//		if (Advertisement.IsReady (rewardedVideoZone)) {
+//			return true;
+//		} else {
+//			rewardedVideoZone = "rewardedVideoZone";
+//			if (Advertisement.IsReady (rewardedVideoZone)) {
+//				return true;
+//			}
+//		}
+//#endif
 
         return false;
     }
 
-    public void ShowRewardedAds()
-    {
-#if UNITY_ADS
-		Debug.Log ("show Unity Rewarded ads video in " + LevelManager.THIS.gameStatus);
+//    public void ShowRewardedAds()
+//    {
+//#if UNITY_ADS
+//		Debug.Log ("show Unity Rewarded ads video in " + LevelManager.THIS.gameStatus);
 
-		if (GetRewardedUnityAdsReady ()) {
-			Advertisement.Show (rewardedVideoZone, new ShowOptions {
-				resultCallback = result => {
-					if (result == ShowResult.Finished) {
-						CheckRewardedAds ();
-					}
-				}
-			});
-		}
-#elif GOOGLE_MOBILE_ADS//2.2
-        bool stillShow = true;
-#if UNITY_ADS
-        stillShow = !GetRewardedUnityAdsReady ();
-#endif
-        if(stillShow)
-        {
-            Debug.Log("show Admob Rewarded ads video in " + LevelManager.THIS.gameStatus);
-            RewAdmobManager.THIS.ShowRewardedAd(CheckRewardedAds);
-        }
-#endif
-    }
+//		if (GetRewardedUnityAdsReady ()) {
+//			Advertisement.Show (rewardedVideoZone, new ShowOptions {
+//				resultCallback = result => {
+//					if (result == ShowResult.Finished) {
+//						CheckRewardedAds ();
+//					}
+//				}
+//			});
+//		}
+//#elif GOOGLE_MOBILE_ADS//2.2
+//        bool stillShow = true;
+//#if UNITY_ADS
+//        stillShow = !GetRewardedUnityAdsReady ();
+//#endif
+//        if(stillShow)
+//        {
+//            Debug.Log("show Admob Rewarded ads video in " + LevelManager.THIS.gameStatus);
+//            RewAdmobManager.THIS.ShowRewardedAd(CheckRewardedAds);
+//        }
+//#endif
+//    }
 
-    public void CheckAdsEvents(GameState state)
-    {
+//    public void CheckAdsEvents(GameState state)
+//    {
 
-        foreach (AdEvents item in adsEvents)
-        {
-            if (item.gameEvent == state)
-            {
-                if ((LevelManager.THIS.gameStatus == GameState.GameOver || LevelManager.THIS.gameStatus == GameState.Pause ||
-                    LevelManager.THIS.gameStatus == GameState.Playing || LevelManager.THIS.gameStatus == GameState.PrepareGame || LevelManager.THIS.gameStatus == GameState.PreWinAnimations ||
-                    LevelManager.THIS.gameStatus == GameState.RegenLevel || LevelManager.THIS.gameStatus == GameState.Win))
-                {
-                    item.calls++;
-                    if (item.calls % item.everyLevel == 0)
-                        ShowAdByType(item.adType);
-                    // } else {
-                    // ShowAdByType (item.adType);
+//        foreach (AdEvents item in adsEvents)
+//        {
+//            if (item.gameEvent == state)
+//            {
+//                if ((LevelManager.THIS.gameStatus == GameState.GameOver || LevelManager.THIS.gameStatus == GameState.Pause ||
+//                    LevelManager.THIS.gameStatus == GameState.Playing || LevelManager.THIS.gameStatus == GameState.PrepareGame || LevelManager.THIS.gameStatus == GameState.PreWinAnimations ||
+//                    LevelManager.THIS.gameStatus == GameState.RegenLevel || LevelManager.THIS.gameStatus == GameState.Win))
+//                {
+//                    item.calls++;
+//                    if (item.calls % item.everyLevel == 0)
+//                        ShowAdByType(item.adType);
+//                    // } else {
+//                    // ShowAdByType (item.adType);
 
-                }
-            }
-        }
-    }
+//                }
+//            }
+//        }
+//    }
 
-    void ShowAdByType(AdType adType)
-    {
-        if (adType == AdType.AdmobInterstitial)
-            ShowAds(false);
-        else if (adType == AdType.UnityAdsVideo)
-            ShowVideo();
-        else if (adType == AdType.ChartboostInterstitial)
-            ShowAds(true);
+//    void ShowAdByType(AdType adType)
+//    {
+//        if (adType == AdType.AdmobInterstitial)
+//            ShowAds(false);
+//        else if (adType == AdType.UnityAdsVideo)
+//            ShowVideo();
+//        else if (adType == AdType.ChartboostInterstitial)
+//            ShowAds(true);
 
-    }
+//    }
 
-    public void ShowVideo()
-    {
-        Debug.Log("show Unity ads video on " + LevelManager.THIS.gameStatus);
-#if UNITY_ADS
+//    public void ShowVideo()
+//    {
+//        Debug.Log("show Unity ads video on " + LevelManager.THIS.gameStatus);
+//#if UNITY_ADS
 
-		if (Advertisement.IsReady ("video")) {
-			Advertisement.Show ("video");
-		} else {
-			if (Advertisement.IsReady ("defaultZone")) {
-				Advertisement.Show ("defaultZone");
-			}
-		}
-#endif
-    }
+//		if (Advertisement.IsReady ("video")) {
+//			Advertisement.Show ("video");
+//		} else {
+//			if (Advertisement.IsReady ("defaultZone")) {
+//				Advertisement.Show ("defaultZone");
+//			}
+//		}
+//#endif
+//    }
 
-    public void ShowAds(bool chartboost = true)
-    {
-        if (chartboost)
-        {
-            Debug.Log("show Chartboost Interstitial on " + LevelManager.THIS.gameStatus);
-#if CHARTBOOST_ADS
-			Chartboost.showInterstitial (CBLocation.Default);
-			Chartboost.cacheInterstitial (CBLocation.Default);
-#endif
-        }
-        else
-        {
-            Debug.Log("show Google mobile ads Interstitial on " + LevelManager.THIS.gameStatus);
-#if GOOGLE_MOBILE_ADS
-			if (interstitial.IsLoaded ()) {
-				interstitial.Show ();
-#if UNITY_ANDROID
-				interstitial = new InterstitialAd (admobUIDAndroid);
-#elif UNITY_IOS
-                interstitial = new InterstitialAd(admobUIDIOS);
-#else
-				interstitial = new InterstitialAd (admobUIDAndroid);
-#endif
+//    public void ShowAds(bool chartboost = true)
+//    {
+//        if (chartboost)
+//        {
+//            Debug.Log("show Chartboost Interstitial on " + LevelManager.THIS.gameStatus);
+//#if CHARTBOOST_ADS
+//			Chartboost.showInterstitial (CBLocation.Default);
+//			Chartboost.cacheInterstitial (CBLocation.Default);
+//#endif
+//        }
+//        else
+//        {
+//            Debug.Log("show Google mobile ads Interstitial on " + LevelManager.THIS.gameStatus);
+//#if GOOGLE_MOBILE_ADS
+//			if (interstitial.IsLoaded ()) {
+//				interstitial.Show ();
+//#if UNITY_ANDROID
+//				interstitial = new InterstitialAd (admobUIDAndroid);
+//#elif UNITY_IOS
+//                interstitial = new InterstitialAd(admobUIDIOS);
+//#else
+//				interstitial = new InterstitialAd (admobUIDAndroid);
+//#endif
 
-				// Create an empty ad request.
-				requestAdmob = new AdRequest.Builder ().Build ();
-				// Load the interstitial with the request.
-				interstitial.LoadAd (requestAdmob);
-			}
-#endif
-        }
-    }
+//				// Create an empty ad request.
+//				requestAdmob = new AdRequest.Builder ().Build ();
+//				// Load the interstitial with the request.
+//				interstitial.LoadAd (requestAdmob);
+//			}
+//#endif
+//        }
+//    }
 
    /* public void ShowRate()
     {
@@ -408,30 +408,30 @@ public class InitScript : MonoBehaviour
     }
 */
 
-    public void CheckRewardedAds()
-    {
-        RewardIcon reward = GameObject.Find("CanvasGlobal").transform.Find("Reward").GetComponent<RewardIcon>();
-        if (currentReward == RewardedAdsType.GetGems)
-        {
-            reward.SetIconSprite(0);
+    //public void CheckRewardedAds()
+    //{
+    //    RewardIcon reward = GameObject.Find("CanvasGlobal").transform.Find("Reward").GetComponent<RewardIcon>();
+    //    if (currentReward == RewardedAdsType.GetGems)
+    //    {
+    //        reward.SetIconSprite(0);
 
-            reward.gameObject.SetActive(true);
-            AddGems(rewardedGems);
-            GameObject.Find("CanvasGlobal").transform.Find("GemsShop").GetComponent<AnimationManager>().CloseMenu();
-        }
-        else if (currentReward == RewardedAdsType.GetLifes)
-        {
-            reward.SetIconSprite(1);
-            reward.gameObject.SetActive(true);
-            RestoreLifes();
-            GameObject.Find("CanvasGlobal").transform.Find("LiveShop").GetComponent<AnimationManager>().CloseMenu();
-        }
-        else if (currentReward == RewardedAdsType.GetGoOn)
-        {
-            GameObject.Find("CanvasGlobal").transform.Find("MenuFailed").GetComponent<AnimationManager>().GoOnFailed();
-        }
+    //        reward.gameObject.SetActive(true);
+    //        AddGems(rewardedGems);
+    //        GameObject.Find("CanvasGlobal").transform.Find("GemsShop").GetComponent<AnimationManager>().CloseMenu();
+    //    }
+    //    else if (currentReward == RewardedAdsType.GetLifes)
+    //    {
+    //        reward.SetIconSprite(1);
+    //        reward.gameObject.SetActive(true);
+    //        RestoreLifes();
+    //        GameObject.Find("CanvasGlobal").transform.Find("LiveShop").GetComponent<AnimationManager>().CloseMenu();
+    //    }
+    //    else if (currentReward == RewardedAdsType.GetGoOn)
+    //    {
+    //        GameObject.Find("CanvasGlobal").transform.Find("MenuFailed").GetComponent<AnimationManager>().GoOnFailed();
+    //    }
 
-    }
+    //}
 
     public void SetGems(int count)
     {//1.3.3
@@ -445,9 +445,9 @@ public class InitScript : MonoBehaviour
         Gems += count;
         PlayerPrefs.SetInt("Gems", Gems);
         PlayerPrefs.Save();
-#if PLAYFAB || GAMESPARKS
-		NetworkManager.currencyManager.IncBalance (count);
-#endif
+//#if PLAYFAB || GAMESPARKS
+//		NetworkManager.currencyManager.IncBalance (count);
+//#endif
     }
 
     public void SetStars(int count)

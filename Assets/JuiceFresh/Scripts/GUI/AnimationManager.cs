@@ -112,26 +112,26 @@ public class AnimationManager : MonoBehaviour
         if (transform.Find("Image/Video") != null)
         {
 
-#if UNITY_ADS
-            InitScript.Instance.rewardedVideoZone = "rewardedVideo";
+//#if UNITY_ADS
+//            InitScript.Instance.rewardedVideoZone = "rewardedVideo";
 
-            if (transform.Find("Image/Video/AdsNotAvailable") != null)
-            {//1.4.8
-                if (!InitScript.Instance.enableUnityAds || !InitScript.Instance.GetRewardedUnityAdsReady())
-                    transform.Find("Image/Video/AdsNotAvailable").gameObject.SetActive(true);
-                else
-                    transform.Find("Image/Video/AdsNotAvailable").gameObject.SetActive(false);
-            }
-#elif GOOGLE_MOBILE_ADS
-            bool stillShow = true;
-#if UNITY_ADS
-        stillShow = !InitScript.Instance.GetRewardedUnityAdsReady ();
-#endif
-            if (!InitScript.Instance.enableGoogleMobileAds || !RewAdmobManager.THIS.IsRewardedAdIsLoaded() || !stillShow)
-                transform.Find("Image/Video").gameObject.SetActive(false);
-#else
-            transform.Find("Image/Video").gameObject.SetActive(false);
-#endif
+//            if (transform.Find("Image/Video/AdsNotAvailable") != null)
+//            {//1.4.8
+//                if (!InitScript.Instance.enableUnityAds || !InitScript.Instance.GetRewardedUnityAdsReady())
+//                    transform.Find("Image/Video/AdsNotAvailable").gameObject.SetActive(true);
+//                else
+//                    transform.Find("Image/Video/AdsNotAvailable").gameObject.SetActive(false);
+//            }
+//#elif GOOGLE_MOBILE_ADS
+//            bool stillShow = true;
+//#if UNITY_ADS
+//        stillShow = !InitScript.Instance.GetRewardedUnityAdsReady ();
+//#endif
+//            if (!InitScript.Instance.enableGoogleMobileAds || !RewAdmobManager.THIS.IsRewardedAdIsLoaded() || !stillShow)
+//                transform.Find("Image/Video").gameObject.SetActive(false);
+//#else
+//            transform.Find("Image/Video").gameObject.SetActive(false);
+//#endif
         }
     }
 
@@ -145,30 +145,30 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
-    public void ShowAds()
-    {
-        if (name == "GemsShop")
-            InitScript.Instance.currentReward = RewardedAdsType.GetGems;
-        else if (name == "LiveShop")
-            InitScript.Instance.currentReward = RewardedAdsType.GetLifes;
-        else if (name == "MenuFailed")
-            InitScript.Instance.currentReward = RewardedAdsType.GetGoOn;
-        InitScript.Instance.ShowRewardedAds();
-        if (name != "MenuFailed")
-            CloseMenu();
-    }
+    //public void ShowAds()
+    //{
+    //    if (name == "GemsShop")
+    //        InitScript.Instance.currentReward = RewardedAdsType.GetGems;
+    //    else if (name == "LiveShop")
+    //        InitScript.Instance.currentReward = RewardedAdsType.GetLifes;
+    //    else if (name == "MenuFailed")
+    //        InitScript.Instance.currentReward = RewardedAdsType.GetGoOn;
+    //    InitScript.Instance.ShowRewardedAds();
+    //    if (name != "MenuFailed")
+    //        CloseMenu();
+    //}
 
-    public void GoRate()
-    {
-#if UNITY_ANDROID
-        Application.OpenURL(InitScript.Instance.RateURL);
-#elif UNITY_IOS
-		Application.OpenURL (InitScript.Instance.RateURLIOS);
-#endif
+//    public void GoRate()
+//    {
+//#if UNITY_ANDROID
+//        Application.OpenURL(InitScript.Instance.RateURL);
+//#elif UNITY_IOS
+//		Application.OpenURL (InitScript.Instance.RateURLIOS);
+//#endif
 
-        PlayerPrefs.SetInt("Rated", 1);
-        PlayerPrefs.Save();
-    }
+//        PlayerPrefs.SetInt("Rated", 1);
+//        PlayerPrefs.Save();
+//    }
 
     void OnDisable()
     {
