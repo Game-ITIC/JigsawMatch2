@@ -14,7 +14,7 @@ public class tutIcon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (PlayerPrefs.GetInt("isParkVisited") != 1)
+        if (PlayerPrefs.GetInt("isParkVisited") != 1 && StarModel.instance._totalStars >= 3)
         {
             tutIcona.SetActive(true);
         }

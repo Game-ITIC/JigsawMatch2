@@ -7,7 +7,7 @@ public class StarModel : MonoBehaviour
     public static StarModel instance;
 
     public Text totalStarsText; // Текстовый элемент для отображения общего количества звёзд
-    private int _totalStars; // Переменная для хранения общего количества звёзд
+    public int _totalStars; // Переменная для хранения общего количества звёзд
     private Dictionary<int, int> levelStars = new Dictionary<int, int>(); // Хранит количество звёзд для каждого пройденного уровня
 
     private void Awake()
