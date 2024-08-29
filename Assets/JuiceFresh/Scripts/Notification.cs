@@ -1,11 +1,17 @@
 using System.Collections;
 using UnityEngine;
 using Unity.Notifications.Android;
-using UnityEngine.Android; // Не забудьте добавить этот using для работы с Permission
+using UnityEngine.Android;
+using UnityEngine.UI;
+using System;
 
 public class Notification : MonoBehaviour
 {
-    private void Awake()
+    private Text text;
+    private bool startTimer;
+    private float TotalTimeForRestLife = 15f * 60;  // 15 minutes for restore life
+
+    void Awake()
     {
         // Запрашиваем разрешение на отправку уведомлений
         RequestAuthorization();
@@ -25,12 +31,65 @@ public class Notification : MonoBehaviour
         ScheduleDailyNotifications();
     }
 
-    public void RequestAuthorization()
+    void Start()
     {
-        if (!Permission.HasUserAuthorizedPermission("android.permission.POST_NOTIFICATIONS"))
+        text = GetComponent<Text>();
+        TotalTimeForRestLife = InitScript.Instance.TotalTimeForRestLifeHours * 60 * 60 +
+                               InitScript.Instance.TotalTimeForRestLifeMin * 60 +
+                               InitScript.Instance.TotalTimeForRestLifeSec;
+
+        if (InitScript.lifes < InitScript.Instance.CapOfLife)
         {
-            Permission.RequestUserPermission("android.permission.POST_NOTIFICATIONS");
+            startTimer = true;
         }
+    }
+
+    void Update()
+    {
+        if (startTimer)
+        {
+            TimeCount(Time.deltaTime);
+        }
+
+        if (gameObject.activeSelf)
+        {
+            if (InitScript.lifes < InitScript.Instance.CapOfLife)
+            {
+                int minutes = Mathf.FloorToInt(InitScript.RestLifeTimer / 60F);
+                int seconds = Mathf.FloorToInt(InitScript.RestLifeTimer - minutes * 60);
+
+                text.enabled = true;
+                text.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+                InitScript.timeForReps = text.text;
+            }
+            else
+            {
+                text.text = "   Full";
+            }
+        }
+    }
+
+    private void TimeCount(float tick)
+    {
+        if (InitScript.RestLifeTimer <= 0)
+            ResetTimer();
+
+        InitScript.RestLifeTimer -= tick;
+        if (InitScript.RestLifeTimer <= 1 && InitScript.lifes < InitScript.Instance.CapOfLife)
+        {
+            InitScript.Instance.AddLife(1);
+            if (InitScript.lifes == InitScript.Instance.CapOfLife)
+            {
+                ScheduleFullLivesNotification(); // Планируем уведомление после восстановления всех жизней
+            }
+            ResetTimer();
+        }
+    }
+
+    private void ResetTimer()
+    {
+        InitScript.RestLifeTimer = TotalTimeForRestLife;
     }
 
     private void ScheduleDailyNotifications()
@@ -65,5 +124,43 @@ public class Notification : MonoBehaviour
         };
 
         AndroidNotificationCenter.SendNotification(notification, "Push");
+    }
+
+    private void ScheduleFullLivesNotification()
+    {
+        var notification = new AndroidNotification
+        {
+            Title = "All Lives Restored!",
+            Text = "Your lives are fully restored! Come back and play!",
+            FireTime = DateTime.Now.AddSeconds(1), // Отправка уведомления через 1 секунду
+            SmallIcon = "small_icon",
+        };
+
+        AndroidNotificationCenter.SendNotification(notification, "Push");
+    }
+
+    public void RequestAuthorization()
+    {
+        if (!Permission.HasUserAuthorizedPermission("android.permission.POST_NOTIFICATIONS"))
+        {
+            Permission.RequestUserPermission("android.permission.POST_NOTIFICATIONS");
+        }
+    }
+
+    void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            InitScript.DateOfExit = DateTime.Now.ToString();
+        }
+        else
+        {
+            startTimer = false;
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        InitScript.DateOfExit = DateTime.Now.ToString();
     }
 }
