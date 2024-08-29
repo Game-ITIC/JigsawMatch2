@@ -4,13 +4,13 @@ using UnityEngine.SceneManagement;
 
 public class GUIEvents : MonoBehaviour {
 
-	void Start () {
-//		if (name == "FaceBook") {//1.3
-////            if (PlayerPrefs.GetInt("Facebook_Logged") == 1) {
-////                FaceBookLogin();
-////            }
-//		}
 
+	void Start () {
+		//		if (name == "FaceBook") {//1.3
+		////            if (PlayerPrefs.GetInt("Facebook_Logged") == 1) {
+		////                FaceBookLogin();
+		////            }
+		//		}
 	}
 
 	void Update () {
@@ -47,6 +47,8 @@ public class GUIEvents : MonoBehaviour {
 
 	public void ParkSceneLoader()
 	{
+        PlayerPrefs.SetInt("isParkVisited", 1);
+        PlayerPrefs.Save();
         SceneManager.LoadScene("Park");
     }
 

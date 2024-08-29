@@ -519,6 +519,13 @@ public class AnimationManager : MonoBehaviour
         CloseMenu();
     }
 
+    public void BackToMapWithoutDie()
+    {
+        Time.timeScale = 1;
+        LevelManager.THIS.gameStatus = GameState.ToMap;
+        CloseMenu();
+    }
+
     public void Next()
     {
         SoundBase.Instance.PlaySound(SoundBase.Instance.click);

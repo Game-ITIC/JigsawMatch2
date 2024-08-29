@@ -31,13 +31,13 @@ public enum GameState
 	WaitForPotion,
 	PreFailed,
 	PreFailedBomb,
-	RegenLevel
+	RegenLevel,
+	ToMap
 }
 
 
 public class LevelManager : MonoBehaviour
 {
-
 	//inctance of LevelManager for direct references
 	public static LevelManager THIS;
 	//inctance of LevelManager for direct references
@@ -436,6 +436,12 @@ public class LevelManager : MonoBehaviour
 				GameObject.Find("CanvasGlobal").transform.Find("MenuFailed").gameObject.SetActive(true);
 				OnLose();
 			}
+			else if(value == GameState.ToMap)
+			{
+                MusicBase.Instance.GetComponent<AudioSource>().Stop();
+                SoundBase.Instance.PlaySound(SoundBase.Instance.gameOver[0]);
+                GameObject.Find("CanvasGlobal").transform.Find("MenuFailed").gameObject.SetActive(true);
+            }
 			else if (value == GameState.PreWinAnimations)
 			{
 				MusicBase.Instance.GetComponent<AudioSource>().Stop();
