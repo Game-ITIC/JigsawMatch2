@@ -48,10 +48,14 @@ public class EventsListener : MonoBehaviour {
     void OnWin() {
         //AnalyticsEvent("OnWin", LevelManager.THIS.currentLevel);
         InitScript.Instance.AddGems(15);
+        AdmobManager.Instance.LoadInterstital();
+        AdmobManager.Instance.ShowInterstital();
         //InitScript.Instance.AddStars(3);
     }
     void OnLose() {
         //AnalyticsEvent("OnLose", LevelManager.THIS.currentLevel);
+        AdmobManager.Instance.LoadInterstital();
+        AdmobManager.Instance.ShowInterstital();
     }
 
     #endregion
