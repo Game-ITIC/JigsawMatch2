@@ -16,6 +16,8 @@ namespace JuiceFresh.Scripts.GoogleAds
 
         private InterstitialAd _interstitialAd;
 
+        private bool _isShowRequested = false;
+
         /// <summary>
         /// Loads the interstitial ad.
         /// </summary>
@@ -49,8 +51,17 @@ namespace JuiceFresh.Scripts.GoogleAds
                               + ad.GetResponseInfo());
 
                     _interstitialAd = ad;
+
+                    RegisterReloadHandler(_interstitialAd);
+
+
+                    if (_isShowRequested)
+                    {
+                        ShowInterstitialAd();
+                    }
                 });
         }
+
         /// <summary>
         /// Shows the interstitial ad.
         /// </summary>
@@ -58,34 +69,34 @@ namespace JuiceFresh.Scripts.GoogleAds
         {
             if (_interstitialAd != null && _interstitialAd.CanShowAd())
             {
-                Debug.Log("Showing interstitial ad.");
+                Debug.Log("Показываем межстраничное объявление.");
                 _interstitialAd.Show();
+                _isShowRequested = false;
             }
             else
             {
-                Debug.LogError("Interstitial ad is not ready yet.");
+                Debug.Log("Межстраничное объявление ещё не готово. Оно будет показано после загрузки.");
+                _isShowRequested = true;
             }
         }
-        
+
         private void RegisterReloadHandler(InterstitialAd interstitialAd)
         {
             // Raised when the ad closed full screen content.
-            interstitialAd.OnAdFullScreenContentClosed += () =>
-            {
-                Debug.Log("Interstitial Ad full screen content closed.");
+            interstitialAd.OnAdFullScreenContentClosed += HandleAdClosed;
+            interstitialAd.OnAdFullScreenContentFailed += HandleAdFailed;
+        }
 
-                // Reload the ad so that we can show another as soon as possible.
-                LoadInterstitialAd();
-            };
-            // Raised when the ad failed to open full screen content.
-            interstitialAd.OnAdFullScreenContentFailed += (AdError error) =>
-            {
-                Debug.LogError("Interstitial ad failed to open full screen content " +
-                               "with error : " + error);
+        private void HandleAdClosed()
+        {
+            Debug.Log("Межстраничное объявление закрыто.");
+            LoadInterstitialAd();
+        }
 
-                // Reload the ad so that we can show another as soon as possible.
-                LoadInterstitialAd();
-            };
+        private void HandleAdFailed(AdError error)
+        {
+            Debug.LogError("Ошибка показа межстраничного объявления: " + error);
+            LoadInterstitialAd();
         }
     }
 }

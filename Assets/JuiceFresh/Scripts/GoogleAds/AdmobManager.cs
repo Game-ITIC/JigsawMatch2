@@ -26,7 +26,11 @@ public class AdmobManager : MonoBehaviour
     public void Start()
     {
         // Initialize the Google Mobile Ads SDK.
-        MobileAds.Initialize(initStatus => { _banner.LoadAd(); });
+        MobileAds.Initialize(initStatus =>
+        {
+            _banner.LoadAd();
+            LoadInterstital();
+        });
     }
 
     public void OnDestroy()

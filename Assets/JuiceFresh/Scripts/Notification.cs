@@ -7,9 +7,9 @@ using System;
 
 public class Notification : MonoBehaviour
 {
-    private Text text;
+    [SerializeField] private Text text;
     private bool startTimer;
-    private float TotalTimeForRestLife = 15f * 60;  // 15 minutes for restore life
+    private float TotalTimeForRestLife = 15f * 60; // 15 minutes for restore life
 
     void Awake()
     {
@@ -33,7 +33,7 @@ public class Notification : MonoBehaviour
 
     void Start()
     {
-        text = GetComponent<Text>();
+        // text = GetComponent<Text>();
         TotalTimeForRestLife = InitScript.Instance.TotalTimeForRestLifeHours * 60 * 60 +
                                InitScript.Instance.TotalTimeForRestLifeMin * 60 +
                                InitScript.Instance.TotalTimeForRestLifeSec;
@@ -83,6 +83,7 @@ public class Notification : MonoBehaviour
             {
                 ScheduleFullLivesNotification(); // Планируем уведомление после восстановления всех жизней
             }
+
             ResetTimer();
         }
     }
