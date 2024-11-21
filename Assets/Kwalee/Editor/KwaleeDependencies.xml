@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dependencies>
+    <androidPackages>
+        <androidPackage spec="androidx.work:work-runtime-ktx:2.7.0" />
+        <androidPackage spec="com.google.android.gms:play-services-ads-identifier:18.+" />
+    </androidPackages>
+</dependencies>

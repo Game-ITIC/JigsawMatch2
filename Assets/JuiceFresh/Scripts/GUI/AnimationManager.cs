@@ -341,7 +341,6 @@ public class AnimationManager : MonoBehaviour
 
     IEnumerator MenuComplete()
     {
-        TinySauce.OnGameFinished(LevelManager.THIS.currentLevel);
         for (int i = 1; i <= LevelManager.Instance.stars; i++)
         {
             //  SoundBase.Instance.audio.PlayOneShot( SoundBase.Instance.scoringStar );

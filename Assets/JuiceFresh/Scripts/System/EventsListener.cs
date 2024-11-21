@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using KWCore;
+
 //#if UNITY_ANALYTICS
 //using UnityEngine.Analytics;
 //#endif
 
-public class EventsListener : MonoBehaviour {
-
-    void OnEnable() {
+public class EventsListener : MonoBehaviour
+{
+    void OnEnable()
+    {
         LevelManager.OnMapState += OnMapState;
         LevelManager.OnEnterGame += OnEnterGame;
         LevelManager.OnLevelLoaded += OnLevelLoaded;
@@ -16,10 +19,10 @@ public class EventsListener : MonoBehaviour {
         LevelManager.OnStartPlay += OnStartPlay;
         LevelManager.OnWin += OnWin;
         LevelManager.OnLose += OnLose;
-
     }
 
-    void OnDisable() {
+    void OnDisable()
+    {
         LevelManager.OnMapState -= OnMapState;
         LevelManager.OnEnterGame -= OnEnterGame;
         LevelManager.OnLevelLoaded -= OnLevelLoaded;
@@ -28,33 +31,55 @@ public class EventsListener : MonoBehaviour {
         LevelManager.OnStartPlay -= OnStartPlay;
         LevelManager.OnWin -= OnWin;
         LevelManager.OnLose -= OnLose;
-
     }
 
     #region GAME_EVENTS
-    void OnMapState() {
+
+    void OnMapState()
+    {
     }
-    void OnEnterGame() {
+
+    void OnEnterGame()
+    {
         //AnalyticsEvent("OnEnterGame", LevelManager.THIS.currentLevel);
+        // TinySauce.OnGameStarted(LevelManager.THIS.currentLevel);
+        Umbrella.GameCore.ProgressManager.StartStage();
+
         AdmobManager.Instance.LoadInterstital();
     }
-    void OnLevelLoaded() {
+
+    void OnLevelLoaded()
+    {
     }
-    void OnMenuPlay() {
+
+    void OnMenuPlay()
+    {
     }
-    void OnMenuComplete() {
+
+    void OnMenuComplete()
+    {
     }
-    void OnStartPlay() {
+
+    void OnStartPlay()
+    {
     }
-    void OnWin() {
+
+    void OnWin()
+    {
         //AnalyticsEvent("OnWin", LevelManager.THIS.currentLevel);
         InitScript.Instance.AddGems(15);
         //InitScript.Instance.AddStars(3);
         AdmobManager.Instance.ShowInterstital();
+        // TinySauce.OnGameFinished(true, LevelManager.Score, LevelManager.THIS.currentLevel);
+        Umbrella.GameCore.ProgressManager.CompleteStage(score: LevelManager.Score);
     }
-    void OnLose() {
+
+    void OnLose()
+    {
         //AnalyticsEvent("OnLose", LevelManager.THIS.currentLevel);
         AdmobManager.Instance.ShowInterstital();
+        // TinySauce.OnGameFinished(false, LevelManager.Score, LevelManager.THIS.currentLevel);
+        Umbrella.GameCore.ProgressManager.FailStage(score: LevelManager.Score);
     }
 
     #endregion
@@ -68,6 +93,4 @@ public class EventsListener : MonoBehaviour {
 
 //#endif
 //    }
-
-
 }

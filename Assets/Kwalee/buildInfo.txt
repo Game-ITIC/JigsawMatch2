@@ -1,0 +1,53 @@
+Release Version: 6.0.8 (Custom)
+Publishing System: e4f6b9e6
+KWAds: [8.2.7](Custom) 5e534ed 
+KWAnalytics: [2.5.2](Custom) 36e2384 
+KWAttribution: [1.9.2](Custom) 9dbd1d2 
+KWAudio: [1.1.2] 0fb4911 
+KWCore: [4.3.8](Custom) 70a17c9 
+KWCrossPromotion: [1.0.4] c0ecdd9 
+KWDebug: [2.11.1](Custom) 8f795da 
+KWGDPR: [2.0.9](Custom) def913e 
+KWGameCore: [2.1.4](Custom) 84dc7ca 
+KWGameSettings: [1.9.0](Custom) 3ebc2b1 
+KWHaptics: [1.2.1] 25d716c 
+KWLocalisation: [1.2.5](Custom) 5736610 
+KWMarket: [1.5.7] f4ae893 
+KWRating: [1.1.0] 1e41c84 
+KWServer: [1.3.6](Custom) 700de00 
+KWTools: [2.14.1](Custom) 29bddf5 
+KWXPromo: [2.1.6] 4741e38 
+
+Optional Submodules:
+KWIronSource: [7.2.6.1] 90175e2 
+KWMax: [5.4.3.1] 6b144da 
+
+Gameplay Submodules:
+DialogueSystem: Not Installed
+EarningsQTE: Not Installed
+KWArcadeIdle: Not Installed
+KWCollectEmAll: Not Installed
+KWCosmeticManager: Not Installed
+KWCurvySpline: Not Installed
+KWDailyChallenge: Not Installed
+KWDailyTasks: Not Installed
+KWDataSheets: Not Installed
+KWGameplayUtils: Not Installed
+KWGrid: Not Installed
+KWImageComparison: Not Installed
+KWLeaderboard: Not Installed
+KWLevels: Not Installed
+KWMatchCross: Not Installed
+KWMilestoneProgress: Not Installed
+KWNotificationWidget: Not Installed
+KWObjectCustomisation: Not Installed
+KWObjectDependencyFinder: Not Installed
+KWPerformanceTools: Not Installed
+KWPrefabVault: Not Installed
+KWProgressReward: Not Installed
+KWQualitySettings: Not Installed
+KWQuestionData: Not Installed
+KWServerShop: Not Installed
+KWTimelines: Not Installed
+KWVirtualControls: Not Installed
+PrizeBox: Not Installed

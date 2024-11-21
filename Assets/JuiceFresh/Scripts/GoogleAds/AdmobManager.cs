@@ -12,6 +12,8 @@ public class AdmobManager : MonoBehaviour
     [SerializeField] private Banner _banner;
     [SerializeField] private AdMobInterstital _interstital;
 
+    [field: SerializeField] public bool IsActive { get; private set; } = false;
+    
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -25,6 +27,7 @@ public class AdmobManager : MonoBehaviour
 
     public void Start()
     {
+        if (!IsActive) return; 
         // Initialize the Google Mobile Ads SDK.
         MobileAds.Initialize(initStatus =>
         {
@@ -40,11 +43,15 @@ public class AdmobManager : MonoBehaviour
 
     public void LoadInterstital()
     {
+        if (!IsActive) return;
+        
         _interstital.LoadInterstitialAd();
     }
 
     public void ShowInterstital()
     {
+        if (!IsActive) return;
         _interstital.ShowInterstitialAd();
+        
     }
 }
