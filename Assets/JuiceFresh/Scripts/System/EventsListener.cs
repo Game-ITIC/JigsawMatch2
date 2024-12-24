@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using KWCore;
 
 //#if UNITY_ANALYTICS
@@ -43,9 +44,10 @@ public class EventsListener : MonoBehaviour
     {
         //AnalyticsEvent("OnEnterGame", LevelManager.THIS.currentLevel);
         // TinySauce.OnGameStarted(LevelManager.THIS.currentLevel);
-        Umbrella.GameCore.ProgressManager.StartStage();
-
-        AdmobManager.Instance.LoadInterstital();
+        // Umbrella.GameCore.ProgressManager.StartStage();
+        //
+        // AdmobManager.Instance.LoadInterstital();
+        IronSourceManager.Instance.LoadInterstitial();
     }
 
     void OnLevelLoaded()
@@ -69,17 +71,19 @@ public class EventsListener : MonoBehaviour
         //AnalyticsEvent("OnWin", LevelManager.THIS.currentLevel);
         InitScript.Instance.AddGems(15);
         //InitScript.Instance.AddStars(3);
-        AdmobManager.Instance.ShowInterstital();
+        // AdmobManager.Instance.ShowInterstital();
         // TinySauce.OnGameFinished(true, LevelManager.Score, LevelManager.THIS.currentLevel);
-        Umbrella.GameCore.ProgressManager.CompleteStage(score: LevelManager.Score);
+        // Umbrella.GameCore.ProgressManager.CompleteStage(score: LevelManager.Score);
+        IronSourceManager.Instance.ShowInterstitial();
     }
 
     void OnLose()
     {
         //AnalyticsEvent("OnLose", LevelManager.THIS.currentLevel);
-        AdmobManager.Instance.ShowInterstital();
+        // AdmobManager.Instance.ShowInterstital();
         // TinySauce.OnGameFinished(false, LevelManager.Score, LevelManager.THIS.currentLevel);
-        Umbrella.GameCore.ProgressManager.FailStage(score: LevelManager.Score);
+        // Umbrella.GameCore.ProgressManager.FailStage(score: LevelManager.Score);
+        IronSourceManager.Instance.ShowInterstitial();
     }
 
     #endregion
