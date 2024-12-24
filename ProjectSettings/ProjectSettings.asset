@@ -266,7 +266,7 @@ PlayerSettings:
   AndroidTargetDevices: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: C:/Users/Sardor/Downloads/Telegram Desktop/iticgames.keystore
+  AndroidKeystoreName: C:/Users/Sardor Akhmadjonov/Downloads/Telegram Desktop/iticgames.keystore
   AndroidKeyaliasName: shokhaproitic
   AndroidEnableArmv9SecurityFeatures: 0
   AndroidBuildApkPerCpuArchitecture: 0
@@ -852,9 +852,9 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Android: VS_ATT;gameanalytics_admob_enabled
+    Android: VS_ATT;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled;LEVELPLAY_DEPENDENCIES_INSTALLED
     Windows Store Apps: UNITY_ADS
-    iPhone: UNITY_ADS;gameanalytics_admob_enabled
+    iPhone: UNITY_ADS;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled
   additionalCompilerArguments: {}
   platformArchitecture:
     iPhone: 1
@@ -975,11 +975,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: e20c53a2-3293-4987-a51b-103d37d1baaf
+  cloudProjectId: 294794a3-038e-4cb5-add2-a0b64a789aee
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: MatchPuzzle
-  organizationId: iticjo
+  projectName: ButterflyMatch
+  organizationId: itexprouz
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 1
   hmiLoadingImage: {fileID: 0}

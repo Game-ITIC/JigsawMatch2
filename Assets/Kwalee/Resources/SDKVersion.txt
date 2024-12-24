@@ -29,6 +29,8 @@ TENJIN_KEY: WJHWL4N5R3ZUGJENCSDSNYGE7JZ1WE8Y
 
 Project Definitions:
 gameanalytics_admob_enabled
+gameanalytics_ironsource_enabled
+LEVELPLAY_DEPENDENCIES_INSTALLED
 VS_ATT
 
 SKAdNetwork Ids:

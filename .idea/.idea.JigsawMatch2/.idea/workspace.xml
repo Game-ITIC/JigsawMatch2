@@ -5,14 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c8bc5122-cbac-4efe-813b-118ec8437e54" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/IronSourceManager.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/IronSourceManager.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.JigsawMatch2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JigsawMatch2/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scenes/main.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scenes/main.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/GUI/AnimationManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/GUI/AnimationManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/GoogleAds/AdmobManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/GoogleAds/AdmobManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/LevelManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/LevelManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/System/EventsListener.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/System/EventsListener.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Kwalee/Resources/SDKVersion.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Kwalee/Resources/SDKVersion.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Android/gradleTemplate.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/Android/gradleTemplate.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Plugins/Android/mainTemplate.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/Android/mainTemplate.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/AndroidResolverDependencies.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/AndroidResolverDependencies.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/GvhProjectSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/GvhProjectSettings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,6 +32,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f338185e6556436c80e5a7067da07efa9200/bb/dcfe39e9/InterstitialAd.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/JuiceFresh/Scripts/GoogleAds/AdmobManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/JuiceFresh/Scripts/GoogleAds/Banner.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.services.levelplay@8.5.1/Runtime/Api/LevelPlay.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
@@ -100,6 +104,8 @@
       <workItem from="1731997259716" duration="3671000" />
       <workItem from="1732002325826" duration="2974000" />
       <workItem from="1732085793869" duration="5676000" />
+      <workItem from="1734960489784" duration="1356000" />
+      <workItem from="1735033097209" duration="8319000" />
     </task>
     <servers />
   </component>
