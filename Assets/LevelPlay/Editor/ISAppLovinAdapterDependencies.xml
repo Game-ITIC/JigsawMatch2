@@ -1,18 +1,18 @@
 <dependencies>
-  <unityversion>8.6.1</unityversion>
+  <unityversion>4.3.55.0</unityversion>
   <androidPackages>
-    <androidPackage spec="com.unity3d.ads-mediation:mediation-sdk:8.6.1">
+    <androidPackage spec="com.unity3d.ads-mediation:applovin-adapter:4.3.49">
     </androidPackage>
   </androidPackages>
   <androidPackages>
-    <androidPackage spec="com.google.android.gms:play-services-ads-identifier:18.1.0">
+    <androidPackage spec="com.applovin:applovin-sdk:13.0.1">
       <repositories>
         <repository>https://maven.google.com/</repository>
       </repositories>
     </androidPackage>
   </androidPackages>
   <iosPods>
-    <iosPod name="IronSourceSDK" version="8.6.0.0">
+    <iosPod name="IronSourceAppLovinAdapter" version="4.3.51.0">
       <sources>
         <source>https://github.com/CocoaPods/Specs</source>
       </sources>

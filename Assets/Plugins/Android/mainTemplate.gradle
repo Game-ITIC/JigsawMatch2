@@ -28,7 +28,10 @@ allprojects {
             url "https://maven.google.com"
         }
         maven {
-            url "https://maven.google.com/" // Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml:7, Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml:12, Assets/GoogleMobileAds/Editor/GoogleUmpDependencies.xml:7, Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:12, Assets/LevelPlay/Editor/ISAdMobAdapterDependencies.xml:8, Assets/LevelPlay/Editor/ISFacebookAdapterDependencies.xml:8, Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:12
+            url "https://maven.google.com/" // Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml:7, Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml:12, Assets/GoogleMobileAds/Editor/GoogleUmpDependencies.xml:7, Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:12, Assets/LevelPlay/Editor/ISAdMobAdapterDependencies.xml:8, Assets/LevelPlay/Editor/ISAppLovinAdapterDependencies.xml:12, Assets/LevelPlay/Editor/ISFacebookAdapterDependencies.xml:8, Assets/LevelPlay/Editor/ISInMobiAdapterDependencies.xml:19, Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:12
+        }
+        maven {
+            url "https://repo.maven.apache.org/maven2/" // Assets/LevelPlay/Editor/ISInMobiAdapterDependencies.xml:12
         }
         mavenLocal()
         mavenCentral()
@@ -42,16 +45,21 @@ dependencies {
   	implementation 'com.android.installreferrer:installreferrer:1.0'
 // Android Resolver Dependencies Start
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4' // Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml:12
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0' // Assets/LevelPlay/Editor/ISInMobiAdapterDependencies.xml:19
+    implementation 'com.applovin:applovin-sdk:13.0.1' // Assets/LevelPlay/Editor/ISAppLovinAdapterDependencies.xml:12
     implementation 'com.facebook.android:audience-network-sdk:6.18.0' // Assets/LevelPlay/Editor/ISFacebookAdapterDependencies.xml:8
     // implementation 'com.google.android.gms:play-services-ads:23.4.0' // Assets/GoogleMobileAds/Editor/GoogleMobileAdsDependencies.xml:7
     implementation 'com.google.android.gms:play-services-ads:23.6.0' // Assets/LevelPlay/Editor/ISAdMobAdapterDependencies.xml:8
     implementation 'com.google.android.gms:play-services-ads-identifier:18.1.0' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:12
     implementation 'com.google.android.ump:user-messaging-platform:3.0.0' // Assets/GoogleMobileAds/Editor/GoogleUmpDependencies.xml:7
-    implementation 'com.unity3d.ads:unity-ads:4.12.5' // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:12
+    implementation 'com.inmobi.monetization:inmobi-ads-kotlin:10.8.0' // Assets/LevelPlay/Editor/ISInMobiAdapterDependencies.xml:12
+    implementation 'com.unity3d.ads:unity-ads:4.13.0' // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:12
     implementation 'com.unity3d.ads-mediation:admob-adapter:4.3.48' // Assets/LevelPlay/Editor/ISAdMobAdapterDependencies.xml:12
+    implementation 'com.unity3d.ads-mediation:applovin-adapter:4.3.49' // Assets/LevelPlay/Editor/ISAppLovinAdapterDependencies.xml:5
     implementation 'com.unity3d.ads-mediation:facebook-adapter:4.3.48' // Assets/LevelPlay/Editor/ISFacebookAdapterDependencies.xml:12
-    implementation 'com.unity3d.ads-mediation:mediation-sdk:8.6.0' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:5
-    implementation 'com.unity3d.ads-mediation:unityads-adapter:4.3.46' // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:5
+    implementation 'com.unity3d.ads-mediation:inmobi-adapter:4.3.28' // Assets/LevelPlay/Editor/ISInMobiAdapterDependencies.xml:5
+    implementation 'com.unity3d.ads-mediation:mediation-sdk:8.6.1' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:5
+    implementation 'com.unity3d.ads-mediation:unityads-adapter:4.3.47' // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:5
     implementation 'com.unity3d.ads-mediation:yandex-adapter:4.3.7' // Assets/LevelPlay/Editor/ISYandexAdapterDependencies.xml:9
     implementation 'com.yandex.android:mobileads:7.8.0' // Assets/LevelPlay/Editor/ISYandexAdapterDependencies.xml:5
 // Android Resolver Dependencies End
