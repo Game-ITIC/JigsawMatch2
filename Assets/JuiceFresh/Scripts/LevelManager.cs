@@ -144,7 +144,7 @@ public class LevelManager : MonoBehaviour
 	public BoostIcon activatedBoost;
 	//public string androidSharingPath;
 	//public string iosSharingPath;
-
+	[SerializeField] private Camera gameCamera;
 	// field of getting and setting currently activated boost
 	public BoostIcon ActivatedBoost
 	{
@@ -346,7 +346,7 @@ public class LevelManager : MonoBehaviour
 	public static event GameStateEvents OnLevelLoaded;
 	public static event GameStateEvents OnMenuPlay;
 	public static event GameStateEvents OnMenuComplete;
-	public static event GameStateEvents OnStartPlay;
+	public static event GameStateEvents OnTouchDetected;
 	public static event GameStateEvents OnWin;
 	public static event GameStateEvents OnLose;
 
@@ -576,7 +576,7 @@ public class LevelManager : MonoBehaviour
 				panel.anchoredPosition  = new Vector2(panel.anchoredPosition.x, 935) + Vector2.down * 100;
 				
 		}
-		Camera.main.GetComponent<MapCamera>().enabled = enable;
+		gameCamera.GetComponent<MapCamera>().enabled = enable;
 		//1.4.4
 		{
 			LevelsMap.SetActive(!enable);//1.4.6
@@ -599,7 +599,7 @@ public class LevelManager : MonoBehaviour
 			GameField.gameObject.SetActive(false);
 
 		if (!enable)
-			Camera.main.transform.position = new Vector3(0, 0, -10);
+			gameCamera.transform.position = new Vector3(0, 0, -10);
 		foreach (Transform item in GameField.transform)
 		{
 			Destroy(item.gameObject);
@@ -651,18 +651,10 @@ public class LevelManager : MonoBehaviour
 			flowersPool[i].GetComponent<SpriteRenderer>().enabled = false;
 		}
 		passLevelCounter = 0;
-
-//#if UNITY_INAPPS
-//		if (GetComponent<UnityInAppsIntegration> () == null)
-//			gameObject.AddComponent<UnityInAppsIntegration> ();
-		
-//#endif
-
 	}
 
 	void InitLevel()
 	{
-		//        itemPrefab = Resources.Load("Prefabs/Item " + currentLevel)as GameObject;
 		GenerateLevel();
 		GenerateOutline();
 		GenerateNewItems(false);
@@ -1418,33 +1410,7 @@ public class LevelManager : MonoBehaviour
 	public BoostIcon waitingBoost;
 
 	void Update()
-	{                                               // Debug keys events for editor   
-													//if (Application.isEditor)
-													//    SetupGameCamera();
-		if (gameStatus == GameState.Playing)
-		{
-			//  AvctivatedBoostView = ActivatedBoost;
-			if (Input.GetKeyDown(KeyCode.Space))
-			{
-				NoMatches();
-			}
-			if (Input.GetKeyDown(KeyCode.W))
-			{            //Instant win
-				gameStatus = GameState.PreWinAnimations;
-			}
-			if (Input.GetKeyDown(KeyCode.L))
-			{            //last move 
-				Limit = 1;
-			}
-		}
-		if (Input.GetKeyUp(KeyCode.Escape))
-		{    //Back button for Android
-			if (LevelManager.THIS.gameStatus == GameState.Playing)
-				GameObject.Find("CanvasGlobal").transform.Find("MenuPause").gameObject.SetActive(true);
-			else if (LevelManager.THIS.gameStatus == GameState.Map)
-				Application.Quit();
-		}
-
+	{
 		int i = 0;
 		//line.SetVertexCount(destroyAnyway.Count*2);
 		line.SetVertexCount(destroyAnyway.Count);       //draw line effect for selected items
@@ -1465,8 +1431,9 @@ public class LevelManager : MonoBehaviour
 		{
 			if (Input.GetMouseButton(0))
 			{        //touch detected
-				OnStartPlay();
-				Collider2D hit = Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition), 1 << LayerMask.NameToLayer("Item"));
+				OnTouchDetected?.Invoke();
+				
+				Collider2D hit = Physics2D.OverlapPoint(gameCamera.ScreenToWorldPoint(Input.mousePosition), 1 << LayerMask.NameToLayer("Item"));
 				if (hit != null)
 				{
 					Item item = hit.gameObject.GetComponent<Item>();
@@ -1573,7 +1540,7 @@ public class LevelManager : MonoBehaviour
 			}
 			else if (Input.GetMouseButtonUp(0))
 			{
-				Collider2D hit = Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition), 1 << LayerMask.NameToLayer("Default"));
+				Collider2D hit = Physics2D.OverlapPoint(gameCamera.ScreenToWorldPoint(Input.mousePosition), 1 << LayerMask.NameToLayer("Default"));
 				if (hit != null)
 				{
 					Square square = hit.gameObject.GetComponent<Square>();

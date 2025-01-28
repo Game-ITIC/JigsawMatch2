@@ -197,7 +197,7 @@ namespace Gley.EasyIAP
 
 
         /// <summary>
-        /// Returns the Product’s purchase date.
+        /// Returns the Productï¿½s purchase date.
         /// </summary>
         /// <param name="product">An enum member generated from Settings Window</param>
         /// <returns>Date of the purchase</returns>
@@ -318,7 +318,7 @@ namespace Gley.EasyIAP
 
 
         /// <summary>
-        /// Returns the date of the Product’s next auto-renew or expiration (for a canceled auto-renewing subscription).
+        /// Returns the date of the Productï¿½s next auto-renew or expiration (for a canceled auto-renewing subscription).
         /// </summary>
         /// <param name="product">An enum member generated from Settings Window</param>
         /// <returns>The expiration date</returns>
@@ -329,7 +329,7 @@ namespace Gley.EasyIAP
 
 
         /// <summary>
-        /// Returns the date of the Product’s cancel date
+        /// Returns the date of the Productï¿½s cancel date
         /// </summary>
         /// <param name="product">An enum member generated from Settings Window</param>
         /// <returns>The cancel date</returns>

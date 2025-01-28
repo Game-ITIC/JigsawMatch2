@@ -10,12 +10,12 @@ public class TutorialManager : MonoBehaviour {
     bool showed;
     void OnEnable() {
         LevelManager.OnLevelLoaded += CheckNewTarget;
-        LevelManager.OnStartPlay += DisableTutorial;
+        LevelManager.OnTouchDetected += DisableTutorial;
     }
 
     void OnDisable() {
         LevelManager.OnLevelLoaded -= CheckNewTarget;
-        LevelManager.OnStartPlay -= DisableTutorial;
+        LevelManager.OnTouchDetected -= DisableTutorial;
     }
 
     void DisableTutorial() {

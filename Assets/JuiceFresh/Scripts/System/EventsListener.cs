@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using DefaultNamespace;
+using Monobehaviours;
 
 public class EventsListener : MonoBehaviour
 {
+    [SerializeField] private GameEventDispatcher gameEventDispatcher;
+
     void OnEnable()
     {
         LevelManager.OnMapState += OnMapState;
@@ -12,7 +14,7 @@ public class EventsListener : MonoBehaviour
         LevelManager.OnLevelLoaded += OnLevelLoaded;
         LevelManager.OnMenuPlay += OnMenuPlay;
         LevelManager.OnMenuComplete += OnMenuComplete;
-        LevelManager.OnStartPlay += OnStartPlay;
+        LevelManager.OnTouchDetected += TouchDetected;
         LevelManager.OnWin += OnWin;
         LevelManager.OnLose += OnLose;
     }
@@ -24,7 +26,7 @@ public class EventsListener : MonoBehaviour
         LevelManager.OnLevelLoaded -= OnLevelLoaded;
         LevelManager.OnMenuPlay -= OnMenuPlay;
         LevelManager.OnMenuComplete -= OnMenuComplete;
-        LevelManager.OnStartPlay -= OnStartPlay;
+        LevelManager.OnTouchDetected -= TouchDetected;
         LevelManager.OnWin -= OnWin;
         LevelManager.OnLose -= OnLose;
     }
@@ -38,7 +40,7 @@ public class EventsListener : MonoBehaviour
     void OnEnterGame()
     {
         //AnalyticsEvent("OnEnterGame", LevelManager.THIS.currentLevel);
-        IronSourceManager.Instance.LoadInterstitial();
+        gameEventDispatcher.DispatchEnterGame();
     }
 
     void OnLevelLoaded()
@@ -53,7 +55,7 @@ public class EventsListener : MonoBehaviour
     {
     }
 
-    void OnStartPlay()
+    void TouchDetected()
     {
     }
 
@@ -63,16 +65,16 @@ public class EventsListener : MonoBehaviour
         InitScript.Instance.AddGems(15);
         //InitScript.Instance.AddStars(3);
         // TinySauce.OnGameFinished(true, LevelManager.Score, LevelManager.THIS.currentLevel);
-        IronSourceManager.Instance.ShowInterstitial();
+        gameEventDispatcher.DispatchWin();
     }
 
     void OnLose()
     {
         //AnalyticsEvent("OnLose", LevelManager.THIS.currentLevel);
         // AdmobManager.Instance.ShowInterstital();
-        IronSourceManager.Instance.ShowInterstitial();
+
+        gameEventDispatcher.DispatchLose();
     }
 
     #endregion
-
 }
