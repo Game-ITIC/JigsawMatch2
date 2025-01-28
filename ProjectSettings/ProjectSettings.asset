@@ -140,7 +140,8 @@ PlayerSettings:
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
   bundleVersion: 1.0.0
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: 11400000, guid: c967c0192f024c0409c56948fd2a6e68, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -172,7 +173,7 @@ PlayerSettings:
     iPhone: 0
     tvOS: 0
   overrideDefaultApplicationIdentifier: 0
-  AndroidBundleVersionCode: 7
+  AndroidBundleVersionCode: 17
   AndroidMinSdkVersion: 24
   AndroidTargetSdkVersion: 34
   AndroidPreferredInstallLocation: 1
@@ -266,7 +267,8 @@ PlayerSettings:
   AndroidTargetDevices: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: C:/Users/Sardor/Downloads/Telegram Desktop/iticgames.keystore
+  AndroidKeystoreName: C:/Users/Sardor Akhmadjonov/Downloads/Telegram Desktop/iticgames
+    (7).keystore
   AndroidKeyaliasName: shokhaproitic
   AndroidEnableArmv9SecurityFeatures: 0
   AndroidBuildApkPerCpuArchitecture: 0
@@ -852,7 +854,8 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Android: VS_ATT;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled;LEVELPLAY_DEPENDENCIES_INSTALLED
+    Android: VS_ATT;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled;LEVELPLAY_DEPENDENCIES_INSTALLED;GLEY_IAP_GOOGLEPLAY
+    Standalone: 
     Windows Store Apps: UNITY_ADS
     iPhone: UNITY_ADS;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled
   additionalCompilerArguments: {}
@@ -955,6 +958,7 @@ PlayerSettings:
     Collab: 1
     ErrorHub: 0
     Hub: 0
+    Purchasing: 0
     UNet: 1
   luminIcon:
     m_Name: 

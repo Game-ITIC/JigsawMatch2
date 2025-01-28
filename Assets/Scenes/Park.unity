@@ -12246,6 +12246,7 @@ MonoBehaviour:
     - {fileID: 1727637882}
     - {fileID: 851902991}
     - {fileID: 1763828144}
+    objectsStateID: 
   - upgradeButton: {fileID: 1730351395}
     starsToSpend: 1
     unlockID: 
@@ -12253,6 +12254,7 @@ MonoBehaviour:
     - {fileID: 1355983985}
     - {fileID: 1356404872}
     - {fileID: 535403138}
+    objectsStateID: 
   - upgradeButton: {fileID: 595069834}
     starsToSpend: 1
     unlockID: 
@@ -12261,6 +12263,7 @@ MonoBehaviour:
     - {fileID: 1756590339}
     - {fileID: 299629270}
     - {fileID: 2125128976}
+    objectsStateID: 
   - upgradeButton: {fileID: 631799986}
     starsToSpend: 5
     unlockID: 
@@ -12270,6 +12273,7 @@ MonoBehaviour:
     - {fileID: 1253216888}
     - {fileID: 1977070935}
     - {fileID: 1989331980}
+    objectsStateID: 
   - upgradeButton: {fileID: 762923163}
     starsToSpend: 5
     unlockID: 
@@ -12277,6 +12281,7 @@ MonoBehaviour:
     - {fileID: 872797896}
     - {fileID: 1201898456}
     - {fileID: 655820641}
+    objectsStateID: 
   starDisplay: {fileID: 8538005156813296416}
 --- !u!4 &1787876824
 Transform:

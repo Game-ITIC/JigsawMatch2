@@ -82,6 +82,5 @@ public class StarModel : MonoBehaviour
     {
         PlayerPrefs.SetInt("TotalStars", _totalStars);
         PlayerPrefs.Save();
-        Debug.Log($"Total stars saved: {_totalStars}");
     }
 }
