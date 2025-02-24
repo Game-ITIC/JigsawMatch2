@@ -958,7 +958,7 @@ PlayerSettings:
     Collab: 1
     ErrorHub: 0
     Hub: 0
-    Purchasing: 0
+    Purchasing: 1
     UNet: 1
   luminIcon:
     m_Name: 
