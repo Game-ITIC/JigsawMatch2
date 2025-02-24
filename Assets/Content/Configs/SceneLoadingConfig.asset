@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: SceneLoadingConfig
   m_EditorClassIdentifier: 
   <GameplaySceneName>k__BackingField: game
-  <PersistentScenes>k__BackingField:
-  - Bootstrap
+  <PersistentScenes>k__BackingField: []
