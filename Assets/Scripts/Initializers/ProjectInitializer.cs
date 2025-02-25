@@ -38,30 +38,30 @@ namespace Initializers
 
         public async UniTask StartAsync(CancellationToken cancellation = new CancellationToken())
         {
-            var hasInternetAccess = await _internetChecker.HasInternetAccess();
-            _internetState.HasInternet = hasInternetAccess;
+            // var hasInternetAccess = await _internetChecker.HasInternetAccess();
+            // _internetState.HasInternet = hasInternetAccess;
             _loadingScreenView.Show();
-            if (hasInternetAccess)
-            {
-                var isReady = await _ironSourceInitializer.WaitForIronSourceInit();
-                var completionSource = new UniTaskCompletionSource();
-
-                API.Initialize((status, message) =>
-                {
-                    completionSource.TrySetResult();
-                    if (status == IAPOperationStatus.Success)
-                    {
-                        _internetState.HasRemoveAds = API.IsActive(ShopProductNames.RemoveAds);
-                    }
-                });
-
-                await completionSource.Task;
-
-                if (isReady && _internetState.HasRemoveAds)
-                {
-                    _ironSourceManager.InitializeLevelPlay();
-                }
-            }
+            // if (hasInternetAccess)
+            // {
+            //     var isReady = await _ironSourceInitializer.WaitForIronSourceInit();
+            //     var completionSource = new UniTaskCompletionSource();
+            //
+            //     API.Initialize((status, message) =>
+            //     {
+            //         completionSource.TrySetResult();
+            //         if (status == IAPOperationStatus.Success)
+            //         {
+            //             _internetState.HasRemoveAds = API.IsActive(ShopProductNames.RemoveAds);
+            //         }
+            //     });
+            //
+            //     await completionSource.Task;
+            //
+            //     if (isReady && _internetState.HasRemoveAds)
+            //     {
+            //         _ironSourceManager.InitializeLevelPlay();
+            //     }
+            // }
 
             await _sceneLoader.LoadGameplayScene();
             _loadingScreenView.Hide();

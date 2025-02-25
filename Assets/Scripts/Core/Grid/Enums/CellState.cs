@@ -3,7 +3,12 @@ namespace Core.Grid.Interfaces
     public enum CellState
     {
         Normal,
-        Infected,
-        Blocked
+        Empty,
+        Pink,
+        DoublePink,
+        Honey,
+        Blocked,
+        DoubleBlocked,
+        Infected
     }
 }

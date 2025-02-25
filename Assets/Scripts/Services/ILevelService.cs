@@ -1,7 +1,10 @@
+using Cysharp.Threading.Tasks;
+
 namespace Services
 {
-    public class ILevelService
+    public interface ILevelService
     {
-        
+        LevelDefinition LoadAndInitializeLevel(int levelId);
+        UniTask<LevelDefinition> LoadAndInitializeLevelAsync(int levelId);
     }
 }
