@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using Core.Grid.Interfaces;
 using Cysharp.Threading.Tasks;
 using Data;
 using Gley.EasyIAP;
@@ -22,13 +23,15 @@ namespace Initializers
         // private readonly IGameEvents _gameEvents;
         private readonly Button _noAds;
         private readonly InternetState _internetState;
+        private readonly ITileViewFactory _tileViewFactory;
 
         public GameInitializer(
             IronSourceManager ironSourceManager,
             // IGameEvents gameEvents,
             ILevelService levelService,
             Button noAds,
-            InternetState internetState
+            InternetState internetState,
+            ITileViewFactory tileViewFactory
         )
         {
             _ironSourceManager = ironSourceManager;
@@ -36,14 +39,16 @@ namespace Initializers
             // _gameEvents = gameEvents;
             _noAds = noAds;
             _internetState = internetState;
+            _tileViewFactory = tileViewFactory;
         }
 
         public async UniTask StartAsync(CancellationToken cancellation = new CancellationToken())
         {
+            await _tileViewFactory.WarmUp();
             // _gameEvents.OnGameLost += ShowInterstitial;
             // _gameEvents.OnGameWon += ShowInterstitial;
             // _gameEvents.OnEnterGame += GameStart;
-            await _levelService.LoadAndInitializeLevelAsync(1);
+            await _levelService.InitializeLevel(1);
             // _noAds.onClick.RemoveAllListeners();
             // _noAds.onClick.AddListener(() =>
             // {

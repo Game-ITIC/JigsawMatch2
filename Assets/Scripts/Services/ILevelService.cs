@@ -1,10 +1,10 @@
+using Core.Grid.Interfaces;
 using Cysharp.Threading.Tasks;
 
 namespace Services
 {
     public interface ILevelService
     {
-        LevelDefinition LoadAndInitializeLevel(int levelId);
-        UniTask<LevelDefinition> LoadAndInitializeLevelAsync(int levelId);
+        UniTask<IGrid> InitializeLevel(int levelId);
     }
 }

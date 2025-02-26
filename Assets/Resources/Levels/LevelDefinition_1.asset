@@ -21,8 +21,8 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  rows: 10
-  columns: 10
+  rows: 4
+  columns: 4
   moveLimit: 20
   levelId: 1
   themeName: 
@@ -47,36 +47,6 @@ MonoBehaviour:
     isEnabled: 1
     state: 0
     tileId: 
-  - row: 0
-    column: 4
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 0
-    column: 5
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 0
-    column: 6
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 0
-    column: 7
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 0
-    column: 8
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 0
-    column: 9
-    isEnabled: 1
-    state: 0
-    tileId: 
   - row: 1
     column: 0
     isEnabled: 1
@@ -84,107 +54,47 @@ MonoBehaviour:
     tileId: 
   - row: 1
     column: 1
-    isEnabled: 0
+    isEnabled: 1
     state: 0
     tileId: 
   - row: 1
     column: 2
-    isEnabled: 0
+    isEnabled: 1
     state: 0
     tileId: 
   - row: 1
+    column: 3
+    isEnabled: 1
+    state: 0
+    tileId: 
+  - row: 2
+    column: 0
+    isEnabled: 1
+    state: 0
+    tileId: 
+  - row: 2
+    column: 1
+    isEnabled: 1
+    state: 0
+    tileId: 
+  - row: 2
+    column: 2
+    isEnabled: 1
+    state: 0
+    tileId: 
+  - row: 2
     column: 3
     isEnabled: 0
     state: 0
     tileId: 
-  - row: 1
-    column: 4
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 1
-    column: 5
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 1
-    column: 6
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 1
-    column: 7
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 1
-    column: 8
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 1
-    column: 9
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 2
-    column: 0
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 2
-    column: 1
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 2
-    column: 2
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 2
-    column: 3
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 2
-    column: 4
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 2
-    column: 5
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 2
-    column: 6
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 2
-    column: 7
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 2
-    column: 8
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 2
-    column: 9
-    isEnabled: 1
-    state: 0
-    tileId: 
   - row: 3
     column: 0
-    isEnabled: 1
+    isEnabled: 0
     state: 0
     tileId: 
   - row: 3
     column: 1
-    isEnabled: 1
+    isEnabled: 0
     state: 0
     tileId: 
   - row: 3
@@ -194,336 +104,6 @@ MonoBehaviour:
     tileId: 
   - row: 3
     column: 3
-    isEnabled: 1
-    state: 5
-    tileId: 
-  - row: 3
-    column: 4
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 3
-    column: 5
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 3
-    column: 6
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 3
-    column: 7
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 3
-    column: 8
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 3
-    column: 9
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 4
-    column: 0
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 4
-    column: 1
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 4
-    column: 2
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 4
-    column: 3
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 4
-    column: 4
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 4
-    column: 5
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 4
-    column: 6
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 4
-    column: 7
-    isEnabled: 1
-    state: 5
-    tileId: 
-  - row: 4
-    column: 8
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 4
-    column: 9
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 5
-    column: 0
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 5
-    column: 1
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 5
-    column: 2
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 5
-    column: 3
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 5
-    column: 4
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 5
-    column: 5
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 5
-    column: 6
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 5
-    column: 7
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 5
-    column: 8
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 5
-    column: 9
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 6
-    column: 0
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 6
-    column: 1
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 6
-    column: 2
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 6
-    column: 3
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 6
-    column: 4
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 6
-    column: 5
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 6
-    column: 6
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 6
-    column: 7
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 6
-    column: 8
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 6
-    column: 9
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 7
-    column: 0
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 7
-    column: 1
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 7
-    column: 2
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 7
-    column: 3
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 7
-    column: 4
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 7
-    column: 5
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 7
-    column: 6
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 7
-    column: 7
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 7
-    column: 8
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 7
-    column: 9
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 8
-    column: 0
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 8
-    column: 1
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 8
-    column: 2
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 8
-    column: 3
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 8
-    column: 4
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 8
-    column: 5
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 8
-    column: 6
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 8
-    column: 7
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 8
-    column: 8
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 8
-    column: 9
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 9
-    column: 0
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 9
-    column: 1
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 9
-    column: 2
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 9
-    column: 3
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 9
-    column: 4
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 9
-    column: 5
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 9
-    column: 6
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 9
-    column: 7
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 9
-    column: 8
-    isEnabled: 1
-    state: 0
-    tileId: 
-  - row: 9
-    column: 9
     isEnabled: 1
     state: 0
     tileId: 

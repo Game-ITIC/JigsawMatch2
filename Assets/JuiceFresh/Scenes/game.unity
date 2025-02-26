@@ -5840,8 +5840,8 @@ MonoBehaviour:
     TypeName: Scopes.ProjectLifetimeScope
   autoRun: 1
   autoInjectGameObjects: []
-  gameEventDispatcher: {fileID: 654867350}
   noAds: {fileID: 291734964}
+  tileViewFactory: {fileID: 11400000, guid: 277fa629c294dcb47be13d10b20cf1c1, type: 2}
 --- !u!4 &229438419
 Transform:
   m_ObjectHideFlags: 0
