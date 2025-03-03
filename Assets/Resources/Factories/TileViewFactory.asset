@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileMappings:
   - tileId: Red
-    prefab: {fileID: 158394, guid: b2fca4a6a96ef2a42a92881c4bc7ea34, type: 3}
+    prefab: {fileID: 529471138832300920, guid: bc815fa92e7c9014c962b80d10829f43, type: 3}
     poolSize: 5

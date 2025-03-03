@@ -3,17 +3,20 @@ using Cysharp.Threading.Tasks;
 using Loaders;
 using Core;
 using Core.Grid.Interfaces;
+using Core.Grid.Spawners;
+using JetBrains.Annotations;
 using UnityEngine;
 using Grid = Core.Grid.Entities.Grid;
 
 namespace Services
 {
+    [UsedImplicitly]
     public class LevelService : ILevelService
     {
         private readonly ILevelAssetLoader _levelAssetLoader;
         private readonly IGridFactory _gridFactory;
         private readonly ITileFactory _tileFactory;
-        private readonly ITileViewFactory _tileViewFactory;
+        private readonly ITileViewSpawner _tileViewSpawner;
 
         private readonly Dictionary<ICell, GameObject> _cellViews = new();
         public IGrid CurrentGrid { get; private set; }
@@ -23,19 +26,19 @@ namespace Services
         public LevelService(ILevelAssetLoader levelAssetLoader,
             IGridFactory gridFactory,
             ITileFactory tileFactory,
-            ITileViewFactory tileViewFactory
+            ITileViewSpawner tileViewSpawner
         )
         {
             _levelAssetLoader = levelAssetLoader;
             _gridFactory = gridFactory;
             _tileFactory = tileFactory;
-            _tileViewFactory = tileViewFactory;
+            _tileViewSpawner = tileViewSpawner;
         }
 
         public async UniTask<IGrid> InitializeLevel(int levelId)
         {
             var definition = await _levelAssetLoader.LoadLevelAsync(levelId);
-            
+
             CurrentGrid = _gridFactory.CreateGrid(definition.rows, definition.columns);
 
             foreach (var cd in definition.cells)
@@ -51,6 +54,7 @@ namespace Services
                     cell.Tile = null;
                     continue;
                 }
+                //TODO: Need to think about a Normal tile which created. Maybe there's already a solution.
 
                 if (!string.IsNullOrEmpty(cd.tileId))
                 {
@@ -62,16 +66,6 @@ namespace Services
                 }
             }
 
-            if (!_gridParent)
-            {
-                _gridParent = new GameObject("GridParent");
-            }
-
-            float cellWidth = 1f;
-            float cellHeight = 1f;
-            float startX = -(definition.columns / 2f);
-            float startY = (definition.rows / 2f);
-
             for (int r = 0; r < definition.rows; r++)
             {
                 for (int c = 0; c < definition.columns; c++)
@@ -80,17 +74,11 @@ namespace Services
                     if (cell == null) continue;
                     if (!cell.IsEnabled || cell.Tile == null) continue;
 
-                    string tileId = cell.Tile.TileId;
-
-                    GameObject tileGO = _tileViewFactory.GetTileView(tileId);
-
-                    tileGO.transform.SetParent(_gridParent.transform, false);
-
-                    float x = startX + c * cellWidth;
-                    float y = startY - r * cellHeight;
-                    tileGO.transform.localPosition = new Vector3(x, y, 0);
-
-                    _cellViews[cell] = tileGO;
+                    var tileGo = await _tileViewSpawner.SpawnTileView(cell, CurrentGrid);
+                    if (tileGo != null)
+                    {
+                        _cellViews[cell] = tileGo;
+                    }
                 }
             }
 
@@ -101,66 +89,39 @@ namespace Services
         {
             foreach (var kvp in _cellViews)
             {
-                var cell = kvp.Key;
                 var go = kvp.Value;
                 if (go != null)
                 {
-                    _tileViewFactory.ReleaseTileView(go);
-                }
-
-                if (cell != null)
-                {
-                    cell.Tile = null;
+                    _tileViewSpawner.ReleaseTileView(go);
                 }
             }
 
             _cellViews.Clear();
 
-            if (_gridParent != null)
+            CurrentGrid = null;
+        }
+
+        public async UniTask UpdateCellView(ICell cell)
+        {
+            if (_cellViews.TryGetValue(cell, out var oldGO))
             {
-                Object.Destroy(_gridParent);
+                _tileViewSpawner.ReleaseTileView(oldGO);
+                _cellViews.Remove(cell);
             }
 
-            CurrentGrid = null;
-            _gridParent = null;
+            if (cell != null && cell.IsEnabled && cell.Tile != null)
+            {
+                var newGo = await _tileViewSpawner.SpawnTileView(cell, CurrentGrid);
+                if (newGo != null)
+                {
+                    _cellViews[cell] = newGo;
+                }
+            }
         }
 
         public GameObject GetCellView(ICell cell)
         {
             return _cellViews.GetValueOrDefault(cell);
-        }
-
-        public void UpdateCellView(ICell cell)
-        {
-            if (_cellViews.TryGetValue(cell, out var oldGO))
-            {
-                _cellViews.Remove(cell);
-                if (oldGO != null)
-                {
-                    _tileViewFactory.ReleaseTileView(oldGO);
-                }
-            }
-
-            if (!cell.IsEnabled || cell.Tile == null)
-            {
-                return;
-            }
-
-            string tileId = cell.Tile.TileId;
-            GameObject tileGO = _tileViewFactory.GetTileView(tileId);
-            tileGO.transform.SetParent(_gridParent.transform, false);
-
-            float cellWidth = 1f;
-            float cellHeight = 1f;
-            float startX = -(CurrentGrid.Columns / 2f);
-            float startY = (CurrentGrid.Rows / 2f);
-
-            float x = startX + cell.Column * cellWidth;
-            float y = startY - cell.Row * cellHeight;
-            tileGO.transform.localPosition = new Vector3(x, y, 0);
-
-            // Запоминаем
-            _cellViews[cell] = tileGO;
         }
     }
 }

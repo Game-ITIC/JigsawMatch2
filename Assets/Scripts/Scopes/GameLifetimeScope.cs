@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Core.Grid.Configs;
 using Core.Grid.Factories;
 using Core.Grid.Interfaces;
+using Core.Grid.Spawners;
 using Initializers;
 using Loaders;
 using Monobehaviours;
@@ -18,6 +20,7 @@ namespace Scopes
         // [SerializeField] private GameEventDispatcher gameEventDispatcher;
         [SerializeField] private Button noAds;
         [SerializeField] private TileViewFactory tileViewFactory;
+        [SerializeField] private TileViewSpawnConfig tileViewSpawnConfig;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -26,9 +29,14 @@ namespace Scopes
             builder.Register<ILevelAssetLoader, ResourcesLevelAssetLoader>(Lifetime.Scoped)
                 .WithParameter("assetPath", "Levels");
 
+            builder.RegisterComponent(tileViewSpawnConfig);
+
+
             builder.Register<IGridFactory, GridFactory>(Lifetime.Scoped);
-            builder.Register<ITileFactory, TileFactory>(Lifetime.Scoped).WithParameter("possibleTileIds", new List<string> {"Red"});
+            builder.Register<ITileFactory, TileFactory>(Lifetime.Scoped)
+                .WithParameter("possibleTileIds", new List<string> { "Red" });
             builder.RegisterComponent<ITileViewFactory>(tileViewFactory);
+            builder.Register<ITileViewSpawner, TileViewSpawner>(Lifetime.Scoped);
 
             builder.Register<ILevelService, LevelService>(Lifetime.Scoped);
 
