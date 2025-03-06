@@ -126,9 +126,6 @@ namespace Core.Editor
                             case CellState.Blocked:
                                 GUI.backgroundColor = new Color32(0, 170, 255, 255);
                                 break;
-                            case CellState.DoubleBlocked:
-                                GUI.backgroundColor = new Color32(0, 70, 255, 255);
-                                break;
                             case CellState.Pink:
                                 GUI.backgroundColor = new Color32(255, 0, 255, 255);
                                 break;
@@ -189,12 +186,6 @@ namespace Core.Editor
             menu.AddItem(new GUIContent("State/Blocked"), false, () =>
             {
                 cellData.state = CellState.Blocked;
-                MarkLevelDirty();
-            });
-
-            menu.AddItem(new GUIContent("State/DoubleBlocked"), false, () =>
-            {
-                cellData.state = CellState.DoubleBlocked;
                 MarkLevelDirty();
             });
 

@@ -7,6 +7,8 @@ namespace Core.Grid.Entities
         public int Row { get; }
         public int Column { get; }
         public CellState State { get; set; }
+
+        public int BlockHitsRemaining { get; set; }
         public bool IsEnabled { get; set; }
         public ITile Tile { get; set; }
 

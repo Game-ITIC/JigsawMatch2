@@ -16,4 +16,8 @@ public class CellData
 
     [LabelWidth(70)] [LabelText("Tile ID")]
     public string tileId = "";
+
+    [LabelWidth(70)] [LabelText("Block hits")]
+    public int blockHits;
+
 }

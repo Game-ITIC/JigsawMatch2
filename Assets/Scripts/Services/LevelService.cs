@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Loaders;
 using Core;
+using Core.Grid.Factories;
 using Core.Grid.Interfaces;
 using Core.Grid.Spawners;
 using JetBrains.Annotations;
@@ -17,6 +18,7 @@ namespace Services
         private readonly IGridFactory _gridFactory;
         private readonly ITileFactory _tileFactory;
         private readonly ITileViewSpawner _tileViewSpawner;
+        private readonly CellViewFactory _cellViewFactory;
 
         private readonly Dictionary<ICell, GameObject> _cellViews = new();
         public IGrid CurrentGrid { get; private set; }
@@ -26,13 +28,15 @@ namespace Services
         public LevelService(ILevelAssetLoader levelAssetLoader,
             IGridFactory gridFactory,
             ITileFactory tileFactory,
-            ITileViewSpawner tileViewSpawner
+            ITileViewSpawner tileViewSpawner,
+            CellViewFactory cellViewFactory
         )
         {
             _levelAssetLoader = levelAssetLoader;
             _gridFactory = gridFactory;
             _tileFactory = tileFactory;
             _tileViewSpawner = tileViewSpawner;
+            _cellViewFactory = cellViewFactory;
         }
 
         public async UniTask<IGrid> InitializeLevel(int levelId)
@@ -48,6 +52,7 @@ namespace Services
 
                 cell.IsEnabled = cd.isEnabled;
                 cell.State = cd.state;
+                cell.BlockHitsRemaining = cd.blockHits;
 
                 if (!cell.IsEnabled || cell.State != CellState.Normal)
                 {
@@ -73,7 +78,7 @@ namespace Services
                     var cell = CurrentGrid.GetCell(r, c);
                     if (cell == null) continue;
                     if (!cell.IsEnabled || cell.Tile == null) continue;
-
+                    
                     var tileGo = await _tileViewSpawner.SpawnTileView(cell, CurrentGrid);
                     if (tileGo != null)
                     {

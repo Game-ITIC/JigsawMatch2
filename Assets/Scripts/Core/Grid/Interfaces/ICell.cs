@@ -4,8 +4,9 @@ namespace Core.Grid.Interfaces
     {
         int Row { get; }
         int Column { get; }
-        CellState State { get; set; }
         bool IsEnabled { get; set; }
+        CellState State { get; set; }
+        int BlockHitsRemaining { get; set; }
         ITile Tile { get; set; }
     }
 }

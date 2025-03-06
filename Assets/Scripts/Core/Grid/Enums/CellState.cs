@@ -8,7 +8,6 @@ namespace Core.Grid.Interfaces
         DoublePink,
         Honey,
         Blocked,
-        DoubleBlocked,
         Infected
     }
 }
