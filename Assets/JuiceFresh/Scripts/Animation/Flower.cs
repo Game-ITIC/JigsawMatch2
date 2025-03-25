@@ -2,80 +2,157 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Flower : MonoBehaviour {
-    Item item;
-    // Use this for initialization
-    void Start() {
-        GetComponent<ParticleSystem>().Stop();
+/// <summary>
+/// Controls the visual "flower" effect that flies to items when creating special items
+/// </summary>
+public class Flower : MonoBehaviour 
+{
+    #region Private Fields
+    private Item targetItem;
+    private SpriteRenderer spriteRenderer;
+    private ParticleSystem particleSystem;
+    #endregion
+
+    #region Unity Lifecycle
+    void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        particleSystem = GetComponent<ParticleSystem>();
+    }
+    
+    void Start() 
+    {
+        // Ensure the particle system is stopped on initialization
+        particleSystem.Stop();
     }
 
-    // Update is called once per frame
-    void Update() {
+    void Update() 
+    {
+        // Keep the flower rotating and at proper depth
         transform.Rotate(Vector3.back * Time.deltaTime * 1000);
         transform.position = new Vector3(transform.position.x, transform.position.y, -15f);
     }
+    #endregion
 
-    public void StartFly(Vector3 pos1, bool directFly = false) {
-        GetComponent<SpriteRenderer>().enabled = true;
-        StartCoroutine(FlyCor(pos1, directFly));
+    #region Public Methods
+    /// <summary>
+    /// Starts the flower animation flying from a given position
+    /// </summary>
+    /// <param name="startPosition">Starting position for the flower</param>
+    /// <param name="directFly">If true, flies directly and faster</param>
+    public void StartFly(Vector3 startPosition, bool directFly = false) 
+    {
+        spriteRenderer.enabled = true;
+        StartCoroutine(FlyCor(startPosition, directFly));
     }
+    #endregion
 
-    IEnumerator FlyCor(Vector3 pos1, bool directFly = false) {
-        Vector3 pos2 = Vector3.zero;
+    #region Private Methods
+    /// <summary>
+    /// Coroutine to handle the flying animation
+    /// </summary>
+    private IEnumerator FlyCor(Vector3 startPosition, bool directFly = false) 
+    {
+        Vector3 targetPosition = Vector3.zero;
+        
         yield return new WaitForFixedUpdate();
 
-        transform.position = pos1;
-        while (LevelManager.THIS.DragBlocked) {
+        // Set initial position
+        transform.position = startPosition;
+        
+        // Wait until we're not drag-blocked
+        while (LevelManager.THIS.DragBlocked) 
+        {
             yield return new WaitForEndOfFrame();
         }
-        List<Item> items = LevelManager.THIS.GetRandomItems(1);
-        foreach (Item item1 in items) {
-            item = item1;
-            pos2 = item.transform.position;
-        }
-        if (item == null) {
-            GetComponent<ParticleSystem>().Stop();
-            GetComponent<SpriteRenderer>().enabled = false;
+        
+        // Find a random target item
+        FindTargetItem();
+        
+        if (targetItem == null) 
+        {
+            CleanupFlower();
             yield break;
         }
-        Item _item = item;
-        _item.nextType = (ItemsTypes)Random.Range(1, 3);
+        
+        // Store the target position and item
+        targetPosition = targetItem.transform.position;
+        Item trackedItem = targetItem;
+        
+        // Set the target item to change to a special item
+        trackedItem.nextType = (ItemsTypes)Random.Range(1, 3);
+        
+        // Calculate movement parameters
         float startTime = Time.time;
-        Vector3 startPos = pos1;
-        float distance = Vector3.Distance(pos1, pos2);
-        float speed = 5;
-        if (directFly)
-            speed *= 10;
+        float distance = Vector3.Distance(startPosition, targetPosition);
+        float speed = directFly ? 50f : 5f;
         float fracJourney = 0;
-        //GetComponent<ParticleSystem>().gravityModifier = 0.1f;
-        GetComponent<ParticleSystem>().Play();
+        
+        // Start particle effect
+        particleSystem.Play();
 
-        //        iTween.MoveTo(gameObject, iTween.Hash("position", pos2, "time", 1, "oncomplete", "AnimCallBack"));
-        while (fracJourney < 1) {
-            if (_item.awaken && _item.gameObject != null) {
-                _item.nextType = ItemsTypes.NONE;
+        // Animate the flower flying to the target
+        while (fracJourney < 1) 
+        {
+            // If the target item changed state, retarget
+            if (trackedItem.awaken && trackedItem.gameObject != null) 
+            {
+                trackedItem.nextType = ItemsTypes.NONE;
                 StartFly(transform.position, directFly);
                 yield break;
             }
-            // speed += 0.2f;
+            
+            // Calculate movement
             float distCovered = (Time.time - startTime) * speed;
             fracJourney = distCovered / distance;
-			if (float.IsNaN (fracJourney))  //1.3
-				fracJourney = 0;   //1.3
-            transform.position = Vector3.Lerp(startPos, pos2, fracJourney);
+            
+            // Handle edge case for NaN
+            if (float.IsNaN(fracJourney))
+                fracJourney = 0;
+                
+            // Move the flower
+            transform.position = Vector3.Lerp(startPosition, targetPosition, fracJourney);
             yield return new WaitForFixedUpdate();
         }
 
-        GetComponent<ParticleSystem>().gravityModifier = 0;
-
-        AnimCallBack();
+        // Complete the animation
+        particleSystem.gravityModifier = 0;
+        AnimationComplete();
     }
 
-    void AnimCallBack() {
-        GetComponent<ParticleSystem>().Stop();
-        GetComponent<SpriteRenderer>().enabled = false;
-        item.ChangeType();
+    /// <summary>
+    /// Finds a random target item for the flower to fly to
+    /// </summary>
+    private void FindTargetItem()
+    {
+        List<Item> items = LevelManager.THIS.GetRandomItems(1);
+        foreach (Item item in items) 
+        {
+            targetItem = item;
+        }
+    }
+
+    /// <summary>
+    /// Cleans up the flower when animation is complete or canceled
+    /// </summary>
+    private void CleanupFlower()
+    {
+        particleSystem.Stop();
+        spriteRenderer.enabled = false;
+    }
+
+    /// <summary>
+    /// Completes the animation and applies the effect to the target item
+    /// </summary>
+    private void AnimationComplete() 
+    {
+        CleanupFlower();
+        
+        // Change the target item's type
+        targetItem.ChangeType();
+        
+        // Unblock dragging
         LevelManager.THIS.DragBlocked = false;
-
     }
+    #endregion
 }

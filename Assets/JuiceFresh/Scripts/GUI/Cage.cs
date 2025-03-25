@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using JuiceFresh;
 using UnityEngine.UI;
 
 public class Cage : MonoBehaviour

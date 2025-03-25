@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using JuiceFresh;
 //using JuiceFresh.Scripts.System;
 using UnityEngine.UI;
 

@@ -2,73 +2,106 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Manages the visual lines connecting matched items during gameplay
+/// </summary>
 public class Line : MonoBehaviour
 {
+    #region Public Fields
     public Material material;
+    public int lineWidth = 1;
+    #endregion
+
+    #region Private Fields
     private Mesh mesh;
-    public Vector3[] vertices;
-    public Vector3 start;
-    public Vector3 end;
-    public int lineWidth;
+    private Vector3 start;
+    private Vector3 end;
+    private List<LineRenderer> lines = new List<LineRenderer>();
+    private Vector3[] points = new Vector3[200]; // Cache for point positions
+    #endregion
 
-    public List<LineRenderer> lines = new List<LineRenderer>();
-    public Vector3[] points = new Vector3[200];
-
-    // Use this for initialization
+    #region Unity Lifecycle
     void Start()
     {
-
-        foreach (Transform item in transform)
-        {
-            lines.Add(item.GetComponent<LineRenderer>());
-        }
+        InitializeLineRenderers();
     }
+    #endregion
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+    #region Public Methods
+    /// <summary>
+    /// Sets the number of vertices in the line
+    /// </summary>
+    /// <param name="count">Number of vertices</param>
     public void SetVertexCount(int count)
     {
-        int i = 0;
+        // Ensure we have enough line renderers
         if (lines.Count < count)
             AddLine();
-        foreach (LineRenderer item in lines)
+        
+        // Enable/disable line renderers based on count
+        for (int i = 0; i < lines.Count; i++)
         {
             if (i < count)
             {
-                item.enabled = true;
-                SetSorting(item);
+                lines[i].enabled = true;
+                SetSortingLayer(lines[i]);
             }
             else
-                item.enabled = false;
-            i++;
+            {
+                lines[i].enabled = false;
+            }
         }
     }
 
+    /// <summary>
+    /// Adds a point to the line
+    /// </summary>
+    /// <param name="position">Position of the point</param>
+    /// <param name="index">Index of the point</param>
     public void AddPoint(Vector3 position, int index)
     {
         points[index] = position;
+        
+        // If not the first point, connect it to the previous point
         if (index > 0)
         {
             lines[index].SetPosition(0, points[index - 1]);
             lines[index].SetPosition(1, points[index]);
         }
     }
+    #endregion
 
-    void AddLine()
+    #region Private Methods
+    /// <summary>
+    /// Initializes line renderers at startup
+    /// </summary>
+    private void InitializeLineRenderers()
+    {
+        foreach (Transform item in transform)
+        {
+            if (item.GetComponent<LineRenderer>() != null)
+                lines.Add(item.GetComponent<LineRenderer>());
+        }
+    }
+
+    /// <summary>
+    /// Creates and adds a new line renderer
+    /// </summary>
+    private void AddLine()
     {
         GameObject newLine = Instantiate(transform.GetChild(0).gameObject) as GameObject;
         newLine.transform.SetParent(transform);
         lines.Add(newLine.GetComponent<LineRenderer>());
     }
 
-
-    void SetSorting(LineRenderer lr)
+    /// <summary>
+    /// Sets the sorting layer for a line renderer
+    /// </summary>
+    /// <param name="lineRenderer">Line renderer to set</param>
+    private void SetSortingLayer(LineRenderer lineRenderer)
     {
-        lr.sortingLayerID = 0;
-        lr.sortingOrder = 1;
+        lineRenderer.sortingLayerID = 0;
+        lineRenderer.sortingOrder = 1;
     }
+    #endregion
 }

@@ -85,28 +85,14 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c44c2128b75f0ab4596c61a0e2d9b349, type: 3}
   - {fileID: 21300000, guid: f6a3bb4b5cc2c8a409436b886dc4db43, type: 3}
   sprRenderer: {fileID: 21290506}
-  square: {fileID: 0}
-  dragThis: 0
-  mousePos: {x: 0, y: 0, z: 0}
-  deltaPos: {x: 0, y: 0, z: 0}
-  switchDirection: {x: 0, y: 0, z: 0}
-  falling: 0
-  CurrentType: 0
-  debugType: 0
-  COLORView: 0
-  anim: {fileID: 9544942}
-  destroying: 0
-  appeared: 0
-  animationFinished: 0
-  justCreatedItem: 0
+  appearingEffect: {fileID: 157356, guid: 6edc18e850d8a134e88e99cb7a671687, type: 3}
   timerTextPrefab: {fileID: 146320, guid: a8088f5845f57544e806e54bb1a317ce, type: 3}
-  bombTimer: 0
   bombSelection: {fileID: 151702, guid: 3aba11b56505b9c499cb3449e836b223, type: 3}
   bombSelection1: {fileID: 174278, guid: 13e5cd2f06589485eab69c6bd0561a67, type: 3}
   wickBurningPrefab: {fileID: 179724, guid: b4fa6e352fc8349bc9270d0b6189a1f9, type: 3}
-  awaken: 0
-  appearingEffect: {fileID: 157356, guid: 6edc18e850d8a134e88e99cb7a671687, type: 3}
-  item: {fileID: 0}
+  debugType: 0
+  COLORView: 0
+  <anim>k__BackingField: {fileID: 9544942}
 --- !u!61 &6190506
 BoxCollider2D:
   m_ObjectHideFlags: 0
