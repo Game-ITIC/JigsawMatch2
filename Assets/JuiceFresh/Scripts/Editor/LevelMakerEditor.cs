@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using UnityEngine.UI;
 using System.Reflection;
+using JuiceFresh;
 //using JuiceFresh.Scripts.Integrations;
 using UnityEditor.SceneManagement;
 

@@ -854,10 +854,23 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Android: VS_ATT;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled;LEVELPLAY_DEPENDENCIES_INSTALLED;GLEY_IAP_GOOGLEPLAY
-    Standalone: 
-    Windows Store Apps: UNITY_ADS
-    iPhone: UNITY_ADS;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled
+    Android: VS_ATT;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled;LEVELPLAY_DEPENDENCIES_INSTALLED;GLEY_IAP_GOOGLEPLAY;DOTWEEN
+    EmbeddedLinux: DOTWEEN
+    GameCoreScarlett: DOTWEEN
+    GameCoreXboxOne: DOTWEEN
+    LinuxHeadlessSimulation: DOTWEEN
+    Nintendo Switch: DOTWEEN
+    PS4: DOTWEEN
+    PS5: DOTWEEN
+    QNX: DOTWEEN
+    Stadia: DOTWEEN
+    Standalone: DOTWEEN
+    VisionOS: DOTWEEN
+    WebGL: DOTWEEN
+    Windows Store Apps: UNITY_ADS;DOTWEEN
+    XboxOne: DOTWEEN
+    iPhone: UNITY_ADS;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled;DOTWEEN
+    tvOS: DOTWEEN
   additionalCompilerArguments: {}
   platformArchitecture:
     iPhone: 1
