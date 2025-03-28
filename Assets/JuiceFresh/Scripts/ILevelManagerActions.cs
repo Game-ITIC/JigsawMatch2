@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace JuiceFresh
@@ -13,6 +14,7 @@ namespace JuiceFresh
         IEnumerator InitBombs();
 
         void CreateCollectableTarget(GameObject parentTransform, Target tar, bool ForDialog = true);
+        List<Item> GetRandomItems(int count);
         // Add other methods as needed
     }
 }

@@ -352,7 +352,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     public BoostIcon[] InGameBoosts;
     public int passLevelCounter;
-    List<ItemsTypes> gatheredTypes = new List<ItemsTypes>();
+    public List<ItemsTypes> gatheredTypes = new List<ItemsTypes>();
     List<Vector3> startPosFlowers = new List<Vector3>();
     public List<GameObject> friendsAvatars = new List<GameObject>();
 
@@ -412,7 +412,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     private bool stopSliding;
     private float offset;
     public GameObject flower;
-    float extraItemEvery = 6;
+    public float extraItemEvery = 6;
 
     public int bombsCollect;
 
@@ -479,17 +479,25 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         get { return GameStatus; }
         set
         {
-            _currentState?.ExitState();
+            if (_currentState != null)
+            {
+                Debug.Log("Exiting current state: " + _currentState.GetType().Name);
+                _currentState.ExitState();
+            }
+
 
             GameStatus = value;
 
-            if (_states.ContainsKey(value))
+            if (_states != null && _states.ContainsKey(value))
             {
                 _currentState = _states[value];
+
+                Debug.Log("Entering new state: " + _currentState.GetType().Name);
                 _currentState.EnterState();
             }
             else
             {
+                Debug.Log("Handling legacy state: " + value);
                 HandleLegacyState(value);
             }
         }
@@ -540,17 +548,17 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         {
             Time.timeScale = 0;
         }
-        else if (state == GameState.PrepareBoosts)
-        {
-            SetPreBoosts();
-        }
-        else if (state == GameState.Playing)
-        {
-            Time.timeScale = 1;
-
-
-            StartCoroutine(TipsManager.THIS.CheckPossibleCombines());
-        }
+        // else if (state == GameState.PrepareBoosts)
+        // {
+        //     SetPreBoosts();
+        // }
+        // else if (state == GameState.Playing)
+        // {
+        //     Time.timeScale = 1;
+        //
+        //
+        //     StartCoroutine(TipsManager.THIS.CheckPossibleCombines());
+        // }
         else if (state == GameState.GameOver)
         {
             MusicBase.Instance.GetComponent<AudioSource>().Stop();
@@ -663,19 +671,22 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         if (Level.gameObject.activeSelf)
             Level.gameObject.SetActive(false);
 
-        THIS = this;
-        Instance = this;
         // if (!LevelManager.THIS.enableInApps)//1.4.9
         // 	GameObject.Find("Gems").gameObject.SetActive(false);
 
-        gameStatus = GameState.Map;
 
         _states = new Dictionary<GameState, GameStateBase>
         {
             { GameState.Map, new MapState(this) },
             { GameState.PrepareGame, new PrepareGameState(this) },
-            { GameState.WaitForPopup, new WaitForPopupState(this) }
+            { GameState.WaitForPopup, new WaitForPopupState(this) },
+            { GameState.PrepareBoosts, new PrepareBoostsState(this) },
+            { GameState.Playing, new PlayingState(this) },
         };
+        gameStatus = GameState.Map;
+
+        THIS = this;
+        Instance = this;
 
         for (int i = 0; i < 20; i++)
         {
@@ -1470,27 +1481,39 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     void Update()
     {
-        int i = 0;
-        //line.SetVertexCount(destroyAnyway.Count*2);
-        line.SetVertexCount(destroyAnyway.Count); //draw line effect for selected items
-        foreach (Item item in destroyAnyway)
-        {
-            if (item != null)
-            {
-                line.AddPoint(item.transform.position, i);
-                i++;
-            }
-            //Drawing.DrawLine(destroyAnyway[i-1].transform.position, item.transform.position );
-            //line.SetPosition(i, item.transform.position);
-            //line.SetPosition(i, item.transform.position+Vector3.one*0.01f);
-            //i++;
-        }
-
         if (_currentState != null)
         {
             _currentState.UpdateState();
         }
+        else if (GameStatus == GameState.Playing)
+        {
+            // Fallback for legacy code until fully refactored
+            LegacyUpdatePlaying();
+        }
 
+        // Now draw the lines based on the updated destroyAnyway list
+        if (destroyAnyway.Count > 0)
+        {
+            Debug.Log("Drawing lines for " + destroyAnyway.Count + " items");
+            int i = 0;
+            line.SetVertexCount(destroyAnyway.Count);
+            foreach (Item item in destroyAnyway)
+            {
+                if (item != null)
+                {
+                    line.AddPoint(item.transform.position, i);
+                    i++;
+                }
+            }
+        }
+        else
+        {
+            line.SetVertexCount(0);
+        }
+    }
+
+    private void LegacyUpdatePlaying()
+    {
         if (LevelManager.THIS.gameStatus == GameState.Playing)
         {
             if (Input.GetMouseButton(0))
@@ -2197,7 +2220,12 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     public void NoMatches()
     {
-        StartCoroutine(NoMatchesCor());
+        PlayingState playingState = _states[GameState.Playing]
+            as PlayingState;
+
+        playingState?.HandleNoMatches();
+
+        // StartCoroutine(NoMatchesCor());
     }
 
     IEnumerator NoMatchesCor()
@@ -2299,8 +2327,11 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         //StartCoroutine(CheckFallingAtStart());
     }
 
+    [System.Obsolete("Use PrepareBoostsState instead")]
     void SetPreBoosts()
     {
+        Debug.LogWarning("Using obsolete SetPreBoosts method. Switch to PrepareBoostsState.");
+
         //activate boosts from map
         bool NoBoosts = true;
         if (BoostColorfullBomb > 0)
