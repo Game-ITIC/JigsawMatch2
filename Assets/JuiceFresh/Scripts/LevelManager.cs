@@ -175,7 +175,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     List<List<Item>> newCombines;
 
     // is touch blocks?
-    private bool dragBlocked;
+    public bool dragBlocked;
 
     // amount of boosts
     public int BoostColorfullBomb;
@@ -559,31 +559,31 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         //
         //     StartCoroutine(TipsManager.THIS.CheckPossibleCombines());
         // }
-        else if (state == GameState.GameOver)
-        {
-            MusicBase.Instance.GetComponent<AudioSource>().Stop();
-            SoundBase.Instance.PlaySound(SoundBase.Instance.gameOver[0]);
-            GameObject.Find("CanvasGlobal").transform.Find("MenuFailed").gameObject.SetActive(true);
-            OnLose();
-        }
+        // else if (state == GameState.GameOver)
+        // {
+        //     MusicBase.Instance.GetComponent<AudioSource>().Stop();
+        //     SoundBase.Instance.PlaySound(SoundBase.Instance.gameOver[0]);
+        //     GameObject.Find("CanvasGlobal").transform.Find("MenuFailed").gameObject.SetActive(true);
+        //     OnLose();
+        // }
         else if (state == GameState.ToMap)
         {
             MusicBase.Instance.GetComponent<AudioSource>().Stop();
             SoundBase.Instance.PlaySound(SoundBase.Instance.gameOver[0]);
             GameObject.Find("CanvasGlobal").transform.Find("MenuFailed").gameObject.SetActive(true);
         }
-        else if (state == GameState.PreWinAnimations)
-        {
-            MusicBase.Instance.GetComponent<AudioSource>().Stop();
-            StartCoroutine(PreWinAnimationsCor());
-        }
-        else if (state == GameState.Win)
-        {
-            passLevelCounter++;
-            OnMenuComplete();
-            GameObject.Find("CanvasGlobal").transform.Find("MenuComplete").gameObject.SetActive(true);
-            OnWin();
-        }
+        // else if (state == GameState.PreWinAnimations)
+        // {
+        //     MusicBase.Instance.GetComponent<AudioSource>().Stop();
+        //     StartCoroutine(PreWinAnimationsCor());
+        // }
+        // else if (state == GameState.Win)
+        // {
+        //     passLevelCounter++;
+        //     OnMenuComplete();
+        //     GameObject.Find("CanvasGlobal").transform.Find("MenuComplete").gameObject.SetActive(true);
+        //     OnWin();
+        // }
         //InitScript.Instance.CheckAdsEvents(value);
     }
 
@@ -682,11 +682,15 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             { GameState.WaitForPopup, new WaitForPopupState(this) },
             { GameState.PrepareBoosts, new PrepareBoostsState(this) },
             { GameState.Playing, new PlayingState(this) },
+            { GameState.GameOver, new GameOverState(this) },
+            { GameState.PreWinAnimations, new PreWinAnimationsState(this) },
+            { GameState.Win, new WinState(this) },
+            { GameState.RegenLevel, new RegenLevelState(this) }
         };
-        gameStatus = GameState.Map;
-
+        Debug.Log(_states[GameState.Playing]);
         THIS = this;
         Instance = this;
+        gameStatus = GameState.Map;
 
         for (int i = 0; i < 20; i++)
         {
@@ -3108,7 +3112,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         return list2;
     }
 
-    List<Item> GetAllExtraItems()
+    public List<Item> GetAllExtraItems()
     {
         List<Item> list = new List<Item>();
         GameObject[] items = GameObject.FindGameObjectsWithTag("Item");

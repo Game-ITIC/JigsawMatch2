@@ -5,14 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c8bc5122-cbac-4efe-813b-118ec8437e54" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PlayingState.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PlayingState.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PrepareBoostsState.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PrepareBoostsState.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/GameOverState.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/GameOverState.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PreWinAnimationState.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PreWinAnimationState.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/RegenLevelState.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/RegenLevelState.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/WinState.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/WinState.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.JigsawMatch2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JigsawMatch2/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/ILevelManagerActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/ILevelManagerActions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/LevelManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/LevelManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/GameStateBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/GameStateBase.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/IronSourceManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/IronSourceManager.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
