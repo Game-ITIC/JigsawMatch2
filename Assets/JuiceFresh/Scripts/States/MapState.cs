@@ -46,7 +46,7 @@ namespace JuiceFresh.States
             audioSource.Play();
         }
 
-        private void EnableMap(bool enable)
+        public void EnableMap(bool enable)
         {
             float aspect = (float)Screen.height / (float)Screen.width;
             aspect = (float)Math.Round(aspect, 2);

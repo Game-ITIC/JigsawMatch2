@@ -37,7 +37,7 @@ public enum GameState
 }
 
 
-public class LevelManager : MonoBehaviour
+public class LevelManager : MonoBehaviour, ILevelManagerActions
 {
     //inctance of LevelManager for direct references
     public static LevelManager THIS;
@@ -279,7 +279,7 @@ public class LevelManager : MonoBehaviour
     public bool showPopupScores;
 
     //inner using
-    int nextExtraItems;
+    public int nextExtraItems;
 
     //prefab of row explosion effect
     public GameObject stripesEffect;
@@ -312,7 +312,7 @@ public class LevelManager : MonoBehaviour
     public List<CollectedIngredients> ingrTarget = new List<CollectedIngredients>();
 
     //necessary collectable items
-    CollectItems[] collectItems = new CollectItems[6];
+    public CollectItems[] collectItems = new CollectItems[6];
 
     //sprites of collectable items
     public Sprite[] ingrediendSprites;
@@ -408,7 +408,7 @@ public class LevelManager : MonoBehaviour
     public Sprite doubleSolidBlock;
     public bool FacebookEnable;
     public bool PlayFab;
-    private int selectedColor;
+    public int selectedColor;
     private bool stopSliding;
     private float offset;
     public GameObject flower;
@@ -497,52 +497,45 @@ public class LevelManager : MonoBehaviour
 
     private void HandleLegacyState(GameState state)
     {
-        if (state == GameState.PrepareGame)
-        {
-            MusicBase.Instance.GetComponent<AudioSource>().Stop();
-            MusicBase.Instance.GetComponent<AudioSource>().loop = true;
-            MusicBase.Instance.GetComponent<AudioSource>().clip = MusicBase.Instance.music[1];
-            MusicBase.Instance.GetComponent<AudioSource>().Play();
-            PrepareGame();
-        }
-        else if (state == GameState.WaitForPopup)
-        {
-            InitLevel();
-            OnLevelLoaded();
-            Scale(GetComponent<Camera>().orthographicSize); //1.4.9
-        }
-        else if (state == GameState.PreFailedBomb)
+        // if (state == GameState.PrepareGame)
+        // {
+        //     MusicBase.Instance.GetComponent<AudioSource>().Stop();
+        //     MusicBase.Instance.GetComponent<AudioSource>().loop = true;
+        //     MusicBase.Instance.GetComponent<AudioSource>().clip = MusicBase.Instance.music[1];
+        //     MusicBase.Instance.GetComponent<AudioSource>().Play();
+        //     PrepareGame();
+        // }
+        // if (state == GameState.WaitForPopup)
+        // {
+        //     InitLevel();
+        //     OnLevelLoaded();
+        //     Scale(GetComponent<Camera>().orthographicSize); //1.4.9
+        // }
+        if (state == GameState.PreFailedBomb)
         {
         }
         else if (state == GameState.PreFailed)
         {
             GameObject.Find("CanvasGlobal").transform.Find("PreFailed").gameObject.SetActive(true);
         }
-        else if (state == GameState.Map)
-        {
-            if (PlayerPrefs.GetInt("OpenLevelTest") <= 0)
-            {
-                MusicBase.Instance.GetComponent<AudioSource>().Stop();
-                MusicBase.Instance.GetComponent<AudioSource>().loop = true;
-                MusicBase.Instance.GetComponent<AudioSource>().clip = MusicBase.Instance.music[0];
-                MusicBase.Instance.GetComponent<AudioSource>().Play();
-                EnableMap(true);
-                OnMapState();
-            }
-            else
-            {
-                LevelManager.THIS.gameStatus = GameState.PrepareGame;
-                PlayerPrefs.SetInt("OpenLevelTest", 0);
-                PlayerPrefs.Save();
-            }
-//#if UNITY_ANDROID || UNITY_IOS || UNITY_WINRT
-//				if (passLevelCounter > 0 && InitScript.Instance.ShowRateEvery > 0)
-//				{
-//					if (passLevelCounter % InitScript.Instance.ShowRateEvery == 0 && InitScript.Instance.ShowRateEvery > 0 && PlayerPrefs.GetInt("Rated", 0) == 0)
-//						InitScript.Instance.ShowRate();
-//				}
-//#endif
-        }
+        // else if (state == GameState.Map)
+        // {
+        //     if (PlayerPrefs.GetInt("OpenLevelTest") <= 0)
+        //     {
+        //         MusicBase.Instance.GetComponent<AudioSource>().Stop();
+        //         MusicBase.Instance.GetComponent<AudioSource>().loop = true;
+        //         MusicBase.Instance.GetComponent<AudioSource>().clip = MusicBase.Instance.music[0];
+        //         MusicBase.Instance.GetComponent<AudioSource>().Play();
+        //         EnableMap(true);
+        //         OnMapState();
+        //     }
+        //     else
+        //     {
+        //         LevelManager.THIS.gameStatus = GameState.PrepareGame;
+        //         PlayerPrefs.SetInt("OpenLevelTest", 0);
+        //         PlayerPrefs.Save();
+        //     }
+        // }
         else if (state == GameState.Pause)
         {
             Time.timeScale = 0;
@@ -650,87 +643,11 @@ public class LevelManager : MonoBehaviour
         GetComponent<Camera>().orthographicSize = Mathf.Clamp(h, defaultScale, h);
     }
 
+
     public void EnableMap(bool enable)
     {
-        float aspect = (float)Screen.height / (float)Screen.width; //1.4.7
-        aspect = (float)Math.Round(aspect, 2);
-        if (enable)
-        {
-            //InternetChecker.THIS.CheckInternet(true);
-            GetComponent<Camera>().orthographicSize = 10.25f;
-
-            if (aspect == 1.6f)
-                GetComponent<Camera>().orthographicSize = 12.2f; //16:10
-            else if (aspect == 1.78f)
-                GetComponent<Camera>().orthographicSize = 13.6f; //16:9
-            else if (aspect == 1.5f)
-                GetComponent<Camera>().orthographicSize = 11.2f; //3:2
-            else if (aspect == 1.33f)
-                GetComponent<Camera>().orthographicSize = 10.25f; //4:3
-            else if (aspect == 1.67f)
-                GetComponent<Camera>().orthographicSize = 12.5f; //5:3
-            else if (aspect == 2.06f)
-                GetComponent<Camera>().orthographicSize = 15.75f; //2960:1440 S8   //1.4.7
-            else if (aspect == 2.17f)
-                GetComponent<Camera>().orthographicSize = 16.5f;
-            else if (aspect == 2.16f)
-                GetComponent<Camera>().orthographicSize = 16.5f; //iphone x    //1.4.7
-            //else if (aspect == 1.25f)
-            //    GetComponent<Camera>().orthographicSize = 4.9f;                  //5:4
-
-            GetComponent<Camera>().GetComponent<MapCamera>()
-                .SetPosition(new Vector2(0, GetComponent<Camera>().transform.position.y));
-        }
-        else
-        {
-            InitScript.DateOfExit = DateTime.Now.ToString();
-            SetupGameCamera();
-
-            if (aspect == 2.06f)
-                GetComponent<Camera>().orthographicSize = 11.5f; //2960:1440 S8
-            else if (aspect == 2.17f)
-                GetComponent<Camera>().orthographicSize = 12.26f; //iphone x
-            else if (aspect == 2.16f)
-                GetComponent<Camera>().orthographicSize = 12.26f; //iphone x
-            GameObject.Find("CanvasGlobal").GetComponent<GraphicRaycaster>().enabled = false;
-            GameObject.Find("CanvasGlobal").GetComponent<GraphicRaycaster>().enabled = true;
-            var canvas = Level.transform.Find("Canvas");
-            canvas.GetComponent<GraphicRaycaster>().enabled = false;
-            canvas.GetComponent<GraphicRaycaster>().enabled = true;
-            var panel = canvas.transform.Find("Panel/Panel").GetComponent<RectTransform>();
-            if (aspect == 2.17f) //1.4.9
-                panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, 935) + Vector2.down * 100;
-        }
-
-        gameCamera.GetComponent<MapCamera>().enabled = enable;
-        //1.4.4
-        {
-            LevelsMap.SetActive(!enable); //1.4.6
-            LevelsMap.SetActive(enable);
-            LevelsMap.GetComponent<LevelsMap>().Reset();
-            foreach (Transform tr in LevelsMap.transform)
-            {
-                if (tr.name != "AvatarManager" && tr.name != "Character")
-                    tr.gameObject.SetActive(enable);
-                if (tr.name == "Character")
-                {
-                    tr.GetComponent<SpriteRenderer>().enabled = enable;
-                    tr.transform.GetChild(0).gameObject.SetActive(enable);
-                }
-            }
-
-            Level.SetActive(!enable);
-        }
-
-        if (enable)
-            GameField.gameObject.SetActive(false);
-
-        if (!enable)
-            gameCamera.transform.position = new Vector3(0, 0, -10);
-        foreach (Transform item in GameField.transform)
-        {
-            Destroy(item.gameObject);
-        }
+        MapState mapState = _states[GameState.Map] as MapState;
+        mapState.EnableMap(enable);
     }
 
     private Dictionary<GameState, GameStateBase> _states;
@@ -745,22 +662,6 @@ public class LevelManager : MonoBehaviour
 
         if (Level.gameObject.activeSelf)
             Level.gameObject.SetActive(false);
-//#if FACEBOOK
-//		FacebookEnable = true;//1.3.2
-//		if (FacebookEnable)
-//			FacebookManager.THIS.CallFBInit();
-
-//#else
-//		FacebookEnable = false;
-
-//#endif
-//#if UNITY_INAPPS
-
-//		gameObject.AddComponent<UnityInAppsIntegration> ();
-//		enableInApps = true;//1.3
-//#else
-//		enableInApps = false;
-//#endif
 
         THIS = this;
         Instance = this;
@@ -771,7 +672,9 @@ public class LevelManager : MonoBehaviour
 
         _states = new Dictionary<GameState, GameStateBase>
         {
-            { GameState.Map, new MapState(this) }
+            { GameState.Map, new MapState(this) },
+            { GameState.PrepareGame, new PrepareGameState(this) },
+            { GameState.WaitForPopup, new WaitForPopupState(this) }
         };
 
         for (int i = 0; i < 20; i++)
@@ -815,7 +718,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    List<GameObject> listIngredientsGUIObjects = new List<GameObject>();
+    public List<GameObject> listIngredientsGUIObjects = new List<GameObject>();
 
     void InitTargets()
     {
@@ -1019,7 +922,7 @@ public class LevelManager : MonoBehaviour
         //containerRect.anchoredPosition = new Vector2(0, 0);
     }
 
-    IEnumerator InitBombs()
+    public IEnumerator InitBombs()
     {
         yield return new WaitUntil(() => !TipsManager.THIS.gotTip); //1.3
         yield return new WaitForSeconds(1);
@@ -1051,8 +954,11 @@ public class LevelManager : MonoBehaviour
         StartCoroutine(InitBombs());
     }
 
+    [System.Obsolete("Use PrepareGameState instead")]
     void PrepareGame()
     {
+        Debug.LogError("Using obsolete PrepareGame method. Switch to PrepareGameState.");
+
         InitScript.Instance.SpendLife(1);
 
         ActivatedBoost = null;
@@ -1584,7 +1490,7 @@ public class LevelManager : MonoBehaviour
         {
             _currentState.UpdateState();
         }
-        
+
         if (LevelManager.THIS.gameStatus == GameState.Playing)
         {
             if (Input.GetMouseButton(0))
@@ -1826,7 +1732,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    private void GenerateLevel()
+    public void GenerateLevel()
     {
         bool chessColor = false;
         float sqWidth = 1.6f;
@@ -1933,7 +1839,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    void GenerateOutline()
+    public void GenerateOutline()
     {
         int row = 0;
         int col = 0;
@@ -2268,7 +2174,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    void GenerateNewItems(bool falling = true)
+    public void GenerateNewItems(bool falling = true)
     {
         for (int col = 0; col < maxCols; col++)
         {
@@ -2307,7 +2213,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    List<int> bombTimers = new List<int>();
+    public List<int> bombTimers = new List<int>();
     //1.3
 
     public void ReGenLevel()
@@ -2874,7 +2780,7 @@ public class LevelManager : MonoBehaviour
         //{
         //    List<Item> items = GetRandomItems(nextExtraItems);
         //    int cc = 0;
-        //    foreach (Item item in items)
+        //    foreach (Item ite in items)
         //    {
         //        item.nextType = (ItemsTypes)UnityEngine.Random.Range(1, 3);
         //        GameObject flowerParticle = GetFlowerFromPool();
