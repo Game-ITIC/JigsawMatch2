@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using JuiceFresh;
+using JuiceFresh.Scripts;
 using JuiceFresh.States;
 
 public class PlayingState : GameStateBase
@@ -40,7 +41,7 @@ public class PlayingState : GameStateBase
         // If it's a timed level, make sure the timer is running
         if (levelManager.limitType == LIMIT.TIME)
         {
-            levelManager.RestartTimer();
+            RestartTimer();
         }
     }
 
@@ -64,6 +65,8 @@ public class PlayingState : GameStateBase
         // Clear any highlights or selections when exiting the state
         levelManager.ClearHighlight(true);
         ClearSelection();
+
+        CoroutineManager.Instance.StopManagedCoroutine("TimeTick");
     }
 
     private void HandleInput()
@@ -498,5 +501,122 @@ public class PlayingState : GameStateBase
     {
         // Pre-win animations and then transition to Win state
         levelManager.gameStatus = GameState.PreWinAnimations;
+    }
+
+
+    // Вспомогательные методы для корутин
+    private void DestroyGatheredExtraItems(Item item)
+    {
+        if (levelManager.gatheredTypes.Count > 1)
+        {
+            item.DestroyHorizontal();
+            item.DestroyVertical();
+        }
+
+        foreach (ItemsTypes itemType in levelManager.gatheredTypes)
+        {
+            if (itemType == ItemsTypes.HORIZONTAL_STRIPPED)
+                item.DestroyHorizontal();
+            else
+                item.DestroyVertical();
+        }
+    }
+
+    private bool IsAllDestoyFinished()
+    {
+        GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
+        foreach (GameObject item in items)
+        {
+            Item itemComponent = item.GetComponent<Item>();
+            if (itemComponent == null)
+            {
+                return false;
+            }
+
+            if (itemComponent.destroying && !itemComponent.animationFinished)
+                return false;
+        }
+
+        return true;
+    }
+
+    private bool IsAllItemsFallDown()
+    {
+        if (levelManager.gameStatus == GameState.PreWinAnimations)
+            return true;
+        GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
+        foreach (GameObject item in items)
+        {
+            Item itemComponent = item.GetComponent<Item>();
+            if (itemComponent == null)
+            {
+                return false;
+            }
+
+            if (itemComponent.falling)
+                return false;
+        }
+
+        return true;
+    }
+
+    private void CheckIngredient()
+    {
+        int row = levelManager.maxRows;
+        List<Square> sqList = levelManager.GetBottomRow();
+        foreach (Square sq in sqList)
+        {
+            if (sq.item != null)
+            {
+                if (sq.item.currentType == ItemsTypes.INGREDIENT)
+                {
+                    levelManager.destroyAnyway.Add(sq.item);
+                }
+            }
+        }
+    }
+
+    public void FindMatches()
+    {
+        // CoroutineManager.Instance.StartManagedCoroutine("FallingDown", FallingDown());
+        levelManager.ProcessMatchesAndFalling();
+    }
+
+    public IEnumerator TimeTick()
+    {
+        while (true)
+        {
+            if (levelManager.gameStatus == GameState.Playing)
+            {
+                if (levelManager.limitType == LIMIT.TIME)
+                {
+                    levelManager.Limit--;
+                    levelManager.CheckWinLose();
+                }
+            }
+
+            // Выход из корутины при определенных условиях
+            if (levelManager.gameStatus == GameState.Map ||
+                levelManager.Limit <= 0 ||
+                levelManager.gameStatus == GameState.GameOver)
+            {
+                yield break;
+            }
+
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    // Обновляем RestartTimer в PlayingState
+    public void RestartTimer()
+    {
+        if (levelManager.limitType == LIMIT.TIME)
+        {
+            // Остановить предыдущую корутину таймера, если есть
+            CoroutineManager.Instance.StopManagedCoroutine("TimeTick");
+
+            // Запустить новую корутину таймера
+            CoroutineManager.Instance.StartManagedCoroutine("TimeTick", TimeTick());
+        }
     }
 }

@@ -776,14 +776,6 @@ public class LevelMakerEditor : EditorWindow
 
 	//}
 
-	void ResetInAppsSettings()
-	{
-		lm.InAppIDs[0] = "gems10";
-		lm.InAppIDs[1] = "gems50";
-		lm.InAppIDs[2] = "gems100";
-		lm.InAppIDs[3] = "gems150";
-	}
-
 	#endregion
 
 	//void GUIHelp()

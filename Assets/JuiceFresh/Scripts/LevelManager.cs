@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using JuiceFresh;
+using JuiceFresh.Scripts;
 using JuiceFresh.States;
 //using JuiceFresh.Scripts.System;
 using UnityEngine.UI;
@@ -109,7 +110,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     public Square[] squaresArray;
 
     //array of combined items
-    List<List<Item>> combinedItems = new List<List<Item>>();
+    public List<List<Item>> combinedItems = new List<List<Item>>();
 
     // latest touched item
     public Item lastDraggedItem;
@@ -141,9 +142,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     //value of rest limit (moves or time)
     public int Limit = 30;
 
-    //deprecated
-    public int TargetScore = 1000;
-
     //current level number
     public int currentLevel = 1;
 
@@ -159,13 +157,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     // array of iapps products
     public List<GemProduct> gemsProducts = new List<GemProduct>();
 
-    // product IDs
-    public string[] InAppIDs;
-
-    // google licnse key
-    public string GoogleLicenseKey;
-
-    //line object for effect
     public Line line;
 
     //is any growing blocks destroyed in that turn
@@ -189,16 +180,20 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     //inner using variable
     public BoostIcon emptyBoostIcon;
 
-    // deprecated
-    public BoostIcon AvctivatedBoostView;
-
     //currently active boost
     public BoostIcon activatedBoost;
 
     //public string androidSharingPath;
     //public string iosSharingPath;
     public Camera gameCamera;
+    
+    private BoardMechanicsService _boardMechanicsService;
 
+    public BoardMechanicsService BoardMechanics 
+    {
+        get { return _boardMechanicsService; }
+    }
+    
     // field of getting and setting currently activated boost
     public BoostIcon ActivatedBoost
     {
@@ -339,7 +334,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     private bool matchesGot;
 
     //inner using
-    bool ingredientFly;
+    public bool ingredientFly;
 
     //UI objects
     public GameObject[] gratzWords;
@@ -353,7 +348,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     public BoostIcon[] InGameBoosts;
     public int passLevelCounter;
     public List<ItemsTypes> gatheredTypes = new List<ItemsTypes>();
-    List<Vector3> startPosFlowers = new List<Vector3>();
+    public List<Vector3> startPosFlowers = new List<Vector3>();
     public List<GameObject> friendsAvatars = new List<GameObject>();
 
     public Target target;
@@ -479,12 +474,18 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         get { return GameStatus; }
         set
         {
+            Debug.Log("Changing game state from " + GameStatus + " to " + value);
+
             if (_currentState != null)
             {
                 Debug.Log("Exiting current state: " + _currentState.GetType().Name);
                 _currentState.ExitState();
             }
 
+            if (gameObject.activeInHierarchy)
+            {
+                StopAllCoroutines();
+            }
 
             GameStatus = value;
 
@@ -572,11 +573,11 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             SoundBase.Instance.PlaySound(SoundBase.Instance.gameOver[0]);
             GameObject.Find("CanvasGlobal").transform.Find("MenuFailed").gameObject.SetActive(true);
         }
-        // else if (state == GameState.PreWinAnimations)
-        // {
-        //     MusicBase.Instance.GetComponent<AudioSource>().Stop();
-        //     StartCoroutine(PreWinAnimationsCor());
-        // }
+        else if (state == GameState.PreWinAnimations)
+        {
+            MusicBase.Instance.GetComponent<AudioSource>().Stop();
+            StartCoroutine(PreWinAnimationsCor());
+        }
         // else if (state == GameState.Win)
         // {
         //     passLevelCounter++;
@@ -622,36 +623,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         NumIngredients = ingrTarget.Count;
     }
 
-    void SetupGameCamera()
-    {
-        float aspect = (float)Screen.height / (float)Screen.width;
-        GetComponent<Camera>().orthographicSize = 10.05f;
-        aspect = (float)Math.Round(aspect, 2);
-        //        if (aspect == 1.6f)
-        //            GetComponent<Camera>().orthographicSize = 4.6f;                    //16:10
-        //        else if (aspect == 1.78f)
-        //            GetComponent<Camera>().orthographicSize = 5.15f;    //16:9
-        //        else if (aspect == 1.5f)
-        //            GetComponent<Camera>().orthographicSize = 4.4f;                  //3:2
-        //        else if (aspect == 1.33f)
-        //            GetComponent<Camera>().orthographicSize = 4.45f;                  //4:3
-        //        else if (aspect == 1.67f)
-        //            GetComponent<Camera>().orthographicSize = 4.8f;                  //5:3
-        //        else if (aspect == 1.25f)
-        //            GetComponent<Camera>().orthographicSize = 4.45f;                  //5:4
-        GetComponent<Camera>().GetComponent<MapCamera>()
-            .SetPosition(new Vector2(0, GetComponent<Camera>().transform.position.y));
-    }
-
-    void Scale(float defaultScale) //1.4.9 
-    {
-        Debug.Log(GetSquare(maxCols - 1, 0));
-        float width = GetSquare(maxCols - 1, 0).transform.position.x - GetSquare(0, 0).transform.position.x;
-        float h = width * Screen.height / Screen.width / 2 + 1.5f;
-        GetComponent<Camera>().orthographicSize = Mathf.Clamp(h, defaultScale, h);
-    }
-
-
     public void EnableMap(bool enable)
     {
         MapState mapState = _states[GameState.Map] as MapState;
@@ -664,6 +635,9 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     // Use this for initialization
     void Start()
     {
+        
+        _boardMechanicsService = new BoardMechanicsService(this);
+        
         ingrCountTarget = new int[NumIngredients]; //necessary amount of collectable items
         //ingrTarget = InitScript.Instance.collectedIngredients.ToArray();  //necessary collectable items
         //collectItems = new CollectItems[NumIngredients];   //necessary collectable items
@@ -674,6 +648,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         // if (!LevelManager.THIS.enableInApps)//1.4.9
         // 	GameObject.Find("Gems").gameObject.SetActive(false);
 
+        CoroutineManager.Instance.GetType();
 
         _states = new Dictionary<GameState, GameStateBase>
         {
@@ -711,88 +686,15 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         passLevelCounter = 0;
     }
 
-    void InitLevel()
-    {
-        GenerateLevel();
-        GenerateOutline();
-        GenerateNewItems(false);
-        nextExtraItems = 0;
-        bombTimers.Clear(); //1.3
-        //        ReGenLevel();
-        RestartTimer();
-        InitTargets();
-        GameField.gameObject.SetActive(true);
-    }
-
     public void RestartTimer()
     {
-        if (limitType == LIMIT.TIME)
+        if (_currentState is PlayingState playingState)
         {
-            StopCoroutine(TimeTick());
-            StartCoroutine(TimeTick());
+            playingState.RestartTimer();
         }
     }
 
     public List<GameObject> listIngredientsGUIObjects = new List<GameObject>();
-
-    void InitTargets()
-    {
-        blocksObject.SetActive(false);
-        ingrObject.SetActive(false);
-        scoreTargetObject.SetActive(false);
-        cageTargetObject.SetActive(false);
-        bombTargetObject.SetActive(false);
-        GameObject ingrPrefab = Resources.Load("Prefabs/CollectGUIObj") as GameObject;
-        foreach (GameObject item in listIngredientsGUIObjects)
-        {
-            Destroy(item);
-        }
-
-        listIngredientsGUIObjects.Clear();
-
-
-        if (target != Target.COLLECT && target != Target.ITEMS)
-            ingrObject.SetActive(false);
-        else if (target == Target.COLLECT)
-        {
-            blocksObject.SetActive(false);
-            CreateCollectableTarget(ingrObject, target, false);
-        }
-        else if (target == Target.ITEMS)
-        {
-            blocksObject.SetActive(false);
-            CreateCollectableTarget(ingrObject, target, false);
-        }
-
-        if (targetBlocks > 0 && target == Target.BLOCKS)
-        {
-            blocksObject.SetActive(true);
-
-            blocksObject.GetComponent<TargetGUI>().text.GetComponent<Counter_>().totalCount = targetBlocks;
-            //CreateCollectableTarget(ingrObject, target, false);
-        }
-        else if (LevelManager.THIS.target == Target.CAGES)
-        {
-            cageTargetObject.SetActive(true);
-            cageTargetObject.GetComponent<TargetGUI>().text.GetComponent<Counter_>().totalCount = TargetCages;
-            //CreateCollectableTarget(ingrObject, target, false);
-        }
-        else if (LevelManager.THIS.target == Target.BOMBS)
-        {
-            StartCoroutine(InitBombs());
-            bombTargetObject.SetActive(true);
-            bombTargetObject.GetComponent<TargetGUI>().text.GetComponent<Counter_>().totalCount = bombsCollect;
-            //CreateCollectableTarget(ingrObject, target, false);
-        }
-        else if (target == Target.SCORE)
-        {
-            ingrObject.SetActive(false);
-            blocksObject.SetActive(false);
-            scoreTargetObject.SetActive(true);
-            cageTargetObject.SetActive(false);
-            bombTargetObject.SetActive(false);
-        }
-    }
 
     public void CreateCollectableTarget(GameObject parentTransform, Target tar, bool ForDialog = true)
     {
@@ -967,78 +869,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     {
         //1.3
         StartCoroutine(InitBombs());
-    }
-
-    [System.Obsolete("Use PrepareGameState instead")]
-    void PrepareGame()
-    {
-        Debug.LogError("Using obsolete PrepareGame method. Switch to PrepareGameState.");
-
-        InitScript.Instance.SpendLife(1);
-
-        ActivatedBoost = null;
-        Score = 0;
-        stars = 0;
-        moveID = 0;
-        selectedColor = -1; //1.3
-        highlightedItems = new List<Item>();
-        if (ProgressBarScript.Instance)
-            ProgressBarScript.Instance.ResetBar();
-
-
-        blocksObject.SetActive(false);
-        ingrObject.SetActive(false);
-        scoreTargetObject.SetActive(false);
-        cageTargetObject.SetActive(false);
-        bombTargetObject.SetActive(false);
-
-        star1Anim.SetActive(false);
-        star2Anim.SetActive(false);
-        star3Anim.SetActive(false);
-        ingrTarget = new List<CollectedIngredients>();
-        if (target != Target.COLLECT)
-            ingrTarget.Add(new CollectedIngredients());
-
-        //ingrTarget = InitScript.Instance.collectedIngredients.ToArray();  //necessary collectable items
-
-        for (int i = 0; i < collectItems.Length; i++)
-        {
-            collectItems[i] = CollectItems.None;
-            //ingrTarget[i] = Ingredients.None;
-            //ingrCountTarget[i] = 0;
-        }
-
-
-        TargetBlocks = 0;
-        TargetCages = 0;
-        TargetBombs = 0;
-        EnableMap(false);
-
-
-        GameField.transform.position = Vector3.zero;
-        firstSquarePosition = GameField.transform.position;
-
-        squaresArray = new Square[maxCols * maxRows];
-        LoadLevel();
-
-        //float getSize = maxCols - 9;
-        //if (getSize < maxRows - 9)
-        //    getSize = maxRows - 9;
-        //if (getSize > 0)
-        //    camera.orthographicSize = 6.5f + getSize * 0.5f;
-        Level.transform.Find("Canvas/PrePlay").gameObject.SetActive(true); //1.3.3
-        if (limitType == LIMIT.MOVES)
-        {
-            InGameBoosts[0].gameObject.SetActive(true);
-            InGameBoosts[1].gameObject.SetActive(false);
-        }
-        else
-        {
-            InGameBoosts[0].gameObject.SetActive(false);
-            InGameBoosts[1].gameObject.SetActive(true);
-        }
-
-        OnEnterGame();
     }
 
     public void CheckCollectedTarget(GameObject _item)
@@ -1453,11 +1283,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         LevelsMap.SetActive(false); //1.4.4
         LevelsMap.SetActive(true); //1.4.4
-//#if PLAYFAB || GAMESPARKS
-//		NetworkManager.dataManager.SetPlayerScore(currentLevel, Score);
-//		NetworkManager.dataManager.SetPlayerLevel(currentLevel + 1);
-//		NetworkManager.dataManager.SetStars();
-//#endif
 
         gameStatus = GameState.Win;
     }
@@ -1489,11 +1314,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         {
             _currentState.UpdateState();
         }
-        else if (GameStatus == GameState.Playing)
-        {
-            // Fallback for legacy code until fully refactored
-            LegacyUpdatePlaying();
-        }
 
         // Now draw the lines based on the updated destroyAnyway list
         if (destroyAnyway.Count > 0)
@@ -1513,229 +1333,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         else
         {
             line.SetVertexCount(0);
-        }
-    }
-
-    private void LegacyUpdatePlaying()
-    {
-        if (LevelManager.THIS.gameStatus == GameState.Playing)
-        {
-            if (Input.GetMouseButton(0))
-            {
-                //touch detected
-                OnTouchDetected?.Invoke();
-
-                Collider2D hit = Physics2D.OverlapPoint(gameCamera.ScreenToWorldPoint(Input.mousePosition),
-                    1 << LayerMask.NameToLayer("Item"));
-                if (hit != null)
-                {
-                    Item item = hit.gameObject.GetComponent<Item>();
-                    if (item.currentType != ItemsTypes.INGREDIENT)
-                    {
-                        if (LevelManager.THIS.ActivatedBoost.type == BoostType.Bomb &&
-                            item.currentType != ItemsTypes.INGREDIENT)
-                        {
-                            //boost action events   BOMB
-                        }
-                        else if (LevelManager.THIS.ActivatedBoost.type == BoostType.Shovel &&
-                                 item.currentType != ItemsTypes.INGREDIENT)
-                        {
-                            //boost action events   SHOVEL
-                        }
-                        else if (LevelManager.THIS.ActivatedBoost.type == BoostType.Energy &&
-                                 item.currentType != ItemsTypes.INGREDIENT)
-                        {
-                            //boost action events   ENERGY
-                        }
-                        else if (selectedColor == -1 || selectedColor == item.color)
-                        {
-                            //selection items by touch
-                            if (extraCageAddItem < 0)
-                                extraCageAddItem = 0;
-                            selectedColor = item.color;
-                            //if (destroyAnyway.Count > 0)
-                            //{
-                            //    if (destroyAnyway[destroyAnyway.Count - 1] == item) stopSliding = false;
-                            //}
-                            if (!LevelManager.THIS.DragBlocked && LevelManager.THIS.gameStatus == GameState.Playing &&
-                                !stopSliding)
-                            {
-                                if (destroyAnyway.Count > 1)
-                                {
-                                    Vector2 pos1 = new Vector2(destroyAnyway[destroyAnyway.Count - 1].square.col,
-                                        destroyAnyway[destroyAnyway.Count - 1].square.row);
-                                    Vector2 pos2 = new Vector2(item.square.col, item.square.row);
-                                    offset = Vector2.Distance(pos1, pos2);
-                                }
-
-                                if (destroyAnyway.IndexOf(item) < 0 && offset < 2)
-                                {
-                                    //add item to selection
-                                    if (destroyAnyway.Count > 0)
-                                    {
-                                        Vector2 pos1 = new Vector2(destroyAnyway[destroyAnyway.Count - 1].square.col,
-                                            destroyAnyway[destroyAnyway.Count - 1].square.row);
-                                        Vector2 pos2 = new Vector2(item.square.col, item.square.row);
-                                        offset = Vector2.Distance(pos1, pos2);
-
-                                        if (offset >= 2)
-                                        {
-                                            offset = 0;
-                                            return;
-                                        }
-                                    }
-
-                                    destroyAnyway.Add(item);
-                                    int selectingSoundNum = Mathf.Clamp(destroyAnyway.Count - 1, 0, 9);
-                                    SoundBase.Instance.PlaySound(SoundBase.Instance.selecting[selectingSoundNum]);
-                                    if ((destroyAnyway.Count % (extraItemEvery + extraCageAddItem) == 0) &&
-                                        item.square.cageHP <= 0)
-                                        //item.SetLight();
-                                        Debug.Log("setlight");
-                                    else if ((destroyAnyway.Count % (extraItemEvery + extraCageAddItem) == 0) &&
-                                             item.square.cageHP > 0)
-                                        extraCageAddItem += 1;
-                                    if (item.currentType == ItemsTypes.HORIZONTAL_STRIPPED)
-                                        gatheredTypes.Add(item.currentType);
-                                    else if (item.currentType == ItemsTypes.VERTICAL_STRIPPED)
-                                        gatheredTypes.Add(item.currentType);
-                                    HighlightManager.SelectItem(item);
-                                    //CheckHighlightExtraItem(item);
-                                    item.square.SetActiveCage(true);
-                                    item.AwakeItem();
-                                }
-                                else if (destroyAnyway.IndexOf(item) > -1)
-                                {
-                                    //remove item from selection (step back by finger)
-                                    if ((destroyAnyway.Count % (extraItemEvery + extraCageAddItem) == 0) &&
-                                        item.square.cageHP > 0)
-                                        extraCageAddItem -= 1;
-
-                                    if (destroyAnyway.Count > 1)
-                                    {
-                                        if (destroyAnyway[destroyAnyway.Count - 2] == item)
-                                        {
-                                            if (destroyAnyway[destroyAnyway.Count - 1].currentType ==
-                                                ItemsTypes.HORIZONTAL_STRIPPED)
-                                                gatheredTypes.Remove(gatheredTypes[gatheredTypes.Count - 1]);
-                                            else if (destroyAnyway[destroyAnyway.Count - 1].currentType ==
-                                                     ItemsTypes.VERTICAL_STRIPPED)
-                                                gatheredTypes.Remove(gatheredTypes[gatheredTypes.Count - 1]);
-
-                                            destroyAnyway[destroyAnyway.Count - 1].SleepItem();
-
-
-                                            destroyAnyway[destroyAnyway.Count - 1].square.SetActiveCage(false);
-                                            HighlightManager.DeselectItem(destroyAnyway[destroyAnyway.Count - 1], item);
-                                            destroyAnyway.Remove(destroyAnyway[destroyAnyway.Count - 1]);
-                                            //CheckHighlightExtraItem(destroyAnyway[destroyAnyway.Count - 1]);
-                                            //highlightedItems.Clear();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        //else if(selectedColor > -1 || selectedColor != item.color)
-                        //{
-                        //    stopSliding = true;
-                        //}
-                    }
-                }
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                Collider2D hit = Physics2D.OverlapPoint(gameCamera.ScreenToWorldPoint(Input.mousePosition),
-                    1 << LayerMask.NameToLayer("Default"));
-                if (hit != null)
-                {
-                    Square square = hit.gameObject.GetComponent<Square>();
-                    Item item = square.item;
-                    bool isIngredient = false;
-                    if (item)
-                    {
-                        //1.3
-
-                        if (item.currentType == ItemsTypes.INGREDIENT)
-                        {
-                            isIngredient = true;
-                        }
-
-                        if (!isIngredient)
-                        {
-                            if (LevelManager.THIS.ActivatedBoost.type == BoostType.Bomb)
-                            {
-                                SoundBase.Instance.PlaySound(SoundBase.Instance.boostBomb);
-                                LevelManager.THIS.DragBlocked = true;
-                                GameObject obj = Instantiate(Resources.Load("Prefabs/Effects/bomb"),
-                                    square.transform.position, square.transform.rotation) as GameObject;
-                                obj.GetComponent<SpriteRenderer>().sortingOrder = 5;
-                                obj.GetComponent<BoostAnimation>().square = square;
-                                waitingBoost = LevelManager.THIS.ActivatedBoost;
-                                LevelManager.THIS.ActivatedBoost = null;
-                            }
-                            else if (LevelManager.THIS.ActivatedBoost.type == BoostType.Shovel)
-                            {
-                                //SoundBase.Instance.PlaySound(SoundBase.Instance.boostBomb);
-                                LevelManager.THIS.DragBlocked = true;
-                                GameObject obj = Instantiate(Resources.Load("Prefabs/Effects/shovel"),
-                                    square.transform.position, square.transform.rotation) as GameObject;
-                                obj.GetComponent<SpriteRenderer>().sortingOrder = 5;
-                                obj.GetComponent<BoostAnimation>().square = square;
-                                waitingBoost = LevelManager.THIS.ActivatedBoost;
-                                LevelManager.THIS.ActivatedBoost = null;
-                            }
-                            else if (LevelManager.THIS.ActivatedBoost.type == BoostType.Energy)
-                            {
-                                SoundBase.Instance.PlaySound(SoundBase.Instance.boostBomb);
-                                LevelManager.THIS.DragBlocked = true;
-                                GameObject obj = Instantiate(Resources.Load("Prefabs/Effects/energy"),
-                                    square.transform.position, square.transform.rotation) as GameObject;
-                                obj.GetComponent<SpriteRenderer>().sortingOrder = 5;
-                                obj.GetComponent<BoostAnimation>().square = square;
-                                waitingBoost = LevelManager.THIS.ActivatedBoost;
-                                LevelManager.THIS.ActivatedBoost = null;
-                            }
-                        }
-                    }
-                }
-
-                selectedColor = -1;
-                stopSliding = false;
-                offset = 0;
-                if (destroyAnyway.Count >= 3)
-                {
-                    LevelManager.THIS.DragBlocked = true;
-                    FindMatches();
-                    if (LevelManager.Instance.limitType == LIMIT.MOVES)
-                    {
-                        LevelManager.THIS.Limit--;
-                    }
-
-                    LevelManager.THIS.moveID++;
-                }
-                else
-                {
-                    foreach (Item item in destroyAnyway)
-                    {
-                        item.SleepItem();
-                        item.square.SetActiveCage(false);
-                    }
-
-                    destroyAnyway.Clear();
-                    gatheredTypes.Clear();
-                    //ClearHighlight();
-                }
-
-                HighlightManager.StopAndClearAll();
-
-                //Collider2D hit = Physics2D.OverlapPoint (Camera.main.ScreenToWorldPoint (Input.mousePosition));
-                //if (hit != null) {
-                //	Item item = hit.gameObject.GetComponent<Item> ();
-                //	item.dragThis = false;
-                //	item.switchDirection = Vector3.zero;
-                //}
-            }
         }
     }
 
@@ -2110,7 +1707,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         return outline;
     }
 
-    void CreateObstacles(int col, int row, GameObject square, SquareTypes type)
+    public void CreateObstacles(int col, int row, GameObject square, SquareTypes type)
     {
         if ((levelSquaresFile[row * maxCols + col].obstacle == SquareTypes.WIREBLOCK && type == SquareTypes.NONE) ||
             type == SquareTypes.WIREBLOCK)
@@ -2224,10 +1821,10 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     public void NoMatches()
     {
-        PlayingState playingState = _states[GameState.Playing]
-            as PlayingState;
-
-        playingState?.HandleNoMatches();
+        if (_currentState is PlayingState playingState)
+        {
+            playingState.HandleNoMatches();
+        }
 
         // StartCoroutine(NoMatchesCor());
     }
@@ -2265,106 +1862,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         OnLevelLoaded();
         // StartCoroutine(RegenMatches());
     }
-
-    IEnumerator RegenMatches(bool onlyFalling = false)
-    {
-        if (gameStatus == GameState.RegenLevel)
-        {
-            //while (!itemsHided)
-            //{
-            yield return new WaitForSeconds(0.5f);
-            //}
-        }
-
-        if (!onlyFalling)
-            GenerateNewItems(false);
-        else
-            LevelManager.THIS.onlyFalling = true;
-        //   yield return new WaitForSeconds(1f);
-        yield return new WaitForFixedUpdate();
-
-        List<List<Item>> combs = GetMatches();
-        //while (!matchesGot)
-        //{
-        //    yield return new WaitForFixedUpdate();
-
-        //}
-        //combs = newCombines;
-        //matchesGot = false;
-        do
-        {
-            foreach (List<Item> comb in combs)
-            {
-                int colorOffset = 0;
-                foreach (Item item in comb)
-                {
-                    item.GenColor(item.color + colorOffset);
-                    colorOffset++;
-                }
-            }
-
-            combs = GetMatches();
-            //while (!matchesGot)
-            //{
-            //    yield return new WaitForFixedUpdate();
-
-            //}
-            //combs = newCombines;
-            //matchesGot = false;
-
-            //     yield return new WaitForFixedUpdate();
-        } while (combs.Count > 0);
-
-        yield return new WaitForFixedUpdate();
-        SetPreBoosts();
-        if (!onlyFalling)
-            DragBlocked = false;
-        LevelManager.THIS.onlyFalling = false;
-
-        if (LevelManager.THIS.target == Target.BOMBS)
-        {
-            StartCoroutine(InitBombs());
-        }
-
-        if (gameStatus == GameState.RegenLevel)
-            gameStatus = GameState.Playing;
-        //StartCoroutine(CheckFallingAtStart());
-    }
-
-    [System.Obsolete("Use PrepareBoostsState instead")]
-    void SetPreBoosts()
-    {
-        Debug.LogWarning("Using obsolete SetPreBoosts method. Switch to PrepareBoostsState.");
-
-        //activate boosts from map
-        bool NoBoosts = true;
-        if (BoostColorfullBomb > 0)
-        {
-            //InitScript.Instance.SpendBoost(BoostType.Colorful_bomb);
-            GameObject colorMix = Instantiate(Resources.Load("Prefabs/Effects/colorful_mix")) as GameObject;
-            colorMix.transform.position = Vector3.zero + Vector3.up * -5f;
-            BoostColorfullBomb = 0;
-            NoBoosts = false;
-        }
-
-        if (BoostStriped > 0)
-        {
-            //InitScript.Instance.SpendBoost(BoostType.Stripes);
-            foreach (Item item in GetRandomItems(BoostStriped))
-            {
-                item.nextType = (ItemsTypes)UnityEngine.Random.Range(1, 3);
-                item.ChangeType();
-            }
-
-            BoostStriped = 0;
-            NoBoosts = false;
-            gameStatus = GameState.Playing;
-        }
-
-        if (NoBoosts)
-            gameStatus = GameState.Playing;
-    }
-
 
     public List<Item> GetIngredients(int i = -1)
     {
@@ -2410,7 +1907,10 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             }
         }
     }
-
+    public void ProcessMatchesAndFalling()
+    {
+        StartCoroutine(_boardMechanicsService.ProcessBoardAfterMatches());
+    }
     public IEnumerator FindMatchDelay()
     {
         yield return new WaitForSeconds(0.2f);
@@ -2419,92 +1919,11 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     public void FindMatches()
     {
-        StartCoroutine(FallingDown());
-    }
-
-    public List<List<Item>> GetMatches(FindSeparating separating = FindSeparating.NONE, int matches = 3)
-    {
-        newCombines = new List<List<Item>>();
-        //       List<Item> countedSquares = new List<Item>();
-        countedSquares = new Hashtable();
-        countedSquares.Clear();
-        for (int col = 0; col < maxCols; col++)
+        if (_currentState is PlayingState playingState)
         {
-            for (int row = 0; row < maxRows; row++)
-            {
-                if (GetSquare(col, row) != null)
-                {
-                    if (!countedSquares.ContainsValue(GetSquare(col, row).item))
-                    {
-                        List<Item> newCombine =
-                            GetSquare(col, row).FindMatchesAround(separating, matches, countedSquares);
-                        if (newCombine.Count >= matches)
-                            newCombines.Add(newCombine);
-                    }
-                }
-            }
+            playingState.FindMatches();
         }
-
-        //print("global " + countedSquares.Count);
-        //  Debug.Break();
-        return newCombines;
     }
-
-    IEnumerator GetMatchesCor(FindSeparating separating = FindSeparating.NONE, int matches = 3, bool Smooth = true)
-    {
-        Hashtable countedSquares = new Hashtable();
-        for (int col = 0; col < maxCols; col++)
-        {
-            //if (Smooth)
-            //                    yield return new WaitForFixedUpdate();
-            for (int row = 0; row < maxRows; row++)
-            {
-                if (GetSquare(col, row) != null)
-                {
-                    if (!countedSquares.ContainsValue(GetSquare(col, row).item))
-                    {
-                        List<Item> newCombine =
-                            GetSquare(col, row).FindMatchesAround(separating, matches, countedSquares);
-                        if (newCombine.Count >= matches)
-                            newCombines.Add(newCombine);
-                    }
-                }
-            }
-        }
-
-        matchesGot = true;
-        yield return new WaitForFixedUpdate();
-    }
-
-    IEnumerator CheckFallingAtStart()
-    {
-        yield return new WaitForSeconds(0.5f);
-        while (!IsAllItemsFallDown())
-        {
-            yield return new WaitForSeconds(0.1f);
-        }
-
-        FindMatches();
-    }
-
-    public bool CheckExtraPackage(List<List<Item>> rowItems)
-    {
-        foreach (List<Item> items in rowItems)
-        {
-            foreach (Item item in items)
-            {
-                if (item.square.FindMatchesAround(FindSeparating.VERTICAL).Count > 2)
-                {
-                    if (LevelManager.THIS.lastDraggedItem == null)
-                        LevelManager.THIS.lastDraggedItem = item;
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
 
     IEnumerator FallingDown()
     {
@@ -2851,32 +2270,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     public CollectStars starsTargetCount;
     public int extraCageAddItem;
 
-    public void CheckHighlightExtraItem(Item item)
-    {
-        //  if (gatheredTypes.Count >=1)
-        ClearHighlight(true);
-        foreach (Item _item in destroyAnyway)
-        {
-            if (_item.currentType == ItemsTypes.HORIZONTAL_STRIPPED ||
-                _item.currentType == ItemsTypes.VERTICAL_STRIPPED)
-                highlightedItems.Add(_item);
-        }
-
-        if (gatheredTypes.Count > 1)
-        {
-            item.SetHighlight(ItemsTypes.HORIZONTAL_STRIPPED);
-            item.SetHighlight(ItemsTypes.VERTICAL_STRIPPED);
-        }
-
-        foreach (ItemsTypes itemType in gatheredTypes)
-        {
-            if (itemType == ItemsTypes.HORIZONTAL_STRIPPED)
-                item.SetHighlight(ItemsTypes.HORIZONTAL_STRIPPED);
-            else
-                item.SetHighlight(ItemsTypes.VERTICAL_STRIPPED);
-        }
-    }
-
     public void ClearHighlight(bool boost = false)
     {
         if (!boost)
@@ -2997,11 +2390,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         return true;
     }
 
-    public Vector2 GetPosition(Item item)
-    {
-        return GetPosition(item.square);
-    }
-
     public Vector2 GetPosition(Square square)
     {
         return new Vector2(square.col, square.row);
@@ -3047,35 +2435,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         for (int row = 0; row < maxRows; row++)
         {
             itemsList.Add(GetSquare(col, row, true));
-        }
-
-        return itemsList;
-    }
-
-
-    public List<Square> GetColumnSquaresObstacles(int col)
-    {
-        List<Square> itemsList = new List<Square>();
-        for (int row = 0; row < maxRows; row++)
-        {
-            if (GetSquare(col, row, true).IsHaveDestroybleObstacle())
-                itemsList.Add(GetSquare(col, row, true));
-            if (GetSquare(col, row, true).block.Count > 0)
-                itemsList.Add(GetSquare(col, row, true));
-        }
-
-        return itemsList;
-    }
-
-    public List<Square> GetRowSquaresObstacles(int row)
-    {
-        List<Square> itemsList = new List<Square>();
-        for (int col = 0; col < maxCols; col++)
-        {
-            if (GetSquare(col, row, true).IsHaveDestroybleObstacle())
-                itemsList.Add(GetSquare(col, row, true));
-            if (GetSquare(col, row, true).block.Count > 0)
-                itemsList.Add(GetSquare(col, row, true));
         }
 
         return itemsList;
@@ -3155,45 +2514,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             {
                 itemsList.Add(GetSquare(c, r, true));
             }
-        }
-
-        return itemsList;
-    }
-
-    public List<Item> GetItemsCross(Square square, List<Item> exceptList = null, int COLOR = -1)
-    {
-        if (exceptList == null)
-            exceptList = new List<Item>();
-        int c = square.col;
-        int r = square.row;
-        List<Item> itemsList = new List<Item>();
-        Item item = null;
-        item = GetSquare(c - 1, r, true).item;
-        if (exceptList.IndexOf(item) <= -1)
-        {
-            if (item.color == COLOR || COLOR == -1)
-                itemsList.Add(item);
-        }
-
-        item = GetSquare(c + 1, r, true).item;
-        if (exceptList.IndexOf(item) <= -1)
-        {
-            if (item.color == COLOR || COLOR == -1)
-                itemsList.Add(item);
-        }
-
-        item = GetSquare(c, r - 1, true).item;
-        if (exceptList.IndexOf(item) <= -1)
-        {
-            if (item.color == COLOR || COLOR == -1)
-                itemsList.Add(item);
-        }
-
-        item = GetSquare(c, r + 1, true).item;
-        if (exceptList.IndexOf(item) <= -1)
-        {
-            if (item.color == COLOR || COLOR == -1)
-                itemsList.Add(item);
         }
 
         return itemsList;
@@ -3308,21 +2628,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         }
 
         return itemsList;
-    }
-
-    IEnumerator StartIdleCor()
-    {
-        for (int col = 0; col < maxCols; col++)
-        {
-            for (int row = 0; row < maxRows; row++)
-            {
-                // GetSquare(col, row, true).item.anim.SetBool("stop", false);
-                if (GetSquare(col, row, true).item != null)
-                    GetSquare(col, row, true).item.StartIdleAnim();
-            }
-        }
-
-        yield return new WaitForFixedUpdate();
     }
 
     public void StrippedShow(GameObject obj, bool horrizontal)
@@ -3572,6 +2877,14 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         //print(TargetBlocks);
         levelLoaded = true;
+    }
+
+    private void OnDestroy()
+    {
+        if (CoroutineManager.Instance != null)
+        {
+            CoroutineManager.Instance.StopAllManagedCoroutines();
+        }
     }
 }
 

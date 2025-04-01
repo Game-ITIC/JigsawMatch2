@@ -5,17 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c8bc5122-cbac-4efe-813b-118ec8437e54" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/GameOverState.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/GameOverState.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PreWinAnimationState.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PreWinAnimationState.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/RegenLevelState.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/RegenLevelState.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/WinState.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/WinState.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/CoroutineManager.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/CoroutineManager.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/Services.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.JigsawMatch2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JigsawMatch2/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Content/Prefabs/ProjectLifetimeScope.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Content/Prefabs/ProjectLifetimeScope.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/Editor/LevelMakerEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/Editor/LevelMakerEditor.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/LevelManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/LevelManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PlayingState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PlayingState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PreWinAnimationState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PreWinAnimationState.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/IronSourceManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/IronSourceManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Examples &amp; Extras/Resources/Fonts &amp; Materials/Roboto-Bold SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Examples &amp; Extras/Resources/Fonts &amp; Materials/Roboto-Bold SDF.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +30,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5a41d6b7189842eca409fd0b1c3e3dcf17bf78/41/54895cbc/Void.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5ed782439084ef1bc2ad85eec89e9fe175a00/47/e6f96e59/Screen.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5ed782439084ef1bc2ad85eec89e9fe175a00/8d/66312f8e/Application.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5ed782439084ef1bc2ad85eec89e9fe175a00/c4/2b167987/MonoBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f338185e6556436c80e5a7067da07efa9200/bb/dcfe39e9/InterstitialAd.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d44b17e136d09081da1e8fd0e8c83fde60e11818b9f2442d7ed8cb733fae895e/System.Collections.Generic.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/JuiceFresh/Scripts/GoogleAds/AdmobManager.cs" root0="FORCE_HIGHLIGHTING" />
@@ -51,18 +52,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "develop",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="C:\Unity\Hub\Editor\2022.3.24f1\Editor\Unity.exe" />
@@ -120,6 +121,7 @@
       <workItem from="1738057468529" duration="1086000" />
       <workItem from="1739951381358" duration="2849000" />
       <workItem from="1743137988469" duration="3805000" />
+      <workItem from="1743481797461" duration="12177000" />
     </task>
     <servers />
   </component>
