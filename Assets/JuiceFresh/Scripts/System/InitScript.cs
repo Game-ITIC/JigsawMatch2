@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-
 using System.Collections.Generic;
 //using JuiceFresh.Scripts.System;
 //#if UNITY_ADS
@@ -41,7 +40,6 @@ public enum Ingredients
     Ingredient2,
     Ingredient3,
     Ingredient4
-
 }
 
 public enum CollectItems
@@ -89,14 +87,8 @@ public class InitScript : MonoBehaviour
 
     public static int lifes
     {
-        get
-        {
-            return InitScript.Lifes;
-        }
-        set
-        {
-            InitScript.Lifes = value;
-        }
+        get { return InitScript.Lifes; }
+        set { InitScript.Lifes = value; }
     }
 
     public int CapOfLife = 5;
@@ -118,7 +110,9 @@ public class InitScript : MonoBehaviour
     //public List<AdEvents> adsEvents = new List<AdEvents>();
 
     public static bool sound = false;
+
     public static bool music = false;
+
 //    private bool adsReady;
 //    public bool enableUnityAds;
 //    public bool enableGoogleMobileAds;
@@ -127,7 +121,7 @@ public class InitScript : MonoBehaviour
 //    public string nonRewardedVideoZone;
 //    public int ShowChartboostAdsEveryLevel;
 //    public int ShowAdmobAdsEveryLevel;
-      private bool leftControl;
+    private bool leftControl;
 //#if GOOGLE_MOBILE_ADS
 //	private InterstitialAd interstitial;
 //	private AdRequest requestAdmob;
@@ -136,11 +130,13 @@ public class InitScript : MonoBehaviour
 //    public string admobUIDIOS;
 
     public int ShowRateEvery;
+
     //public string RateURL;
     //public string RateURLIOS;
     private GameObject rate;
     public int rewardedGems = 5;
     public bool losingLifeEveryGame;
+
     public static Sprite profilePic;
     //public GameObject facebookButton;
     //1.3.3
@@ -150,6 +146,12 @@ public class InitScript : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Application.targetFrameRate = 60;
         Instance = this;
         RestLifeTimer = PlayerPrefs.GetFloat("RestLifeTimer");
@@ -161,7 +163,8 @@ public class InitScript : MonoBehaviour
         Stars = PlayerPrefs.GetInt("Stars");
         lifes = PlayerPrefs.GetInt("Lifes");
         if (PlayerPrefs.GetInt("Lauched") == 0)
-        {    //First lauching
+        {
+            //First lauching
             lifes = CapOfLife;
             PlayerPrefs.SetInt("Lifes", lifes);
             Gems = FirstGems;
@@ -174,16 +177,18 @@ public class InitScript : MonoBehaviour
             PlayerPrefs.SetInt("Lauched", 1);
             PlayerPrefs.Save();
         }
-        rate = GameObject.Find("CanvasGlobal").transform.Find("Rate").gameObject;
-        rate.SetActive(false);
+
+        // rate = GameObject.Find("CanvasGlobal").transform.Find("Rate").gameObject;
+        // rate.SetActive(false);
         //rate.transform.SetParent(GameObject.Find("CanvasGlobal").transform);
         //rate.transform.localPosition = Vector3.zero;
         //rate.GetComponent<RectTransform>().anchoredPosition = (Resources.Load("Prefabs/Rate") as GameObject).GetComponent<RectTransform>().anchoredPosition;
         //rate.transform.localScale = Vector3.one;
         //gameObject.AddComponent<InternetChecker>();
-        GameObject.Find("Music").GetComponent<AudioSource>().volume = PlayerPrefs.GetInt("Music");
-        SoundBase.Instance.GetComponent<AudioSource>().volume = PlayerPrefs.GetInt("Sound");
-//#if UNITY_ADS//1.3
+        //  GameObject.Find("Music").GetComponent<AudioSource>().volume = PlayerPrefs.GetInt("Music");
+        // SoundBase.Instance.GetComponent<AudioSource>().volume = PlayerPrefs.GetInt("Sound");
+        DontDestroyOnLoad(this);
+        //#if UNITY_ADS//1.3
 //		enableUnityAds = true;
 //        var unityAds = Resources.Load<UnityAdsID>("UnityAdsID");
 //        #if UNITY_ANDROID
@@ -228,14 +233,14 @@ public class InitScript : MonoBehaviour
 //#else
 //        enableGoogleMobileAds = false; //1.3
 //#endif
-        Transform canvas = GameObject.Find("CanvasGlobal").transform;
-        foreach (Transform item in canvas)
-        {
-            item.gameObject.SetActive(false);
-        }
+        // Transform canvas = GameObject.Find("CanvasGlobal")?.transform;
+        // foreach (Transform item in canvas!)
+        // {
+        //     item.gameObject.SetActive(false);
+        // }
     }
 //#if GOOGLE_MOBILE_ADS
-	
+
 //	public void HandleInterstitialLoaded (object sender, EventArgs args) {
 //		print ("HandleInterstitialLoaded event received.");
 //	}
@@ -257,7 +262,6 @@ public class InitScript : MonoBehaviour
             {
                 SaveLevelStarsCount(i, 1);
             }
-
         }
     }
 
@@ -265,7 +269,6 @@ public class InitScript : MonoBehaviour
     {
         Debug.Log(string.Format("Stars count {0} of level {1} saved.", starsCount, level));
         PlayerPrefs.SetInt(GetLevelKey(level), starsCount);
-
     }
 
     private string GetLevelKey(int number)
@@ -399,14 +402,14 @@ public class InitScript : MonoBehaviour
 //        }
 //    }
 
-   /* public void ShowRate()
-    {
-        InternetChecker.THIS.CheckInternet(true, (isConnected) =>
-        {
-            if (isConnected) rate.SetActive(true);
-        });
-    }
-*/
+    /* public void ShowRate()
+     {
+         InternetChecker.THIS.CheckInternet(true, (isConnected) =>
+         {
+             if (isConnected) rate.SetActive(true);
+         });
+     }
+ */
 
     //public void CheckRewardedAds()
     //{
@@ -434,7 +437,8 @@ public class InitScript : MonoBehaviour
     //}
 
     public void SetGems(int count)
-    {//1.3.3
+    {
+        //1.3.3
         Gems = count;
         PlayerPrefs.SetInt("Gems", Gems);
         PlayerPrefs.Save();
@@ -451,7 +455,8 @@ public class InitScript : MonoBehaviour
     }
 
     public void SetStars(int count)
-    {//1.3.3
+    {
+        //1.3.3
         Stars = count;
         PlayerPrefs.SetInt("Stars", Stars);
         PlayerPrefs.Save();
@@ -503,6 +508,7 @@ public class InitScript : MonoBehaviour
             PlayerPrefs.SetInt("Lifes", lifes);
             PlayerPrefs.Save();
         }
+
         return lifes;
     }
 
@@ -544,7 +550,6 @@ public class InitScript : MonoBehaviour
 //#if PLAYFAB || GAMESPARKS
 //		NetworkManager.dataManager.SetBoosterData ();
 //#endif
-
     }
     //void ReloadBoosts()
     //{
@@ -564,7 +569,8 @@ public class InitScript : MonoBehaviour
     //}
 
     void OnApplicationFocus(bool focusStatus)
-    {//1.3.3
+    {
+        //1.3.3
         if (MusicBase.Instance)
         {
             MusicBase.Instance.GetComponent<AudioSource>().Play();
@@ -580,6 +586,7 @@ public class InitScript : MonoBehaviour
             {
                 PlayerPrefs.SetFloat("RestLifeTimer", RestLifeTimer);
             }
+
             PlayerPrefs.SetInt("Lifes", lifes);
             PlayerPrefs.SetString("DateOfExit", DateTime.Now.ToString());
             PlayerPrefs.Save();
@@ -587,11 +594,13 @@ public class InitScript : MonoBehaviour
     }
 
     void OnApplicationQuit()
-    {   //1.4  added 
+    {
+        //1.4  added 
         if (RestLifeTimer > 0)
         {
             PlayerPrefs.SetFloat("RestLifeTimer", RestLifeTimer);
         }
+
         PlayerPrefs.SetInt("Lifes", lifes);
         PlayerPrefs.SetString("DateOfExit", DateTime.Now.ToString());
         PlayerPrefs.Save();
@@ -601,7 +610,9 @@ public class InitScript : MonoBehaviour
     {
         if (EventSystem.current.IsPointerOverGameObject(-1))
             return;
-        if (!GameObject.Find("CanvasGlobal").transform.Find("MenuPlay").gameObject.activeSelf && !GameObject.Find("CanvasGlobal").transform.Find("GemsShop").gameObject.activeSelf && !GameObject.Find("CanvasGlobal").transform.Find("LiveShop").gameObject.activeSelf)
+        if (!GameObject.Find("CanvasGlobal").transform.Find("MenuPlay").gameObject.activeSelf
+            && !GameObject.Find("CanvasGlobal").transform.Find("GemsShop").gameObject.activeSelf
+            && !GameObject.Find("CanvasGlobal").transform.Find("LiveShop").gameObject.activeSelf)
         {
             PlayerPrefs.SetInt("OpenLevel", args.Number);
             PlayerPrefs.Save();
@@ -642,8 +653,5 @@ public class InitScript : MonoBehaviour
 //		interstitial.OnAdLoaded -= HandleInterstitialLoaded;
 //		interstitial.OnAdFailedToLoad -= HandleInterstitialFailedToLoad;
 //#endif
-
     }
-
-
 }

@@ -12709,7 +12709,6 @@ GameObject:
   - component: {fileID: 511786105}
   - component: {fileID: 511786104}
   - component: {fileID: 511786110}
-  - component: {fileID: 511786109}
   - component: {fileID: 511786112}
   - component: {fileID: 511786113}
   - component: {fileID: 511786114}
@@ -12804,36 +12803,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &511786109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 511786103}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b04bb4abd8356e04894093fdaaa1805b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  collectedIngredients:
-  - name: Ingredient1
-    sprite: {fileID: 21300000, guid: 63938c0f13ed90f44a5a7ad659f6262a, type: 3}
-    check: 1
-    count: 1
-  - name: Ingredient2
-    sprite: {fileID: 21300000, guid: 5b36c94fa40177248bd1894a25cbd3b8, type: 3}
-    check: 1
-    count: 1
-  currentReward: 0
-  CapOfLife: 5
-  TotalTimeForRestLifeHours: 0
-  TotalTimeForRestLifeMin: 5
-  TotalTimeForRestLifeSec: 0
-  FirstGems: 5
-  ShowRateEvery: 5
-  rewardedGems: 5
-  losingLifeEveryGame: 0
 --- !u!120 &511786110
 LineRenderer:
   serializedVersion: 2
@@ -12977,11 +12946,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemPrefab: {fileID: 190504, guid: 11627449414b639428ab223fa6ad4143, type: 3}
   squarePrefab: {fileID: 113570, guid: 74bed59af10418449aca02d1f8217eac, type: 3}
-  squareSprite: {fileID: 21300000, guid: 8d6dfee8217441946b4f9a8a0617806f, type: 3}
-  squareSprite1: {fileID: 21300000, guid: f8037e2d044c3af4b82ee2cc57325685, type: 3}
-  outline1: {fileID: 21300000, guid: aedfd74761eff26479a0969f4b6d5591, type: 3}
-  outline2: {fileID: 21300000, guid: 440b23c6d2829de4fb99fd4ce4e0217f, type: 3}
-  outline3: {fileID: 21300000, guid: d93fc221c44f6ca4a84c51271a3ae82b, type: 3}
   blockPrefab: {fileID: 179862, guid: 20204f83f367d93428a3e824b6ba4eb3, type: 3}
   wireBlockPrefab: {fileID: 153778, guid: d7a0ec3bdb439fb43a4ec9e26fe3f22c, type: 3}
   solidBlockPrefab: {fileID: 141174, guid: 546ef16483e777141b1e45b2f676d8b3, type: 3}
@@ -12990,12 +12954,91 @@ MonoBehaviour:
   thrivingBlockPrefab: {fileID: 142200, guid: 4d22c0ca6aa3c2f44a8136e879b88ed3, type: 3}
   lifeShop: {fileID: 285581711}
   GameField: {fileID: 1050245871}
+  popupScore: {fileID: 100000, guid: 045b1a17bc5268b419f9a7fa7af3c2ba, type: 3}
+  stripesEffect: {fileID: 100804, guid: c1d86e442930a7b40835a0fbad225fbd, type: 3}
+  LevelsMap: {fileID: 1404877721}
+  Level: {fileID: 1375642408}
+  star1Anim: {fileID: 1966708837}
+  star2Anim: {fileID: 940062435}
+  star3Anim: {fileID: 1268082354}
+  gratzWords:
+  - {fileID: 1162009076}
+  - {fileID: 1303933588}
+  - {fileID: 889631136}
+  ingrObject: {fileID: 1329699253}
+  blocksObject: {fileID: 1392166698}
+  scoreTargetObject: {fileID: 913142532}
+  cageTargetObject: {fileID: 1579985914}
+  bombTargetObject: {fileID: 1192546712}
+  gameCamera: {fileID: 511786107}
+  line: {fileID: 1400600143}
+  flower: {fileID: 107552, guid: 0a071ea80298917468648bade3061b0a, type: 3}
+  squareSprite: {fileID: 21300000, guid: 8d6dfee8217441946b4f9a8a0617806f, type: 3}
+  squareSprite1: {fileID: 21300000, guid: f8037e2d044c3af4b82ee2cc57325685, type: 3}
+  outline1: {fileID: 21300000, guid: aedfd74761eff26479a0969f4b6d5591, type: 3}
+  outline2: {fileID: 21300000, guid: 440b23c6d2829de4fb99fd4ce4e0217f, type: 3}
+  outline3: {fileID: 21300000, guid: d93fc221c44f6ca4a84c51271a3ae82b, type: 3}
+  ingrediendSprites:
+  - {fileID: 21300000, guid: 63938c0f13ed90f44a5a7ad659f6262a, type: 3}
+  - {fileID: 21300000, guid: 5b36c94fa40177248bd1894a25cbd3b8, type: 3}
+  - {fileID: 21300000, guid: 63938c0f13ed90f44a5a7ad659f6262a, type: 3}
+  - {fileID: 21300000, guid: 5b36c94fa40177248bd1894a25cbd3b8, type: 3}
+  doubleBlock: {fileID: 21300000, guid: b19a43d9055f7834dbb0c212adbe27c8, type: 3}
+  doubleSolidBlock: {fileID: 21300000, guid: de11d44799201174c8354808473c380e, type: 3}
   enableInApps: 0
+  limitType: 1
+  Limit: 60
+  currentLevel: 4
+  FailedCost: 12
+  ExtraFailedMoves: 5
+  ExtraFailedSecs: 30
   maxRows: 8
   maxCols: 7
   squareWidth: 1.6
   squareHeight: 1.6
   firstSquarePosition: {x: -2.4, y: 3.3}
+  showPopupScores: 1
+  colorLimit: 5
+  targetDiscriptions:
+  - 'Achieve score of %n '
+  - Destroy all blocks
+  - Bring insects till the bottom
+  - Get required butterflies
+  - Destroy honey blocks
+  - Get rid of bombs
+  - 'Achieve number of stars: %s '
+  FacebookEnable: 0
+  PlayFab: 0
+  extraItemEvery: 6
+  bombTimer: 5
+  NumIngredients: 0
+  target: 1
+  scoreForItem: 80
+  scoreForBlock: 100
+  scoreForWireBlock: 100
+  scoreForSolidBlock: 120
+  scoreForThrivingBlock: 150
+  scoresColors:
+  - {r: 0.7176471, g: 0.011764706, b: 0.011764706, a: 1}
+  - {r: 1, g: 0.43676472, b: 0, a: 1}
+  - {r: 0.5661765, g: 0, b: 0.556066, a: 1}
+  - {r: 0.0919286, g: 0.5441177, b: 0, a: 1}
+  - {r: 0, g: 0.3547279, b: 0.6544118, a: 1}
+  scoresColorsOutline:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  stars: 0
+  star1: 2300
+  star2: 5300
+  star3: 8600
+  starsTargetCount: 3
+  targetBlocks: 0
+  TargetCages: 0
+  TargetBombs: 0
   squaresArray:
   - {fileID: 0}
   - {fileID: 0}
@@ -13055,40 +13098,24 @@ MonoBehaviour:
   - {fileID: 0}
   lastDraggedItem: {fileID: 0}
   destroyAnyway: []
-  popupScore: {fileID: 100000, guid: 045b1a17bc5268b419f9a7fa7af3c2ba, type: 3}
-  scoreForItem: 80
-  scoreForBlock: 100
-  scoreForWireBlock: 100
-  scoreForSolidBlock: 120
-  scoreForThrivingBlock: 150
-  limitType: 1
-  Limit: 60
-  TargetScore: 1000
-  currentLevel: 4
-  FailedCost: 12
-  ExtraFailedMoves: 5
-  ExtraFailedSecs: 30
-  gemsProducts:
-  - count: 10
-    price: 0.99
-  - count: 50
-    price: 4.99
-  - count: 100
-    price: 9.99
-  - count: 150
-    price: 14.99
-  InAppIDs: []
-  GoogleLicenseKey: 
-  line: {fileID: 1400600143}
-  thrivingBlockDestroyed: 0
+  highlightedItems: []
+  ingrCountTarget: 0200000002000000
+  ingrTarget: []
+  collectItems: 000000000000000000000000000000000000000000000000
+  listIngredientsGUIObjects: []
+  gatheredTypes: 
+  startPosFlowers: []
   BoostColorfullBomb: 0
   BoostPackage: 0
   BoostStriped: 0
   emptyBoostIcon: {fileID: 511786113}
-  AvctivatedBoostView: {fileID: 0}
   activatedBoost: {fileID: 0}
-  gameCamera: {fileID: 511786107}
-  targetBlocks: 0
+  InGameBoosts:
+  - {fileID: 998237489}
+  - {fileID: 118832954}
+  - {fileID: 64084070}
+  - {fileID: 1823937794}
+  waitingBoost: {fileID: 0}
   itemExplPool:
   - {fileID: 0}
   - {fileID: 0}
@@ -13131,84 +13158,30 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  stars: 0
-  star1: 2300
-  star2: 5300
-  star3: 8600
-  showPopupScores: 1
-  stripesEffect: {fileID: 100804, guid: c1d86e442930a7b40835a0fbad225fbd, type: 3}
-  star1Anim: {fileID: 1966708837}
-  star2Anim: {fileID: 940062435}
-  star3Anim: {fileID: 1268082354}
-  snowParticle: {fileID: 100000, guid: c17c528c0a714fd4fa4d113077a0d351, type: 3}
-  scoresColors:
-  - {r: 0.7176471, g: 0.011764706, b: 0.011764706, a: 1}
-  - {r: 1, g: 0.43676472, b: 0, a: 1}
-  - {r: 0.5661765, g: 0, b: 0.556066, a: 1}
-  - {r: 0.0919286, g: 0.5441177, b: 0, a: 1}
-  - {r: 0, g: 0.3547279, b: 0.6544118, a: 1}
-  scoresColorsOutline:
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  colorLimit: 5
-  ingrCountTarget: 0200000002000000
-  ingrTarget: []
-  ingrediendSprites:
-  - {fileID: 21300000, guid: 63938c0f13ed90f44a5a7ad659f6262a, type: 3}
-  - {fileID: 21300000, guid: 5b36c94fa40177248bd1894a25cbd3b8, type: 3}
-  - {fileID: 21300000, guid: 63938c0f13ed90f44a5a7ad659f6262a, type: 3}
-  - {fileID: 21300000, guid: 5b36c94fa40177248bd1894a25cbd3b8, type: 3}
-  targetDiscriptions:
-  - 'Achieve score of %n '
-  - Destroy all blocks
-  - Bring insects till the bottom
-  - Get required butterflies
-  - Destroy honey blocks
-  - Get rid of bombs
-  - 'Achieve number of stars: %s '
-  ingrObject: {fileID: 1329699253}
-  blocksObject: {fileID: 1392166698}
-  scoreTargetObject: {fileID: 913142532}
-  cageTargetObject: {fileID: 1579985914}
-  bombTargetObject: {fileID: 1192546712}
-  gratzWords:
-  - {fileID: 1162009076}
-  - {fileID: 1303933588}
-  - {fileID: 889631136}
-  Level: {fileID: 1375642408}
-  LevelsMap: {fileID: 1404877721}
-  InGameBoosts:
-  - {fileID: 998237489}
-  - {fileID: 118832954}
-  - {fileID: 64084070}
-  - {fileID: 1823937794}
+  gemsProducts:
+  - count: 10
+    price: 0.99
+  - count: 50
+    price: 4.99
+  - count: 100
+    price: 9.99
+  - count: 150
+    price: 14.99
+  bombTimers: 
   passLevelCounter: 0
-  friendsAvatars: []
-  target: 1
-  TargetCages: 0
-  TargetBombs: 0
-  itemsHided: 0
   moveID: 0
   lastRandColor: 0
+  selectedColor: 0
+  nextExtraItems: 0
+  itemsHided: 0
   onlyFalling: 0
   levelLoaded: 0
-  doubleBlock: {fileID: 21300000, guid: b19a43d9055f7834dbb0c212adbe27c8, type: 3}
-  doubleSolidBlock: {fileID: 21300000, guid: de11d44799201174c8354808473c380e, type: 3}
-  FacebookEnable: 0
-  PlayFab: 0
-  flower: {fileID: 107552, guid: 0a071ea80298917468648bade3061b0a, type: 3}
-  bombsCollect: 0
-  bombTimer: 5
-  NumIngredients: 0
-  waitingBoost: {fileID: 0}
-  highlightedItems: []
+  ingredientFly: 0
   testByPlay: 0
-  starsTargetCount: 3
   extraCageAddItem: 0
+  bombsCollect: 0
+  thrivingBlockDestroyed: 0
+  dragBlocked: 0
 --- !u!114 &511786113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15985,7 +15958,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &625036442
 RectTransform:
   m_ObjectHideFlags: 0
@@ -31503,212 +31476,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   material: {fileID: 0}
-  vertices: []
-  start: {x: 0, y: 0, z: 0}
-  end: {x: 0, y: 0, z: 0}
   lineWidth: 0
-  lines: []
-  points:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
 --- !u!4 &1400600144
 Transform:
   m_ObjectHideFlags: 0

@@ -3,6 +3,8 @@ using System.Collections;
 using System;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+
 //using JuiceFresh.Scripts.System;
 
 //#if UNITY_ADS
@@ -523,6 +525,7 @@ public class AnimationManager : MonoBehaviour
         Time.timeScale = 1;
         LevelManager.THIS.gameStatus = GameState.ToMap;
         CloseMenu();
+        SceneManager.LoadScene("RegionTest 1");
     }
 
     public void Next()
