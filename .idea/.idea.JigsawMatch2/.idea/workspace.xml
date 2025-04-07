@@ -5,10 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c8bc5122-cbac-4efe-813b-118ec8437e54" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/CoroutineManager.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/CoroutineManager.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/Services.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.JigsawMatch2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JigsawMatch2/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Content/Prefabs/ProjectLifetimeScope.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Content/Prefabs/ProjectLifetimeScope.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/Editor/LevelMakerEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/Editor/LevelMakerEditor.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/LevelManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/LevelManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PlayingState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PlayingState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PreWinAnimationState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/States/PreWinAnimationState.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/IronSourceManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/IronSourceManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Examples &amp; Extras/Resources/Fonts &amp; Materials/Roboto-Bold SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Examples &amp; Extras/Resources/Fonts &amp; Materials/Roboto-Bold SDF.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,8 +121,7 @@
       <workItem from="1738057468529" duration="1086000" />
       <workItem from="1739951381358" duration="2849000" />
       <workItem from="1743137988469" duration="3805000" />
-      <workItem from="1743481797461" duration="13355000" />
-      <workItem from="1743499883861" duration="1210000" />
+      <workItem from="1743481797461" duration="12177000" />
     </task>
     <servers />
   </component>

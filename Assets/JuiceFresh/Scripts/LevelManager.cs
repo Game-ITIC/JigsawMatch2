@@ -162,6 +162,9 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     //is any growing blocks destroyed in that turn
     public bool thrivingBlockDestroyed;
 
+    //inner using variable
+    List<List<Item>> newCombines;
+
     // is touch blocks?
     public bool dragBlocked;
 
@@ -285,6 +288,9 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     //UI star object
     public GameObject star3Anim;
 
+    //snow particle prefab
+    public GameObject snowParticle;
+
     //array of colors for popup scores
     public Color[] scoresColors;
 
@@ -325,6 +331,9 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     public GameObject bombTargetObject;
 
     //inner using
+    private bool matchesGot;
+
+    //inner using
     public bool ingredientFly;
 
     //UI objects
@@ -340,6 +349,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     public int passLevelCounter;
     public List<ItemsTypes> gatheredTypes = new List<ItemsTypes>();
     public List<Vector3> startPosFlowers = new List<Vector3>();
+    public List<GameObject> friendsAvatars = new List<GameObject>();
 
     public Target target;
 
@@ -496,6 +506,20 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     private void HandleLegacyState(GameState state)
     {
+        // if (state == GameState.PrepareGame)
+        // {
+        //     MusicBase.Instance.GetComponent<AudioSource>().Stop();
+        //     MusicBase.Instance.GetComponent<AudioSource>().loop = true;
+        //     MusicBase.Instance.GetComponent<AudioSource>().clip = MusicBase.Instance.music[1];
+        //     MusicBase.Instance.GetComponent<AudioSource>().Play();
+        //     PrepareGame();
+        // }
+        // if (state == GameState.WaitForPopup)
+        // {
+        //     InitLevel();
+        //     OnLevelLoaded();
+        //     Scale(GetComponent<Camera>().orthographicSize); //1.4.9
+        // }
         if (state == GameState.PreFailedBomb)
         {
         }
@@ -503,11 +527,46 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         {
             GameObject.Find("CanvasGlobal").transform.Find("PreFailed").gameObject.SetActive(true);
         }
+        // else if (state == GameState.Map)
+        // {
+        //     if (PlayerPrefs.GetInt("OpenLevelTest") <= 0)
+        //     {
+        //         MusicBase.Instance.GetComponent<AudioSource>().Stop();
+        //         MusicBase.Instance.GetComponent<AudioSource>().loop = true;
+        //         MusicBase.Instance.GetComponent<AudioSource>().clip = MusicBase.Instance.music[0];
+        //         MusicBase.Instance.GetComponent<AudioSource>().Play();
+        //         EnableMap(true);
+        //         OnMapState();
+        //     }
+        //     else
+        //     {
+        //         LevelManager.THIS.gameStatus = GameState.PrepareGame;
+        //         PlayerPrefs.SetInt("OpenLevelTest", 0);
+        //         PlayerPrefs.Save();
+        //     }
+        // }
         else if (state == GameState.Pause)
         {
             Time.timeScale = 0;
         }
-    
+        // else if (state == GameState.PrepareBoosts)
+        // {
+        //     SetPreBoosts();
+        // }
+        // else if (state == GameState.Playing)
+        // {
+        //     Time.timeScale = 1;
+        //
+        //
+        //     StartCoroutine(TipsManager.THIS.CheckPossibleCombines());
+        // }
+        // else if (state == GameState.GameOver)
+        // {
+        //     MusicBase.Instance.GetComponent<AudioSource>().Stop();
+        //     SoundBase.Instance.PlaySound(SoundBase.Instance.gameOver[0]);
+        //     GameObject.Find("CanvasGlobal").transform.Find("MenuFailed").gameObject.SetActive(true);
+        //     OnLose();
+        // }
         else if (state == GameState.ToMap)
         {
             MusicBase.Instance.GetComponent<AudioSource>().Stop();
@@ -519,6 +578,19 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             MusicBase.Instance.GetComponent<AudioSource>().Stop();
             StartCoroutine(PreWinAnimationsCor());
         }
+        // else if (state == GameState.Win)
+        // {
+        //     passLevelCounter++;
+        //     OnMenuComplete();
+        //     GameObject.Find("CanvasGlobal").transform.Find("MenuComplete").gameObject.SetActive(true);
+        //     OnWin();
+        // }
+        //InitScript.Instance.CheckAdsEvents(value);
+    }
+
+    public void MenuPlayEvent()
+    {
+        OnMenuPlay();
     }
 
     #endregion
@@ -567,9 +639,14 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         _boardMechanicsService = new BoardMechanicsService(this);
         
         ingrCountTarget = new int[NumIngredients]; //necessary amount of collectable items
-       
+        //ingrTarget = InitScript.Instance.collectedIngredients.ToArray();  //necessary collectable items
+        //collectItems = new CollectItems[NumIngredients];   //necessary collectable items
+
         if (Level.gameObject.activeSelf)
             Level.gameObject.SetActive(false);
+
+        // if (!LevelManager.THIS.enableInApps)//1.4.9
+        // 	GameObject.Find("Gems").gameObject.SetActive(false);
 
         CoroutineManager.Instance.GetType();
 
@@ -596,7 +673,9 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
                 Instantiate(Resources.Load("Prefabs/Effects/ItemExpl"), transform.position,
                     Quaternion.identity) as GameObject;
             itemExplPool[i].GetComponent<SpriteRenderer>().enabled = false;
-         }
+
+            // itemExplPool[i].SetActive(false);
+        }
 
         for (int i = 0; i < 20; i++)
         {
@@ -620,6 +699,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     public void CreateCollectableTarget(GameObject parentTransform, Target tar, bool ForDialog = true)
     {
         tar = target;
+        // if (tar != Target.COLLECT && tar != Target.ITEMS && tar != Target.BOMBS && tar != Target.CAGES ) return;
         GameObject ingrPrefab = Resources.Load("Prefabs/CollectGUIObj") as GameObject;
 
         parentTransform.SetActive(true);
@@ -1609,6 +1689,9 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
                 }
             }
         }
+        //Vector3 pos = GameField.transform.TransformPoint((Vector3)firstSquarePosition + new Vector3(col * squareWidth - squareWidth / 2, -row * squareHeight, 10));
+        //line.SetVertexCount(linePoint + 1);
+        //line.SetPosition(linePoint++, pos);
     }
 
     GameObject CreateOutline(Square square)
@@ -1639,6 +1722,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             block.GetComponent<SpriteRenderer>().sortingOrder = 3;
             block.GetComponent<Square>().type = SquareTypes.WIREBLOCK;
             square.GetComponent<Square>().SetCage(cageHP);
+            //   TargetBlocks++;
         }
         else if ((levelSquaresFile[row * maxCols + col].obstacle == SquareTypes.SOLIDBLOCK &&
                   type == SquareTypes.NONE) || type == SquareTypes.SOLIDBLOCK)
@@ -1735,6 +1819,29 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         }
     }
 
+    public void NoMatches()
+    {
+        if (_currentState is PlayingState playingState)
+        {
+            playingState.HandleNoMatches();
+        }
+
+        // StartCoroutine(NoMatchesCor());
+    }
+
+    IEnumerator NoMatchesCor()
+    {
+        if (gameStatus == GameState.Playing)
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.noMatch);
+
+            GameObject.Find("Level/Canvas").transform.Find("NoMoreMatches").gameObject.SetActive(true); //1.4.5
+            gameStatus = GameState.RegenLevel;
+            yield return new WaitForSeconds(1);
+            ReGenLevel();
+        }
+    }
+
     public List<int> bombTimers = new List<int>();
     //1.3
 
@@ -1816,6 +1923,346 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         {
             playingState.FindMatches();
         }
+    }
+
+    IEnumerator FallingDown()
+    {
+        bool throwflower = false;
+        extraCageAddItem = 0;
+        bool nearEmptySquareDetected = false;
+        int combo = 0;
+        // AI.THIS.allowShowTip = false;
+        List<Item> it = GetItems();
+        for (int i = 0; i < it.Count; i++)
+        {
+            Item item = it[i];
+            if (item != null)
+            {
+                //AI.THIS.StopAllCoroutines();
+                item.anim.StopPlayback();
+            }
+        }
+
+        while (true)
+        {
+            //find matches
+            yield return new WaitForSeconds(0.1f);
+
+            combinedItems.Clear();
+            //combinedItems = GetMatches();
+            //StartCoroutine(GetMatchesCor());
+            //while (!matchesGot)
+            //    yield return new WaitForFixedUpdate();
+            //combinedItems = newCombines;
+            //matchesGot = false;
+
+            //if (LevelManager.THIS.CheckExtraPackage(GetMatches(FindSeparating.HORIZONTAL)))
+            //{
+            //    LevelManager.THIS.lastDraggedItem.nextType = ItemsTypes.PACKAGE;
+            //}
+            //if (combinedItems.Count > 0)
+            //    combo++;
+            combo = destroyAnyway.Count;
+            foreach (List<Item> desrtoyItems in combinedItems)
+            {
+                if (lastDraggedItem == null)
+                {
+                    if (desrtoyItems.Count == 4)
+                    {
+                        if (lastDraggedItem == null)
+                            lastDraggedItem = desrtoyItems[UnityEngine.Random.Range(0, desrtoyItems.Count)];
+                        lastDraggedItem.nextType = (ItemsTypes)UnityEngine.Random.Range(1, 3);
+                        //lastDraggedItem.ChangeType();
+                    }
+
+                    if (desrtoyItems.Count >= 5)
+                    {
+                        if (lastDraggedItem == null)
+                            lastDraggedItem = desrtoyItems[UnityEngine.Random.Range(0, desrtoyItems.Count)];
+                        lastDraggedItem.nextType = ItemsTypes.CHOCOBOMB;
+                        //lastDraggedItem.ChangeType();
+                    }
+                }
+            }
+
+            if (destroyAnyway.Count >= extraItemEvery)
+            {
+                LevelManager.THIS.nextExtraItems = destroyAnyway.Count / (int)extraItemEvery;
+            }
+
+            int destroyArrayCount = destroyAnyway.Count;
+            int iCounter = 0;
+            foreach (Item item in destroyAnyway)
+            {
+                iCounter++;
+                //  if(item.sprRenderer.enabled)
+                if (item.nextType == ItemsTypes.NONE)
+                {
+                    if (item.square.IsCageGoingToBroke())
+                    {
+                        if (iCounter == destroyArrayCount)
+                        {
+                            DestroyGatheredExtraItems(item);
+                        }
+
+                        if (iCounter % extraItemEvery == 0)
+                        {
+                            startPosFlowers.Add(item.transform.position);
+                            List<Item> items = GetRandomItems(1);
+                            int cc = 0;
+                            foreach (Item item1 in items)
+                            {
+                                LevelManager.THIS.DragBlocked = true;
+                                throwflower = true;
+                                //                                item1.nextType = (ItemsTypes)UnityEngine.Random.Range(1, 3);
+                                GameObject flowerParticle = GetFlowerFromPool();
+                                flowerParticle.GetComponent<Flower>().StartFly(item.transform.position);
+                                cc++;
+                            }
+                        }
+
+                        yield return new WaitForSeconds(0.03f);
+                        item.DestroyItem(true, "", true); //destroy items safely
+                    }
+                    else
+                    {
+                        if (iCounter == destroyArrayCount)
+                        {
+                            DestroyGatheredExtraItems(item);
+                        }
+
+                        item.SleepItem();
+                    }
+                }
+            }
+
+            //          if (destroyAnyway.Count > 0) PopupScore(scoreForItem * destroyAnyway.Count, destroyAnyway[(int)destroyAnyway.Count / 2].transform.position);
+            destroyAnyway.Clear();
+
+
+            if (lastDraggedItem != null)
+            {
+                //if (LevelManager.THIS.CheckExtraPackage(GetMatches(FindSeparating.HORIZONTAL)))
+                //{
+                //    LevelManager.THIS.lastDraggedItem.nextType = ItemsTypes.PACKAGE;
+                //}
+                if (lastDraggedItem.nextType != ItemsTypes.NONE)
+                {
+                    //lastDraggedItem.ChangeType();
+                    yield return new WaitForSeconds(0.5f);
+                }
+
+                lastDraggedItem = null;
+            }
+
+            while (!IsAllDestoyFinished())
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            //falling down
+            for (int i = 0; i < 20; i++)
+            {
+                //just for testing
+                for (int col = 0; col < maxCols; col++)
+                {
+                    for (int row = maxRows - 1; row >= 0; row--)
+                    {
+                        //need to enumerate rows from bottom to top
+                        if (GetSquare(col, row) != null)
+                            GetSquare(col, row).FallOut();
+                    }
+                }
+                // yield return new WaitForFixedUpdate();
+            }
+
+            if (!nearEmptySquareDetected)
+                yield return new WaitForSeconds(0.2f);
+
+            CheckIngredient();
+            for (int col = 0; col < maxCols; col++)
+            {
+                for (int row = maxRows - 1; row >= 0; row--)
+                {
+                    if (GetSquare(col, row) != null)
+                    {
+                        if (!GetSquare(col, row).IsNone())
+                        {
+                            if (GetSquare(col, row).item != null)
+                            {
+                                GetSquare(col, row).item.StartFalling();
+                                //if (row == maxRows - 1 && GetSquare(col, row).item.currentType == ItemsTypes.INGREDIENT)
+                                //{
+                                //    destroyAnyway.Add(GetSquare(col, row).item);
+                                //}
+                            }
+                        }
+                    }
+                }
+            }
+
+            yield return new WaitForSeconds(0.2f);
+            GenerateNewItems();
+            // StartCoroutine(RegenMatches(true));
+            yield return new WaitForSeconds(0.1f);
+            while (!IsAllItemsFallDown())
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            //detect near empty squares to fall into
+            nearEmptySquareDetected = false;
+
+            for (int col = 0; col < maxCols; col++)
+            {
+                for (int row = maxRows - 1; row >= 0; row--)
+                {
+                    if (GetSquare(col, row) != null)
+                    {
+                        if (!GetSquare(col, row).IsNone())
+                        {
+                            if (GetSquare(col, row).item != null)
+                            {
+                                if (GetSquare(col, row).item.GetNearEmptySquares())
+                                    nearEmptySquareDetected = true;
+                            }
+                        }
+                    }
+                    // if (nearEmptySquareDetected) break;
+                }
+                //   if (nearEmptySquareDetected) break;
+            }
+
+            //StartCoroutine(GetMatchesCor());
+            //while (!matchesGot)
+            //    yield return new WaitForFixedUpdate();
+            //matchesGot = false;
+            //CheckIngredient();
+            while (!IsAllItemsFallDown())
+            {
+                //1.3.2
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            if (destroyAnyway.Count > 0)
+                nearEmptySquareDetected = true;
+            if (!nearEmptySquareDetected)
+                break;
+        }
+
+        List<Item> item_ = GetItems();
+        for (int i = 0; i < it.Count; i++)
+        {
+            if (item_.Count > i)
+            {
+                Item item1 = item_[i];
+                if (item1 != null)
+                {
+                    if (item1 != item1.square.item)
+                    {
+                        Destroy(item1.gameObject);
+                    }
+                }
+            }
+        }
+
+        //thrive thriving blocks
+        if (!thrivingBlockDestroyed)
+        {
+            bool thrivingBlockSelected = false;
+            for (int col = 0; col < maxCols; col++)
+            {
+                if (thrivingBlockSelected)
+                    break;
+                for (int row = maxRows - 1; row >= 0; row--)
+                {
+                    if (thrivingBlockSelected)
+                        break;
+                    if (GetSquare(col, row) != null)
+                    {
+                        if (GetSquare(col, row).type == SquareTypes.THRIVING)
+                        {
+                            List<Square> sqList = GetSquaresAround(GetSquare(col, row));
+
+                            foreach (Square sq in sqList)
+                            {
+                                if (sq.CanFallInto() && UnityEngine.Random.Range(0, 5) == 0 &&
+                                    sq.type == SquareTypes.EMPTY)
+                                {
+                                    if (sq.item != null)
+                                    {
+                                        //1.3
+                                        if (sq.item.currentType == ItemsTypes.NONE)
+                                        {
+                                            //1.3
+                                            //GetSquare(col, row).GenThriveBlock(sq);
+                                            CreateObstacles(sq.col, sq.row, sq.gameObject, SquareTypes.THRIVING);
+
+                                            thrivingBlockSelected = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        thrivingBlockDestroyed = false;
+
+        if (gameStatus == GameState.Playing && !ingredientFly)
+            LevelManager.THIS.CheckWinLose();
+
+        if (combo > 11 && gameStatus == GameState.Playing)
+        {
+            gratzWords[2].SetActive(true);
+        }
+        else if (combo > 8 && gameStatus == GameState.Playing)
+        {
+            gratzWords[1].SetActive(true);
+        }
+        else if (combo > 5 && gameStatus == GameState.Playing)
+        {
+            gratzWords[0].SetActive(true);
+        }
+
+        combo = 0;
+
+        //if (nextExtraItems > 0)
+        //{
+        //    List<Item> items = GetRandomItems(nextExtraItems);
+        //    int cc = 0;
+        //    foreach (Item ite in items)
+        //    {
+        //        item.nextType = (ItemsTypes)UnityEngine.Random.Range(1, 3);
+        //        GameObject flowerParticle = GetFlowerFromPool();
+        //        flowerParticle.GetComponent<Flower>().StartFly(startPosFlowers[cc], item.transform);
+        //        item.ChangeType();
+        //        cc++;
+        //    }
+        //}
+        nextExtraItems = 0;
+
+        gatheredTypes.Clear();
+        startPosFlowers.Clear();
+        DragBlocked = false;
+        yield return new WaitForEndOfFrame();
+        //if (throwflower)
+        //    DragBlocked = true;
+        GameField.BroadcastMessage("BombTick");
+
+        List<Item> itemss = GetItems();
+        bombTimers.Clear();
+        foreach (Item item in itemss)
+        {
+            if (item.currentType == ItemsTypes.BOMB)
+                bombTimers.Add(item.bombTimer);
+        }
+
+        if (gameStatus == GameState.Playing)
+            StartCoroutine(TipsManager.THIS.CheckPossibleCombines());
     }
 
     public List<Item> highlightedItems;
@@ -1902,6 +2349,50 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             col = Mathf.Clamp(col, 0, maxCols - 1);
             return squaresArray[row * maxCols + col];
         }
+    }
+
+    bool IsAllDestoyFinished()
+    {
+        GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
+        foreach (GameObject item in items)
+        {
+            Item itemComponent = item.GetComponent<Item>();
+            if (itemComponent == null)
+            {
+                return false;
+            }
+
+            if (itemComponent.destroying && !itemComponent.animationFinished)
+                return false;
+        }
+
+        return true;
+    }
+
+
+    bool IsAllItemsFallDown()
+    {
+        if (gameStatus == GameState.PreWinAnimations)
+            return true;
+        GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
+        foreach (GameObject item in items)
+        {
+            Item itemComponent = item.GetComponent<Item>();
+            if (itemComponent == null)
+            {
+                return false;
+            }
+
+            if (itemComponent.falling)
+                return false;
+        }
+
+        return true;
+    }
+
+    public Vector2 GetPosition(Square square)
+    {
+        return new Vector2(square.col, square.row);
     }
 
     public List<Item> GetRow(int row)
@@ -2099,6 +2590,22 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             yield return new WaitForSeconds(0.01f);
             item.SetColor(p);
             item.anim.SetTrigger("appear");
+        }
+    }
+
+    public void CheckIngredient()
+    {
+        int row = maxRows;
+        List<Square> sqList = GetBottomRow();
+        foreach (Square sq in sqList)
+        {
+            if (sq.item != null)
+            {
+                if (sq.item.currentType == ItemsTypes.INGREDIENT)
+                {
+                    destroyAnyway.Add(sq.item);
+                }
+            }
         }
     }
 
