@@ -9,18 +9,25 @@ namespace Monobehaviours.Buildings
 
         [HideInInspector] public bool isUnlocked = false;
 
-        [SerializeField] private GameObject buildingVisual;
+        [SerializeField] private GameObject[] buildingVisual;
 
         public void Unlock()
         {
             isUnlocked = true;
-            buildingVisual.SetActive(true);
+            foreach (var obj in buildingVisual)
+            {
+                obj.SetActive(true);
+            }
+            
         }
 
         public void Lock()
         {
             isUnlocked = false;
-            buildingVisual.SetActive(false);
+            foreach (var obj in buildingVisual)
+            {
+                obj.SetActive(false);
+            }
         }
     }
 }
