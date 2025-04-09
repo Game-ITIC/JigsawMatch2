@@ -1,26 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using Interfaces;
+using Monobehaviours.Buildings;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MenuView : MonoBehaviour
+public class MenuView : MonoBehaviour, IPreload
 {
     [SerializeField] private Button startGame;
+    [SerializeField] private Button shopOpenButton;
+    [SerializeField] private BuildingShopManager buildingShopManager;
 
-    void Start()
+    public Button StartGame => startGame;
+
+
+    public void Warmup()
     {
-        startGame.onClick.AddListener(() =>
-        {
-            int level = PlayerPrefs.GetInt("OpenLevel", 0);
-            
-            InitScript.openLevel = level;
-            if (InitScript.lifes > 0)
-            {
-                SceneManager.LoadScene("game");
-            }
-            
-            // InitScript.Instance.OnLevelClicked(this, new LevelReachedEventArgs(1));
-        });
+        shopOpenButton.onClick.RemoveAllListeners();
+        shopOpenButton.onClick.AddListener(() => { buildingShopManager.gameObject.SetActive(true); });
     }
 }

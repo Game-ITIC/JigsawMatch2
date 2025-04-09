@@ -2,28 +2,18 @@ using System;
 using Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
+using Views;
 
 namespace Monobehaviours.Buildings
 {
-    public class ShopItem : MonoBehaviour, IPreloader
+    [Serializable]
+    public struct ShopItem
     {
-        [SerializeField] private string itemId;
-        [SerializeField] private string itemName;
-        [SerializeField] private string description;
-        [SerializeField] private int cost;
-        [SerializeField] private Building[] buildingsToUnlock;
-        [SerializeField] private int requiredPlayerLevel;
-        [SerializeField] private Building[] requiredBuildings;
-
-        [HideInInspector] public bool isPurchased = false;
-        [SerializeField] private Button buyButton;
-
-        public string ItemId => itemId;
-        public int Cost => cost;
-        public Button BuyButton => buyButton;
-
-        public event Action<string> OnBought;
-        
+        public string itemId;
+        public string itemName;
+        public int cost;
+        public Building[] buildingsToUnlock;
+        public bool isPurchased;
         public void UnlockBuildings()
         {
             foreach (var building in buildingsToUnlock)
@@ -39,14 +29,14 @@ namespace Monobehaviours.Buildings
                 building.Lock();
             }
         }
-
-        public void Warmup()
-        {
-            buyButton.onClick.RemoveAllListeners();
-            buyButton.onClick.AddListener(() =>
-            {
-                OnBought?.Invoke(itemId);
-            });
-        }
+        //
+        // public void Warmup()
+        // {
+        //     buyButton.onClick.RemoveAllListeners();
+        //     buyButton.onClick.AddListener(() =>
+        //     {
+        //         OnBought?.Invoke(itemId);
+        //     });
+        // }
     }
 }

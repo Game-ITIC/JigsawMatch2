@@ -2,7 +2,8 @@ using UnityEngine;
 
 namespace Configs
 {
-    [CreateAssetMenu(fileName = "FILENAME", menuName = "MENUNAME", order = 0)]
+    
+    [CreateAssetMenu(fileName = nameof(GameConfig), menuName = nameof(Configs) + "/" + nameof(GameConfig))]
     public class GameConfig : ScriptableObject
     {
         public int MaxLifes = 5;

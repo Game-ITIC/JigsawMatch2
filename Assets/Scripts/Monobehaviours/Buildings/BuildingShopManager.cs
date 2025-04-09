@@ -1,9 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Configs;
+using Extensions.ZLinq;
 using Models;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.UI;
 using VContainer;
+using Views;
+using ZLinq;
+using Object = UnityEngine.Object;
 
 namespace Monobehaviours.Buildings
 {
@@ -11,76 +18,105 @@ namespace Monobehaviours.Buildings
     {
         [SerializeField] private List<ShopItem> shopItems;
         [SerializeField] private int maxItemsInShop;
+        [SerializeField] private ShopItemView shopItemViewPrefab;
+        [SerializeField] private Transform shopItemParent;
+        [SerializeField] private Button closeButton;
 
         private Models.StarModel _starModel;
-        private string _countryId;
+        private CountryConfig _countryConfig;
 
         private List<string> _openedItemsId;
 
-        private IDisposable _starsSubscrieDisposable;
+        private IDisposable _starsSubscribeDisposable;
 
-        [Inject]
-        public void Construct(Models.StarModel starModel, string countryId)
+        private List<ShopItemView> _shopItemViews = new();
+
+        public void Initialize(Models.StarModel starModel, CountryConfig countryConfig)
         {
             _starModel = starModel;
-            _countryId = countryId;
+            _countryConfig = countryConfig;
 
-            Initialize();
-        }
-
-        private void Initialize()
-        {
-            _starsSubscrieDisposable = _starModel.Stars.Subscribe(UpdateBuyVisual);
+            _starsSubscribeDisposable = _starModel.Stars.Subscribe(UpdateBuyVisual);
             LoadBuildings();
 
+            CreateShopItemViews();
 
-            foreach (var shopItem in shopItems)
+            closeButton.onClick.RemoveAllListeners();
+            closeButton.onClick.AddListener(() => { gameObject.SetActive(false); });
+            UpdateBuyVisual(starModel.Stars.Value);
+        }
+
+        private void CreateShopItemViews()
+        {
+            var lockedShopItems =
+                shopItems
+                    .AsValueEnumerable()
+                    .Where(item => !_openedItemsId.Contains(item.itemId))
+                    .AsEnumerable();
+            
+
+            foreach (var item in lockedShopItems)
             {
-                if (_openedItemsId.Contains(shopItem.ItemId)) shopItem.UnlockBuildings();
-
-                shopItem.OnBought += BuyItem;
-                shopItem.BuyButton.interactable = _starModel.Stars.Value >= shopItem.Cost;
-                shopItem.LockBuildings();
+                if (_shopItemViews.Count < maxItemsInShop)
+                {
+                    var shopItemView = Object.Instantiate(shopItemViewPrefab, shopItemParent);
+                    var itemId = item.itemId;
+                    shopItemView.Warmup();
+                    shopItemView.Init(item);
+                    shopItemView.OnBuyClicked += () => { BuyItem(itemId); };
+                    _shopItemViews.Add(shopItemView);
+                }
+                else
+                {
+                    break;
+                }
             }
         }
 
         private void UpdateBuyVisual(int newValue)
         {
-            foreach (var shopItem in shopItems)
+            foreach (var shopItemView in _shopItemViews)
             {
-                shopItem.BuyButton.interactable = newValue >= shopItem.Cost;
-                shopItem.Warmup();
+                shopItemView.BuyButton.interactable = newValue >= shopItemView.ShopItem.cost;
             }
         }
 
         private void BuyItem(string itemId)
         {
-            Debug.Log(itemId);
-            var item = shopItems.Find(item => item.ItemId == itemId);
-            
-            Debug.Log(item);
-            if (item.Cost <= _starModel.Stars.Value)
+            var item = _shopItemViews.AsValueEnumerable()
+                .First(item => item.ShopItem.itemId == itemId);
+
+            if (item.ShopItem.cost <= _starModel.Stars.Value)
             {
-                _starModel.Decrease(item.Cost);
-                item.UnlockBuildings();
+                _starModel.Decrease(item.ShopItem.cost);
+                item.ShopItem.UnlockBuildings();
                 _openedItemsId.Add(itemId);
 
-                PlayerPrefs.SetString(_countryId, JsonConvert.SerializeObject(_openedItemsId));
+                PlayerPrefs.SetString(_countryConfig.GetCountryKeyToSave(),
+                    JsonConvert.SerializeObject(_openedItemsId));
             }
         }
 
         private void LoadBuildings()
         {
-            var saveValue = PlayerPrefs.GetString(_countryId, "empty");
+            var saveValue = PlayerPrefs.GetString(_countryConfig.GetCountryKeyToSave(), "empty");
 
             _openedItemsId = saveValue == "empty"
                 ? new List<string>()
                 : JsonConvert.DeserializeObject<List<string>>(saveValue);
+
+            var shopItemsZ = shopItems.AsValueEnumerable();
+
+            foreach (var id in _openedItemsId)
+            {
+                var item = shopItemsZ.First(item => item.itemId == id);
+                item.UnlockBuildings();
+            }
         }
 
         private void OnDestroy()
         {
-            _starsSubscrieDisposable.Dispose();
+            _starsSubscribeDisposable.Dispose();
         }
     }
 }

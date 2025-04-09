@@ -58,7 +58,7 @@ dependencies {
     implementation 'com.unity3d.ads-mediation:applovin-adapter:4.3.49' // Assets/LevelPlay/Editor/ISAppLovinAdapterDependencies.xml:5
     implementation 'com.unity3d.ads-mediation:facebook-adapter:4.3.48' // Assets/LevelPlay/Editor/ISFacebookAdapterDependencies.xml:12
     implementation 'com.unity3d.ads-mediation:inmobi-adapter:4.3.28' // Assets/LevelPlay/Editor/ISInMobiAdapterDependencies.xml:5
-    implementation 'com.unity3d.ads-mediation:mediation-sdk:8.6.1' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:5
+    implementation 'com.unity3d.ads-mediation:mediation-sdk:8.7.0' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:5
     implementation 'com.unity3d.ads-mediation:unityads-adapter:4.3.47' // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:5
     implementation 'com.unity3d.ads-mediation:yandex-adapter:4.3.7' // Assets/LevelPlay/Editor/ISYandexAdapterDependencies.xml:9
     implementation 'com.yandex.android:mobileads:7.8.0' // Assets/LevelPlay/Editor/ISYandexAdapterDependencies.xml:5
