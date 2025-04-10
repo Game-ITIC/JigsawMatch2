@@ -176,17 +176,18 @@ public class PlayingState : GameStateBase
 
         if (activeBoostType == BoostType.Bomb && item.currentType != ItemsTypes.INGREDIENT)
         {
-            // Логика для бомбы
+            Debug.Log("Bomb");
             return true;
         }
         else if (activeBoostType == BoostType.Shovel && item.currentType != ItemsTypes.INGREDIENT)
         {
-            // Логика для лопаты
+            
+            Debug.Log("Shovel");
             return true;
         }
         else if (activeBoostType == BoostType.Energy && item.currentType != ItemsTypes.INGREDIENT)
         {
-            // Логика для энергии
+            Debug.Log("Energy");
             return true;
         }
 

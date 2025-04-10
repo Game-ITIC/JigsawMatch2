@@ -1,3 +1,5 @@
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using VContainer.Unity;
 
 namespace Initializers
@@ -14,6 +16,14 @@ namespace Initializers
         public void Initialize()
         {
             _menuView.Warmup();
+            _menuView.StartGame.onClick.RemoveAllListeners();
+            _menuView.StartGame.onClick.AddListener(StartGame);
+        }
+
+        private void StartGame()
+        {
+            PlayerPrefs.SetInt("OpenLevel", 0);
+            SceneManager.LoadScene("game");
         }
     }
 }

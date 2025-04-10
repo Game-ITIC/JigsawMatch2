@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 using UnityEngine.UI;
 
 public class BoostIcon : MonoBehaviour
@@ -24,12 +25,18 @@ public class BoostIcon : MonoBehaviour
     }
 
     public void ActivateBoost()
-    {
+    {   
         if (LevelManager.THIS.ActivatedBoost == this)
         {
             UnCheckBoost();
             return;
         }
+        else
+        {
+            LevelManager.THIS.ActivatedBoost = this;
+            return;
+        }
+        
         if (IsLocked() || check || (LevelManager.THIS.gameStatus != GameState.Playing && LevelManager.THIS.gameStatus != GameState.Map))
             return;
         if (BoostCount() > 0)
