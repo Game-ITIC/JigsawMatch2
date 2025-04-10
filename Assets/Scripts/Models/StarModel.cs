@@ -4,7 +4,7 @@ namespace Models
 {
     public class StarModel
     {
-        public ReactiveProperty<int> Stars = new(4);
+        public ReactiveProperty<int> Stars = new(1000);
         
         public bool HasStars()
         {

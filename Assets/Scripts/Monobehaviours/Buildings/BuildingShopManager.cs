@@ -25,98 +25,188 @@ namespace Monobehaviours.Buildings
         private Models.StarModel _starModel;
         private CountryConfig _countryConfig;
 
-        private List<string> _openedItemsId;
-
+        private List<string> _purchasedItemIds = new List<string>();
+        private List<ShopItemView> _shopItemViews = new List<ShopItemView>();
         private IDisposable _starsSubscribeDisposable;
-
-        private List<ShopItemView> _shopItemViews = new();
 
         public void Initialize(Models.StarModel starModel, CountryConfig countryConfig)
         {
             _starModel = starModel;
             _countryConfig = countryConfig;
 
-            _starsSubscribeDisposable = _starModel.Stars.Subscribe(UpdateBuyVisual);
-            LoadBuildings();
+            
+            SetupCloseButton();
+
+            LoadPurchasedItems();
+            
+            UpdateShopItemsLockState();
 
             CreateShopItemViews();
 
-            closeButton.onClick.RemoveAllListeners();
-            closeButton.onClick.AddListener(() => { gameObject.SetActive(false); });
-            UpdateBuyVisual(starModel.Stars.Value);
+            _starsSubscribeDisposable = _starModel.Stars.Subscribe(UpdatePurchaseAvailability);
+
+            UpdatePurchaseAvailability(_starModel.Stars.Value);
         }
 
-        private void CreateShopItemViews()
+        private void SetupCloseButton()
         {
-            var lockedShopItems =
-                shopItems
-                    .AsValueEnumerable()
-                    .Where(item => !_openedItemsId.Contains(item.itemId))
-                    .AsEnumerable();
-            
+            closeButton.onClick.RemoveAllListeners();
+            closeButton.onClick.AddListener(() => gameObject.SetActive(false));
+        }
 
-            foreach (var item in lockedShopItems)
+        private void LoadPurchasedItems()
+        {
+            try
             {
-                if (_shopItemViews.Count < maxItemsInShop)
+                string saveKey = _countryConfig.GetCountryKeyToSave();
+                string savedJson = PlayerPrefs.GetString(saveKey, string.Empty);
+
+                _purchasedItemIds = string.IsNullOrEmpty(savedJson)
+                    ? new List<string>()
+                    : JsonConvert.DeserializeObject<List<string>>(savedJson);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Ошибка загрузки купленных предметов: {ex.Message}");
+                _purchasedItemIds = new List<string>();
+            }
+        }
+
+        private void UpdateShopItemsLockState()
+        {
+            
+            foreach (var shopItem in shopItems)
+            {
+                if (_purchasedItemIds.Contains(shopItem.itemId))
                 {
-                    var shopItemView = Object.Instantiate(shopItemViewPrefab, shopItemParent);
-                    var itemId = item.itemId;
-                    shopItemView.Warmup();
-                    shopItemView.Init(item);
-                    shopItemView.OnBuyClicked += () => { BuyItem(itemId); };
-                    _shopItemViews.Add(shopItemView);
+                    shopItem.UnlockBuildings();
                 }
                 else
                 {
-                    break;
+                    shopItem.LockBuildings();
                 }
             }
         }
 
-        private void UpdateBuyVisual(int newValue)
+        private void CreateShopItemViews()
+        {
+            ClearShopItemViews();
+
+            IEnumerable<ShopItem> availableItems = GetAvailableShopItems()
+                .Take(maxItemsInShop)
+                .AsEnumerable();
+
+            foreach (ShopItem shopItem in availableItems)
+            {
+                CreateShopItemView(shopItem);
+            }
+        }
+
+        private IEnumerable<ShopItem> GetAvailableShopItems()
+        {
+            return shopItems
+                .AsValueEnumerable()
+                .Where(item => !_purchasedItemIds.Contains(item.itemId))
+                .AsEnumerable();
+        }
+
+        private void ClearShopItemViews()
+        {
+            foreach (var view in _shopItemViews)
+            {
+                if (view != null)
+                {
+                    Destroy(view.gameObject);
+                }
+            }
+
+            _shopItemViews.Clear();
+        }
+
+        private void CreateShopItemView(ShopItem shopItem)
+        {
+            ShopItemView shopItemView = Object.Instantiate(shopItemViewPrefab, shopItemParent);
+            string itemId = shopItem.itemId;
+
+            shopItemView.Warmup();
+            shopItemView.Init(shopItem);
+            shopItemView.OnBuyClicked += () => BuyItem(itemId);
+
+            _shopItemViews.Add(shopItemView);
+        }
+
+        private void UpdatePurchaseAvailability(int starCount)
         {
             foreach (var shopItemView in _shopItemViews)
             {
-                shopItemView.BuyButton.interactable = newValue >= shopItemView.ShopItem.cost;
+                shopItemView.BuyButton.interactable = starCount >= shopItemView.ShopItem.cost;
             }
         }
 
         private void BuyItem(string itemId)
         {
-            var item = _shopItemViews.AsValueEnumerable()
-                .First(item => item.ShopItem.itemId == itemId);
+            ShopItemView itemView = _shopItemViews.FirstOrDefault(view => view.ShopItem.itemId == itemId);
+            if (itemView == null) return;
 
-            if (item.ShopItem.cost <= _starModel.Stars.Value)
+            if (itemView.ShopItem.cost > _starModel.Stars.Value) return;
+
+            _starModel.Decrease(itemView.ShopItem.cost);
+            itemView.ShopItem.UnlockBuildings();
+
+            _purchasedItemIds.Add(itemId);
+            SavePurchasedItems();
+
+            _shopItemViews.Remove(itemView);
+            Destroy(itemView.gameObject);
+
+            RefreshShopAfterPurchase();
+        }
+
+        private void RefreshShopAfterPurchase()
+        {
+            if (_shopItemViews.Count >= maxItemsInShop) return;
+            
+            var displayedItemIds = _shopItemViews.Select(view => view.ShopItem.itemId).ToList();
+
+            ShopItem? nextItemNullable = GetAvailableShopItems()
+                .Where(item => !displayedItemIds.Contains(item.itemId))
+                .Cast<ShopItem?>()
+                .FirstOrDefault();
+
+            if (nextItemNullable != null)
             {
-                _starModel.Decrease(item.ShopItem.cost);
-                item.ShopItem.UnlockBuildings();
-                _openedItemsId.Add(itemId);
+                ShopItem nextItem = nextItemNullable.Value;
 
-                PlayerPrefs.SetString(_countryConfig.GetCountryKeyToSave(),
-                    JsonConvert.SerializeObject(_openedItemsId));
+                CreateShopItemView(nextItem);
+                
+                UpdatePurchaseAvailability(_starModel.Stars.Value);
             }
         }
 
-        private void LoadBuildings()
+        private void SavePurchasedItems()
         {
-            var saveValue = PlayerPrefs.GetString(_countryConfig.GetCountryKeyToSave(), "empty");
-
-            _openedItemsId = saveValue == "empty"
-                ? new List<string>()
-                : JsonConvert.DeserializeObject<List<string>>(saveValue);
-
-            var shopItemsZ = shopItems.AsValueEnumerable();
-
-            foreach (var id in _openedItemsId)
+            try
             {
-                var item = shopItemsZ.First(item => item.itemId == id);
-                item.UnlockBuildings();
+                string saveKey = _countryConfig.GetCountryKeyToSave();
+                string jsonData = JsonConvert.SerializeObject(_purchasedItemIds);
+                PlayerPrefs.SetString(saveKey, jsonData);
+                PlayerPrefs.Save();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error when saving purchased items: {ex.Message}");
             }
         }
 
         private void OnDestroy()
         {
-            _starsSubscribeDisposable.Dispose();
+            if (_starsSubscribeDisposable != null)
+            {
+                _starsSubscribeDisposable.Dispose();
+                _starsSubscribeDisposable = null;
+            }
+
+            ClearShopItemViews();
         }
     }
 }
