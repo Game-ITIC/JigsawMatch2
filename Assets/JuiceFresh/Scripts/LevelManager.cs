@@ -5,7 +5,10 @@ using System.Collections.Generic;
 using JuiceFresh;
 using JuiceFresh.Scripts;
 using JuiceFresh.States;
+using Models;
+using Providers;
 using UnityEngine.UI;
+using VContainer;
 
 // Data structure for square blocks in the level
 public class SquareBlocks
@@ -488,6 +491,9 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             }
         }
     }
+
+    [Inject] public BoostersProvider BoostersProvider;
+    [Inject] public CoinModel CoinModel;
     
     // Field of getting and setting currently activated boost
     public BoostIcon ActivatedBoost
@@ -725,7 +731,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         mapState.EnableMap(enable);
     }
     
-    void LockBoosts()
+    public void LockBoosts()
     {
         foreach (BoostIcon item in InGameBoosts)
         {

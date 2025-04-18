@@ -1,3 +1,4 @@
+using UnityEngine;
 using Utils.Reactive;
 
 namespace Models
@@ -5,6 +6,11 @@ namespace Models
     public class CoinModel
     {
         public ReactiveProperty<int> Coins = new();
+
+        public CoinModel()
+        {
+            Load();
+        }
 
         public bool HasCoins()
         {
@@ -16,6 +22,8 @@ namespace Models
             int targetValue = Coins.Value + value;
 
             Coins.Value = targetValue;
+
+            Save();
         }
 
         public void Decrease(int value)
@@ -28,6 +36,19 @@ namespace Models
             }
 
             Coins.Value = targetValue;
+
+            Save();
+        }
+
+        public void Save()
+        {
+            PlayerPrefs.SetInt("Coins-", Coins.Value);
+            PlayerPrefs.Save();
+        }
+
+        public void Load()
+        {
+            Coins.Value = PlayerPrefs.GetInt("Coins-", Coins.Value);
         }
     }
 }

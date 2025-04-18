@@ -1,6 +1,7 @@
 using Itic.Scopes;
 using Itic.Services;
 using Models;
+using Providers;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -16,7 +17,7 @@ namespace Scopes
         {
             builder.RegisterComponent(loadingScreenView);
 
-
+            builder.Register<BoostersProvider>(Lifetime.Singleton);
             builder.Register<CoinModel>(Lifetime.Singleton);
             builder.Register<LifeModel>(Lifetime.Singleton);
             builder.Register<Models.StarModel>(Lifetime.Singleton);

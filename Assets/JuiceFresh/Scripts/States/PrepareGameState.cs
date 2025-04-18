@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using ZLinq;
 
 namespace JuiceFresh.States
 {
@@ -117,6 +118,16 @@ namespace JuiceFresh.States
             {
                 levelManager.InGameBoosts[0].gameObject.SetActive(false);
                 levelManager.InGameBoosts[1].gameObject.SetActive(true);
+            }
+            
+            var ingameBoosts = levelManager.InGameBoosts;
+            var boosterProviders = levelManager.BoostersProvider;
+
+            foreach (var booster in boosterProviders.BoostersModels)
+            {
+                var value = ingameBoosts.AsValueEnumerable().First(v => v.type == booster.Type);
+
+                value.BoosterModel = booster;
             }
         }
     }

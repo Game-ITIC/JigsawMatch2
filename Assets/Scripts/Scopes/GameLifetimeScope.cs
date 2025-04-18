@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using Initializers;
+using Models;
 using Monobehaviours;
+using Providers;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -26,7 +29,7 @@ namespace Scopes
             builder.RegisterComponent(levelManager);
             
             builder.RegisterComponent<IGameEvents>(gameEventDispatcher).AsSelf();
-            
+
             builder.RegisterEntryPoint<GameInitializer>()
                 .WithParameter("noAds", noAds);
         }

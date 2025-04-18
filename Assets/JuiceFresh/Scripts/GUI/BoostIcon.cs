@@ -1,6 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using DG.Tweening;
+using Models;
+using R3;
 using UnityEngine.UI;
 
 public class BoostIcon : MonoBehaviour
@@ -9,6 +12,28 @@ public class BoostIcon : MonoBehaviour
     public BoostType type;
     bool check;
     public Text price;
+    public Button button;
+
+    private BoosterModel _boosterModel;
+
+    private CompositeDisposable _disposable = new();
+
+    public BoosterModel BoosterModel
+    {
+        get { return _boosterModel; }
+        set
+        {
+            _boosterModel = value;
+            boostCount.text = BoosterModel.Count.Value.ToString();
+
+            _boosterModel.Count.Subscribe(OnCountChanged).AddTo(_disposable);
+        }
+    }
+
+    private void OnCountChanged(int newValue)
+    {
+        boostCount.text = newValue.ToString();
+    }
 
     void OnEnable()
     {
@@ -25,20 +50,23 @@ public class BoostIcon : MonoBehaviour
     }
 
     public void ActivateBoost()
-    {   
+    {
         if (LevelManager.THIS.ActivatedBoost == this)
         {
             UnCheckBoost();
             return;
+        }
+        else if (BoostCount() == 0)
+        {
+            OpenBoostShop(type);
         }
         else
         {
             LevelManager.THIS.ActivatedBoost = this;
             return;
         }
-        
-        if (IsLocked() || check || (LevelManager.THIS.gameStatus != GameState.Playing && LevelManager.THIS.gameStatus != GameState.Map))
-            return;
+
+
         if (BoostCount() > 0)
         {
             //if (type != BoostType.Colorful_bomb && type != BoostType.Stripes && !LevelManager.THIS.DragBlocked)
@@ -53,11 +81,6 @@ public class BoostIcon : MonoBehaviour
             //    LevelManager.THIS.BoostStriped = 2;
             //    Check();
             //}
-
-        }
-        else
-        {
-            OpenBoostShop(type);
         }
     }
 
@@ -110,13 +133,14 @@ public class BoostIcon : MonoBehaviour
 
     int BoostCount()
     {
-        return int.Parse(boostCount.text);
+        return _boosterModel.Count.Value;
     }
 
     public void OpenBoostShop(BoostType boosType)
     {
         SoundBase.Instance.PlaySound(SoundBase.Instance.click);
-        GameObject.Find("CanvasGlobal").transform.Find("BoostShop").gameObject.GetComponent<BoostShop>().SetBoost(boosType);
+        GameObject.Find("CanvasGlobal").transform.Find("BoostShop").gameObject.GetComponent<BoostShop>()
+            .SetBoost(boosType);
     }
 
     void ShowPlus(bool show)
@@ -139,5 +163,10 @@ public class BoostIcon : MonoBehaviour
                     ShowPlus(true);
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        _disposable.Dispose();
     }
 }

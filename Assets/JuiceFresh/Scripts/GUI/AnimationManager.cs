@@ -4,6 +4,7 @@ using System;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using ZLinq;
 
 //using JuiceFresh.Scripts.System;
 
@@ -719,11 +720,18 @@ public class AnimationManager : MonoBehaviour
     public void BuyBoost(BoostType boostType, int price, int count)
     {
         SoundBase.Instance.PlaySound(SoundBase.Instance.click);
-        if (InitScript.Gems >= price)
+        // if (InitScript.Gems >= price)
+        var coinModel = LevelManager.THIS.CoinModel;
+        
+        if(coinModel.Coins.Value >= price)
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.cash);
-            InitScript.Instance.SpendGems(price);
-            InitScript.Instance.BuyBoost(boostType, price, count);
+            var booster = LevelManager.THIS.BoostersProvider.BoostersModels.AsValueEnumerable().First(v => v.Type == boostType);
+            booster.Add(count);
+            coinModel.Decrease(price);
+            
+            // InitScript.Instance.SpendGems(price);
+            // InitScript.Instance.BuyBoost(boostType, price, count);
             //InitScript.Instance.SpendBoost(boostType);
             CloseMenu();
         }

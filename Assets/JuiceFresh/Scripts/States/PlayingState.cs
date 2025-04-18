@@ -346,18 +346,24 @@ public class PlayingState : GameStateBase
                     // Обработка разных типов бустов
                     BoostType? activeBoostType = levelManager.ActivatedBoost?.type ?? null;
 
+                    var boosterModel = levelManager.BoostersProvider.BoostersModels.Find(v => v.Type == activeBoostType);
+
                     if (activeBoostType == BoostType.Bomb && item.currentType != ItemsTypes.INGREDIENT)
                     {
                         ActivateBombBoost(square);
+                        boosterModel.Use();
                     }
                     else if (activeBoostType == BoostType.Shovel && item.currentType != ItemsTypes.INGREDIENT)
                     {
                         ActivateShovelBoost(square);
+                        boosterModel.Use();
                     }
                     else if (activeBoostType == BoostType.Energy && item.currentType != ItemsTypes.INGREDIENT)
                     {
                         ActivateEnergyBoost(square);
+                        boosterModel.Use();
                     }
+                    levelManager.BoostersProvider.Save();
                 }
             }
         }

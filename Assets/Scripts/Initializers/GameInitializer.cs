@@ -27,6 +27,7 @@ namespace Initializers
         private readonly GameOverView _gameOverView;
         private readonly SceneLoader _sceneLoader;
         private readonly LevelManager _levelManager;
+        
 
         public GameInitializer(
             // IronSourceManager ironSourceManager,

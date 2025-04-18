@@ -27,7 +27,10 @@ namespace Initializers
 
         private void StartGame()
         {
-            PlayerPrefs.SetInt("OpenLevel", 1);
+            var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
+            _menuView.StartGameText.SetText("Level " + nextLevel);
+
+            PlayerPrefs.SetInt("OpenLevel", nextLevel);
             // SceneManager.LoadScene("game");
             _sceneLoader.LoadGameAsync().Forget();
         }

@@ -40,7 +40,7 @@ public class WinState : GameStateBase
         }
     }
 
-    private void ShowCompleteUI()
+    private void сShowCompleteUI()
     {
         // Find and show the complete menu UI
         menuCompleteUI = GameObject.Find("CanvasGlobal").transform.Find("MenuComplete").gameObject;
