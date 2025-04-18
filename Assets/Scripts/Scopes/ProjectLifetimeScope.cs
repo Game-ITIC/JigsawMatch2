@@ -1,6 +1,7 @@
 using Configs;
 using Data;
 using Initializers;
+using Itic.Scopes;
 using Models;
 using Services;
 using UnityEngine;
@@ -28,7 +29,7 @@ namespace Scopes
 
             builder.Register<InternetState>(Lifetime.Singleton);
             builder.Register<InternetChecker>(Lifetime.Singleton);
-            builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton).AsSelf();
+            builder.Register<SceneLoader>(Lifetime.Singleton).AsSelf();
 
             builder.Register<CoinModel>(Lifetime.Singleton);
             builder.Register<LifeModel>(Lifetime.Singleton);

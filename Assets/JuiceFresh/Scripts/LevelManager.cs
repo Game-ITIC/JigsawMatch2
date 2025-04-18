@@ -592,8 +592,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     #region Unity Lifecycle Methods
 
-    // Use this for initialization
-    void Start()
+    public void InvokeStart()
     {
         _boardMechanicsService = new BoardMechanicsService(this);
         
@@ -642,8 +641,14 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         gameStatus = GameState.PrepareGame;
         LoadLevel();
     }
+    
+    // Use this for initialization
+    void Start()
+    {
+       
+    }
 
-    void Update()
+    public void InvokeUpdate()
     {
         if (_currentState != null)
         {
@@ -669,6 +674,11 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         {
             line.SetVertexCount(0);
         }
+    }
+    
+    void Update()
+    {
+      
     }
 
     private void OnDestroy()

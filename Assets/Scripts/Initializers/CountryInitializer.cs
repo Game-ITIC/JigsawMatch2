@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using Itic.Scopes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using VContainer.Unity;
@@ -7,14 +9,17 @@ namespace Initializers
     public class CountryInitializer : IInitializable
     {
         private readonly MenuView _menuView;
+        private readonly SceneLoader _sceneLoader;
 
-        public CountryInitializer(MenuView menuView)
+        public CountryInitializer(MenuView menuView, SceneLoader sceneLoader)
         {
             _menuView = menuView;
+            _sceneLoader = sceneLoader;
         }
 
         public void Initialize()
         {
+            Debug.Log("I'm here in country");
             _menuView.Warmup();
             _menuView.StartGame.onClick.RemoveAllListeners();
             _menuView.StartGame.onClick.AddListener(StartGame);
@@ -22,8 +27,9 @@ namespace Initializers
 
         private void StartGame()
         {
-            PlayerPrefs.SetInt("OpenLevel", 0);
-            SceneManager.LoadScene("game");
+            PlayerPrefs.SetInt("OpenLevel", 1);
+            // SceneManager.LoadScene("game");
+            _sceneLoader.LoadGameAsync().Forget();
         }
     }
 }

@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using Itic.Scopes;
 using Services;
 using UnityEngine.SceneManagement;
 using VContainer.Unity;
@@ -7,9 +9,9 @@ namespace Initializers
     public class AsiaInitializer : IInitializable
     {
         private readonly MenuView _menuView;
-        private readonly ISceneLoader _sceneLoader;
+        private readonly SceneLoader _sceneLoader;
 
-        public AsiaInitializer(MenuView menuView, ISceneLoader sceneLoader)
+        public AsiaInitializer(MenuView menuView, SceneLoader sceneLoader)
         {
             _menuView = menuView;
             _sceneLoader = sceneLoader;
@@ -29,7 +31,7 @@ namespace Initializers
                        
             // }
 
-            _sceneLoader.LoadGameplayScene();
+            _sceneLoader.LoadGameAsync().Forget();
         }
     }
 }

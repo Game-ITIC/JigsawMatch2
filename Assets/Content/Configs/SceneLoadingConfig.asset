@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 101a955e48f4461a8088f2c02878accb, type: 3}
   m_Name: SceneLoadingConfig
   m_EditorClassIdentifier: 
-  <GameplaySceneName>k__BackingField: RegionTest 1
+  <GameplaySceneName>k__BackingField: game
+  <Region>k__BackingField: RegionTest 1
   <PersistentScenes>k__BackingField:
   - Bootstrap

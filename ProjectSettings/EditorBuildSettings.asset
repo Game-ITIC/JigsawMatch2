@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Bootstrap.unity
     guid: d52ac898d4cebbb4eb71c520a1d84d28
   - enabled: 1
+    path: Assets/Scenes/Services.unity
+    guid: 6b5933439b345194a8e50f68f899ac0d
+  - enabled: 1
     path: Assets/JuiceFresh/Scenes/main.unity
     guid: 4bc5e408c1b1f874f8a64d9cfe1906b9
   - enabled: 1

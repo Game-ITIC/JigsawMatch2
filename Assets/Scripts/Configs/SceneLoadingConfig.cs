@@ -7,6 +7,7 @@ namespace Configs
     public class SceneLoadingConfig : ScriptableObject
     {
         [field: SerializeField] public string GameplaySceneName { get; private set; } = "Gameplay";
+        [field: SerializeField] public string Region { get; private set; } = "RegionTest 1";
         [field: SerializeField] public List<string> PersistentScenes { get; private set; } = new()
         {
             "Bootstrapper",

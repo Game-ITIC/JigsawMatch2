@@ -2,6 +2,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Data;
 using Gley.EasyIAP;
+using Itic.Scopes;
 using JetBrains.Annotations;
 using Services;
 using VContainer.Unity;
@@ -15,7 +16,7 @@ namespace Initializers
         private readonly IronSourceInitializer _ironSourceInitializer;
         private readonly IronSourceManager _ironSourceManager;
         private readonly InternetChecker _internetChecker;
-        private readonly ISceneLoader _sceneLoader;
+        private readonly SceneLoader _sceneLoader;
         private readonly InternetState _internetState;
         private readonly LoadingScreenView _loadingScreenView;
 
@@ -23,7 +24,7 @@ namespace Initializers
             IronSourceInitializer ironSourceInitializer,
             IronSourceManager ironSourceManager,
             InternetChecker internetChecker,
-            ISceneLoader sceneLoader,
+            SceneLoader sceneLoader,
             InternetState internetState,
             LoadingScreenView loadingScreenView
         )
@@ -39,7 +40,7 @@ namespace Initializers
         public async UniTask StartAsync(CancellationToken cancellation = new CancellationToken())
         {
             
-            await _sceneLoader.LoadGameplayScene();
+            await _sceneLoader.LoadRegionAsync();
             return;
 
             var hasInternetAccess = await _internetChecker.HasInternetAccess();
@@ -67,7 +68,7 @@ namespace Initializers
                 }
             }
 
-            await _sceneLoader.LoadGameplayScene();
+            await _sceneLoader.LoadGameAsync();
             _loadingScreenView.Hide();
         }
     }
