@@ -23,13 +23,15 @@ namespace Initializers
             _menuView.Warmup();
             _menuView.StartGame.onClick.RemoveAllListeners();
             _menuView.StartGame.onClick.AddListener(StartGame);
+            
+            
+            var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
+            _menuView.StartGameText.SetText("LEVEL " + nextLevel);
         }
 
         private void StartGame()
         {
             var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
-            _menuView.StartGameText.SetText("Level " + nextLevel);
-
             PlayerPrefs.SetInt("OpenLevel", nextLevel);
             // SceneManager.LoadScene("game");
             _sceneLoader.LoadGameAsync().Forget();

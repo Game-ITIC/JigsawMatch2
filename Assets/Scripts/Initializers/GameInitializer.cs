@@ -56,7 +56,14 @@ namespace Initializers
         {
             Debug.Log("I'm here");
             _gameCompleteView.Home.onClick.RemoveAllListeners();
-            _gameCompleteView.Home.onClick.AddListener(() => { _sceneLoader.LoadRegionAsync().Forget(); });
+            _gameCompleteView.Home.onClick.AddListener(() =>
+            {
+                
+                var currentLevel = PlayerPrefs.GetInt("OpenLevel", 1);
+                PlayerPrefs.SetInt("OpenLevel", currentLevel + 1);
+                
+                _sceneLoader.LoadRegionAsync().Forget();
+            });
 
             _gameCompleteView.Next.onClick.RemoveAllListeners();
             _gameCompleteView.Next.onClick.AddListener(() =>

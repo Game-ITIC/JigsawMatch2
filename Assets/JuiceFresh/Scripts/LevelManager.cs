@@ -494,6 +494,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     [Inject] public BoostersProvider BoostersProvider;
     [Inject] public CoinModel CoinModel;
+    [Inject] public Models.StarModel StarModel;
     
     // Field of getting and setting currently activated boost
     public BoostIcon ActivatedBoost
@@ -765,6 +766,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         currentLevel = PlayerPrefs.GetInt("OpenLevel"); // TargetHolder.level;
         if (currentLevel == 0)
             currentLevel = 1;
+
+        currentLevel = CalculateLevel(currentLevel);
         LoadDataFromLocal(currentLevel);
         NumIngredients = ingrTarget.Count;
     }
@@ -780,6 +783,30 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         }
 
         ProcessGameDataFromString(mapText.text);
+    }
+    
+    int CalculateLevel(int playerLevel)
+    {
+        // Если уровень меньше или равен 45, просто возвращаем его
+        if (playerLevel <= 45)
+            return playerLevel;
+    
+        // Вычисляем, сколько раз игрок "прошел полный круг" после 45
+        int beyond45 = playerLevel - 45;
+    
+        // Используем модуло для циклического расчета
+        // Диапазон уровней в цикле: от 10 до 45 (всего 36 уровней)
+        int cyclePosition = beyond45 % 36;
+    
+        // Прибавляем 10 (начальный уровень цикла) и учитываем особый случай
+        int result = cyclePosition + 10;
+    
+        // Если результат получился 46 или больше, это означает,
+        // что мы вышли за пределы диапазона 10-45, поэтому начинаем с 10 снова
+        if (result > 45)
+            result = (result - 45) + 9;
+        
+        return result;
     }
     
     void ProcessGameDataFromString(string mapText)

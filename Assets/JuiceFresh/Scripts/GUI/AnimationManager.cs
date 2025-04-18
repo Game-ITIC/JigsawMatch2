@@ -467,9 +467,10 @@ public class AnimationManager : MonoBehaviour
         SoundBase.Instance.PlaySound(SoundBase.Instance.click);
         if (gameObject.name == "MenuPreGameOver")
         {
-            if (InitScript.Gems >= 12)
+            if (LevelManager.THIS.CoinModel.Coins.Value >= 12)
             {
-                InitScript.Instance.SpendGems(12);
+                //InitScript.Instance.SpendGems(12);
+                LevelManager.THIS.CoinModel.Decrease(12);
                 //                LevelData.LimitAmount += 12;
                 LevelManager.Instance.gameStatus = GameState.WaitAfterClose;
                 gameObject.SetActive(false);
@@ -667,16 +668,17 @@ public class AnimationManager : MonoBehaviour
     {
         //if (GetComponent<Animation>()["bannerFailed"].speed == 0)
         //{
-        if (InitScript.Gems >= LevelManager.THIS.FailedCost)
+        if (LevelManager.THIS.CoinModel.Coins.Value >= LevelManager.THIS.FailedCost)
         {
-            InitScript.Instance.SpendGems(LevelManager.THIS.FailedCost);
+            LevelManager.THIS.CoinModel.Decrease(LevelManager.THIS.FailedCost);
+            // InitScript.Instance.SpendGems(LevelManager.THIS.FailedCost);
             //button.GetComponent<Button>().interactable = false;
             GoOnFailed();
         }
-        else
-        {
-            GameObject.Find("CanvasGlobal").transform.Find("GemsShop").gameObject.SetActive(true);
-        }
+        // else
+        // {
+        //     GameObject.Find("CanvasGlobal").transform.Find("GemsShop").gameObject.SetActive(true);
+        // }
         //}
     }
 
@@ -734,10 +736,6 @@ public class AnimationManager : MonoBehaviour
             // InitScript.Instance.BuyBoost(boostType, price, count);
             //InitScript.Instance.SpendBoost(boostType);
             CloseMenu();
-        }
-        else
-        {
-            BuyGems();
         }
     }
 

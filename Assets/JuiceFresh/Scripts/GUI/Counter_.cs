@@ -164,7 +164,7 @@ public class Counter_ : MonoBehaviour
 
         if (name == "Gems")
         {
-            txt.text = "" + InitScript.Gems;
+            txt.text = "" + LevelManager.THIS.CoinModel.Coins.Value;
         }
         if (name == "Level")
         {

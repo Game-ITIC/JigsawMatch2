@@ -19,6 +19,7 @@ namespace Scopes
 
             builder.Register<BoostersProvider>(Lifetime.Singleton);
             builder.Register<CoinModel>(Lifetime.Singleton);
+            builder.Register<GemModel>(Lifetime.Singleton);
             builder.Register<LifeModel>(Lifetime.Singleton);
             builder.Register<Models.StarModel>(Lifetime.Singleton);
 

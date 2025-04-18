@@ -41,5 +41,7 @@ namespace Itic.Services
             DOTween.SetTweensCapacity(84, 42);
             await UniTask.CompletedTask;
         }
+        
+        
     }
 }

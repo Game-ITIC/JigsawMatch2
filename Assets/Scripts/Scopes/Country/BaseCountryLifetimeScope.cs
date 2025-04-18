@@ -89,6 +89,10 @@ namespace Scopes.Country
                 .As<IInitializable>()
                 .WithParameter(starTextView);
 
+            builder.Register<GemPresenter>(Lifetime.Scoped)
+                .As<IInitializable>()
+                .WithParameter(gemTextView);
+
             builder.Register<BuildingShopInitializer>(Lifetime.Scoped)
                 .As<IInitializable>()
                 .AsSelf();
