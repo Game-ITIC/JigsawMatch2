@@ -485,17 +485,17 @@ public class AnimationManager : MonoBehaviour
         }
         else if (gameObject.name == "MenuPlay")
         {
-            if (InitScript.lifes > 0)
-            {
+            // if (InitScript.lifes > 0)
+            // {
                 //InitScript.Instance.SpendLife(1);
                 LevelManager.THIS.gameStatus = GameState.PrepareGame;
                 CloseMenu();
                 //Application.LoadLevel( "game" );
-            }
-            else
-            {
-                BuyLifeShop();
-            }
+            // }
+            // else
+            // {
+                // BuyLifeShop();
+            // }
 
         }
         else if (gameObject.name == "MenuPause")
@@ -536,18 +536,18 @@ public class AnimationManager : MonoBehaviour
 
     public void Again()
     {
-        if (InitScript.lifes > 0)
-        {
+        // if (InitScript.lifes > 0)
+        // {
 
             SoundBase.Instance.PlaySound(SoundBase.Instance.click);
             LevelManager.THIS.gameStatus = GameState.PrepareGame;
             keepGaming = true;
             CloseMenu();
-        }
-        else
-        {
-            BuyLifeShop();
-        }
+        // }
+        // else
+        // {
+            // BuyLifeShop();
+        // }
     }
 
 
@@ -640,25 +640,25 @@ public class AnimationManager : MonoBehaviour
     public void BuyLifeShop()
     {
 
-        SoundBase.Instance.PlaySound(SoundBase.Instance.click);
-        if (InitScript.lifes < InitScript.Instance.CapOfLife)
-            GameObject.Find("CanvasGlobal").transform.Find("LiveShop").gameObject.SetActive(true);
+        // SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+        // if (InitScript.lifes < InitScript.Instance.CapOfLife)
+            // GameObject.Find("CanvasGlobal").transform.Find("LiveShop").gameObject.SetActive(true);
 
     }
 
     public void BuyLife(GameObject button)
     {
-        SoundBase.Instance.PlaySound(SoundBase.Instance.click);
-        if (InitScript.Gems >= int.Parse(button.transform.Find("Price").GetComponent<Text>().text))
-        {
-            InitScript.Instance.SpendGems(int.Parse(button.transform.Find("Price").GetComponent<Text>().text));
-            InitScript.Instance.RestoreLifes();
-            CloseMenu();
-        }
-        else
-        {
-            //GameObject.Find("CanvasGlobal").transform.Find("GemsShop").gameObject.SetActive(true);
-        }
+        // SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+        // if (InitScript.Gems >= int.Parse(button.transform.Find("Price").GetComponent<Text>().text))
+        // {
+            // InitScript.Instance.SpendGems(int.Parse(button.transform.Find("Price").GetComponent<Text>().text));
+            // InitScript.Instance.RestoreLifes();
+            // CloseMenu();
+        // }
+        // else
+        // {
+            // GameObject.Find("CanvasGlobal").transform.Find("GemsShop").gameObject.SetActive(true);
+        // }
 
     }
 

@@ -997,10 +997,10 @@ public class LevelMakerEditor : EditorWindow
 			GUILayout.BeginVertical();
 
 
-			initscript.CapOfLife = EditorGUILayout.IntField("Max of lifes", initscript.CapOfLife, new GUILayoutOption[] {
-				GUILayout.Width (200),
-				GUILayout.MaxWidth (200)
-			});
+			// initscript.CapOfLife = EditorGUILayout.IntField("Max of lifes", initscript.CapOfLife, new GUILayoutOption[] {
+			// 	GUILayout.Width (200),
+			// 	GUILayout.MaxWidth (200)
+			// });
 			GUILayout.Space(10);
 
 			GUILayout.Label("Total time for refill lifes:", EditorStyles.label);
@@ -1110,7 +1110,7 @@ public class LevelMakerEditor : EditorWindow
 		lm.scoresColorsOutline[4] = new Color(255f / 255f, 255f / 255f, 255f / 255f);
 		lm.scoresColorsOutline[5] = new Color(255f / 255f, 255f / 255f, 255f / 255f);
 
-		initscript.CapOfLife = 5;
+		// initscript.CapOfLife = 5;
 		initscript.TotalTimeForRestLifeHours = 0;
 		initscript.TotalTimeForRestLifeMin = 15;
 		initscript.TotalTimeForRestLifeSec = 0;

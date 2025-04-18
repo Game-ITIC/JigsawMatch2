@@ -38,54 +38,54 @@ public class Notification : MonoBehaviour
                                InitScript.Instance.TotalTimeForRestLifeMin * 60 +
                                InitScript.Instance.TotalTimeForRestLifeSec;
 
-        if (InitScript.lifes < InitScript.Instance.CapOfLife)
-        {
-            startTimer = true;
-        }
+        // if (InitScript.lifes < InitScript.Instance.CapOfLife)
+        // {
+        //     startTimer = true;
+        // }
     }
 
     void Update()
     {
-        if (startTimer)
-        {
-            TimeCount(Time.deltaTime);
-        }
-
-        if (gameObject.activeSelf)
-        {
-            if (InitScript.lifes < InitScript.Instance.CapOfLife)
-            {
-                int minutes = Mathf.FloorToInt(InitScript.RestLifeTimer / 60F);
-                int seconds = Mathf.FloorToInt(InitScript.RestLifeTimer - minutes * 60);
-
-                text.enabled = true;
-                text.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-
-                InitScript.timeForReps = text.text;
-            }
-            else
-            {
-                text.text = "   Full";
-            }
-        }
+        // if (startTimer)
+        // {
+        //     TimeCount(Time.deltaTime);
+        // }
+        //
+        // if (gameObject.activeSelf)
+        // {
+        //     if (InitScript.lifes < InitScript.Instance.CapOfLife)
+        //     {
+        //         int minutes = Mathf.FloorToInt(InitScript.RestLifeTimer / 60F);
+        //         int seconds = Mathf.FloorToInt(InitScript.RestLifeTimer - minutes * 60);
+        //
+        //         text.enabled = true;
+        //         text.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        //
+        //         InitScript.timeForReps = text.text;
+        //     }
+        //     else
+        //     {
+        //         text.text = "   Full";
+        //     }
+        // }
     }
 
     private void TimeCount(float tick)
     {
-        if (InitScript.RestLifeTimer <= 0)
-            ResetTimer();
-
-        InitScript.RestLifeTimer -= tick;
-        if (InitScript.RestLifeTimer <= 1 && InitScript.lifes < InitScript.Instance.CapOfLife)
-        {
-            InitScript.Instance.AddLife(1);
-            if (InitScript.lifes == InitScript.Instance.CapOfLife)
-            {
-                ScheduleFullLivesNotification(); // Планируем уведомление после восстановления всех жизней
-            }
-
-            ResetTimer();
-        }
+        // if (InitScript.RestLifeTimer <= 0)
+        //     ResetTimer();
+        //
+        // InitScript.RestLifeTimer -= tick;
+        // if (InitScript.RestLifeTimer <= 1 && InitScript.lifes < InitScript.Instance.CapOfLife)
+        // {
+        //     InitScript.Instance.AddLife(1);
+        //     if (InitScript.lifes == InitScript.Instance.CapOfLife)
+        //     {
+        //         ScheduleFullLivesNotification(); // Планируем уведомление после восстановления всех жизней
+        //     }
+        //
+        //     ResetTimer();
+        // }
     }
 
     private void ResetTimer()

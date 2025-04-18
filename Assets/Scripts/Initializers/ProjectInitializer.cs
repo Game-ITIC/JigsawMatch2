@@ -38,6 +38,10 @@ namespace Initializers
 
         public async UniTask StartAsync(CancellationToken cancellation = new CancellationToken())
         {
+            
+            await _sceneLoader.LoadGameplayScene();
+            return;
+
             var hasInternetAccess = await _internetChecker.HasInternetAccess();
             _internetState.HasInternet = hasInternetAccess;
             _loadingScreenView.Show();

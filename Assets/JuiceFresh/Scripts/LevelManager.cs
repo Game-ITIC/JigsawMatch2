@@ -2262,8 +2262,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     
     IEnumerator PreWinAnimationsCor()
     {
-        if (!InitScript.Instance.losingLifeEveryGame)
-            InitScript.Instance.AddLife(1);
+        // if (!InitScript.Instance.losingLifeEveryGame)
+        //     InitScript.Instance.AddLife(1);
 
         SoundBase.Instance.PlaySound(SoundBase.Instance.complete[1]);
         GameObject.Find("Level/Canvas").transform.Find("PreCompleteBanner").gameObject.SetActive(true);
