@@ -6,7 +6,7 @@ namespace Gley.Common
 {
     public class WindowLoader : EditorWindow
     {
-        internal static T LoadWindow<T>(ISettingsWindowProperties windowProperties, out string rootFolder) where T : EditorWindow
+        public static T LoadWindow<T>(ISettingsWindowProperties windowProperties, out string rootFolder) where T : EditorWindow
         {
             rootFolder = GetRootFolder(windowProperties);
 
@@ -19,14 +19,14 @@ namespace Gley.Common
             return (T)Convert.ChangeType(window, typeof(T));
         }
 
-        internal static T LoadWindow<T>(ISettingsWindowProperties windowProperties, out string rootFolder,out string rootWithoutAssets) where T : EditorWindow
+        public static T LoadWindow<T>(ISettingsWindowProperties windowProperties, out string rootFolder,out string rootWithoutAssets) where T : EditorWindow
         {
             T result = LoadWindow<T>(windowProperties, out rootFolder);
             rootWithoutAssets = rootFolder.Substring(7, rootFolder.Length - 7);
             return result;
         }
 
-        internal static string GetRootFolder(ISettingsWindowProperties windowProperties)
+        public static string GetRootFolder(ISettingsWindowProperties windowProperties)
         {
             string rootFolder = EditorUtilities.FindFolder(windowProperties.FolderName, windowProperties.ParentFolder);
             if (rootFolder == null)
@@ -36,7 +36,7 @@ namespace Gley.Common
             return rootFolder;
         }
 
-        internal static string GetRootFolder(ISettingsWindowProperties windowProperties, out string rootWithoutAssets)
+        public static string GetRootFolder(ISettingsWindowProperties windowProperties, out string rootWithoutAssets)
         {
             string rootFolder = EditorUtilities.FindFolder(windowProperties.FolderName, windowProperties.ParentFolder);
             if (rootFolder == null)

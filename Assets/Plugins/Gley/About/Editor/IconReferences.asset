@@ -28,6 +28,7 @@ MonoBehaviour:
   rateGameIcon: {fileID: 2800000, guid: 518a78f64ed2aa4439123fcb06cd2089, type: 3}
   saveIcon: {fileID: 2800000, guid: 244e3dba22194f24aabe4a9752dbba50, type: 3}
   trafficSystemIcon: {fileID: 2800000, guid: a8f292c511f1dba4fa55fd5f4823d388, type: 3}
+  urbanIcon: {fileID: 2800000, guid: 2c366a1673556c34fb562bd786260828, type: 3}
   pedestrianSystemIcon: {fileID: 2800000, guid: 2097c707ef30fb3438c7b59262dcd426,
     type: 3}
   twitterIcon: {fileID: 2800000, guid: 13ec966af2cbc8741bbe4efa0bf7c8e7, type: 3}

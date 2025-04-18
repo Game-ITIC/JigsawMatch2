@@ -33,6 +33,7 @@
         private static int nrOfUpdates;
         private bool updateCheck;
         private bool mobileToolsAvailable;
+        private bool urbanExampleAvailable;
 
         static AssetStorePackage[] assetStorePackages;
 
@@ -46,6 +47,11 @@
             "AllPlatformsSave",
             "Localization",
             "DailyRewards"
+        };
+        string[] packagesInsideUrbanExample =
+        {
+            "PedestrianSystem",
+            "TrafficSystem"
         };
 
         [MenuItem(AboutWindowProperties.menuItem, false, 0)]
@@ -64,35 +70,37 @@
         {
             assetStorePackages = new AssetStorePackage[]
             {
+                new AssetStorePackage("UrbanExample", "Urban Traffic & Pedestrian System", iconReferences.urbanIcon, "Bring your city environment to life with realistic vehicle and pedestrian systems.",
+                "https://assetstore.unity.com/packages/slug/285687?aid=1011l8QY4"),
                 new AssetStorePackage("TrafficSystem", "Traffic System", iconReferences.trafficSystemIcon, "Highly performant and easy to use traffic system that can make any driving game more fun to play in just a few clicks.",
-                "https://assetstore.unity.com/packages/slug/277301?aid=1011l8QY4"),
+                "https://assetstore.unity.com/packages/slug/305800?aid=1011l8QY4"),
                  new AssetStorePackage("PedestrianSystem", "Pedestrian System", iconReferences.pedestrianSystemIcon, "Create a realistic and vibrant urban environment with a customizable and dynamic Pedestrian System.",
                 "https://assetstore.unity.com/packages/slug/203706?aid=1011l8QY4"),
-                new AssetStorePackage("Jumpy", "Mobile Tools", iconReferences.mobileToolsIcon, "All you need to publish your finished game on the store and BONUS a free game with all of them already integrated", 
+                new AssetStorePackage("Jumpy", "Mobile Tools", iconReferences.mobileToolsIcon, "All you need to publish your finished game on the store and BONUS a free game with all of them already integrated",
                 "https://assetstore.unity.com/packages/slug/266719?aid=1011l8QY4"),
-                new AssetStorePackage("Ads", "Mobile Ads", iconReferences.mobileAdsIcon, "Show ads inside your game with this easy to use, multiple advertisers support tool.", 
+                new AssetStorePackage("Ads", "Mobile Ads", iconReferences.mobileAdsIcon, "Show ads inside your game with this easy to use, multiple advertisers support tool.",
                 "https://assetstore.unity.com/packages/slug/266331?aid=1011l8QY4"),
                 new AssetStorePackage("CakeRush", "Cake Rush", iconReferences.cakeRushIcon, "A complete arcade casual game, ready to be published or integrated as a mini-game within a larger project.",
                 "https://assetstore.unity.com/packages/slug/203708?aid=1011l8QY4"),
                  new AssetStorePackage("MobileTrafficTruck", "Traffic Truck", iconReferences.trafficTruckIcon, "Highly optimized, low-poly PBR pack containing a truck head, a tanker, a trailer, and a hangar garage",
                 "https://assetstore.unity.com/packages/slug/273684?aid=1011l8QY4"),
-                new AssetStorePackage("EasyIAP", "Easy IAP", iconReferences.easyIAPIcon, "Sell In App products inside your game with minimal setup and very little programming knowledge.", 
+                new AssetStorePackage("EasyIAP", "Easy IAP", iconReferences.easyIAPIcon, "Sell In App products inside your game with minimal setup and very little programming knowledge.",
                 "https://assetstore.unity.com/packages/slug/264594?aid=1011l8QY4"),
-                new AssetStorePackage("Localization", "Localization (Multi-Language)", iconReferences.localizationIcon, "Make your app international and reach a greater audience by translating your app in multiple languages.", 
+                new AssetStorePackage("Localization", "Localization (Multi-Language)", iconReferences.localizationIcon, "Make your app international and reach a greater audience by translating your app in multiple languages.",
                 "https://assetstore.unity.com/packages/slug/264640?aid=1011l8QY4"),
-                new AssetStorePackage("DailyRewards", "Daily (Time Based) Rewards", iconReferences.dailyRewardsIcon, "Increase the retention of your game by using Daily Rewards and Time Based rewards.", 
+                new AssetStorePackage("DailyRewards", "Daily (Time Based) Rewards", iconReferences.dailyRewardsIcon, "Increase the retention of your game by using Daily Rewards and Time Based rewards.",
                 "https://assetstore.unity.com/packages/slug/264442?aid=1011l8QY4"),
-                new AssetStorePackage("Notifications", "Mobile Push Notifications",iconReferences.notificationsIcon, "Send scheduled offline notifications to your users and keep them engaged.", 
+                new AssetStorePackage("Notifications", "Mobile Push Notifications",iconReferences.notificationsIcon, "Send scheduled offline notifications to your users and keep them engaged.",
                 "https://assetstore.unity.com/packages/slug/264705?aid=1011l8QY4"),
-                new AssetStorePackage("GameServices", "Easy Achievements and Leaderboards", iconReferences.achievementsIcon, "Submit achievements and scores with minimal setup and increase competition between your users.", 
+                new AssetStorePackage("GameServices", "Easy Achievements and Leaderboards", iconReferences.achievementsIcon, "Submit achievements and scores with minimal setup and increase competition between your users.",
                 "https://assetstore.unity.com/packages/slug/264568?aid=1011l8QY4"),
-                new AssetStorePackage("RateGame", "Rate Game Popup", iconReferences.rateGameIcon, "Increase the number of game ratings by encouraging users to rate your game.", 
+                new AssetStorePackage("RateGame", "Rate Game Popup", iconReferences.rateGameIcon, "Increase the number of game ratings by encouraging users to rate your game.",
                 "https://assetstore.unity.com/packages/slug/264661?aid=1011l8QY4"),
-                new AssetStorePackage("CrossPromo", "Mobile Cross Promo", iconReferences.crossPromoIcon, "Easily cross promote and increase popularity for all of your published games.", 
+                new AssetStorePackage("CrossPromo", "Mobile Cross Promo", iconReferences.crossPromoIcon, "Easily cross promote and increase popularity for all of your published games.",
                 "https://assetstore.unity.com/packages/slug/264649?aid=1011l8QY4"),
-                new AssetStorePackage("AllPlatformsSave", "All Platforms Save", iconReferences.saveIcon, "Easy to use: same line of code to save or load game data on all supported Unity platforms.", 
+                new AssetStorePackage("AllPlatformsSave", "All Platforms Save", iconReferences.saveIcon, "Easy to use: same line of code to save or load game data on all supported Unity platforms.",
                 "https://assetstore.unity.com/packages/slug/264406?aid=1011l8QY4"),
-                new AssetStorePackage("DeliveryVehiclesPack", "Delivery Vehicles Pack", iconReferences.vehiclesIcon, "Delivery Vehicles Pack contains 3 low poly, textured vehicles: Scooter, Three Wheeler, Minivan", 
+                new AssetStorePackage("DeliveryVehiclesPack", "Delivery Vehicles Pack", iconReferences.vehiclesIcon, "Delivery Vehicles Pack contains 3 low poly, textured vehicles: Scooter, Three Wheeler, Minivan",
                 "https://assetstore.unity.com/packages/3d/vehicles/land/delivery-vehicles-pack-55528?aid=1011l8QY4")
             };
         }
@@ -131,7 +139,8 @@
 
             RefreshState();
 
-            mobileToolsAvailable = (assetStorePackages[2].assetState != AssetState.NotDownloaded);
+            mobileToolsAvailable = (assetStorePackages[3].assetState != AssetState.NotDownloaded);
+            urbanExampleAvailable = (assetStorePackages[0].assetState != AssetState.NotDownloaded);
         }
 
         static void RefreshState()
@@ -217,7 +226,17 @@
                 }
                 else
                 {
-                    DrawPack(assetStorePackages[i]);
+                    if (urbanExampleAvailable)
+                    {
+                        if (!packagesInsideUrbanExample.Contains(assetStorePackages[i].folderName))
+                        {
+                            DrawPack(assetStorePackages[i]);
+                        }
+                    }
+                    else
+                    {
+                        DrawPack(assetStorePackages[i]);
+                    }
                 }
             }
         }
@@ -239,7 +258,7 @@
 
             if (allAssetsVersion != null)
             {
-                if (AssetNeedsUpdate(path,folderName))
+                if (AssetNeedsUpdate(path, folderName))
                 {
                     nrOfUpdates++;
                     return AssetState.UpdateAvailable;
