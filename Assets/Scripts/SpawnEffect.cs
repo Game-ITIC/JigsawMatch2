@@ -9,13 +9,15 @@ public class SpawnEffect : MonoBehaviour
     private float jumpPower = 2f;
     private float overshootScale = 1.5f;
 
+    [SerializeField] private GameObject buildUI;
+
 
     void Start()
     {
-        PlaySpawnAnimation();
+        //PlaySpawnAnimation();
     }
 
-    void PlaySpawnAnimation()
+    public void PlaySpawnAnimation()
     {
         Vector3 originalScale = transform.localScale;
         Vector3 startScale = originalScale * 0.1f;
@@ -31,5 +33,8 @@ public class SpawnEffect : MonoBehaviour
 
         //sound
         GetComponent<AudioSource>().Play();
+
+        //hide UI
+        buildUI.SetActive(false);
     }
 }

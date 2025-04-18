@@ -17,6 +17,7 @@ namespace Monobehaviours.Buildings
             foreach (var obj in buildingVisual)
             {
                 obj.SetActive(true);
+                
             }
             
         }
@@ -28,6 +29,11 @@ namespace Monobehaviours.Buildings
             {
                 obj.SetActive(false);
             }
+        }
+
+        public void Spawn()
+        {
+            gameObject.GetComponent<SpawnEffect>().PlaySpawnAnimation();
         }
     }
 }

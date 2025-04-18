@@ -152,6 +152,7 @@ namespace Monobehaviours.Buildings
 
             _starModel.Decrease(itemView.ShopItem.cost);
             itemView.ShopItem.UnlockBuildings();
+            itemView.ShopItem.SpawnBuildings();
 
             _purchasedItemIds.Add(itemId);
             SavePurchasedItems();

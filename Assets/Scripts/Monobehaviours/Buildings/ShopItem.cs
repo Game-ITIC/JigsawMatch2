@@ -29,6 +29,14 @@ namespace Monobehaviours.Buildings
                 building.Lock();
             }
         }
+
+        public void SpawnBuildings()
+        {
+            foreach (var building in buildingsToUnlock)
+            {
+                building.Spawn();
+            }
+        }
         //
         // public void Warmup()
         // {
