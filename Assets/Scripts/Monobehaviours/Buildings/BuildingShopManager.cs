@@ -21,6 +21,7 @@ namespace Monobehaviours.Buildings
         [SerializeField] private ShopItemView shopItemViewPrefab;
         [SerializeField] private Transform shopItemParent;
         [SerializeField] private Button closeButton;
+        [SerializeField] private GameObject CompletePanel;
 
         private Models.StarModel _starModel;
         private CountryConfig _countryConfig;
@@ -46,6 +47,12 @@ namespace Monobehaviours.Buildings
             _starsSubscribeDisposable = _starModel.Stars.Subscribe(UpdatePurchaseAvailability);
 
             UpdatePurchaseAvailability(_starModel.Stars.Value);
+
+            bool allItemsWereAlreadyPurchased = PlayerPrefs.GetInt("AllItemsPurchased", 0) == 1;
+            if (allItemsWereAlreadyPurchased)
+            {
+                OnAllItemsPurchased();
+            }
         }
 
         private void SetupCloseButton()
@@ -161,6 +168,11 @@ namespace Monobehaviours.Buildings
             Destroy(itemView.gameObject);
 
             RefreshShopAfterPurchase();
+
+            if (!GetAvailableShopItems().Any())
+            {
+                OnAllItemsPurchased();
+            }
         }
 
         private void RefreshShopAfterPurchase()
@@ -208,6 +220,13 @@ namespace Monobehaviours.Buildings
             }
 
             ClearShopItemViews();
+        }
+
+        private void OnAllItemsPurchased()
+        {
+            CompletePanel.SetActive(true);
+            PlayerPrefs.SetInt("AllItemsPurchased", 1);
+            PlayerPrefs.Save();
         }
     }
 }
