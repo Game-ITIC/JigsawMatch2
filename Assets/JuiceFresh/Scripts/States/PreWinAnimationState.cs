@@ -42,8 +42,8 @@ public class PreWinAnimationsState : GameStateBase
         Debug.Log("Starting PreWinAnimationsCor");
 
         // Add life if configured to not lose life every game
-        if (!InitScript.Instance.losingLifeEveryGame)
-            InitScript.Instance.AddLife(1);
+        // if (!InitScript.Instance.losingLifeEveryGame)
+        //     InitScript.Instance.AddLife(1);
 
         // Play completion sound
         SoundBase.Instance.PlaySound(SoundBase.Instance.complete[1]);

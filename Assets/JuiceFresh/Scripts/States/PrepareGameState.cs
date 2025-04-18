@@ -36,7 +36,7 @@ namespace JuiceFresh.States
 
         private void PrepareGame()
         {
-            InitScript.Instance.SpendLife(1);
+            // InitScript.Instance.SpendLife(1);
 
             levelManager.activatedBoost = null;
 

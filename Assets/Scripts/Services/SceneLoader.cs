@@ -3,16 +3,19 @@ using Configs;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Views;
 
 namespace Services
 {
     public class SceneLoader : ISceneLoader
     {
         private readonly SceneLoadingConfig _config;
+        private readonly LoadingScreenView screenView;
 
-        public SceneLoader(SceneLoadingConfig config)
+        public SceneLoader(SceneLoadingConfig config, LoadingScreenView screenView)
         {
             _config = config;
+            this.screenView = screenView;
         }
 
         public async UniTask LoadGameplayScene()
@@ -24,9 +27,11 @@ namespace Services
         {
             try
             {
+                screenView.Show();
                 await UnloadCurrentScenes();
                 await LoadSceneAdditive(sceneName);
                 SetActiveScene(sceneName);
+                screenView.Hide();
             }
             catch (System.Exception e)
             {

@@ -79,19 +79,19 @@ public class InitScript : MonoBehaviour
     public static DateTime today;
     public static DateTime DateOfRestLife;
     public static string timeForReps;
-    private static int Lifes;
+    // private static int Lifes;
 
     public List<CollectedIngredients> collectedIngredients = new List<CollectedIngredients>();
 
     public RewardedAdsType currentReward;
 
-    public static int lifes
-    {
-        get { return InitScript.Lifes; }
-        set { InitScript.Lifes = value; }
-    }
+    // public static int lifes
+    // {
+    //     get { return InitScript.Lifes; }
+    //     set { InitScript.Lifes = value; }
+    // }
 
-    public int CapOfLife = 5;
+    // public int CapOfLife = 5;
     public float TotalTimeForRestLifeHours = 0;
     public float TotalTimeForRestLifeMin = 15;
     public float TotalTimeForRestLifeSec = 60;
@@ -161,12 +161,12 @@ public class InitScript : MonoBehaviour
         DateOfExit = PlayerPrefs.GetString("DateOfExit", "");
         Gems = PlayerPrefs.GetInt("Gems");
         Stars = PlayerPrefs.GetInt("Stars");
-        lifes = PlayerPrefs.GetInt("Lifes");
+        // lifes = PlayerPrefs.GetInt("Lifes");
         if (PlayerPrefs.GetInt("Lauched") == 0)
         {
             //First lauching
-            lifes = CapOfLife;
-            PlayerPrefs.SetInt("Lifes", lifes);
+            // lifes = CapOfLife;
+            // PlayerPrefs.SetInt("Lifes", lifes);
             Gems = FirstGems;
             Stars = 0;
             PlayerPrefs.SetInt("Gems", Gems);
@@ -484,33 +484,33 @@ public class InitScript : MonoBehaviour
     }
 
 
-    public void RestoreLifes()
-    {
-        lifes = CapOfLife;
-        PlayerPrefs.SetInt("Lifes", lifes);
-        PlayerPrefs.Save();
-    }
-
-    public void AddLife(int count)
-    {
-        lifes += count;
-        if (lifes > CapOfLife)
-            lifes = CapOfLife;
-        PlayerPrefs.SetInt("Lifes", lifes);
-        PlayerPrefs.Save();
-    }
-
-    public int GetLife()
-    {
-        if (lifes > CapOfLife)
-        {
-            lifes = CapOfLife;
-            PlayerPrefs.SetInt("Lifes", lifes);
-            PlayerPrefs.Save();
-        }
-
-        return lifes;
-    }
+    // public void RestoreLifes()
+    // {
+    //     lifes = CapOfLife;
+    //     PlayerPrefs.SetInt("Lifes", lifes);
+    //     PlayerPrefs.Save();
+    // }
+    //
+    // public void AddLife(int count)
+    // {
+    //     lifes += count;
+    //     if (lifes > CapOfLife)
+    //         lifes = CapOfLife;
+    //     PlayerPrefs.SetInt("Lifes", lifes);
+    //     PlayerPrefs.Save();
+    // }
+    //
+    // public int GetLife()
+    // {
+    //     if (lifes > CapOfLife)
+    //     {
+    //         lifes = CapOfLife;
+    //         PlayerPrefs.SetInt("Lifes", lifes);
+    //         PlayerPrefs.Save();
+    //     }
+    //
+    //     return lifes;
+    // }
 
     public void PurchaseSucceded()
     {
@@ -518,19 +518,19 @@ public class InitScript : MonoBehaviour
         waitedPurchaseGems = 0;
     }
 
-    public void SpendLife(int count)
-    {
-        if (lifes > 0)
-        {
-            lifes -= count;
-            PlayerPrefs.SetInt("Lifes", lifes);
-            PlayerPrefs.Save();
-        }
-        //else
-        //{
-        //    GameObject.Find("Canvas").transform.Find("RestoreLifes").gameObject.SetActive(true);
-        //}
-    }
+    // public void SpendLife(int count)
+    // {
+    //     if (lifes > 0)
+    //     {
+    //         lifes -= count;
+    //         PlayerPrefs.SetInt("Lifes", lifes);
+    //         PlayerPrefs.Save();
+    //     }
+    //     //else
+    //     //{
+    //     //    GameObject.Find("Canvas").transform.Find("RestoreLifes").gameObject.SetActive(true);
+    //     //}
+    // }
 
     public void BuyBoost(BoostType boostType, int price, int count)
     {
@@ -587,7 +587,7 @@ public class InitScript : MonoBehaviour
                 PlayerPrefs.SetFloat("RestLifeTimer", RestLifeTimer);
             }
 
-            PlayerPrefs.SetInt("Lifes", lifes);
+            // PlayerPrefs.SetInt("Lifes", lifes);
             PlayerPrefs.SetString("DateOfExit", DateTime.Now.ToString());
             PlayerPrefs.Save();
         }
@@ -601,7 +601,7 @@ public class InitScript : MonoBehaviour
             PlayerPrefs.SetFloat("RestLifeTimer", RestLifeTimer);
         }
 
-        PlayerPrefs.SetInt("Lifes", lifes);
+        // PlayerPrefs.SetInt("Lifes", lifes);
         PlayerPrefs.SetString("DateOfExit", DateTime.Now.ToString());
         PlayerPrefs.Save();
     }
@@ -621,16 +621,16 @@ public class InitScript : MonoBehaviour
             openLevel = args.Number;
             //  currentTarget = targets[args.Number];
             //GameObject.Find("CanvasGlobal").transform.Find("MenuPlay").gameObject.SetActive(true);
-            if (InitScript.lifes > 0)
-            {
-                //InitScript.Instance.SpendLife(1);
-                LevelManager.THIS.gameStatus = GameState.PrepareGame;
-                //Application.LoadLevel( "game" );
-            }
-            else
-            {
-                AnimationManager.THIS.BuyLifeShop();
-            }
+            // if (InitScript.lifes > 0)
+            // {
+            //     //InitScript.Instance.SpendLife(1);
+            //     LevelManager.THIS.gameStatus = GameState.PrepareGame;
+            //     //Application.LoadLevel( "game" );
+            // }
+            // else
+            // {
+            //     AnimationManager.THIS.BuyLifeShop();
+            // }
         }
     }
 
@@ -646,7 +646,7 @@ public class InitScript : MonoBehaviour
         //		if(RestLifeTimer>0){
         PlayerPrefs.SetFloat("RestLifeTimer", RestLifeTimer);
         //		}
-        PlayerPrefs.SetInt("Lifes", lifes);
+        // PlayerPrefs.SetInt("Lifes", lifes);
         PlayerPrefs.SetString("DateOfExit", DateTime.Now.ToString());
         PlayerPrefs.Save();
 //#if GOOGLE_MOBILE_ADS

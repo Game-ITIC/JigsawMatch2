@@ -1,3 +1,4 @@
+using Services;
 using UnityEngine.SceneManagement;
 using VContainer.Unity;
 
@@ -6,10 +7,12 @@ namespace Initializers
     public class AsiaInitializer : IInitializable
     {
         private readonly MenuView _menuView;
-        
-        public AsiaInitializer(MenuView menuView)
+        private readonly ISceneLoader _sceneLoader;
+
+        public AsiaInitializer(MenuView menuView, ISceneLoader sceneLoader)
         {
             _menuView = menuView;
+            _sceneLoader = sceneLoader;
         }
 
         public void Initialize()
@@ -20,10 +23,13 @@ namespace Initializers
 
         private void StartGame()
         {
-            if (InitScript.lifes > 0)
-            {
-                SceneManager.LoadScene("game");
-            }
+            // if (InitScript.lifes > 0)
+            // {
+                // SceneManager.LoadScene("game");
+                       
+            // }
+
+            _sceneLoader.LoadGameplayScene();
         }
     }
 }

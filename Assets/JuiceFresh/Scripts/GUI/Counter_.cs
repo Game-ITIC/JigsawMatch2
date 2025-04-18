@@ -159,7 +159,7 @@ public class Counter_ : MonoBehaviour
         // }
         if (name == "Lifes")
         {
-            txt.text = "" + InitScript.Instance.GetLife();
+            // txt.text = "" + InitScript.Instance.GetLife();
         }
 
         if (name == "Gems")
