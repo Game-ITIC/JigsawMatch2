@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allTimerButtons: []
   calendarPrefab: {fileID: 0}
-  calendarCanvas: {fileID: 0}
+  calendarCanvas: {fileID: 1072201933520926, guid: f0fb663a072a5c345bb1a5426202ac18,
+    type: 3}
   availableAtStart: 1
-  resetAtEnd: 0
+  resetAtEnd: 1
   hours: 24
   minutes: 0
   seconds: 0
