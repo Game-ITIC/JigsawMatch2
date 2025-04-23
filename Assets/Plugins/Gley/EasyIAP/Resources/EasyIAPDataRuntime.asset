@@ -34,3 +34,51 @@ MonoBehaviour:
     price: 0
     isoCurrencyCode: 
     receipt: 
+  - productName: Coins100
+    productType: 0
+    idGooglePlay: coins_100
+    idAmazon: 
+    idIOS: 
+    idMac: 
+    idWindows: 
+    value: 100
+    localizedPriceString: '-'
+    price: 0
+    isoCurrencyCode: 
+    receipt: 
+  - productName: Coins500
+    productType: 0
+    idGooglePlay: coins_500
+    idAmazon: 
+    idIOS: 
+    idMac: 
+    idWindows: 
+    value: 500
+    localizedPriceString: '-'
+    price: 0
+    isoCurrencyCode: 
+    receipt: 
+  - productName: Stars100
+    productType: 0
+    idGooglePlay: stars_100
+    idAmazon: 
+    idIOS: 
+    idMac: 
+    idWindows: 
+    value: 100
+    localizedPriceString: '-'
+    price: 0
+    isoCurrencyCode: 
+    receipt: 
+  - productName: Stars500
+    productType: 0
+    idGooglePlay: stars_500
+    idAmazon: 
+    idIOS: 
+    idMac: 
+    idWindows: 
+    value: 500
+    localizedPriceString: '-'
+    price: 0
+    isoCurrencyCode: 
+    receipt: 
