@@ -1,5 +1,6 @@
 using UnityEngine;
 using Utils.Reactive;
+using Utils.Save;
 
 namespace Models
 {
@@ -42,13 +43,13 @@ namespace Models
 
         public void Save()
         {
-            PlayerPrefs.SetInt("Coins-", Coins.Value);
+            PlayerPrefs.SetInt(PlayerPrefsKeys.Coin, Coins.Value);
             PlayerPrefs.Save();
         }
 
         public void Load()
         {
-            Coins.Value = PlayerPrefs.GetInt("Coins-", Coins.Value);
+            Coins.Value = PlayerPrefs.GetInt(PlayerPrefsKeys.Coin, Coins.Value);
         }
     }
 }

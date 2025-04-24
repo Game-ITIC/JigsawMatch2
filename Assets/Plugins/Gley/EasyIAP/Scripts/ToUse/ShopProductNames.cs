@@ -10,8 +10,8 @@ namespace Gley.EasyIAP
 		RemoveAds,
 		Coins100,
 		Coins500,
-		Stars100,
-		Stars500,
+		DiamondSmall,
+		DiamondMedium,
 	}
 }
 #endif

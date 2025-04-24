@@ -1,5 +1,6 @@
 using UnityEngine;
 using Utils.Reactive;
+using Utils.Save;
 
 namespace Models
 {
@@ -41,13 +42,13 @@ namespace Models
 
         public void Save()
         {
-            PlayerPrefs.SetInt("Stars-", Stars.Value);
+            PlayerPrefs.SetInt(PlayerPrefsKeys.Star,Stars.Value);
             PlayerPrefs.Save();
         }
 
         public void Load()
         {
-            Stars.Value = PlayerPrefs.GetInt("Stars-", Stars.Value);
+            Stars.Value = PlayerPrefs.GetInt(PlayerPrefsKeys.Star, Stars.Value);
         }
     }
 }
