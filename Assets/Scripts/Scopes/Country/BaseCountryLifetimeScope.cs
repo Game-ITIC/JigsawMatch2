@@ -74,6 +74,8 @@ namespace Scopes.Country
         [LabelText("Gems Display")] [Tooltip("Text view for displaying player's gems")] [SerializeField]
         private TextView gemTextView;
 
+        [SerializeField] private InAppView inAppView;
+        
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(menuView);

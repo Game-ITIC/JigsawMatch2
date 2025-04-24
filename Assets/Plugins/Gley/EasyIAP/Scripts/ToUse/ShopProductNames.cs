@@ -8,8 +8,8 @@ namespace Gley.EasyIAP
 	public enum ShopProductNames
 	{
 		RemoveAds,
-		Coins100,
-		Coins500,
+		CoinsSmall,
+		CoinsMedium,
 		DiamondSmall,
 		DiamondMedium,
 	}

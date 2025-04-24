@@ -109,16 +109,16 @@ namespace JuiceFresh.States
         private void ConfigureBoostButtons()
         {
             // Configure boost buttons based on limit type
-            if (levelManager.limitType == LIMIT.MOVES)
-            {
-                levelManager.InGameBoosts[0].gameObject.SetActive(true);
-                levelManager.InGameBoosts[1].gameObject.SetActive(false);
-            }
-            else
-            {
-                levelManager.InGameBoosts[0].gameObject.SetActive(false);
-                levelManager.InGameBoosts[1].gameObject.SetActive(true);
-            }
+            // if (levelManager.limitType == LIMIT.MOVES)
+            // {
+            //     levelManager.InGameBoosts[0].gameObject.SetActive(true);
+            //     levelManager.InGameBoosts[1].gameObject.SetActive(false);
+            // }
+            // else
+            // {
+            //     levelManager.InGameBoosts[0].gameObject.SetActive(false);
+            //     levelManager.InGameBoosts[1].gameObject.SetActive(true);
+            // }
             
             var ingameBoosts = levelManager.InGameBoosts;
             var boosterProviders = levelManager.BoostersProvider;

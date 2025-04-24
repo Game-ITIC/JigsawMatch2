@@ -7,6 +7,7 @@ using Itic.Scopes;
 using JetBrains.Annotations;
 using Monobehaviours;
 using Services;
+using Services.InApp;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer.Unity;
@@ -16,24 +17,21 @@ namespace Initializers
 {
     [UsedImplicitly]
     public class GameInitializer : IInitializable, IAsyncStartable, ITickable
-        // , IDisposable
+    // , IDisposable
     {
         // private readonly IronSourceManager _ironSourceManager;
         private readonly IGameEvents _gameEvents;
-        private readonly Button _noAds;
-        // private readonly InternetState _internetState;
+        private readonly InternetState _internetState;
         private readonly GameCompleteView _gameCompleteView;
         private readonly GamePauseView _gamePauseView;
         private readonly GameOverView _gameOverView;
         private readonly SceneLoader _sceneLoader;
         private readonly LevelManager _levelManager;
-        
 
         public GameInitializer(
             // IronSourceManager ironSourceManager,
             IGameEvents gameEvents,
-            Button noAds,
-            // InternetState internetState,
+            InternetState internetState,
             GameCompleteView gameCompleteView,
             GamePauseView gamePauseView,
             GameOverView gameOverView,
@@ -43,8 +41,7 @@ namespace Initializers
         {
             // _ironSourceManager = ironSourceManager;
             _gameEvents = gameEvents;
-            _noAds = noAds;
-            // _internetState = internetState;
+            _internetState = internetState;
             _gameCompleteView = gameCompleteView;
             _gamePauseView = gamePauseView;
             _gameOverView = gameOverView;
@@ -54,14 +51,12 @@ namespace Initializers
 
         public void Initialize()
         {
-            Debug.Log("I'm here");
             _gameCompleteView.Home.onClick.RemoveAllListeners();
             _gameCompleteView.Home.onClick.AddListener(() =>
             {
-                
                 var currentLevel = PlayerPrefs.GetInt("OpenLevel", 1);
                 PlayerPrefs.SetInt("OpenLevel", currentLevel + 1);
-                
+
                 _sceneLoader.LoadRegionAsync().Forget();
             });
 
@@ -98,20 +93,7 @@ namespace Initializers
             // _gameEvents.OnGameLost += ShowInterstitial;
             // _gameEvents.OnGameWon += ShowInterstitial;
             // _gameEvents.OnEnterGame += GameStart;
-
-            // _noAds.onClick.RemoveAllListeners();
-            // _noAds.onClick.AddListener(() =>
-            // {
-            //     Gley.EasyIAP.API.BuyProduct(ShopProductNames.RemoveAds, (status, message, product) =>
-            //     {
-            //         if (status == IAPOperationStatus.Success)
-            //         {
-            //             _internetState.HasRemoveAds = true;
-            //             _noAds.gameObject.SetActive(false);
-            //         }
-            //     });
-            // });
-            // _noAds.gameObject.SetActive(!_internetState.HasRemoveAds);
+            
             await UniTask.Yield();
         }
 
@@ -134,6 +116,8 @@ namespace Initializers
         //     _gameEvents.OnGameWon -= ShowInterstitial;
         //     _gameEvents.OnEnterGame -= GameStart;
         // }
+        
+        
         public void Tick()
         {
             _levelManager.InvokeUpdate();
