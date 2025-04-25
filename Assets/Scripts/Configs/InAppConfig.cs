@@ -20,6 +20,5 @@ namespace Configs
         public string productName;
         public Sprite icon;
         public int amount;
-        public int price;
     }
 }

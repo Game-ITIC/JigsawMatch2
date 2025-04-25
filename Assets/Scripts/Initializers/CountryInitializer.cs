@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using VContainer.Unity;
 using Views;
+using ZLinq;
 using Object = UnityEngine.Object;
 
 namespace Initializers
@@ -52,31 +53,33 @@ namespace Initializers
             _menuView.StartGame.onClick.RemoveAllListeners();
             _menuView.StartGame.onClick.AddListener(StartGame);
 
-            _inAppView.NoAdsButton.onClick.RemoveAllListeners();
-            _inAppView.NoAdsButton.onClick.AddListener(() =>
-                {
-                    HandlePurchaseInApp(ShopProductNames.RemoveAds,
-                        () =>
-                        {
-                            _internetState.HasRemoveAds = true;
-                            _inAppView.NoAdsButton.gameObject.SetActive(false);
-                        },
-                        () => { }
-                    ).Forget();
-                }
-            );
-            _inAppView.NoAdsButton.gameObject.SetActive(!_internetState.HasRemoveAds);
+            // _inAppView.NoAdsButton.onClick.RemoveAllListeners();
+            // _inAppView.NoAdsButton.onClick.AddListener(() =>
+            //     {
+            //         HandlePurchaseInApp(ShopProductNames.RemoveAds,
+            //             () =>
+            //             {
+            //                 _internetState.HasRemoveAds = true;
+            //                 _inAppView.NoAdsButton.gameObject.SetActive(false);
+            //             },
+            //             () => { }
+            //         ).Forget();
+            //     }
+            // );
+            // _inAppView.NoAdsButton.gameObject.SetActive(!_internetState.HasRemoveAds);
 
             foreach (var inAppProduct in _inAppConfig.InAppProducts)
             {
+                var price = API.GetLocalizedPriceString(inAppProduct.product);
+
                 var parent = _inAppView.ButtonsParent;
 
                 var product = Object.Instantiate(_inAppConfig.ProductViewPrefab, parent);
-                product.Init(inAppProduct.productName, inAppProduct.icon, inAppProduct.price.ToString(),
+                product.Init(inAppProduct.productName, inAppProduct.icon, price,
                     inAppProduct.amount.ToString());
-                
+
                 product.BuyButton.onClick.RemoveAllListeners();
-                // product.BuyButton.onClick.AddListener();
+                product.BuyButton.onClick.AddListener(() => { HandlePurchaseInApp(inAppProduct.product).Forget(); });
             }
 
             var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
@@ -91,18 +94,28 @@ namespace Initializers
             _sceneLoader.LoadGameAsync().Forget();
         }
 
-        private async UniTaskVoid HandlePurchaseInApp(ShopProductNames shopProduct, Action successCallback,
-            Action failureCallback)
+        private async UniTaskVoid HandlePurchaseInApp(ShopProductNames shopProduct)
         {
             var isBought = await InAppPurchasingService.TryBuyConsumableAsync(shopProduct);
 
-            if (isBought)
+            if (!isBought) return;
+
+            var productConfig = _inAppConfig.InAppProducts.AsValueEnumerable().First(v => v.product == shopProduct);
+            //TODO POKAZAT CHTO ON GEY POLUCHIL BABKI SVOI
+            switch (shopProduct)
             {
-                successCallback?.Invoke();
-            }
-            else
-            {
-                failureCallback?.Invoke();
+                case ShopProductNames.CoinsSmall:
+                    _coinModel.Increase(productConfig.amount);
+                    break;
+                case ShopProductNames.CoinsMedium:
+                    _coinModel.Increase(productConfig.amount);
+                    break;
+                case ShopProductNames.DiamondSmall:
+                    _gemModel.Increase(productConfig.amount);
+                    break;
+                case ShopProductNames.DiamondMedium:
+                    _gemModel.Increase(productConfig.amount);
+                    break;
             }
         }
     }

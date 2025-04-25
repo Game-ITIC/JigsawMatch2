@@ -1,8 +1,10 @@
 using Configs;
+using Data;
 using Itic.Scopes;
 using Itic.Services;
 using Models;
 using Providers;
+using Services;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -19,7 +21,9 @@ namespace Scopes
         {
             builder.RegisterComponent(loadingScreenView);
             builder.RegisterInstance(inAppConfig);
-
+            
+            builder.Register<InternetChecker>(Lifetime.Singleton);
+            builder.Register<InternetState>(Lifetime.Singleton);
             builder.Register<BoostersProvider>(Lifetime.Singleton);
             builder.Register<CoinModel>(Lifetime.Singleton);
             builder.Register<GemModel>(Lifetime.Singleton);

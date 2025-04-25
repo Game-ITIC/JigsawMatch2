@@ -1,5 +1,6 @@
 using System;
 using Interfaces;
+using R3;
 using VContainer.Unity;
 using Views;
 
@@ -7,22 +8,22 @@ namespace Presenters
 {
     public class CoinPresenter : IInitializable, IDisposable
     {
-        private readonly Models.CoinModel _starModel;
+        private readonly Models.CoinModel _coinModel;
         private readonly TextView _textView;
 
-        private IDisposable _disposable;
+        private CompositeDisposable _disposable = new();
 
-        public CoinPresenter(Models.CoinModel starModel, TextView textView)
+        public CoinPresenter(Models.CoinModel coinModel, TextView textView)
         {
-            _starModel = starModel;
+            _coinModel = coinModel;
             _textView = textView;
         }
 
         public void Initialize()
         {
-            _disposable = _starModel.Coins.Subscribe(
+            _coinModel.Coins.Subscribe(
                 (int newValue) => { _textView.SetText(newValue.ToString()); }
-            );
+            ).AddTo(_disposable);
         }
 
         public void Dispose()

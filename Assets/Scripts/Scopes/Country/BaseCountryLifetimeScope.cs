@@ -80,7 +80,8 @@ namespace Scopes.Country
         {
             builder.RegisterComponent(menuView);
             builder.RegisterComponent(buildingShopManager);
-
+            builder.RegisterComponent(inAppView);
+            
             builder.RegisterInstance(countryConfig);
             
             builder.Register<CoinPresenter>(Lifetime.Scoped)
