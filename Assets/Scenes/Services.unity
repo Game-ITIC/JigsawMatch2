@@ -656,6 +656,7 @@ MonoBehaviour:
   autoRun: 0
   autoInjectGameObjects: []
   loadingScreenView: {fileID: 1966903337}
+  inAppConfig: {fileID: 11400000, guid: b61bce8b40b69c34bbbe4be5a1fb56ea, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

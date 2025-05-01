@@ -74,11 +74,14 @@ namespace Scopes.Country
         [LabelText("Gems Display")] [Tooltip("Text view for displaying player's gems")] [SerializeField]
         private TextView gemTextView;
 
+        [SerializeField] private InAppView inAppView;
+        
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(menuView);
             builder.RegisterComponent(buildingShopManager);
-
+            builder.RegisterComponent(inAppView);
+            
             builder.RegisterInstance(countryConfig);
             
             builder.Register<CoinPresenter>(Lifetime.Scoped)
@@ -88,6 +91,10 @@ namespace Scopes.Country
             builder.Register<StarPresenter>(Lifetime.Scoped)
                 .As<IInitializable>()
                 .WithParameter(starTextView);
+
+            builder.Register<GemPresenter>(Lifetime.Scoped)
+                .As<IInitializable>()
+                .WithParameter(gemTextView);
 
             builder.Register<BuildingShopInitializer>(Lifetime.Scoped)
                 .As<IInitializable>()

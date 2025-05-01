@@ -1,0 +1,33 @@
+using System;
+using Interfaces;
+using R3;
+using VContainer.Unity;
+using Views;
+
+namespace Presenters
+{
+    public class GemPresenter : IInitializable, IDisposable
+    {
+        private readonly Models.GemModel _gemModel;
+        private readonly TextView _textView;
+
+        private CompositeDisposable _disposable = new();
+
+        public GemPresenter(Models.GemModel gemModel, TextView textView)
+        {
+            _gemModel = gemModel;
+            _textView = textView;
+        }
+
+        public void Initialize()
+        {
+            _gemModel.Gems.Subscribe((int newValue) => { _textView.SetText(newValue.ToString()); }
+            ).AddTo(_disposable);
+        }
+
+        public void Dispose()
+        {
+            _disposable.Dispose();
+        }
+    }
+}

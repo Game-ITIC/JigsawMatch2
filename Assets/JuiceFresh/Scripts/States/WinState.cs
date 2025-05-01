@@ -45,7 +45,7 @@ public class WinState : GameStateBase
         // Find and show the complete menu UI
         menuCompleteUI = GameObject.Find("CanvasGlobal").transform.Find("MenuComplete").gameObject;
         menuCompleteUI.SetActive(true);
-
+        LevelManager.THIS.CoinModel.Increase(100);
         // Set up the menu content
         SetupCompleteMenu();
     }
@@ -53,41 +53,41 @@ public class WinState : GameStateBase
     private void SetupCompleteMenu()
     {
         // Get the score display and set it
-        Text scoreText = menuCompleteUI.transform.Find("Score").GetComponent<Text>();
-        if (scoreText != null)
-        {
-            scoreText.text = LevelManager.Score.ToString();
-        }
+        // Text scoreText = menuCompleteUI.transform.Find("Score").GetComponent<Text>();
+        // if (scoreText != null)
+        // {
+        //     scoreText.text = LevelManager.Score.ToString();
+        // }
 
         // Set up the stars display
         SetupStarsDisplay();
 
         // Set up next level button
-        Button nextButton = menuCompleteUI.transform.Find("ButtonNext").GetComponent<Button>();
-        if (nextButton != null)
-        {
-            nextButton.onClick.RemoveAllListeners();
-            nextButton.onClick.AddListener(() => OnNextLevelClicked());
-
-            // Disable next button if this is the last level
-            // nextButton.interactable = levelManager.currentLevel < InitScript.Instance.GetLastUnlockedLevel();
-        }
-
-        // Set up retry button
-        Button retryButton = menuCompleteUI.transform.Find("ButtonReplay").GetComponent<Button>();
-        if (retryButton != null)
-        {
-            retryButton.onClick.RemoveAllListeners();
-            retryButton.onClick.AddListener(() => OnRetryClicked());
-        }
-
-        // Set up map button
-        Button mapButton = menuCompleteUI.transform.Find("ButtonMap").GetComponent<Button>();
-        if (mapButton != null)
-        {
-            mapButton.onClick.RemoveAllListeners();
-            mapButton.onClick.AddListener(() => OnMapClicked());
-        }
+        // Button nextButton = menuCompleteUI.transform.Find("Next").GetComponent<Button>();
+        // if (nextButton != null)
+        // {
+        //     nextButton.onClick.RemoveAllListeners();
+        //     nextButton.onClick.AddListener(() => OnNextLevelClicked());
+        //
+        //     // Disable next button if this is the last level
+        //     // nextButton.interactable = levelManager.currentLevel < InitScript.Instance.GetLastUnlockedLevel();
+        // }
+        //
+        // // Set up retry button
+        // Button retryButton = menuCompleteUI.transform.Find("ButtonReplay").GetComponent<Button>();
+        // if (retryButton != null)
+        // {
+        //     retryButton.onClick.RemoveAllListeners();
+        //     retryButton.onClick.AddListener(() => OnRetryClicked());
+        // }
+        //
+        // // Set up map button
+        // Button mapButton = menuCompleteUI.transform.Find("ButtonMap").GetComponent<Button>();
+        // if (mapButton != null)
+        // {
+        //     mapButton.onClick.RemoveAllListeners();
+        //     mapButton.onClick.AddListener(() => OnMapClicked());
+        // }
     }
 
     private void SetupStarsDisplay()
@@ -107,6 +107,8 @@ public class WinState : GameStateBase
                 }
             }
         }
+        
+        levelManager.StarModel.Increase(levelManager.stars);
     }
 
     private void OnNextLevelClicked()
@@ -132,6 +134,9 @@ public class WinState : GameStateBase
     private void OnMapClicked()
     {
         // Return to map
+        
+        levelManager.currentLevel++;
+        PlayerPrefs.SetInt("OpenLevel", levelManager.currentLevel);
         levelManager.gameStatus = GameState.Map;
     }
 }

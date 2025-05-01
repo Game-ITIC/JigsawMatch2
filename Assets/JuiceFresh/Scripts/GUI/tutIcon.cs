@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using JuiceFresh.Scripts;
 using UnityEngine;
 
 public class tutIcon : MonoBehaviour

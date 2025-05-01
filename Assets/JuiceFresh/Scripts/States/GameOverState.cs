@@ -103,7 +103,7 @@ namespace JuiceFresh.States
                     }
 
                     // Enable/disable based on whether player has enough gems
-                    bool canAfford = InitScript.Gems >= levelManager.FailedCost;
+                    bool canAfford = levelManager.CoinModel.Coins.Value >= levelManager.FailedCost;
                     continueButton.interactable = canAfford;
                 }
             }

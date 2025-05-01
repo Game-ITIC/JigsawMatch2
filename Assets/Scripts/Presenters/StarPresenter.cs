@@ -1,5 +1,6 @@
 using System;
 using Interfaces;
+using R3;
 using VContainer.Unity;
 using Views;
 
@@ -10,7 +11,7 @@ namespace Presenters
         private readonly Models.StarModel _starModel;
         private readonly TextView _textView;
 
-        private IDisposable _disposable;
+        private CompositeDisposable _disposable = new();
 
         public StarPresenter(Models.StarModel starModel, TextView textView)
         {
@@ -20,9 +21,9 @@ namespace Presenters
 
         public void Initialize()
         {
-            _disposable = _starModel.Stars.Subscribe(
+            _starModel.Stars.Subscribe(
                 (int newValue) => { _textView.SetText(newValue.ToString()); }
-            );
+            ).AddTo(_disposable);
         }
 
         public void Dispose()

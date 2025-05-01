@@ -2,6 +2,7 @@
 using Models;
 using Newtonsoft.Json;
 using UnityEngine;
+using Utils.Save;
 
 namespace Providers
 {
@@ -16,7 +17,7 @@ namespace Providers
 
         public void Load()
         {
-            var value = PlayerPrefs.GetString("boosters-provider", "empty");
+            var value = PlayerPrefs.GetString(PlayerPrefsKeys.Boosters, "empty");
 
             if (value == "empty")
             {
@@ -38,7 +39,7 @@ namespace Providers
         {
             var value = JsonConvert.SerializeObject(BoostersModels);
 
-            PlayerPrefs.SetString("boosters-provider", value);
+            PlayerPrefs.SetString(PlayerPrefsKeys.Boosters, value);
             PlayerPrefs.Save();
         }
     }
