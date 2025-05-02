@@ -7,6 +7,7 @@ using Gley.DailyRewards.API;
 using Gley.EasyIAP;
 using Itic.Scopes;
 using Models;
+using Providers;
 using Services.InApp;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -27,6 +28,7 @@ namespace Initializers
         private readonly StarModel _starModel;
         private readonly InternetState _internetState;
         private readonly InAppConfig _inAppConfig;
+        private readonly BoostersProvider _boostersProvider;
 
         public CountryInitializer(MenuView menuView,
             SceneLoader sceneLoader,
@@ -35,7 +37,8 @@ namespace Initializers
             GemModel gemModel,
             StarModel starModel,
             InternetState internetState,
-            InAppConfig inAppConfig
+            InAppConfig inAppConfig,
+            BoostersProvider boostersProvider
         )
         {
             _menuView = menuView;
@@ -46,6 +49,7 @@ namespace Initializers
             _starModel = starModel;
             _internetState = internetState;
             _inAppConfig = inAppConfig;
+            _boostersProvider = boostersProvider;
         }
 
         public void Initialize()
@@ -107,6 +111,35 @@ namespace Initializers
                 case 1:
                     _coinModel.Increase(value);
                     break;
+                case 2:
+                    _gemModel.Increase(value);
+                    break;
+                case 3:
+                    _coinModel.Increase(value);
+                    break;
+                case 4:
+                {
+                    var booster = _boostersProvider.BoostersModels
+                        .AsValueEnumerable()
+                        .First(v => v.Type == BoostType.Bomb);
+                    booster.Add(value);
+                }
+                    break;
+                case 5:
+                {
+                    var booster = _boostersProvider.BoostersModels
+                        .AsValueEnumerable()
+                        .First(v => v.Type == BoostType.Shovel);
+                    booster.Add(value);
+                }
+                    break;
+                case 6:
+                    _coinModel.Increase(value);
+                    break;
+                case 7:
+                    _gemModel.Increase(value);
+                    break;
+
             }
         }
 
