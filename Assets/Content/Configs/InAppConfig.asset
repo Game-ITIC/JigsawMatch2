@@ -17,17 +17,17 @@ MonoBehaviour:
   <InAppProducts>k__BackingField:
   - product: 1
     productName: Coins Small
-    icon: {fileID: 21300000, guid: a18cd363e3798394daf0b8a9a3813a3f, type: 3}
+    icon: {fileID: 21300000, guid: 509d17d8d1280014c8ea7bb96dddca68, type: 3}
     amount: 150
   - product: 2
     productName: Coins Medium
-    icon: {fileID: 21300000, guid: 68532b982fa8a6d4a87f01b368c99515, type: 3}
+    icon: {fileID: 21300000, guid: 522123ac4d9a7de4daf2f6dfbfc2c07a, type: 3}
     amount: 500
   - product: 3
     productName: Diamond Small
-    icon: {fileID: 21300000, guid: 527d3e81145174d429ef196bbe035a2d, type: 3}
+    icon: {fileID: 21300000, guid: 28b534dae36d2574ba3d10830551192d, type: 3}
     amount: 10
   - product: 4
     productName: Diamond Medium
-    icon: {fileID: 21300000, guid: c0b39533303734b13ab5767a054b6cdd, type: 3}
+    icon: {fileID: 21300000, guid: cf12d3f646285054d984f96bafe086ef, type: 3}
     amount: 25
