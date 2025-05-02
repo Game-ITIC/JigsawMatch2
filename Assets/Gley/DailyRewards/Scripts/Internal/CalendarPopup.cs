@@ -75,11 +75,11 @@ namespace Gley.DailyRewards.Internal
         /// <summary>
         /// Refresh popup text
         /// </summary>
-        private void RefreshText()
+        public void RefreshText()
         {
             if (!CalendarManager.Instance.TimeExpired())
             {
-                subtitleText.text = "Your reward is ready in:";
+                subtitleText.text = "New reward in:";
                 remainingTime.text = CalendarManager.Instance.GetRemainingTime();
             }
             else

@@ -51,11 +51,15 @@ namespace Initializers
         public void Initialize()
         {
             _menuView.Warmup();
+            _inAppView.Warmup();
+            
             _menuView.StartGame.onClick.RemoveAllListeners();
             _menuView.StartGame.onClick.AddListener(StartGame);
             _menuView.DailyButton.onClick.RemoveAllListeners();
             _menuView.DailyButton.onClick.AddListener(OpenDailyFrame);
-
+            _menuView.InAppButton.onClick.RemoveAllListeners();
+            _menuView.InAppButton.onClick.AddListener(ShowInAppView);
+            
             Calendar.AddClickListener(OnDayClick);
 
             // _inAppView.NoAdsButton.onClick.RemoveAllListeners();
@@ -89,6 +93,11 @@ namespace Initializers
 
             var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
             _menuView.StartGameText.SetText("LEVEL " + nextLevel);
+        }
+
+        private void ShowInAppView()
+        {
+            _inAppView.Show();
         }
 
         private void OnDayClick(int day, int value, Sprite icon)
