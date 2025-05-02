@@ -31,7 +31,7 @@ namespace Gley.DailyRewards
         /// <param name="timeExpired">true if timer expired</param>
         public void Initialize(int dayNumber, Sprite rewardSprite, int rewardValue, int currentDay, bool timeExpired, ValueFormatterFunction valueFormatterFunction)
         {
-            dayText.text = dayNumber.ToString();
+            dayText.text = "Day " + dayNumber.ToString();
             rewardImage.sprite = rewardSprite;
             bool formattedUsingFormatterFunction = false;
             if (valueFormatterFunction != null)
@@ -66,8 +66,9 @@ namespace Gley.DailyRewards
         {
             if (dayNumber - 1 < currentDay)
             {
-                dayBg.sprite = claimedSprite;
+                rewardImage.sprite = claimedSprite;
                 dayText.gameObject.SetActive(false);
+                rewardValue.gameObject.SetActive(false);
             }
 
             if (dayNumber - 1 == currentDay)
@@ -81,6 +82,7 @@ namespace Gley.DailyRewards
                     dayBg.sprite = currentSprite;
                 }
                 dayText.gameObject.SetActive(true);
+                rewardValue.gameObject.SetActive(true);
             }
 
             if (dayNumber - 1 > currentDay)

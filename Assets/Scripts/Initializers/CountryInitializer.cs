@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using Configs;
 using Cysharp.Threading.Tasks;
 using Data;
+using Gley.DailyRewards.API;
 using Gley.EasyIAP;
 using Itic.Scopes;
 using Models;
@@ -54,8 +55,9 @@ namespace Initializers
             _menuView.StartGame.onClick.AddListener(StartGame);
             _menuView.DailyButton.onClick.RemoveAllListeners();
             _menuView.DailyButton.onClick.AddListener(OpenDailyFrame);
-            
-            
+
+            Calendar.AddClickListener(OnDayClick);
+
             // _inAppView.NoAdsButton.onClick.RemoveAllListeners();
             // _inAppView.NoAdsButton.onClick.AddListener(() =>
             //     {
@@ -87,6 +89,16 @@ namespace Initializers
 
             var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
             _menuView.StartGameText.SetText("LEVEL " + nextLevel);
+        }
+
+        private void OnDayClick(int day, int value, Sprite icon)
+        {
+            switch (day)
+            {
+                case 1:
+                    _coinModel.Increase(value);
+                    break;
+            }
         }
 
         private void OpenDailyFrame()
