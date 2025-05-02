@@ -11,6 +11,7 @@ namespace Gley.DailyRewards
         public Text rewardValue;
 
         public Image dayBg;
+        public Sprite claimedBgSprite; 
         public Sprite claimedSprite;
         public Sprite currentSprite;
         public Sprite availableSprite;
@@ -66,6 +67,7 @@ namespace Gley.DailyRewards
         {
             if (dayNumber - 1 < currentDay)
             {
+                dayBg.sprite = claimedBgSprite;
                 rewardImage.sprite = claimedSprite;
                 dayText.gameObject.SetActive(false);
                 rewardValue.gameObject.SetActive(false);
