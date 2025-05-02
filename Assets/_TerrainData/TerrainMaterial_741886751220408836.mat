@@ -28,17 +28,17 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ColorBlend:
-        m_Texture: {fileID: 5375467781718509784, guid: 56a637b4437e604418fc6656af48d8b5,
+        m_Texture: {fileID: 1636603206694824467, guid: 56a637b4437e604418fc6656af48d8b5,
           type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ColorByHeight:
-        m_Texture: {fileID: 146933710054335107, guid: 56a637b4437e604418fc6656af48d8b5,
+        m_Texture: {fileID: 724714219276362580, guid: 56a637b4437e604418fc6656af48d8b5,
           type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ColorByNormal:
-        m_Texture: {fileID: 5339860272570314054, guid: 56a637b4437e604418fc6656af48d8b5,
+        m_Texture: {fileID: 6071208585266239289, guid: 56a637b4437e604418fc6656af48d8b5,
           type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -84,7 +84,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Gloss: 1
+    - _Gloss: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -93,7 +93,7 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
-    - _Specular: 0.5
+    - _Specular: 0.339
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
