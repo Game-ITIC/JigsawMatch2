@@ -13,11 +13,13 @@ public class MenuView : MonoBehaviour, IPreload
     [SerializeField] private BuildingShopManager buildingShopManager;
     [SerializeField] private Button dailyButton;
     [SerializeField] private Button inAppButton;
+    [SerializeField] private Button mapButton;
     public Button StartGame => startGame;
     public Button DailyButton => dailyButton;
     public Button InAppButton => inAppButton;
     public TextView StartGameText => startGameText;
-    
+    public Button MapButton => mapButton;
+
     public void Warmup()
     {
         shopOpenButton.onClick.RemoveAllListeners();

@@ -61,7 +61,8 @@ namespace Initializers
             _menuView.StartGame.onClick.AddListener(StartGame);
             _menuView.InAppButton.onClick.RemoveAllListeners();
             _menuView.InAppButton.onClick.AddListener(ShowInAppView);
-            
+            _menuView.MapButton.onClick.RemoveAllListeners();  
+            _menuView.MapButton.onClick.AddListener(BackToMap);  
           
             // _inAppView.NoAdsButton.onClick.RemoveAllListeners();
             // _inAppView.NoAdsButton.onClick.AddListener(() =>
@@ -94,6 +95,11 @@ namespace Initializers
 
             var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
             _menuView.StartGameText.SetText("LEVEL " + nextLevel);
+        }
+
+        private void BackToMap()
+        {
+            _sceneLoader.LoadMapAsync().Forget();
         }
 
         private void ShowInAppView()

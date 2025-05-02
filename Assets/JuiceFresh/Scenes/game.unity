@@ -13322,6 +13322,7 @@ MonoBehaviour:
   bombsCollect: 0
   thrivingBlockDestroyed: 0
   dragBlocked: 0
+  GameEventDispatcher: {fileID: 0}
 --- !u!114 &511786113
 MonoBehaviour:
   m_ObjectHideFlags: 0

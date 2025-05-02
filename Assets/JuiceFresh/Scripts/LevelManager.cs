@@ -598,9 +598,11 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     }
 
     #endregion
-
+    
     #region Unity Lifecycle Methods
 
+    
+    
     public void InvokeStart()
     {
         _boardMechanicsService = new BoardMechanicsService(this);
@@ -651,12 +653,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         LoadLevel();
     }
     
-    // Use this for initialization
-    void Start()
-    {
-       
-    }
-
     public void InvokeUpdate()
     {
         if (_currentState != null)
@@ -2397,8 +2393,10 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             poptxt.transform.GetComponentInChildren<Text>().text = "" + value;
             if (color <= scoresColors.Length - 1)
             {
-                poptxt.transform.GetComponentInChildren<Text>().color = scoresColors[color];
-                poptxt.transform.GetComponentInChildren<Outline>().effectColor = scoresColorsOutline[color];
+                var t = poptxt.transform.GetComponentInChildren<Text>(); 
+                if(t != null) t.color = scoresColors[color];
+                var o = poptxt.transform.GetComponentInChildren<Outline>();
+                    if(o != null) o.effectColor = scoresColorsOutline[color];
             }
 
             poptxt.transform.SetParent(parent);
