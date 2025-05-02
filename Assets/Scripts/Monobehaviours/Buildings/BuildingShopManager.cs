@@ -5,6 +5,7 @@ using Configs;
 using Extensions.ZLinq;
 using Models;
 using Newtonsoft.Json;
+using R3;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
@@ -28,23 +29,24 @@ namespace Monobehaviours.Buildings
 
         private List<string> _purchasedItemIds = new List<string>();
         private List<ShopItemView> _shopItemViews = new List<ShopItemView>();
-        private IDisposable _starsSubscribeDisposable;
+        private CompositeDisposable disposable = new();
 
         public void Initialize(Models.StarModel starModel, CountryConfig countryConfig)
         {
             _starModel = starModel;
             _countryConfig = countryConfig;
 
-            
+
             SetupCloseButton();
 
             LoadPurchasedItems();
-            
+
             UpdateShopItemsLockState();
 
             CreateShopItemViews();
 
-            _starsSubscribeDisposable = _starModel.Stars.Subscribe(UpdatePurchaseAvailability);
+            _starModel.Stars.Subscribe(UpdatePurchaseAvailability)
+                .AddTo(disposable);
 
             UpdatePurchaseAvailability(_starModel.Stars.Value);
 
@@ -81,7 +83,6 @@ namespace Monobehaviours.Buildings
 
         private void UpdateShopItemsLockState()
         {
-            
             foreach (var shopItem in shopItems)
             {
                 if (_purchasedItemIds.Contains(shopItem.itemId))
@@ -178,7 +179,7 @@ namespace Monobehaviours.Buildings
         private void RefreshShopAfterPurchase()
         {
             if (_shopItemViews.Count >= maxItemsInShop) return;
-            
+
             var displayedItemIds = _shopItemViews.Select(view => view.ShopItem.itemId).ToList();
 
             ShopItem? nextItemNullable = GetAvailableShopItems()
@@ -191,7 +192,7 @@ namespace Monobehaviours.Buildings
                 ShopItem nextItem = nextItemNullable.Value;
 
                 CreateShopItemView(nextItem);
-                
+
                 UpdatePurchaseAvailability(_starModel.Stars.Value);
             }
         }
@@ -213,11 +214,7 @@ namespace Monobehaviours.Buildings
 
         private void OnDestroy()
         {
-            if (_starsSubscribeDisposable != null)
-            {
-                _starsSubscribeDisposable.Dispose();
-                _starsSubscribeDisposable = null;
-            }
+            disposable.Dispose();
 
             ClearShopItemViews();
         }

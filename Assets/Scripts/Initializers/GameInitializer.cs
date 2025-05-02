@@ -54,6 +54,8 @@ namespace Initializers
             _gameCompleteView.Home.onClick.RemoveAllListeners();
             _gameCompleteView.Home.onClick.AddListener(() =>
             {
+
+                Debug.Log("gameComplete woriking");
                 var currentLevel = PlayerPrefs.GetInt("OpenLevel", 1);
                 PlayerPrefs.SetInt("OpenLevel", currentLevel + 1);
 
@@ -83,7 +85,11 @@ namespace Initializers
             _gameOverView.RestartButton.onClick.AddListener(() => { _sceneLoader.LoadGameAsync().Forget(); });
 
             _gameOverView.Home.onClick.RemoveAllListeners();
-            _gameOverView.Home.onClick.AddListener(() => { _sceneLoader.LoadLastSceneAsync().Forget(); });
+            _gameOverView.Home.onClick.AddListener(() =>
+            {
+                Debug.Log("gameover woriking");
+                _sceneLoader.LoadLastSceneAsync().Forget();
+            });
 
 
             _levelManager.InvokeStart();

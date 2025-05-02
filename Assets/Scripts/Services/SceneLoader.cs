@@ -59,7 +59,7 @@ namespace Itic.Scopes
                     throw new ArgumentOutOfRangeException(nameof(country), country, null);
             }
         }
-
+        
         public async UniTask LoadLastSceneAsync()
         {
             if (_sceneModel.LastCountryConfig == null) return;

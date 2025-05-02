@@ -1,6 +1,7 @@
 using Configs;
 using Cysharp.Threading.Tasks;
 using Itic.Scopes;
+using Models;
 using Monobehaviours.Animations;
 using Providers;
 using R3;
@@ -18,18 +19,21 @@ namespace Initializers
 
         // private readonly IslandMenuView _islandMenuView;
         private readonly SceneLoader _sceneLoader;
+        private readonly SceneModel _sceneModel;
         private readonly CameraProvider _cameraProvider;
 
         public IslandInitializer(
             IslandProvider islandProvider,
             // IslandMenuView islandMenuView,
             SceneLoader sceneLoader,
-            CameraProvider cameraProvider
+            CameraProvider cameraProvider,
+            SceneModel sceneModel
         )
         {
             _islandProvider = islandProvider;
             // _islandMenuView = islandMenuView;
             _sceneLoader = sceneLoader;
+            _sceneModel = sceneModel;
             _cameraProvider = cameraProvider;
         }
 
@@ -51,8 +55,9 @@ namespace Initializers
             var cameraTransition = _cameraProvider.Camera.GetComponent<CameraTransition>();
             
             await cameraTransition.TransitionToTargetAsync(islandView.TargetPosition);
-            
+            _sceneModel.LastCountryConfig = islandView.CountryConfig;
             _sceneLoader.LoadRegionScene(islandView.CountryConfig.countryId).Forget();
+            
         }
     }
 }
