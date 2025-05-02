@@ -11,8 +11,9 @@ public class MenuView : MonoBehaviour, IPreload
     [SerializeField] private TextView startGameText;
     [SerializeField] private Button shopOpenButton;
     [SerializeField] private BuildingShopManager buildingShopManager;
-
+    [SerializeField] private Button dailyButton;
     public Button StartGame => startGame;
+    public Button DailyButton => dailyButton;
     public TextView StartGameText => startGameText;
 
     public void Warmup()

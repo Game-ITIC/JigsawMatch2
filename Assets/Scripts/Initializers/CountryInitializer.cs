@@ -52,7 +52,10 @@ namespace Initializers
             _menuView.Warmup();
             _menuView.StartGame.onClick.RemoveAllListeners();
             _menuView.StartGame.onClick.AddListener(StartGame);
-
+            _menuView.DailyButton.onClick.RemoveAllListeners();
+            _menuView.DailyButton.onClick.AddListener(OpenDailyFrame);
+            
+            
             // _inAppView.NoAdsButton.onClick.RemoveAllListeners();
             // _inAppView.NoAdsButton.onClick.AddListener(() =>
             //     {
@@ -84,6 +87,11 @@ namespace Initializers
 
             var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
             _menuView.StartGameText.SetText("LEVEL " + nextLevel);
+        }
+
+        private void OpenDailyFrame()
+        {
+            Gley.DailyRewards.API.Calendar.Show();
         }
 
         private void StartGame()
