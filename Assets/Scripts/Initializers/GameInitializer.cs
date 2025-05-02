@@ -16,7 +16,7 @@ using Views;
 namespace Initializers
 {
     [UsedImplicitly]
-    public class GameInitializer : IInitializable, IAsyncStartable, ITickable
+    public class GameInitializer : IInitializable, IAsyncStartable, ITickable, IDisposable
     // , IDisposable
     {
         // private readonly IronSourceManager _ironSourceManager;
@@ -57,7 +57,7 @@ namespace Initializers
                 var currentLevel = PlayerPrefs.GetInt("OpenLevel", 1);
                 PlayerPrefs.SetInt("OpenLevel", currentLevel + 1);
 
-                _sceneLoader.LoadRegionAsync().Forget();
+                _sceneLoader.LoadLastSceneAsync().Forget();
             });
 
             _gameCompleteView.Next.onClick.RemoveAllListeners();
@@ -70,7 +70,7 @@ namespace Initializers
             });
 
             _gamePauseView.Home.onClick.RemoveAllListeners();
-            _gamePauseView.Home.onClick.AddListener(() => { _sceneLoader.LoadRegionAsync().Forget(); });
+            _gamePauseView.Home.onClick.AddListener(() => { _sceneLoader.LoadLastSceneAsync().Forget(); });
 
             _gamePauseView.ContinueButton.onClick.RemoveAllListeners();
             _gamePauseView.ContinueButton.onClick.AddListener(() => { _gamePauseView.Hide(); });
@@ -83,41 +83,44 @@ namespace Initializers
             _gameOverView.RestartButton.onClick.AddListener(() => { _sceneLoader.LoadGameAsync().Forget(); });
 
             _gameOverView.Home.onClick.RemoveAllListeners();
-            _gameOverView.Home.onClick.AddListener(() => { _sceneLoader.LoadRegionAsync().Forget(); });
-            
+            _gameOverView.Home.onClick.AddListener(() => { _sceneLoader.LoadLastSceneAsync().Forget(); });
+
+
             _levelManager.InvokeStart();
         }
 
         public async UniTask StartAsync(CancellationToken cancellation = new CancellationToken())
         {
-            // _gameEvents.OnGameLost += ShowInterstitial;
-            // _gameEvents.OnGameWon += ShowInterstitial;
-            // _gameEvents.OnEnterGame += GameStart;
-            
+            _gameEvents.OnGameLost += ShowInterstitial;
+            _gameEvents.OnGameWon += ShowInterstitial;
+            _gameEvents.OnEnterGame += GameStart;
+
             await UniTask.Yield();
         }
 
-        // private void GameStart()
-        // {
-        //     if (_internetState.HasInternet && !_internetState.HasRemoveAds)
-        //         _ironSourceManager.LoadInterstitial();
-        //     // _ironSourceManager.LoadBannerAd();
-        // }
+        private void GameStart()
+        {
+            //     if (_internetState.HasInternet && !_internetState.HasRemoveAds)
+            //         _ironSourceManager.LoadInterstitial();
+            //     // _ironSourceManager.LoadBannerAd();
+        }
+
         //
-        // private void ShowInterstitial()
-        // {
-        //     if (_internetState.HasInternet && !_internetState.HasRemoveAds)
-        //         _ironSourceManager.ShowInterstitial();
-        // }
+        private void ShowInterstitial()
+        {
+            //     if (_internetState.HasInternet && !_internetState.HasRemoveAds)
+            //         _ironSourceManager.ShowInterstitial();
+        }
+
         //
-        // public void Dispose()
-        // {
-        //     _gameEvents.OnGameLost -= ShowInterstitial;
-        //     _gameEvents.OnGameWon -= ShowInterstitial;
-        //     _gameEvents.OnEnterGame -= GameStart;
-        // }
-        
-        
+        public void Dispose()
+        {
+            _gameEvents.OnGameLost -= ShowInterstitial;
+            _gameEvents.OnGameWon -= ShowInterstitial;
+            _gameEvents.OnEnterGame -= GameStart;
+        }
+
+
         public void Tick()
         {
             _levelManager.InvokeUpdate();

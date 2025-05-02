@@ -40,7 +40,7 @@ namespace Initializers
         public async UniTask StartAsync(CancellationToken cancellation = new CancellationToken())
         {
             
-            await _sceneLoader.LoadRegionAsync();
+            // await _sceneLoader.LoadRegionAsync();
             return;
 
             var hasInternetAccess = await _internetChecker.HasInternetAccess();

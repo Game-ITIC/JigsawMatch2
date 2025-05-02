@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 977ee445a3364e66a8a3cfd92d44dc01, type: 3}
   m_Name: EgyptConfig
   m_EditorClassIdentifier: 
-  countryId: 2
+  countryId: 1
   countryName: Egypt

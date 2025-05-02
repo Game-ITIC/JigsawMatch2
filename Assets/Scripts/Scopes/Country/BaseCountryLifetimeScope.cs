@@ -100,6 +100,10 @@ namespace Scopes.Country
                 .As<IInitializable>()
                 .AsSelf();
 
+            builder.Register<DailyRewardsPresenter>(Lifetime.Scoped)
+                .As<IInitializable>()
+                .WithParameter(menuView.DailyButton);
+            
             ConfigureCountry(builder);
         }
 

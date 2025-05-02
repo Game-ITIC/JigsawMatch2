@@ -19,6 +19,7 @@ namespace JuiceFresh.States
 
             ShowFailedUI();
 
+            levelManager.GameEventDispatcher.DispatchLose();
             LevelManager.TriggerOnLose();
         }
 

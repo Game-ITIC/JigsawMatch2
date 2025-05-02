@@ -20,7 +20,9 @@ public class WinState : GameStateBase
 
         // Show the complete menu UI
         ShowCompleteUI();
-
+        
+        levelManager.GameEventDispatcher.DispatchWin();
+        
         // Trigger the win events
         LevelManager.TriggerOnMenuComplete();
         LevelManager.TriggerOnWin();

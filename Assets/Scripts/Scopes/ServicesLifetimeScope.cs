@@ -30,7 +30,7 @@ namespace Scopes
             builder.Register<LifeModel>(Lifetime.Singleton);
             builder.Register<Models.StarModel>(Lifetime.Singleton);
 
-
+            builder.Register<SceneModel>(Lifetime.Singleton);
             builder.Register<ScreenService>(Lifetime.Singleton).AsSelf();
             builder.Register<SceneLoader>(Lifetime.Singleton);
             builder.Register<InitializationQueue>(Lifetime.Singleton);

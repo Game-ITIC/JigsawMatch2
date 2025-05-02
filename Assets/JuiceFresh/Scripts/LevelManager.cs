@@ -6,6 +6,7 @@ using JuiceFresh;
 using JuiceFresh.Scripts;
 using JuiceFresh.States;
 using Models;
+using Monobehaviours;
 using Providers;
 using UnityEngine.UI;
 using VContainer;
@@ -495,6 +496,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     [Inject] public BoostersProvider BoostersProvider;
     [Inject] public CoinModel CoinModel;
     [Inject] public Models.StarModel StarModel;
+    [Inject] public GameEventDispatcher GameEventDispatcher;
     
     // Field of getting and setting currently activated boost
     public BoostIcon ActivatedBoost

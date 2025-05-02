@@ -59,13 +59,10 @@ namespace Initializers
             
             _menuView.StartGame.onClick.RemoveAllListeners();
             _menuView.StartGame.onClick.AddListener(StartGame);
-            _menuView.DailyButton.onClick.RemoveAllListeners();
-            _menuView.DailyButton.onClick.AddListener(OpenDailyFrame);
             _menuView.InAppButton.onClick.RemoveAllListeners();
             _menuView.InAppButton.onClick.AddListener(ShowInAppView);
             
-            Calendar.AddClickListener(OnDayClick);
-
+          
             // _inAppView.NoAdsButton.onClick.RemoveAllListeners();
             // _inAppView.NoAdsButton.onClick.AddListener(() =>
             //     {
@@ -103,50 +100,7 @@ namespace Initializers
         {
             _inAppView.Show();
         }
-
-        private void OnDayClick(int day, int value, Sprite icon)
-        {
-            switch (day)
-            {
-                case 1:
-                    _coinModel.Increase(value);
-                    break;
-                case 2:
-                    _gemModel.Increase(value);
-                    break;
-                case 3:
-                    _coinModel.Increase(value);
-                    break;
-                case 4:
-                {
-                    var booster = _boostersProvider.BoostersModels
-                        .AsValueEnumerable()
-                        .First(v => v.Type == BoostType.Bomb);
-                    booster.Add(value);
-                }
-                    break;
-                case 5:
-                {
-                    var booster = _boostersProvider.BoostersModels
-                        .AsValueEnumerable()
-                        .First(v => v.Type == BoostType.Shovel);
-                    booster.Add(value);
-                }
-                    break;
-                case 6:
-                    _coinModel.Increase(value);
-                    break;
-                case 7:
-                    _gemModel.Increase(value);
-                    break;
-
-            }
-        }
-
-        private void OpenDailyFrame()
-        {
-            Gley.DailyRewards.API.Calendar.Show();
-        }
+        
 
         private void StartGame()
         {

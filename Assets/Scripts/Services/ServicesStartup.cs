@@ -52,7 +52,7 @@ namespace Itic.Services
                 // }
             }
             
-            await _sceneLoader.LoadRegionAsync();
+            await _sceneLoader.LoadMapAsync();
         }
     }
 }
