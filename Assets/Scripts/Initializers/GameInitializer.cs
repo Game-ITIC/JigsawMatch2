@@ -72,29 +72,40 @@ namespace Initializers
             });
 
             _gamePauseView.Home.onClick.RemoveAllListeners();
-            _gamePauseView.Home.onClick.AddListener(() => { _sceneLoader.LoadLastSceneAsync().Forget(); });
+            _gamePauseView.Home.onClick.AddListener(BackToBack);
 
             _gamePauseView.ContinueButton.onClick.RemoveAllListeners();
-            _gamePauseView.ContinueButton.onClick.AddListener(() => { _gamePauseView.Hide(); });
+            _gamePauseView.ContinueButton.onClick.AddListener(() =>
+            {
+                _gamePauseView.Hide();
+                _levelManager.ResumeGame();
+            });
 
             _gamePauseView.RestartButton.onClick.RemoveAllListeners();
-            _gamePauseView.RestartButton.onClick.AddListener(() => { _sceneLoader.LoadGameAsync().Forget(); });
-
+            _gamePauseView.RestartButton.onClick.AddListener(RestartGame);
 
             _gameOverView.RestartButton.onClick.RemoveAllListeners();
-            _gameOverView.RestartButton.onClick.AddListener(() => { _sceneLoader.LoadGameAsync().Forget(); });
+            _gameOverView.RestartButton.onClick.AddListener(RestartGame);
 
             _gameOverView.Home.onClick.RemoveAllListeners();
-            _gameOverView.Home.onClick.AddListener(() =>
-            {
-                Debug.Log("gameover woriking");
-                _sceneLoader.LoadLastSceneAsync().Forget();
-            });
+            _gameOverView.Home.onClick.AddListener(BackToBack);
 
 
             _levelManager.InvokeStart();
         }
 
+        public void RestartGame()
+        {
+            Time.timeScale = 1f;
+            _sceneLoader.LoadGameAsync().Forget(); 
+        }
+
+        public void BackToBack()
+        {
+            Time.timeScale = 1f;
+            _sceneLoader.LoadLastSceneAsync().Forget();
+        }
+        
         public async UniTask StartAsync(CancellationToken cancellation = new CancellationToken())
         {
             _gameEvents.OnGameLost += ShowInterstitial;

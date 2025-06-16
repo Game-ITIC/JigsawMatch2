@@ -627,7 +627,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             { GameState.RegenLevel, new RegenLevelState(this) }
         };
 
-        Debug.Log(_states[GameState.Playing]);
         THIS = this;
         Instance = this;
         // gameStatus = GameState.Map;
@@ -705,6 +704,12 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     #region State Management
 
+    public void ResumeGame()
+    {
+        gameStatus = GameState.Playing;
+        Time.timeScale = 1;
+    }
+    
     private void HandleLegacyState(GameState state)
     {
         if (state == GameState.PreFailedBomb)
