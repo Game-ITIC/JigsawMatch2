@@ -81,7 +81,7 @@ public class InitScript : MonoBehaviour
     public static string timeForReps;
     // private static int Lifes;
 
-    public List<CollectedIngredients> collectedIngredients = new List<CollectedIngredients>();
+    // public List<CollectedIngredients> collectedIngredients = new List<CollectedIngredients>();
 
     public RewardedAdsType currentReward;
 

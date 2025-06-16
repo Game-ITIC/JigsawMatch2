@@ -29,6 +29,7 @@ namespace Initializers
         private readonly InternetState _internetState;
         private readonly InAppConfig _inAppConfig;
         private readonly BoostersProvider _boostersProvider;
+        private readonly LevelConfig _levelConfig;
 
         public CountryInitializer(MenuView menuView,
             SceneLoader sceneLoader,
@@ -38,7 +39,8 @@ namespace Initializers
             StarModel starModel,
             InternetState internetState,
             InAppConfig inAppConfig,
-            BoostersProvider boostersProvider
+            BoostersProvider boostersProvider,
+            LevelConfig levelConfig
         )
         {
             _menuView = menuView;
@@ -50,20 +52,21 @@ namespace Initializers
             _internetState = internetState;
             _inAppConfig = inAppConfig;
             _boostersProvider = boostersProvider;
+            _levelConfig = levelConfig;
         }
 
         public void Initialize()
         {
             _menuView.Warmup();
             _inAppView.Warmup();
-            
+
             _menuView.StartGame.onClick.RemoveAllListeners();
             _menuView.StartGame.onClick.AddListener(StartGame);
             _menuView.InAppButton.onClick.RemoveAllListeners();
             _menuView.InAppButton.onClick.AddListener(ShowInAppView);
-            _menuView.MapButton.onClick.RemoveAllListeners();  
-            _menuView.MapButton.onClick.AddListener(BackToMap);  
-          
+            _menuView.MapButton.onClick.RemoveAllListeners();
+            _menuView.MapButton.onClick.AddListener(BackToMap);
+
             // _inAppView.NoAdsButton.onClick.RemoveAllListeners();
             // _inAppView.NoAdsButton.onClick.AddListener(() =>
             //     {
@@ -106,13 +109,17 @@ namespace Initializers
         {
             _inAppView.Show();
         }
-        
+
 
         private void StartGame()
         {
             var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
+            if (_levelConfig.Testing)
+            {
+                nextLevel = _levelConfig.LevelToPlay;
+            }
+            
             PlayerPrefs.SetInt("OpenLevel", nextLevel);
-            // SceneManager.LoadScene("game");
             _sceneLoader.LoadGameAsync().Forget();
         }
 

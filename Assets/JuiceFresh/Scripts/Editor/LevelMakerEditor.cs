@@ -104,7 +104,7 @@ public class LevelMakerEditor : EditorWindow
 		if (lm != null)
 		{
 			initscript = Camera.main.GetComponent<InitScript>();
-			ingr = initscript.collectedIngredients.ToArray();
+			// ingr = initscript.collectedIngredients.ToArray();
 			Initialize();
 			//unityAdsSettings = Resources.Load<UnityAdsID>("UnityAdsID");
 			LoadDataFromLocal(levelNumber);
@@ -1520,7 +1520,7 @@ public class LevelMakerEditor : EditorWindow
 
 	void ClearIngredients()
 	{
-		ingr = initscript.collectedIngredients.ToArray();
+		// ingr = initscript.collectedIngredients.ToArray();
 		//for (int i = 0; i < initscript.collectedIngredients.Count; i++)
 		//{
 		//    ingr[i] = i;
@@ -1588,7 +1588,7 @@ public class LevelMakerEditor : EditorWindow
 		{
 			if (GUILayout.Button("Edit", new GUILayoutOption[] { GUILayout.Width(100) }))
 			{
-				CollectItemsWindow.Init();
+				// CollectItemsWindow.Init();
 			}
 
 			for (int i = 0; i < ingr.Length; i++)
@@ -2195,7 +2195,7 @@ public class LevelMakerEditor : EditorWindow
 
 		string[] lines = mapText.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 		int[] indexItems = new int[10];
-		ingr = initscript.collectedIngredients.ToArray();
+		// ingr = initscript.collectedIngredients.ToArray();
 		int mapLine = 0;
 		foreach (string line in lines)
 		{

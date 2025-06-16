@@ -45,385 +45,387 @@ public enum GameState
 public class LevelManager : MonoBehaviour, ILevelManagerActions
 {
     #region Static References
-    
+
     // Instance of LevelManager for direct references
     public static LevelManager THIS;
-    
+
     // Instance of LevelManager for direct references
     public static LevelManager Instance;
-    
+
     // Global Score amount on current level
     public static int Score;
-    
+
     #endregion
 
     #region Prefabs and Objects
     
+    public List<CollectedIngredients> collectedIngredients = new List<CollectedIngredients>();
+    
     // Prefab of item
     public GameObject itemPrefab;
-    
+
     // Prefab of square
     public GameObject squarePrefab;
-    
+
     // Prefab of block, for more info check enum SquareTypes
     public GameObject blockPrefab;
-    
+
     // Prefab of wire, for more info check enum SquareTypes
     public GameObject wireBlockPrefab;
-    
+
     // Prefab of solid block, for more info check enum SquareTypes
     public GameObject solidBlockPrefab;
-    
+
     // Prefab of undestroyable block, for more info check enum SquareTypes
     public GameObject undesroyableBlockPrefab;
-    
+
     // Prefab of growing block, for more info check enum SquareTypes
     public GameObject thrivingBlockPrefab;
-    
+
     // Life shop scene object
     public LifeShop lifeShop;
-    
+
     // Gamefield scene object
     public Transform GameField;
-    
+
     // Prefab for popuping scores
     public GameObject popupScore;
-    
+
     // Prefab of row explosion effect
     public GameObject stripesEffect;
-    
+
     // Scene object
     public GameObject LevelsMap;
-    
+
     // UI object
     public GameObject Level;
-    
+
     // UI Star objects
     public GameObject star1Anim;
     public GameObject star2Anim;
     public GameObject star3Anim;
-    
+
     // UI objects
     public GameObject[] gratzWords;
-    
+
     // UI objects for targets
     public GameObject ingrObject;
     public GameObject blocksObject;
     public GameObject scoreTargetObject;
     public GameObject cageTargetObject;
     public GameObject bombTargetObject;
-    
+
     // Camera
     public Camera gameCamera;
-    
+
     // Line renderer
     public Line line;
-    
+
     // Flower object
     public GameObject flower;
-    
+
     #endregion
 
     #region Sprites
-    
+
     // Sprite of square
     public Sprite squareSprite;
-    
+
     // Second sprite of square
     public Sprite squareSprite1;
-    
+
     // Outline border for squares
     public Sprite outline1;
-    
+
     // Outline border for squares
     public Sprite outline2;
-    
+
     // Outline border for squares
     public Sprite outline3;
-    
+
     // Sprites of collectable items
     public Sprite[] ingrediendSprites;
-    
+
     // Double block sprite
     public Sprite doubleBlock;
-    
+
     // Double solid block sprite
     public Sprite doubleSolidBlock;
-    
+
     #endregion
 
     #region Level Configuration
-    
+
     // Enabling iapps flag
     public bool enableInApps;
-    
+
     // Type of game limit (moves or time)
     public LIMIT limitType;
-    
+
     // Value of rest limit (moves or time)
     public int Limit = 30;
-    
+
     // Current level number
     public int currentLevel = 1;
-    
+
     // Cost of continue playing after fail
     public int FailedCost;
-    
+
     // Extra moves that you get to continue game after fail
     public int ExtraFailedMoves = 5;
-    
+
     // Extra seconds that you get to continue game after fail
     public int ExtraFailedSecs = 30;
-    
+
     // Max rows of gamefield
     public int maxRows = 8;
-    
+
     // Max cols of gamefield
     public int maxCols = 7;
-    
+
     // Right square size for level generation
     public float squareWidth = 1.2f;
-    
+
     // Right square size for level generation
     public float squareHeight = 1.2f;
-    
+
     // Position of the first square on the game field
     public Vector2 firstSquarePosition;
-    
+
     // Editor option to show popup scores
     public bool showPopupScores;
-    
+
     // Editor variable for limitation of colors
     public int colorLimit;
-    
+
     // Editor values of description tasks
     public string[] targetDiscriptions;
-    
+
     // Facebook enable
     public bool FacebookEnable;
-    
+
     // PlayFab
     public bool PlayFab;
-    
+
     // Extra item every
     public float extraItemEvery = 6;
-    
+
     // Bomb timer
     public int bombTimer;
-    
+
     // Number of ingredients
     public int NumIngredients = 4;
-    
+
     #endregion
 
     #region Game State and Targets
-    
+
     public Target target;
-    
+
     // Inner using
     private GameState GameStatus;
-    
+
     // Amount of scores for item
     public int scoreForItem = 10;
-    
+
     // Amount of scores for block
     public int scoreForBlock = 100;
-    
+
     // Amount of scores for wire block
     public int scoreForWireBlock = 100;
-    
+
     // Amount of scores for solid block
     public int scoreForSolidBlock = 100;
-    
+
     // Amount of scores for growing block
     public int scoreForThrivingBlock = 100;
-    
+
     // Array of colors for popup scores
     public Color[] scoresColors;
-    
+
     // Array of outline colors for popup scores
     public Color[] scoresColorsOutline;
-    
+
     // Stars amount on current level
     public int stars;
-    
+
     // Amount of scores is necessary for reaching first star
     public int star1;
-    
+
     // Amount of scores is necessary for reaching second star
     public int star2;
-    
+
     // Amount of scores is necessary for reaching third star
     public int star3;
-    
+
     // Get stars
     public CollectStars starsTargetCount;
-    
+
     // Amount of blocks for collecting
     public int targetBlocks;
-    
+
     // Target cages
     public int TargetCages;
-    
+
     // Target bombs
     public int TargetBombs;
-    
+
     #endregion
 
     #region Items and Squares
-    
+
     // Array for holding squares data of the game field
     public Square[] squaresArray;
-    
+
     // Array of combined items
     public List<List<Item>> combinedItems = new List<List<Item>>();
-    
+
     // Latest touched item
     public Item lastDraggedItem;
-    
+
     // Array for items prepeared to destory
     public List<Item> destroyAnyway = new List<Item>();
-    
+
     // Level data from the file
     SquareBlocks[] levelSquaresFile = new SquareBlocks[81];
-    
+
     // Array of highlighted items
     public List<Item> highlightedItems;
-    
+
     // Necessary amount of collectable items
     public int[] ingrCountTarget = new int[4];
-    
+
     // Necessary collectable items
     public List<CollectedIngredients> ingrTarget = new List<CollectedIngredients>();
-    
+
     // Necessary collectable items
     public CollectItems[] collectItems = new CollectItems[6];
-    
+
     // List of GameObject for UI ingredients
     public List<GameObject> listIngredientsGUIObjects = new List<GameObject>();
-    
+
     // List of types
     public List<ItemsTypes> gatheredTypes = new List<ItemsTypes>();
-    
+
     // List of vector3 for flowers
     public List<Vector3> startPosFlowers = new List<Vector3>();
-    
+
     #endregion
 
     #region Boosts and Effects
-    
+
     // Amount of boosts
     public int BoostColorfullBomb;
-    
+
     // Amount of boosts
     public int BoostPackage;
-    
+
     // Amount of boosts
     public int BoostStriped;
-    
+
     // Inner using variable
     public BoostIcon emptyBoostIcon;
-    
+
     // Currently active boost
     public BoostIcon activatedBoost;
-    
+
     // Array of in-game boosts
     public BoostIcon[] InGameBoosts;
-    
+
     // Waiting boost
     public BoostIcon waitingBoost;
-    
+
     // Pool of explosion effects for items
     public GameObject[] itemExplPool = new GameObject[20];
-    
+
     // Pool of flowers
     public GameObject[] flowersPool = new GameObject[20];
-    
+
     #endregion
 
     #region Game Data
-    
+
     // Array of iapps products
     public List<GemProduct> gemsProducts = new List<GemProduct>();
-    
+
     // List of bomb timers
     public List<int> bombTimers = new List<int>();
-    
+
     // Level pass counter
     public int passLevelCounter;
-    
+
     // Move ID
     public int moveID;
-    
+
     // Last random color
     public int lastRandColor;
-    
+
     // Selected color
     public int selectedColor;
-    
+
     // Inner using
     public int nextExtraItems;
-    
+
     // Cage HP
     private int cageHP;
-    
+
     // Deprecated
     private int linePoint;
-    
+
     // Items hidden flag
     public bool itemsHided;
-    
+
     // Only falling flag
     public bool onlyFalling;
-    
+
     // Level loaded flag
     public bool levelLoaded;
-    
+
     // Counted squares
     public Hashtable countedSquares;
-    
+
     // Is ingredient flying flag
     public bool ingredientFly;
-    
+
     // Test by play flag
     public bool testByPlay;
-    
+
     // Extra cage add item
     public int extraCageAddItem;
-    
+
     // Bombs collect
     public int bombsCollect;
-    
+
     // Stop sliding flag
     private bool stopSliding;
-    
+
     // Offset
     private float offset;
-    
+
     #endregion
 
     #region Board Mechanics
-    
+
     private BoardMechanicsService _boardMechanicsService;
-    
-    public BoardMechanicsService BoardMechanics 
+
+    public BoardMechanicsService BoardMechanics
     {
         get { return _boardMechanicsService; }
     }
-    
+
     private Dictionary<GameState, GameStateBase> _states;
     private GameStateBase _currentState;
-    
+
     #endregion
 
     #region Properties
-    
+
     // Is any growing blocks destroyed in that turn
     public bool thrivingBlockDestroyed;
-    
+
     // Is touch blocks
     public bool dragBlocked;
-    
+
     public bool DragBlocked
     {
         get { return dragBlocked; }
@@ -446,7 +448,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             dragBlocked = value;
         }
     }
-    
+
     public int TargetBlocks
     {
         get { return targetBlocks; }
@@ -457,7 +459,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             targetBlocks = value;
         }
     }
-    
+
     public GameState gameStatus
     {
         get { return GameStatus; }
@@ -497,7 +499,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     [Inject] public CoinModel CoinModel;
     [Inject] public Models.StarModel StarModel;
     [Inject] public GameEventDispatcher GameEventDispatcher;
-    
+
     // Field of getting and setting currently activated boost
     public BoostIcon ActivatedBoost
     {
@@ -514,8 +516,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         {
             if (value == null)
             {
-                if (activatedBoost != null && gameStatus == GameState.Playing)
-                    InitScript.Instance.SpendBoost(activatedBoost.type);
+                // if (activatedBoost != null && gameStatus == GameState.Playing)
+                //     InitScript.Instance.SpendBoost(activatedBoost.type);
                 UnLockBoosts();
             }
 
@@ -540,7 +542,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             }
         }
     }
-    
+
     #endregion
 
     #region Events
@@ -598,17 +600,15 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     }
 
     #endregion
-    
+
     #region Unity Lifecycle Methods
 
-    
-    
     public void InvokeStart()
     {
         _boardMechanicsService = new BoardMechanicsService(this);
-        
+
         ingrCountTarget = new int[NumIngredients]; // Necessary amount of collectable items
-       
+
         if (Level.gameObject.activeSelf)
             Level.gameObject.SetActive(false);
 
@@ -626,7 +626,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             { GameState.Win, new WinState(this) },
             { GameState.RegenLevel, new RegenLevelState(this) }
         };
-        
+
         Debug.Log(_states[GameState.Playing]);
         THIS = this;
         Instance = this;
@@ -652,7 +652,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         gameStatus = GameState.PrepareGame;
         LoadLevel();
     }
-    
+
     public void InvokeUpdate()
     {
         if (_currentState != null)
@@ -680,11 +680,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             line.SetVertexCount(0);
         }
     }
-    
-    void Update()
-    {
-      
-    }
 
     private void OnDestroy()
     {
@@ -692,12 +687,24 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         {
             CoroutineManager.Instance.StopAllManagedCoroutines();
         }
+
+        THIS = null;
+        Instance = null;
+        
+        OnMapState = null;
+        OnEnterGame = null;
+        OnLevelLoaded = null;
+        OnMenuPlay = null;
+        OnMenuComplete = null;
+        OnTouchDetected = null;
+        OnWin = null;
+        OnLose = null;
     }
 
     #endregion
 
     #region State Management
-    
+
     private void HandleLegacyState(GameState state)
     {
         if (state == GameState.PreFailedBomb)
@@ -723,13 +730,13 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             StartCoroutine(PreWinAnimationsCor());
         }
     }
-    
+
     public void EnableMap(bool enable)
     {
         MapState mapState = _states[GameState.Map] as MapState;
         mapState.EnableMap(enable);
     }
-    
+
     public void LockBoosts()
     {
         foreach (BoostIcon item in InGameBoosts)
@@ -746,7 +753,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             item.UnLockBoost();
         }
     }
-    
+
     public void RestartTimer()
     {
         if (_currentState is PlayingState playingState)
@@ -754,11 +761,11 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             playingState.RestartTimer();
         }
     }
-    
+
     #endregion
 
     #region Level Management
-    
+
     public void LoadLevel()
     {
         currentLevel = PlayerPrefs.GetInt("OpenLevel"); // TargetHolder.level;
@@ -769,7 +776,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         LoadDataFromLocal(currentLevel);
         NumIngredients = ingrTarget.Count;
     }
-    
+
     public void LoadDataFromLocal(int currentLevel)
     {
         levelLoaded = false;
@@ -782,31 +789,31 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         ProcessGameDataFromString(mapText.text);
     }
-    
+
     int CalculateLevel(int playerLevel)
     {
         // Если уровень меньше или равен 45, просто возвращаем его
         if (playerLevel <= 45)
             return playerLevel;
-    
+
         // Вычисляем, сколько раз игрок "прошел полный круг" после 45
         int beyond45 = playerLevel - 45;
-    
+
         // Используем модуло для циклического расчета
         // Диапазон уровней в цикле: от 10 до 45 (всего 36 уровней)
         int cyclePosition = beyond45 % 36;
-    
+
         // Прибавляем 10 (начальный уровень цикла) и учитываем особый случай
         int result = cyclePosition + 10;
-    
+
         // Если результат получился 46 или больше, это означает,
         // что мы вышли за пределы диапазона 10-45, поэтому начинаем с 10 снова
         if (result > 45)
             result = (result - 45) + 9;
-        
+
         return result;
     }
-    
+
     void ProcessGameDataFromString(string mapText)
     {
         string[] lines = mapText.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
@@ -870,10 +877,10 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
                     blocksString.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
                 for (int i = 0; i < blocksNumbers.Length; i++)
                 {
-                    if (InitScript.Instance.collectedIngredients.Count <= i && target == Target.COLLECT)
+                    if (collectedIngredients.Count <= i && target == Target.COLLECT)
                         break;
                     if (target == Target.COLLECT)
-                        ingrTarget.Add(InitScript.Instance.collectedIngredients[i]);
+                        ingrTarget.Add(collectedIngredients[i]);
                     else
                         ingrTarget.Add(new CollectedIngredients());
                     ingrTarget[ingrTarget.Count - 1].count = int.Parse(blocksNumbers[i]);
@@ -891,7 +898,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
                         if (ingrTarget.Count > i)
                         {
                             CollectedIngredients ingFromList =
-                                InitScript.Instance.collectedIngredients[int.Parse(blocksNumbers[i])];
+                                collectedIngredients[int.Parse(blocksNumbers[i])];
                             ingrTarget[i].check = true;
                             ingrTarget[i].name = ingFromList.name;
                             ingrTarget[i].sprite = ingFromList.sprite;
@@ -961,7 +968,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         levelLoaded = true;
     }
-    
+
     public void ReGenLevel()
     {
         itemsHided = false;
@@ -978,7 +985,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         gameStatus = GameState.Playing;
         OnLevelLoaded();
     }
-    
+
     public void GenerateLevel()
     {
         bool chessColor = false;
@@ -998,7 +1005,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         AnimateField(fieldPos);
     }
-    
+
     void AnimateField(Vector3 pos)
     {
         float yOffset = 0;
@@ -1018,7 +1025,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         GameField.transform.position = new Vector2(pos.x + 15, pos.y + yOffset);
     }
-    
+
     void CreateSquare(int col, int row, bool chessColor = false)
     {
         GameObject square = null;
@@ -1078,11 +1085,11 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
             block.GetComponent<SpriteRenderer>().sprite = doubleBlock;
             block.GetComponent<SpriteRenderer>().sortingOrder = 1;
-            
+
             CreateObstacles(col, row, square, SquareTypes.NONE);
         }
     }
-    
+
     public void CreateObstacles(int col, int row, GameObject square, SquareTypes type)
     {
         if ((levelSquaresFile[row * maxCols + col].obstacle == SquareTypes.WIREBLOCK && type == SquareTypes.NONE) ||
@@ -1164,7 +1171,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             block.GetComponent<Square>().type = SquareTypes.THRIVING;
         }
     }
-    
+
     public void GenerateOutline()
     {
         int row = 0;
@@ -1205,7 +1212,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             }
         }
     }
-    
+
     void SetOutline(int col, int row, float zRot)
     {
         Square square = GetSquare(col, row, true);
@@ -1390,7 +1397,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             }
         }
     }
-    
+
     GameObject CreateOutline(Square square)
     {
         GameObject outline = new GameObject();
@@ -1403,11 +1410,11 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         spr.sortingOrder = 1;
         return outline;
     }
-    
+
     #endregion
 
     #region Item Management
-    
+
     public void GenerateNewItems(bool falling = true)
     {
         for (int col = 0; col < maxCols; col++)
@@ -1428,7 +1435,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             }
         }
     }
-    
+
     public void DestroyItems(bool withoutEffects = false)
     {
         GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
@@ -1446,7 +1453,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             }
         }
     }
-    
+
     public void FindMatches()
     {
         if (_currentState is PlayingState playingState)
@@ -1454,18 +1461,18 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             playingState.FindMatches();
         }
     }
-    
+
     public IEnumerator FindMatchDelay()
     {
         yield return new WaitForSeconds(0.2f);
         LevelManager.THIS.FindMatches();
     }
-    
+
     public void ProcessMatchesAndFalling()
     {
         StartCoroutine(_boardMechanicsService.ProcessBoardAfterMatches());
     }
-    
+
     void DestroyGatheredExtraItems(Item item)
     {
         if (gatheredTypes.Count > 1)
@@ -1482,7 +1489,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
                 item.DestroyVertical();
         }
     }
-    
+
     public void ClearHighlight(bool boost = false)
     {
         if (!boost)
@@ -1500,7 +1507,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             }
         }
     }
-    
+
     public void SetTypeByColor(int p, ItemsTypes nextType)
     {
         GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
@@ -1519,12 +1526,12 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             }
         }
     }
-    
+
     public void SetColorToRandomItems()
     {
         StartCoroutine(SetColorToRandomItemscCor());
     }
-    
+
     IEnumerator SetColorToRandomItemscCor()
     {
         int p = UnityEngine.Random.Range(0, colorLimit);
@@ -1536,11 +1543,11 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             item.anim.SetTrigger("appear");
         }
     }
-    
+
     #endregion
 
     #region Square and Item Queries
-    
+
     public Square GetSquare(int col, int row, bool safe = false)
     {
         if (!safe)
@@ -1556,7 +1563,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             return squaresArray[row * maxCols + col];
         }
     }
-    
+
     public List<Item> GetRow(int row)
     {
         List<Item> itemsList = new List<Item>();
@@ -1567,7 +1574,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return itemsList;
     }
-    
+
     public List<Square> GetRowSquare(int row)
     {
         List<Square> itemsList = new List<Square>();
@@ -1578,7 +1585,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return itemsList;
     }
-    
+
     public List<Item> GetColumn(int col)
     {
         List<Item> itemsList = new List<Item>();
@@ -1589,7 +1596,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return itemsList;
     }
-    
+
     public List<Square> GetColumnSquare(int col)
     {
         List<Square> itemsList = new List<Square>();
@@ -1600,7 +1607,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return itemsList;
     }
-    
+
     public List<Item> GetRandomItems(int count)
     {
         List<Item> list = new List<Item>();
@@ -1631,7 +1638,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return list2;
     }
-    
+
     public List<Item> GetAllExtraItems()
     {
         List<Item> list = new List<Item>();
@@ -1646,7 +1653,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return list;
     }
-    
+
     public List<Item> GetItemsAround(Square square)
     {
         int col = square.col;
@@ -1662,7 +1669,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return itemsList;
     }
-    
+
     public List<Square> GetSquaresAround(Square square)
     {
         int col = square.col;
@@ -1678,7 +1685,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return itemsList;
     }
-    
+
     public List<Item> GetItems()
     {
         List<Item> itemsList = new List<Item>();
@@ -1698,7 +1705,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return itemsList;
     }
-    
+
     public List<Square> GetSquares()
     {
         List<Square> itemsList = new List<Square>();
@@ -1715,7 +1722,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return itemsList;
     }
-    
+
     public List<Square> GetBottomRow()
     {
         List<Square> itemsList = new List<Square>();
@@ -1736,7 +1743,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return itemsList;
     }
-    
+
     public List<Item> GetIngredients(int i = -1)
     {
         List<Item> list = new List<Item>();
@@ -1762,17 +1769,17 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return list;
     }
-    
+
     #endregion
 
     #region Special Effects
-    
+
     public void DestroyDoubleBomb(int col)
     {
         StartCoroutine(DestroyDoubleBombCor(col));
         StartCoroutine(DestroyDoubleBombCorBack(col));
     }
-    
+
     IEnumerator DestroyDoubleBombCor(int col)
     {
         for (int i = col; i < maxCols; i++)
@@ -1790,7 +1797,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         if (col <= maxCols - col - 1)
             FindMatches();
     }
-    
+
     IEnumerator DestroyDoubleBombCorBack(int col)
     {
         for (int i = col - 1; i >= 0; i--)
@@ -1808,7 +1815,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         if (col > maxCols - col - 1)
             FindMatches();
     }
-    
+
     public void StrippedShow(GameObject obj, bool horrizontal)
     {
         GameObject effect = Instantiate(stripesEffect, obj.transform.position, Quaternion.identity) as GameObject;
@@ -1816,7 +1823,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             effect.transform.Rotate(Vector3.back, 90);
         Destroy(effect, 1);
     }
-    
+
     public GameObject GetExplFromPool()
     {
         for (int i = 0; i < itemExplPool.Length; i++)
@@ -1831,7 +1838,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return null;
     }
-    
+
     public GameObject GetFlowerFromPool()
     {
         for (int i = 0; i < flowersPool.Length; i++)
@@ -1844,7 +1851,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return null;
     }
-    
+
     public bool CheckFlowerStillFly()
     {
         // Check if any flower still not reached his target
@@ -1858,7 +1865,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return false;
     }
-    
+
     IEnumerator HideDelayed(GameObject gm)
     {
         yield return new WaitForSeconds(1);
@@ -1870,11 +1877,11 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         gm.GetComponent<SpriteRenderer>().enabled = false;
     }
-    
+
     #endregion
 
     #region Target Management
-    
+
     public IEnumerator TimeTick()
     {
         while (true)
@@ -1894,7 +1901,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             yield return new WaitForSeconds(1);
         }
     }
-    
+
     public void CreateCollectableTarget(GameObject parentTransform, Target tar, bool ForDialog = true)
     {
         tar = target;
@@ -2031,7 +2038,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             }
         }
     }
-    
+
     public void CheckCollectedTarget(GameObject _item)
     {
         for (int i = 0; i < NumIngredients; i++)
@@ -2109,7 +2116,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             }
         }
     }
-    
+
     IEnumerator StartAnimateIngredient(GameObject item, int i)
     {
         ingredientFly = true;
@@ -2166,7 +2173,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             CheckWinLose();
         ingredientFly = false;
     }
-    
+
     public int GetActualIngredients()
     {
         int count = 0;
@@ -2187,7 +2194,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return count;
     }
-    
+
     public int GetRestIngredients()
     {
         int count = 0;
@@ -2198,7 +2205,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         return count;
     }
-    
+
     public void CheckWinLose()
     {
         if (Limit <= 0)
@@ -2300,7 +2307,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
                 gameStatus = GameState.PreWinAnimations;
         }
     }
-    
+
     IEnumerator PreWinAnimationsCor()
     {
         // if (!InitScript.Instance.losingLifeEveryGame)
@@ -2370,17 +2377,17 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         gameStatus = GameState.Win;
     }
-    
+
     public int GetScoresOfTargetStars()
     {
         return (int)this.GetType().GetField("star" + (int)starsTargetCount)
             .GetValue(this); // Get value of appropriate field (star1, star2 or star3)
     }
-    
+
     #endregion
 
     #region Score and Progression
-    
+
     public void PopupScore(int value, Vector3 pos, int color)
     {
         Score += value;
@@ -2393,10 +2400,10 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             poptxt.transform.GetComponentInChildren<Text>().text = "" + value;
             if (color <= scoresColors.Length - 1)
             {
-                var t = poptxt.transform.GetComponentInChildren<Text>(); 
-                if(t != null) t.color = scoresColors[color];
+                var t = poptxt.transform.GetComponentInChildren<Text>();
+                if (t != null) t.color = scoresColors[color];
                 var o = poptxt.transform.GetComponentInChildren<Outline>();
-                    if(o != null) o.effectColor = scoresColorsOutline[color];
+                if (o != null) o.effectColor = scoresColorsOutline[color];
             }
 
             poptxt.transform.SetParent(parent);
@@ -2405,13 +2412,13 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             Destroy(poptxt, 1.4f);
         }
     }
-    
+
     void UpdateBar()
     {
         ProgressBarScript.Instance.UpdateDisplay((float)Score * 100f /
                                                  ((float)star1 / ((star1 * 100f / star3)) * 100f) / 100f);
     }
-    
+
     void CheckStars()
     {
         if (Score >= star1 && stars <= 0)
@@ -2450,11 +2457,11 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             star3Anim.SetActive(true);
         }
     }
-    
+
     #endregion
 
     #region Bomb Management
-    
+
     public IEnumerator InitBombs()
     {
         yield return new WaitUntil(() => !TipsManager.THIS.gotTip); // 1.3
@@ -2480,13 +2487,13 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             item.ChangeType();
         }
     }
-    
+
     public void RechargeBombs()
     {
         // 1.3
         StartCoroutine(InitBombs());
     }
-    
+
     #endregion
 }
 

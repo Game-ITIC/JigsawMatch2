@@ -16,11 +16,12 @@ namespace Scopes
     {
         [SerializeField] private LoadingScreenView loadingScreenView;
         [SerializeField] private InAppConfig inAppConfig;
-
+        [SerializeField] private LevelConfig levelConfig;
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(loadingScreenView);
             builder.RegisterInstance(inAppConfig);
+            builder.RegisterInstance(levelConfig);
             
             builder.Register<InternetChecker>(Lifetime.Singleton);
             builder.Register<InternetState>(Lifetime.Singleton);

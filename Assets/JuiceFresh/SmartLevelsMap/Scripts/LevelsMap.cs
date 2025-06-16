@@ -64,8 +64,8 @@ public class LevelsMap : MonoBehaviour {
 	}
 
 	private void PlaceCharacterToLastUnlockedLevel () {
-		int lastUnlockedNumber = GetMapLevels ().Where (l => !l.IsLocked).Select (l => l.Number).Max ();
-		TeleportToLevelInternal (lastUnlockedNumber, true);
+		// int lastUnlockedNumber = GetMapLevels ().Where (l => !l.IsLocked).Select (l => l.Number).Max ();
+		// TeleportToLevelInternal (lastUnlockedNumber, true);
 	}
 
 	public int GetLastestReachedLevel () {//1.3.3
@@ -76,9 +76,9 @@ public class LevelsMap : MonoBehaviour {
 	}
 
 	private void SetCameraToCharacter () {
-		MapCamera mapCamera = FindObjectOfType<MapCamera> ();
-		if (mapCamera != null)
-			mapCamera.SetPosition (WaypointsMover.transform.position);
+		// MapCamera mapCamera = FindObjectOfType<MapCamera> ();
+		// if (mapCamera != null)
+			// mapCamera.SetPosition (WaypointsMover.transform.position);
 	}
 
 	#region Events
@@ -163,7 +163,7 @@ public class LevelsMap : MonoBehaviour {
 		if (mapLevel.IsLocked) {
 			Debug.Log (string.Format ("Can't jump to locked level number {0}.", number));
 		} else {
-			WaypointsMover.transform.position = mapLevel.PathPivot.transform.position;   //need to fix in the map plugin
+			// WaypointsMover.transform.position = mapLevel.PathPivot.transform.position;   //need to fix in the map plugin
 			CharacterLevel = mapLevel;
 			if (!isQuietly)
 				RaiseLevelReached (number);

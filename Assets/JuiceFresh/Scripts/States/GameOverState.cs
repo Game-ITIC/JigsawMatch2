@@ -58,14 +58,15 @@ namespace JuiceFresh.States
         private void SetupFailedMenu()
         {
             // Get the score display and set it
-            Text scoreText = _menuFailedUI.transform.Find("Score").GetComponent<Text>();
+            Text scoreText = _menuFailedUI.transform.Find("Score")?.GetComponent<Text>();
+            
             if (scoreText != null)
             {
                 scoreText.text = LevelManager.Score.ToString();
             }
 
             // Set up retry button
-            Button retryButton = _menuFailedUI.transform.Find("ButtonReplay").GetComponent<Button>();
+            Button retryButton = _menuFailedUI.transform.Find("ButtonReplay")?.GetComponent<Button>();
             if (retryButton != null)
             {
                 retryButton.onClick.RemoveAllListeners();
@@ -73,7 +74,7 @@ namespace JuiceFresh.States
             }
 
             // Set up quit button
-            Button quitButton = _menuFailedUI.transform.Find("ButtonQuit").GetComponent<Button>();
+            Button quitButton = _menuFailedUI.transform.Find("ButtonQuit")?.GetComponent<Button>();
             if (quitButton != null)
             {
                 quitButton.onClick.RemoveAllListeners();
@@ -90,14 +91,14 @@ namespace JuiceFresh.States
             if (levelManager.FailedCost > 0)
             {
                 // Set up continue button
-                Button continueButton = _menuFailedUI.transform.Find("ButtonContinue").GetComponent<Button>();
+                Button continueButton = _menuFailedUI.transform.Find("ButtonContinue")?.GetComponent<Button>();
                 if (continueButton != null)
                 {
                     continueButton.onClick.RemoveAllListeners();
                     continueButton.onClick.AddListener(() => OnContinueClicked());
 
                     // Update the cost text
-                    Text costText = continueButton.transform.Find("Cost").GetComponent<Text>();
+                    Text costText = continueButton.transform.Find("Cost")?.GetComponent<Text>();
                     if (costText != null)
                     {
                         costText.text = levelManager.FailedCost.ToString();
