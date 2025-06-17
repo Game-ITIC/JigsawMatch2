@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace JuiceFresh.Scripts
@@ -13,13 +15,214 @@ namespace JuiceFresh.Scripts
             this.levelManager = levelManager;
         }
 
+        public async UniTask ProcessBoardAfterMatches(CancellationToken cancellationToken = default)
+        {
+            bool throwflower = false;
+            levelManager.extraCageAddItem = 0;
+            bool nearEmptySquareDetected = false;
+            int combo = 0;
+
+            // Freeze animations of items
+            List<Item> items = levelManager.GetItems();
+            foreach (Item item in items)
+            {
+                if (item != null)
+                {
+                    item.anim.StopPlayback();
+                }
+            }
+
+            while (true)
+            {
+                await UniTask.Delay(100, cancellationToken: cancellationToken); // 0.1f seconds = 100ms
+
+                levelManager.combinedItems.Clear();
+                combo = levelManager.destroyAnyway.Count;
+
+                // Process special items
+                foreach (List<Item> destroyItems in levelManager.combinedItems)
+                {
+                    if (levelManager.lastDraggedItem == null)
+                    {
+                        if (destroyItems.Count == 4)
+                        {
+                            if (levelManager.lastDraggedItem == null)
+                                levelManager.lastDraggedItem = destroyItems[Random.Range(0, destroyItems.Count)];
+                            levelManager.lastDraggedItem.nextType = (ItemsTypes)Random.Range(1, 3);
+                        }
+
+                        if (destroyItems.Count >= 5)
+                        {
+                            if (levelManager.lastDraggedItem == null)
+                                levelManager.lastDraggedItem = destroyItems[Random.Range(0, destroyItems.Count)];
+                            levelManager.lastDraggedItem.nextType = ItemsTypes.CHOCOBOMB;
+                        }
+                    }
+                }
+
+                // Handle extra items generation
+                if (levelManager.destroyAnyway.Count >= levelManager.extraItemEvery)
+                {
+                    levelManager.nextExtraItems = levelManager.destroyAnyway.Count / (int)levelManager.extraItemEvery;
+                }
+
+                // Process items to be destroyed
+                int destroyArrayCount = levelManager.destroyAnyway.Count;
+                int iCounter = 0;
+                foreach (Item item in levelManager.destroyAnyway)
+                {
+                    iCounter++;
+                    if (item.nextType == ItemsTypes.NONE)
+                    {
+                        if (item.square.IsCageGoingToBroke())
+                        {
+                            if (iCounter == destroyArrayCount)
+                            {
+                                DestroyGatheredExtraItems(item);
+                            }
+
+                            if (iCounter % levelManager.extraItemEvery == 0)
+                            {
+                                levelManager.startPosFlowers.Add(item.transform.position);
+                                List<Item> itemsRand = levelManager.GetRandomItems(1);
+                                int cc = 0;
+                                foreach (Item item1 in itemsRand)
+                                {
+                                    levelManager.DragBlocked = true;
+                                    throwflower = true;
+                                    GameObject flowerParticle = levelManager.GetFlowerFromPool();
+                                    flowerParticle.GetComponent<Flower>().StartFly(item.transform.position);
+                                    cc++;
+                                }
+                            }
+
+                            await UniTask.Delay(30, cancellationToken: cancellationToken); // 0.03f seconds = 30ms
+                            item.DestroyItem(true, "", true);
+                        }
+                        else
+                        {
+                            if (iCounter == destroyArrayCount)
+                            {
+                                DestroyGatheredExtraItems(item);
+                            }
+
+                            item.SleepItem();
+                        }
+                    }
+                }
+
+                levelManager.destroyAnyway.Clear();
+
+                // Process special items after destruction
+                if (levelManager.lastDraggedItem != null)
+                {
+                    if (levelManager.lastDraggedItem.nextType != ItemsTypes.NONE)
+                    {
+                        await UniTask.Delay(500, cancellationToken: cancellationToken); // 0.5f seconds = 500ms
+                    }
+
+                    levelManager.lastDraggedItem = null;
+                }
+
+                // Wait for all destroy animations to finish
+                while (!IsAllDestroyFinished())
+                {
+                    await UniTask.Delay(100, cancellationToken: cancellationToken); // 0.1f seconds = 100ms
+                }
+
+                // Process falling items
+                ProcessFallingItems();
+
+                if (!nearEmptySquareDetected)
+                    await UniTask.Delay(200, cancellationToken: cancellationToken); // 0.2f seconds = 200ms
+
+                // Check for ingredients
+                CheckIngredient();
+
+                // Start falling animations
+                for (int col = 0; col < levelManager.maxCols; col++)
+                {
+                    for (int row = levelManager.maxRows - 1; row >= 0; row--)
+                    {
+                        if (levelManager.GetSquare(col, row) != null && !levelManager.GetSquare(col, row).IsNone() &&
+                            levelManager.GetSquare(col, row).item != null)
+                        {
+                            levelManager.GetSquare(col, row).item.StartFalling();
+                        }
+                    }
+                }
+
+                await UniTask.Delay(200, cancellationToken: cancellationToken); // 0.2f seconds = 200ms
+
+                // Generate new items
+                levelManager.GenerateNewItems();
+                await UniTask.Delay(100, cancellationToken: cancellationToken); // 0.1f seconds = 100ms
+
+                // Wait for all items to fall
+                while (!IsAllItemsFallDown())
+                {
+                    await UniTask.Delay(100, cancellationToken: cancellationToken); // 0.1f seconds = 100ms
+                }
+
+                // Check for empty squares that need items to fall into
+                nearEmptySquareDetected = FindEmptySquares();
+
+                while (!IsAllItemsFallDown())
+                {
+                    await UniTask.Delay(100, cancellationToken: cancellationToken); // 0.1f seconds = 100ms
+                }
+
+                if (levelManager.destroyAnyway.Count > 0)
+                    nearEmptySquareDetected = true;
+
+                if (!nearEmptySquareDetected)
+                    break;
+            }
+
+            // Clean up any invalid items
+            CleanupInvalidItems(items);
+
+            // Process thriving blocks
+            ProcessThrivingBlocks();
+
+            // Check win/lose condition
+            if (levelManager.gameStatus == GameState.Playing && !levelManager.ingredientFly)
+                levelManager.CheckWinLose();
+
+            // Show achievement text based on combo
+            ShowComboText(combo);
+
+            // Reset state variables
+            levelManager.nextExtraItems = 0;
+            levelManager.gatheredTypes.Clear();
+            levelManager.startPosFlowers.Clear();
+
+            // IMPORTANT: This is where dragBlocked gets reset
+            levelManager.DragBlocked = false;
+
+            await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate, cancellationToken); // WaitForEndOfFrame equivalent
+
+            // Update bombs
+            levelManager.GameField.BroadcastMessage("BombTick");
+
+            // Save bomb timers
+            UpdateBombTimers();
+
+            // Check for possible combines in playing state
+            if (levelManager.gameStatus == GameState.Playing)
+            {
+                // Convert the coroutine call to UniTask as well
+                // _ = TipsManager.THIS.CheckPossibleCombinesAsync(cancellationToken);
+            }
+        }
+
         public IEnumerator ProcessBoardAfterMatches()
         {
             bool throwflower = false;
             levelManager.extraCageAddItem = 0;
             bool nearEmptySquareDetected = false;
             int combo = 0;
-            
+
             // Freeze animations of items
             List<Item> items = levelManager.GetItems();
             foreach (Item item in items)
@@ -130,19 +333,19 @@ namespace JuiceFresh.Scripts
 
                 // Process falling items
                 ProcessFallingItems();
-                
+
                 if (!nearEmptySquareDetected)
                     yield return new WaitForSeconds(0.2f);
 
                 // Check for ingredients
                 CheckIngredient();
-                
+
                 // Start falling animations
                 for (int col = 0; col < levelManager.maxCols; col++)
                 {
                     for (int row = levelManager.maxRows - 1; row >= 0; row--)
                     {
-                        if (levelManager.GetSquare(col, row) != null && !levelManager.GetSquare(col, row).IsNone() && 
+                        if (levelManager.GetSquare(col, row) != null && !levelManager.GetSquare(col, row).IsNone() &&
                             levelManager.GetSquare(col, row).item != null)
                         {
                             levelManager.GetSquare(col, row).item.StartFalling();
@@ -151,11 +354,11 @@ namespace JuiceFresh.Scripts
                 }
 
                 yield return new WaitForSeconds(0.2f);
-                
+
                 // Generate new items
                 levelManager.GenerateNewItems();
                 yield return new WaitForSeconds(0.1f);
-                
+
                 // Wait for all items to fall
                 while (!IsAllItemsFallDown())
                 {
@@ -164,7 +367,7 @@ namespace JuiceFresh.Scripts
 
                 // Check for empty squares that need items to fall into
                 nearEmptySquareDetected = FindEmptySquares();
-                
+
                 while (!IsAllItemsFallDown())
                 {
                     yield return new WaitForSeconds(0.1f);
@@ -172,14 +375,14 @@ namespace JuiceFresh.Scripts
 
                 if (levelManager.destroyAnyway.Count > 0)
                     nearEmptySquareDetected = true;
-                    
+
                 if (!nearEmptySquareDetected)
                     break;
             }
 
             // Clean up any invalid items
             CleanupInvalidItems(items);
-            
+
             // Process thriving blocks
             ProcessThrivingBlocks();
 
@@ -194,21 +397,22 @@ namespace JuiceFresh.Scripts
             levelManager.nextExtraItems = 0;
             levelManager.gatheredTypes.Clear();
             levelManager.startPosFlowers.Clear();
-            
+
             // IMPORTANT: This is where dragBlocked gets reset
             levelManager.DragBlocked = false;
-            
+
             yield return new WaitForEndOfFrame();
-            
+
             // Update bombs
             levelManager.GameField.BroadcastMessage("BombTick");
-            
+
             // Save bomb timers
             UpdateBombTimers();
-            
+
             // Check for possible combines in playing state
             if (levelManager.gameStatus == GameState.Playing)
-                CoroutineManager.Instance.StartManagedCoroutine("CheckPossibleCombines", TipsManager.THIS.CheckPossibleCombines());
+                CoroutineManager.Instance.StartManagedCoroutine("CheckPossibleCombines",
+                    TipsManager.THIS.CheckPossibleCombines());
         }
 
         // Helper methods from the original FallingDown implementation
@@ -238,6 +442,7 @@ namespace JuiceFresh.Scripts
                 if (itemComponent == null || (itemComponent.destroying && !itemComponent.animationFinished))
                     return false;
             }
+
             return true;
         }
 
@@ -272,7 +477,7 @@ namespace JuiceFresh.Scripts
         {
             if (levelManager.gameStatus == GameState.PreWinAnimations)
                 return true;
-                
+
             GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
             foreach (GameObject item in items)
             {
@@ -280,6 +485,7 @@ namespace JuiceFresh.Scripts
                 if (itemComponent == null || itemComponent.falling)
                     return false;
             }
+
             return true;
         }
 
@@ -298,6 +504,7 @@ namespace JuiceFresh.Scripts
                     }
                 }
             }
+
             return nearEmptySquareDetected;
         }
 
@@ -332,7 +539,7 @@ namespace JuiceFresh.Scripts
                             List<Square> sqList = levelManager.GetSquaresAround(square);
                             foreach (Square sq in sqList)
                             {
-                                if (sq.CanFallInto() && Random.Range(0, 5) == 0 && sq.type == SquareTypes.EMPTY && 
+                                if (sq.CanFallInto() && Random.Range(0, 5) == 0 && sq.type == SquareTypes.EMPTY &&
                                     sq.item != null && sq.item.currentType == ItemsTypes.NONE)
                                 {
                                     levelManager.CreateObstacles(sq.col, sq.row, sq.gameObject, SquareTypes.THRIVING);
@@ -344,6 +551,7 @@ namespace JuiceFresh.Scripts
                     }
                 }
             }
+
             levelManager.thrivingBlockDestroyed = false;
         }
 

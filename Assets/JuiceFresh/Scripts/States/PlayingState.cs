@@ -3,6 +3,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using JuiceFresh;
 using JuiceFresh.Scripts;
 using JuiceFresh.States;
@@ -123,7 +124,7 @@ public class PlayingState : GameStateBase
         // Process the selected items if we have enough of them
         if (levelManager.destroyAnyway.Count >= 3)
         {
-            ProcessMatchedItems();
+            ProcessMatchedItems().Forget();
         }
         else
         {
@@ -419,12 +420,12 @@ public class PlayingState : GameStateBase
         levelManager.ActivatedBoost = null;
     }
 
-    private void ProcessMatchedItems()
+    private async UniTask ProcessMatchedItems()
     {
         levelManager.DragBlocked = true;
 
         // Start the matching process
-        levelManager.FindMatches();
+        await levelManager.FindMatches();
 
         // Decrement moves if this is a move-limited level
         if (levelManager.limitType == LIMIT.MOVES)
@@ -583,10 +584,10 @@ public class PlayingState : GameStateBase
         }
     }
 
-    public void FindMatches()
+    public async UniTask FindMatches()
     {
         // CoroutineManager.Instance.StartManagedCoroutine("FallingDown", FallingDown());
-        levelManager.ProcessMatchesAndFalling();
+        await levelManager.ProcessMatchesAndFalling();
     }
 
     public IEnumerator TimeTick()

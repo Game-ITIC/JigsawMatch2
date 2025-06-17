@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using JuiceFresh;
 using JuiceFresh.Scripts;
 using JuiceFresh.States;
@@ -1459,11 +1460,11 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         }
     }
 
-    public void FindMatches()
+    public async UniTask FindMatches()
     {
         if (_currentState is PlayingState playingState)
         {
-            playingState.FindMatches();
+            await playingState.FindMatches();
         }
     }
 
@@ -1473,9 +1474,10 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         LevelManager.THIS.FindMatches();
     }
 
-    public void ProcessMatchesAndFalling()
+    public async UniTask ProcessMatchesAndFalling()
     {
-        StartCoroutine(_boardMechanicsService.ProcessBoardAfterMatches());
+        // var routine = StartCoroutine(_boardMechanicsService.ProcessBoardAfterMatches());
+        await _boardMechanicsService.ProcessBoardAfterMatches();
     }
 
     void DestroyGatheredExtraItems(Item item)
