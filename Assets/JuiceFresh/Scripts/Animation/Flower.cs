@@ -7,7 +7,8 @@ using System.Collections.Generic;
 /// </summary>
 public class Flower : MonoBehaviour
 {
-    [SerializeField] private float speed;
+    [SerializeField] private float speedInGame = 15f;
+    [SerializeField] private float speedInTheEnd = 50f;
     
     #region Private Fields
     private Item targetItem;
@@ -88,6 +89,8 @@ public class Flower : MonoBehaviour
         float startTime = Time.time;
         float distance = Vector3.Distance(startPosition, targetPosition);
         float fracJourney = 0;
+        var speed = directFly ? speedInTheEnd : speedInGame;
+        
         
         // Start particle effect
         particleSystem.Play();
