@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using JuiceFresh;
 using JuiceFresh.Scripts;
@@ -1477,7 +1478,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     public async UniTask ProcessMatchesAndFalling()
     {
         // var routine = StartCoroutine(_boardMechanicsService.ProcessBoardAfterMatches());
-        await _boardMechanicsService.ProcessBoardAfterMatches();
+        await _boardMechanicsService.ProcessBoardAfterMatches(CancellationToken.None);
     }
 
     void DestroyGatheredExtraItems(Item item)
