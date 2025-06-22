@@ -6,6 +6,7 @@ using Models;
 using Providers;
 using Services;
 using UnityEngine;
+using Utils.Debug;
 using VContainer;
 using VContainer.Unity;
 using Views;
@@ -17,9 +18,12 @@ namespace Scopes
         [SerializeField] private LoadingScreenView loadingScreenView;
         [SerializeField] private InAppConfig inAppConfig;
         [SerializeField] private LevelConfig levelConfig;
+        [SerializeField] private SystemDebug systemDebug;
+        
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(loadingScreenView);
+            builder.RegisterComponent(systemDebug);
             builder.RegisterInstance(inAppConfig);
             builder.RegisterInstance(levelConfig);
             

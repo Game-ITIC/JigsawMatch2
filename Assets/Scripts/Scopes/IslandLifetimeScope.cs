@@ -1,4 +1,8 @@
 using Initializers;
+using Meta.Quests.Configs;
+using Meta.Quests.Interfaces;
+using Meta.Quests.Services;
+using Meta.Quests.Views;
 using Presenters;
 using Providers;
 using Sirenix.OdinInspector;
@@ -29,11 +33,17 @@ namespace Scopes
 
         [SerializeField] private Button dailyButton;
         [SerializeField] private CameraProvider cameraProvider;
-        
+
+        [SerializeField] private DailyQuestSettings dailyQuestSettings;
+        [SerializeField] private QuestTemplate questTemplate;
+        [SerializeField] private DailyQuestsView dailyQuestsView;
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(islandProvider);
             builder.RegisterComponent(cameraProvider);
+            builder.RegisterComponent(dailyQuestsView);
+            builder.RegisterInstance(dailyQuestSettings);
+            builder.RegisterInstance(questTemplate);
             
             builder.Register<CoinPresenter>(Lifetime.Scoped)
                 .As<IInitializable>()
@@ -51,6 +61,11 @@ namespace Scopes
                 .As<IInitializable>()
                 .WithParameter(dailyButton);
 
+            builder.Register<IDailyQuestService, DailyQuestService>(Lifetime.Singleton);
+            builder.Register<IQuestProgressTracker, DailyQuestService>(Lifetime.Singleton);
+            builder.Register<IQuestDataStorage, PlayerPrefsQuestStorage>(Lifetime.Singleton);
+            builder.Register<IQuestGenerator, QuestGenerator>(Lifetime.Singleton);
+            
             builder.RegisterEntryPoint<IslandInitializer>();
         }
     }

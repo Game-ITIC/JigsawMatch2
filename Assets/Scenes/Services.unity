@@ -616,6 +616,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2108957125}
   - component: {fileID: 2108957126}
+  - component: {fileID: 2108957127}
   m_Layer: 0
   m_Name: ServicesLifetimeScope
   m_TagString: Untagged
@@ -658,6 +659,19 @@ MonoBehaviour:
   loadingScreenView: {fileID: 1966903337}
   inAppConfig: {fileID: 11400000, guid: b61bce8b40b69c34bbbe4be5a1fb56ea, type: 2}
   levelConfig: {fileID: 11400000, guid: 476c7f1808b505a4a88601d77775607d, type: 2}
+  systemDebug: {fileID: 2108957127}
+--- !u!114 &2108957127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2108957124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c61804f68d34aa59985634d7b476aab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
