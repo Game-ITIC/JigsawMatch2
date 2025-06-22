@@ -150,7 +150,23 @@ public class PlayingState : GameStateBase
             Debug.Log("Item is ingredient or drag is blocked");
             return;
         }
-
+        
+        // В начале метода ProcessItemTouch, до проверки бустов:
+        if (item.currentType == ItemsTypes.HORIZONTAL_STRIPPED && levelManager.destroyAnyway.Count == 0)
+        {
+            item.DestroyHorizontal();
+            levelManager.DragBlocked = true;
+            ProcessMatchedItems().Forget();
+            return;
+        }
+        else if (item.currentType == ItemsTypes.VERTICAL_STRIPPED && levelManager.destroyAnyway.Count == 0)
+        {
+            item.DestroyVertical();
+            levelManager.DragBlocked = true;
+            ProcessMatchedItems().Forget();
+            return;
+        }
+        
         // Handle boost activation
         if (ProcessBoostSelection(item))
         {
