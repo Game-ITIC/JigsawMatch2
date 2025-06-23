@@ -7,6 +7,7 @@ using Presenters;
 using Providers;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using VContainer;
 using VContainer.Unity;
@@ -36,12 +37,12 @@ namespace Scopes
 
         [SerializeField] private DailyQuestSettings dailyQuestSettings;
         [SerializeField] private QuestTemplate questTemplate;
-        [SerializeField] private DailyQuestsView dailyQuestsView;
+        [FormerlySerializedAs("dailyQuestsView")] [SerializeField] private DailyQuestView dailyQuestView;
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(islandProvider);
             builder.RegisterComponent(cameraProvider);
-            builder.RegisterComponent(dailyQuestsView);
+            builder.RegisterComponent(dailyQuestView);
             builder.RegisterInstance(dailyQuestSettings);
             builder.RegisterInstance(questTemplate);
             

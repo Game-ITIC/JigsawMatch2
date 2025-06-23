@@ -15,7 +15,7 @@ namespace Meta.Quests.Services
         private readonly DailyQuestSettings _settings;
         private readonly IQuestDataStorage _storage;
         private readonly IQuestGenerator _generator;
-        private readonly DailyQuestsView _dailyQuestsView;
+        private readonly DailyQuestView dailyQuestView;
 
         private List<DailyQuest> _activeQuests = new List<DailyQuest>();
         private DateTime _lastRefreshTime;
@@ -29,13 +29,13 @@ namespace Meta.Quests.Services
             DailyQuestSettings settings,
             IQuestDataStorage storage,
             IQuestGenerator generator,
-            DailyQuestsView dailyQuestsView
+            DailyQuestView dailyQuestView
         )
         {
             _settings = settings;
             _storage = storage;
             _generator = generator;
-            _dailyQuestsView = dailyQuestsView;
+            this.dailyQuestView = dailyQuestView;
         }
 
         public void Initialize()
@@ -44,7 +44,7 @@ namespace Meta.Quests.Services
             SubscribeToEvents();
             CheckAndRefreshIfNeeded();
             
-            _dailyQuestsView.SetAmount(_activeQuests[0].currentProgress);
+            dailyQuestView.SetAmount(_activeQuests[0].currentProgress);
         }
 
         private void SubscribeToEvents()
@@ -143,7 +143,7 @@ namespace Meta.Quests.Services
                 }
             }
 
-            _dailyQuestsView.SetAmount(_activeQuests[0].currentProgress);
+            dailyQuestView.SetAmount(_activeQuests[0].currentProgress);
             
             if (anyQuestUpdated)
             {
