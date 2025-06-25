@@ -14,7 +14,8 @@ namespace Meta.Quests.Models
         public QuestReward reward;
         public string localizationKey;
         public bool isCompleted;
-
+        public Sprite sprite; 
+        
         public float ProgressNormalized => targetAmount > 0 ? (float)currentProgress / targetAmount : 0f;
 
         public void UpdateProgress(int newProgress)

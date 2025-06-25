@@ -10,12 +10,11 @@ using UnityEngine;
 
 namespace Meta.Quests.Services
 {
-    public class DailyQuestService : IDailyQuestService, IQuestProgressTracker
+    public class DailyQuestService : IDailyQuestService, IQuestProgressTracker, IDisposable
     {
         private readonly DailyQuestSettings _settings;
         private readonly IQuestDataStorage _storage;
         private readonly IQuestGenerator _generator;
-        private readonly DailyQuestView dailyQuestView;
 
         private List<DailyQuest> _activeQuests = new List<DailyQuest>();
         private DateTime _lastRefreshTime;
@@ -28,14 +27,12 @@ namespace Meta.Quests.Services
         public DailyQuestService(
             DailyQuestSettings settings,
             IQuestDataStorage storage,
-            IQuestGenerator generator,
-            DailyQuestView dailyQuestView
+            IQuestGenerator generator
         )
         {
             _settings = settings;
             _storage = storage;
             _generator = generator;
-            this.dailyQuestView = dailyQuestView;
         }
 
         public void Initialize()
@@ -43,8 +40,6 @@ namespace Meta.Quests.Services
             LoadQuestData();
             SubscribeToEvents();
             CheckAndRefreshIfNeeded();
-            
-            dailyQuestView.SetAmount(_activeQuests[0].currentProgress);
         }
 
         private void SubscribeToEvents()
@@ -143,12 +138,17 @@ namespace Meta.Quests.Services
                 }
             }
 
-            dailyQuestView.SetAmount(_activeQuests[0].currentProgress);
-            
             if (anyQuestUpdated)
             {
                 _storage.SaveQuestData(_activeQuests, _lastRefreshTime);
             }
+        }
+
+        public void Dispose()
+        {
+            QuestEvents.OnItemCollected -= TrackItemCollected;
+            QuestEvents.OnLevelCompleted -= OnLevelCompletedEvent;
+            QuestEvents.OnItemUsed -= TrackItemUsed;
         }
     }
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80642afff98645b5adbcb2223b5058a2, type: 3}
   m_Name: QuestTemplate
   m_EditorClassIdentifier: 
-  questType: 0
+  questType: 3
   availableTargetIds:
   - butterfly
   minAmount: 1

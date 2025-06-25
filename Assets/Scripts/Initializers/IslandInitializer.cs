@@ -24,7 +24,7 @@ namespace Initializers
         private readonly SceneModel _sceneModel;
         private readonly IDailyQuestService _dailyQuestService;
         private readonly CameraProvider _cameraProvider;
-
+        
         public IslandInitializer(
             IslandProvider islandProvider,
             // IslandMenuView islandMenuView,
@@ -53,8 +53,6 @@ namespace Initializers
             {
                 islandView.OnClick += (island) => { IslandViewOnClick(island).Forget(); };
             }
-            
-            _dailyQuestService.Initialize();
         }
 
         private async UniTask IslandViewOnClick(IslandView islandView)

@@ -1,6 +1,7 @@
 using Initializers;
 using Meta.Quests.Configs;
 using Meta.Quests.Interfaces;
+using Meta.Quests.Providers;
 using Meta.Quests.Services;
 using Meta.Quests.Views;
 using Presenters;
@@ -18,6 +19,7 @@ namespace Scopes
     public class IslandLifetimeScope : LifetimeScope
     {
         [SerializeField] private IslandProvider islandProvider;
+
         [Space(10)]
         [Title("UI Components")]
         [LabelWidth(130)]
@@ -37,15 +39,17 @@ namespace Scopes
 
         [SerializeField] private DailyQuestSettings dailyQuestSettings;
         [SerializeField] private QuestTemplate questTemplate;
-        [FormerlySerializedAs("dailyQuestsView")] [SerializeField] private DailyQuestView dailyQuestView;
+
+        [SerializeField] private DailyQuestProvider dailyQuestProvider;
+
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(islandProvider);
             builder.RegisterComponent(cameraProvider);
-            builder.RegisterComponent(dailyQuestView);
+            builder.RegisterComponent(dailyQuestProvider);
             builder.RegisterInstance(dailyQuestSettings);
             builder.RegisterInstance(questTemplate);
-            
+
             builder.Register<CoinPresenter>(Lifetime.Scoped)
                 .As<IInitializable>()
                 .WithParameter(coinTextView);
@@ -61,11 +65,15 @@ namespace Scopes
             builder.Register<DailyRewardsPresenter>(Lifetime.Scoped)
                 .As<IInitializable>()
                 .WithParameter(dailyButton);
+            
 
             builder.Register<IDailyQuestService, DailyQuestService>(Lifetime.Singleton);
             builder.Register<IQuestProgressTracker, DailyQuestService>(Lifetime.Singleton);
             builder.Register<IQuestDataStorage, PlayerPrefsQuestStorage>(Lifetime.Singleton);
             builder.Register<IQuestGenerator, QuestGenerator>(Lifetime.Singleton);
+            
+            builder.Register<DailyQuestPresenter>(Lifetime.Scoped)
+                .As<IInitializable>();
             
             builder.RegisterEntryPoint<IslandInitializer>();
         }

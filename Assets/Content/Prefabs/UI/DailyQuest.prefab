@@ -265,10 +265,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a14ebaf0faea49488b6e6d06498486db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questName: {fileID: 7031447452580793086}
-  slider: {fileID: 1504002354949859140}
-  sliderText: {fileID: 4960892780637037493}
-  image: {fileID: 188249856980653880}
+  _questName: {fileID: 7031447452580793086}
+  _slider: {fileID: 1504002354949859140}
+  _sliderText: {fileID: 4960892780637037493}
+  _image: {fileID: 188249856980653880}
   collectButton: {fileID: 537051066539547496}
 --- !u!1 &4371417817579415115
 GameObject:

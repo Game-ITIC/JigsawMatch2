@@ -16,4 +16,6 @@ MonoBehaviour:
   hoursUntilRefresh: 24
   availableQuestTemplates:
   - {fileID: 11400000, guid: 60828bca9dc7a40438204713dcc96d38, type: 2}
+  - {fileID: 11400000, guid: e31646c05c1ec2944bd36ad4ae116eac, type: 2}
+  - {fileID: 11400000, guid: 55c45d38c85326048acb491206c1c4b0, type: 2}
   enableDebugLogs: 1
