@@ -16,11 +16,9 @@ namespace Meta.Quests.Models
         [SerializeField] private Sprite _sprite;
         [SerializeField] private QuestReward _reward;
 
-        // Реактивные свойства
         private readonly ReactiveProperty<int> _currentProgress = new(0);
         private readonly ReactiveProperty<bool> _isCompleted = new(false);
 
-        // Публичные свойства для чтения
         public string id => _id;
         public QuestType type => _type;
         public string targetItemId => _targetItemId;
@@ -33,23 +31,19 @@ namespace Meta.Quests.Models
         public ReadOnlyReactiveProperty<int> CurrentProgress => _currentProgress;
         public ReadOnlyReactiveProperty<bool> IsCompleted => _isCompleted;
         
-        // Вычисляемое свойство для нормализованного прогресса
         public ReadOnlyReactiveProperty<float> ProgressNormalized { get; private set; }
 
         public ReactiveDailyQuest()
         {
-            // Настраиваем вычисляемое свойство для нормализованного прогресса
             ProgressNormalized = _currentProgress
                 .Select(progress => _targetAmount > 0 ? Mathf.Clamp01((float)progress / _targetAmount) : 0f)
                 .ToReadOnlyReactiveProperty();
                 
-            // Автоматически обновляем статус завершения
             _currentProgress
                 .Select(progress => progress >= _targetAmount)
                 .Subscribe(completed => _isCompleted.Value = completed);
         }
 
-        // Конструктор для создания из обычного DailyQuest
         public ReactiveDailyQuest(DailyQuest quest) : this()
         {
             _id = quest.id;

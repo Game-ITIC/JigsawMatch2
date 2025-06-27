@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using Meta.Quests.Interfaces;
 using Meta.Quests.Models;
 using Meta.Quests.Providers;
+using Meta.Quests.Services;
 using Meta.Quests.Views;
 using R3;
 using UnityEngine;
@@ -15,6 +17,7 @@ namespace Presenters
     {
         private readonly IDailyQuestService _questService;
         private readonly DailyQuestProvider _questProvider;
+        private readonly RewardService _rewardService;
 
         private readonly Dictionary<string, DailyQuestView> _questViews = new();
         private readonly Dictionary<string, ReactiveDailyQuest> _reactiveQuests = new();
@@ -22,24 +25,27 @@ namespace Presenters
 
         private readonly CompositeDisposable _globalDisposables = new();
 
-        public DailyQuestPresenter(IDailyQuestService questService, DailyQuestProvider questProvider)
+        public DailyQuestPresenter(
+            IDailyQuestService questService,
+            DailyQuestProvider questProvider,
+            RewardService rewardService
+        )
         {
             _questService = questService;
             _questProvider = questProvider;
+            _rewardService = rewardService;
         }
 
         public void Initialize()
         {
             SubscribeToServiceEvents();
-            Debug.Log(_questService.ActiveQuests.Count);
-            
+
             _questService.Initialize();
-            
+
             if (_questService.ActiveQuests.Count > 0)
             {
                 CreateQuestViews(_questService.ActiveQuests);
             }
-
         }
 
         private void SubscribeToServiceEvents()
@@ -78,20 +84,16 @@ namespace Presenters
             if (_questViews.ContainsKey(quest.id))
                 return;
 
-            // Создаем реактивный квест из обычного
             var reactiveQuest = new ReactiveDailyQuest(quest);
             _reactiveQuests[quest.id] = reactiveQuest;
 
-            // Создаем view
             var questView = UnityEngine.Object.Instantiate(
                 _questProvider.DailyQuestViewPrefab,
                 _questProvider.DailyQuestsParent.transform);
 
-            // Инициализируем view обычным квестом
             questView.Init(quest);
             _questViews[quest.id] = questView;
 
-            // Настраиваем реактивные подписки для этого квеста
             SetupQuestBindings(reactiveQuest, questView);
         }
 
@@ -100,19 +102,15 @@ namespace Presenters
             var questDisposables = new CompositeDisposable();
             _questDisposables[reactiveQuest.id] = questDisposables;
 
-            // Подписываемся на изменения прогресса
             reactiveQuest.CurrentProgress
                 .CombineLatest(reactiveQuest.ProgressNormalized, (progress, normalized) => new { progress, normalized })
                 .Subscribe(data =>
                 {
-                    // Обновляем слайдер
                     questView.Slider.value = data.normalized;
-                    // Обновляем текст прогресса
                     questView.SliderText.text = $"{data.progress} / {reactiveQuest.targetAmount}";
                 })
                 .AddTo(questDisposables);
 
-            // Подписываемся на изменения статуса завершения
             reactiveQuest.IsCompleted
                 .Subscribe(isCompleted =>
                 {
@@ -125,14 +123,11 @@ namespace Presenters
                 })
                 .AddTo(questDisposables);
 
-            // Подписываемся на кнопку сбора награды
             questView.CollectButton.OnClickAsObservable()
                 .Where(_ => reactiveQuest.IsCompleted.CurrentValue)
                 .Subscribe(_ => CollectQuestReward(reactiveQuest))
                 .AddTo(questDisposables);
 
-            // Синхронизируем изменения с оригинальным сервисом
-            // Это нужно для случаев, когда прогресс обновляется извне
             Observable.Interval(TimeSpan.FromSeconds(0.5f))
                 .Subscribe(_ => SyncWithService(reactiveQuest))
                 .AddTo(questDisposables);
@@ -140,7 +135,6 @@ namespace Presenters
 
         private void SyncWithService(ReactiveDailyQuest reactiveQuest)
         {
-            // Находим соответствующий квест в сервисе и синхронизируем прогресс
             var serviceQuest = _questService.ActiveQuests.FirstOrDefault(q => q.id == reactiveQuest.id);
             if (serviceQuest != null && serviceQuest.currentProgress != reactiveQuest.CurrentProgress.CurrentValue)
             {
@@ -150,23 +144,15 @@ namespace Presenters
 
         private void PlayQuestCompletionEffect(DailyQuestView questView)
         {
-            // Анимация завершения квеста
             const float animationDuration = 0.5f;
 
             Observable.Timer(TimeSpan.Zero)
-                .Subscribe(_ =>
-                {
-                    // Можно добавить твин анимации, например с помощью DOTween
-                    // questView.transform.DOScale(1.1f, animationDuration).SetLoops(2, LoopType.Yoyo);
-
-                    Debug.Log($"Quest completed animation for: {questView.QuestName.text}");
-                })
+                .Subscribe(_ => { questView.transform.DOScale(1.1f, animationDuration).SetLoops(2, LoopType.Yoyo); })
                 .AddTo(_globalDisposables);
         }
 
         private void OnQuestCompleted(DailyQuest quest)
         {
-            // Обновляем реактивный квест, если он существует
             if (_reactiveQuests.TryGetValue(quest.id, out var reactiveQuest))
             {
                 reactiveQuest.UpdateProgress(quest.currentProgress);
@@ -183,6 +169,8 @@ namespace Presenters
 
             // Здесь можно добавить логику выдачи награды через сервис
             // например: _rewardService.GiveReward(quest.reward);
+
+            _rewardService.GiveReward(quest.reward);
 
             // Анимация сбора награды
             AnimateRewardCollection(quest.id);
