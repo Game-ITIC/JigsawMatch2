@@ -130,7 +130,34 @@ public class PlayingState : GameStateBase
         {
             ClearSelection();
         }
+        
+        Vector2 worldPos = gameCamera.ScreenToWorldPoint(Input.mousePosition);
 
+        // Check if we hit an item
+        Collider2D hit = Physics2D.OverlapPoint(worldPos, 1 << LayerMask.NameToLayer("Item"));
+        if (hit != null)
+        {
+            Item item = hit.gameObject.GetComponent<Item>();
+            if (item != null)
+            {
+                if (item.currentType == ItemsTypes.HORIZONTAL_STRIPPED && levelManager.destroyAnyway.Count == 0)
+                {
+                    item.DestroyHorizontal();
+                    levelManager.DragBlocked = true;
+                    ProcessMatchedItems().Forget();
+                    // return;
+                }
+                else if (item.currentType == ItemsTypes.VERTICAL_STRIPPED && levelManager.destroyAnyway.Count == 0)
+                {
+                    item.DestroyVertical();
+                    levelManager.DragBlocked = true;
+                    ProcessMatchedItems().Forget();
+                    // return;
+                }
+            }
+        }
+        
+        
         // Clear highlights
         HighlightManager.StopAndClearAll();
     }
@@ -148,22 +175,6 @@ public class PlayingState : GameStateBase
         if (item.currentType == ItemsTypes.INGREDIENT || levelManager.DragBlocked)
         {
             Debug.Log("Item is ingredient or drag is blocked");
-            return;
-        }
-        
-        // В начале метода ProcessItemTouch, до проверки бустов:
-        if (item.currentType == ItemsTypes.HORIZONTAL_STRIPPED && levelManager.destroyAnyway.Count == 0)
-        {
-            item.DestroyHorizontal();
-            levelManager.DragBlocked = true;
-            ProcessMatchedItems().Forget();
-            return;
-        }
-        else if (item.currentType == ItemsTypes.VERTICAL_STRIPPED && levelManager.destroyAnyway.Count == 0)
-        {
-            item.DestroyVertical();
-            levelManager.DragBlocked = true;
-            ProcessMatchedItems().Forget();
             return;
         }
         
