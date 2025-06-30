@@ -23,18 +23,7 @@ public class BoostShop : MonoBehaviour
     BoostType boostType;
 
     public List<BoostProduct> boostProducts = new List<BoostProduct>();
-
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-    }
-
-    // Update is called once per frame
+    
     public void SetBoost(BoostType _boostType)
     {
         boostType = _boostType;

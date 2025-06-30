@@ -12,6 +12,7 @@ using Monobehaviours;
 using Providers;
 using UnityEngine.UI;
 using VContainer;
+using ZLinq;
 
 // Data structure for square blocks in the level
 public class SquareBlocks
@@ -60,9 +61,9 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     #endregion
 
     #region Prefabs and Objects
-    
+
     public List<CollectedIngredients> collectedIngredients = new List<CollectedIngredients>();
-    
+
     // Prefab of item
     public GameObject itemPrefab;
 
@@ -534,10 +535,20 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             {
                 if (activatedBoost.type == BoostType.ExtraMoves)
                 {
+                    //here is checking what kind of limitation in level - Moves or Time
                     if (LevelManager.Instance.limitType == LIMIT.MOVES)
-                        LevelManager.THIS.Limit += 5;
-                    else
-                        LevelManager.THIS.Limit += 30;
+                    {
+                        var model = BoostersProvider.BoostersModels.AsValueEnumerable()
+                            .First(t => t.Type == BoostType.ExtraMoves);
+
+                        if (model.HasBooster())
+                        {
+                            LevelManager.THIS.Limit += 5;
+                            model.Use();
+                        }
+                    }
+                    // else
+                    // LevelManager.THIS.Limit += 30;
 
                     ActivatedBoost = null;
                 }
@@ -691,7 +702,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         THIS = null;
         Instance = null;
-        
+
         OnMapState = null;
         OnEnterGame = null;
         OnLevelLoaded = null;
@@ -711,7 +722,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         gameStatus = GameState.Playing;
         Time.timeScale = 1;
     }
-    
+
     private void HandleLegacyState(GameState state)
     {
         if (state == GameState.PreFailedBomb)

@@ -50,6 +50,8 @@ namespace Scopes
             builder.RegisterInstance(dailyQuestSettings);
             builder.RegisterInstance(questTemplate);
 
+            builder.Register<RewardService>(Lifetime.Singleton);
+            
             builder.Register<CoinPresenter>(Lifetime.Scoped)
                 .As<IInitializable>()
                 .WithParameter(coinTextView);
