@@ -1,7 +1,9 @@
 using Configs;
 using Initializers;
+using Models;
 using Monobehaviours.Buildings;
 using Presenters;
+using Services;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using VContainer;
@@ -75,12 +77,16 @@ namespace Scopes.Country
         private TextView gemTextView;
 
         [SerializeField] private InAppView inAppView;
-        
+
+        [SerializeField] private BuildingsAnimationConfig buildingsAnimationConfig;
+        [SerializeField] private HideUnhideScript hideUnhideScript;
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(menuView);
             builder.RegisterComponent(buildingShopManager);
             builder.RegisterComponent(inAppView);
+            builder.RegisterComponent(buildingsAnimationConfig);
+            builder.RegisterComponent(hideUnhideScript);
             
             builder.RegisterInstance(countryConfig);
             
@@ -103,6 +109,9 @@ namespace Scopes.Country
             builder.Register<DailyRewardsPresenter>(Lifetime.Scoped)
                 .As<IInitializable>()
                 .WithParameter(menuView.DailyButton);
+
+            builder.Register<RegionModel>(Lifetime.Singleton).WithParameter(buildingsAnimationConfig);
+            builder.Register<RegionUpgradeService>(Lifetime.Singleton);
             
             ConfigureCountry(builder);
         }

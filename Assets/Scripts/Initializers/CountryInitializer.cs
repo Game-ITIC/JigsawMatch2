@@ -8,6 +8,7 @@ using Gley.EasyIAP;
 using Itic.Scopes;
 using Models;
 using Providers;
+using Services;
 using Services.InApp;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -30,6 +31,9 @@ namespace Initializers
         private readonly InAppConfig _inAppConfig;
         private readonly BoostersProvider _boostersProvider;
         private readonly LevelConfig _levelConfig;
+        private readonly RegionModel _regionModel;
+        private readonly RegionUpgradeService _regionUpgradeService;
+        private readonly HideUnhideScript _hideUnhideScript;
 
         public CountryInitializer(MenuView menuView,
             SceneLoader sceneLoader,
@@ -40,7 +44,10 @@ namespace Initializers
             InternetState internetState,
             InAppConfig inAppConfig,
             BoostersProvider boostersProvider,
-            LevelConfig levelConfig
+            LevelConfig levelConfig,
+            RegionModel regionModel,
+            RegionUpgradeService regionUpgradeService,
+            HideUnhideScript hideUnhideScript
         )
         {
             _menuView = menuView;
@@ -53,6 +60,9 @@ namespace Initializers
             _inAppConfig = inAppConfig;
             _boostersProvider = boostersProvider;
             _levelConfig = levelConfig;
+            _regionModel = regionModel;
+            _regionUpgradeService = regionUpgradeService;
+            _hideUnhideScript = hideUnhideScript;
         }
 
         public void Initialize()
@@ -66,6 +76,9 @@ namespace Initializers
             _menuView.InAppButton.onClick.AddListener(ShowInAppView);
             _menuView.MapButton.onClick.RemoveAllListeners();
             _menuView.MapButton.onClick.AddListener(BackToMap);
+
+            _menuView.ShopOpenButton.onClick.RemoveAllListeners();
+            _menuView.ShopOpenButton.onClick.AddListener(() => { Upgrade().Forget(); });
 
             // _inAppView.NoAdsButton.onClick.RemoveAllListeners();
             // _inAppView.NoAdsButton.onClick.AddListener(() =>
@@ -98,6 +111,36 @@ namespace Initializers
 
             var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
             _menuView.StartGameText.SetText("LEVEL " + nextLevel);
+            
+            _regionUpgradeService.Initialize(_regionModel);
+            Debug.Log(_regionModel.CurrentLevelProgress);
+            // var model = _regionModel._buildingsAnimationConfig.data[_regionModel.CurrentLevelProgress - 1];
+            
+            _regionUpgradeService.JumpToFrame(0);
+            if (_regionModel.CurrentLevelProgress != 0)
+            {
+                int endFrame = _regionModel._buildingsAnimationConfig.data[_regionModel.CurrentLevelProgress - 1]
+                    .endFrame;
+                Debug.Log(endFrame);
+                _regionUpgradeService.JumpToFrame(endFrame);
+            }
+        }
+
+        private async UniTask Upgrade()
+        {
+            if (_regionModel.CanUpgrade())
+            {
+                _regionModel.Upgrade();
+
+                int endFrame = _regionModel._buildingsAnimationConfig.data[_regionModel.CurrentLevelProgress - 1]
+                    .endFrame;
+
+                _hideUnhideScript.OnEyeButtonClick();
+
+                await _regionUpgradeService.PlayToFrame(endFrame);
+
+                _hideUnhideScript.OnEyeButtonClick();
+            }
         }
 
         private void BackToMap()
@@ -118,7 +161,7 @@ namespace Initializers
             {
                 nextLevel = _levelConfig.LevelToPlay;
             }
-            
+
             PlayerPrefs.SetInt("OpenLevel", nextLevel);
             _sceneLoader.LoadGameAsync().Forget();
         }

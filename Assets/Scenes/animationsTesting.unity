@@ -3483,8 +3483,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89644acc7a123884dacb4b14b7b338ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 2131667561142595251}
-  animationClip: {fileID: 7400000, guid: 967b20dfddc7ace4aa930c1771ebffb3, type: 2}
+  animator: {fileID: 0}
+  animationClip: {fileID: 0}
 --- !u!23 &2167978944198178601
 MeshRenderer:
   m_ObjectHideFlags: 0

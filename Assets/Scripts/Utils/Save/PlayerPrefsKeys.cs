@@ -10,5 +10,8 @@ namespace Utils.Save
         public static readonly string Life = "life";
         
         public static readonly string AsiaBuildings = "asia-buidlings";
+        public static readonly string AsiaBuildingsAnimation = "asia-buildings-animation";
+        
+        
     }
 }

@@ -14,7 +14,7 @@ public class HideUnhideScript : MonoBehaviour
     {
         eyeButton.onClick.AddListener(OnEyeButtonClick);
     }
-    private void OnEyeButtonClick()
+    public void OnEyeButtonClick()
     {
         if (isVisible == true)
         {
