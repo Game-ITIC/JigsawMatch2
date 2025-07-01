@@ -5,8 +5,11 @@ using System.Collections.Generic;
 /// <summary>
 /// Controls the visual "flower" effect that flies to items when creating special items
 /// </summary>
-public class Flower : MonoBehaviour 
+public class Flower : MonoBehaviour
 {
+    [SerializeField] private float speedInGame = 15f;
+    [SerializeField] private float speedInTheEnd = 50f;
+    
     #region Private Fields
     private Item targetItem;
     private SpriteRenderer spriteRenderer;
@@ -85,8 +88,9 @@ public class Flower : MonoBehaviour
         // Calculate movement parameters
         float startTime = Time.time;
         float distance = Vector3.Distance(startPosition, targetPosition);
-        float speed = directFly ? 50f : 5f;
         float fracJourney = 0;
+        var speed = directFly ? speedInTheEnd : speedInGame;
+        
         
         // Start particle effect
         particleSystem.Play();

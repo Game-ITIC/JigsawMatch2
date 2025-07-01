@@ -3,6 +3,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using JuiceFresh;
 using JuiceFresh.Scripts;
 using JuiceFresh.States;
@@ -123,7 +124,7 @@ public class PlayingState : GameStateBase
         // Process the selected items if we have enough of them
         if (levelManager.destroyAnyway.Count >= 3)
         {
-            ProcessMatchedItems();
+            ProcessMatchedItems().Forget();
         }
         else
         {
@@ -149,7 +150,23 @@ public class PlayingState : GameStateBase
             Debug.Log("Item is ingredient or drag is blocked");
             return;
         }
-
+        
+        // В начале метода ProcessItemTouch, до проверки бустов:
+        if (item.currentType == ItemsTypes.HORIZONTAL_STRIPPED && levelManager.destroyAnyway.Count == 0)
+        {
+            item.DestroyHorizontal();
+            levelManager.DragBlocked = true;
+            ProcessMatchedItems().Forget();
+            return;
+        }
+        else if (item.currentType == ItemsTypes.VERTICAL_STRIPPED && levelManager.destroyAnyway.Count == 0)
+        {
+            item.DestroyVertical();
+            levelManager.DragBlocked = true;
+            ProcessMatchedItems().Forget();
+            return;
+        }
+        
         // Handle boost activation
         if (ProcessBoostSelection(item))
         {
@@ -181,7 +198,6 @@ public class PlayingState : GameStateBase
         }
         else if (activeBoostType == BoostType.Shovel && item.currentType != ItemsTypes.INGREDIENT)
         {
-            
             Debug.Log("Shovel");
             return true;
         }
@@ -229,9 +245,6 @@ public class PlayingState : GameStateBase
 
     private void AddItemToSelection(Item item)
     {
-        Debug.Log("Adding item to selection, current count: " + levelManager.destroyAnyway.Count);
-
-        // Check if we need to validate distance from last item
         if (levelManager.destroyAnyway.Count > 0)
         {
             Vector2 pos1 = new Vector2(levelManager.destroyAnyway[levelManager.destroyAnyway.Count - 1].square.col,
@@ -239,30 +252,26 @@ public class PlayingState : GameStateBase
             Vector2 pos2 = new Vector2(item.square.col, item.square.row);
             offset = Vector2.Distance(pos1, pos2);
 
-            Debug.Log("Distance to last item: " + offset);
             if (offset >= ITEM_SELECTION_DISTANCE_THRESHOLD)
             {
-                Debug.Log("Item too far away, not adding");
                 offset = 0;
                 return;
             }
         }
 
-        // Add item to the list
         levelManager.destroyAnyway.Add(item);
-        Debug.Log("Item added to destroyAnyway, new count: " + levelManager.destroyAnyway.Count);
-
-        // Play sound based on how many items are selected
+        
         int selectingSoundNum = Mathf.Clamp(levelManager.destroyAnyway.Count - 1, 0, 9);
         SoundBase.Instance.PlaySound(SoundBase.Instance.selecting[selectingSoundNum]);
 
-        // Handle extra items based on selection count
         int extraItemEvery = 6; // This should come from level manager
+        
         if ((levelManager.destroyAnyway.Count % (extraItemEvery + levelManager.extraCageAddItem) == 0) &&
             item.square.cageHP <= 0)
         {
             // This would highlight or mark the item for special treatment
             Debug.Log("setlight");
+            item.SetLight();
         }
         else if ((levelManager.destroyAnyway.Count % (extraItemEvery + levelManager.extraCageAddItem) == 0) &&
                  item.square.cageHP > 0)
@@ -419,12 +428,12 @@ public class PlayingState : GameStateBase
         levelManager.ActivatedBoost = null;
     }
 
-    private void ProcessMatchedItems()
+    private async UniTask ProcessMatchedItems()
     {
         levelManager.DragBlocked = true;
 
         // Start the matching process
-        levelManager.FindMatches();
+        await levelManager.FindMatches();
 
         // Decrement moves if this is a move-limited level
         if (levelManager.limitType == LIMIT.MOVES)
@@ -583,10 +592,10 @@ public class PlayingState : GameStateBase
         }
     }
 
-    public void FindMatches()
+    public async UniTask FindMatches()
     {
         // CoroutineManager.Instance.StartManagedCoroutine("FallingDown", FallingDown());
-        levelManager.ProcessMatchesAndFalling();
+        await levelManager.ProcessMatchesAndFalling();
     }
 
     public IEnumerator TimeTick()

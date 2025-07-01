@@ -154,7 +154,7 @@ public class BoostIcon : MonoBehaviour
     {
         if (boostCount != null)
         {
-            boostCount.text = "" + PlayerPrefs.GetInt("" + type);
+            //boostCount.text = "" + PlayerPrefs.GetInt("" + type);
             if (!check)
             {
                 if (BoostCount() > 0)
