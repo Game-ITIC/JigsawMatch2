@@ -1,24 +1,66 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.Playables;
 using UnityEngine.UI;
 
 public class Test : MonoBehaviour
 {
-    [SerializeField] private Button loadInter;
-    [SerializeField] private Button showInter;
-    [SerializeField] private Button loadBan;
-    [SerializeField] private Button showBan;
+    
+    private PlayableGraph playableGraph;
+    private AnimationPlayableOutput playableOutput;
+    private AnimationClipPlayable clipPlayable;
 
-    private void Start()
+    public Animator animator;
+    public AnimationClip animationClip;
+    
+    void Start() 
     {
-        loadInter.onClick.AddListener(() => { IronSourceManager.Instance.LoadInterstitial(); });
+        playableGraph = PlayableGraph.Create();
+        playableOutput = AnimationPlayableOutput.Create(playableGraph, "Animation", animator);
+        
+        clipPlayable = AnimationClipPlayable.Create(playableGraph, animationClip);
+        playableOutput.SetSourcePlayable(clipPlayable);
+        
+        playableGraph.Play();
+    }
+    
+    [Button]
+    public void JumpToFrame(int frame)
+    {
+        float frameRate = animationClip.frameRate;
+        double targetTime = frame / frameRate;
+        
+        clipPlayable.SetTime(targetTime);
+        clipPlayable.SetSpeed(0); // Останавливаем
+        playableGraph.Evaluate(); // Принудительно обновляем
+    }
+    
+    [Button]
+    public void PlayToFrame(int targetFrame)
+    {
+        float frameRate = animationClip.frameRate;
+        double targetTime = targetFrame / frameRate;
+        
+        clipPlayable.SetSpeed(1);
+        StartCoroutine(StopAtFrame(targetTime));
+    }
 
-        showInter.onClick.AddListener(() => { IronSourceManager.Instance.ShowInterstitial(); });
-
-        loadBan.onClick.AddListener(() => { IronSourceManager.Instance.LoadBannerAd(); });
-
-        showBan.onClick.AddListener(() => { IronSourceManager.Instance.ShowBannerAd(); });
+    [Button]
+    private IEnumerator StopAtFrame(double targetTime)
+    {
+        while (clipPlayable.GetTime() < targetTime)
+        {
+            yield return null;
+        }
+        clipPlayable.SetSpeed(0);
+    }
+    
+    void OnDestroy() 
+    {
+        playableGraph.Destroy();
     }
 }
