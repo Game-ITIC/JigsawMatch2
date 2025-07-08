@@ -19,10 +19,11 @@ public class MenuView : MonoBehaviour, IPreload
     public Button InAppButton => inAppButton;
     public TextView StartGameText => startGameText;
     public Button MapButton => mapButton;
+    public Button ShopOpenButton => shopOpenButton;
 
     public void Warmup()
     {
-        shopOpenButton.onClick.RemoveAllListeners();
-        shopOpenButton.onClick.AddListener(() => { buildingShopManager.gameObject.SetActive(true); });
+        // shopOpenButton.onClick.RemoveAllListeners();
+        // shopOpenButton.onClick.AddListener(() => { buildingShopManager.gameObject.SetActive(true); });
     }
 }
