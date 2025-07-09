@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,7 +28,7 @@ namespace Views
             gameObject.SetActive(false);
         }
 
-        public void Warmup()
+        public async UniTask Warmup()
         {
             closeButton.onClick.RemoveAllListeners();
             closeButton.onClick.AddListener(Hide);

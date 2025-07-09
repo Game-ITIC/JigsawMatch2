@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Interfaces;
 using Monobehaviours.Buildings;
 using TMPro;
@@ -21,7 +22,7 @@ public class MenuView : MonoBehaviour, IPreload
     public Button MapButton => mapButton;
     public Button ShopOpenButton => shopOpenButton;
 
-    public void Warmup()
+    public async UniTask Warmup()
     {
         // shopOpenButton.onClick.RemoveAllListeners();
         // shopOpenButton.onClick.AddListener(() => { buildingShopManager.gameObject.SetActive(true); });

@@ -1,7 +1,9 @@
+using Cysharp.Threading.Tasks;
+
 namespace Interfaces
 {
     public interface IPreload
     {
-        void Warmup();
+        UniTask Warmup();
     }
 }
