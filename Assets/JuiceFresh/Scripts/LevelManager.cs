@@ -10,8 +10,10 @@ using JuiceFresh.States;
 using Models;
 using Monobehaviours;
 using Providers;
+using Services;
 using UnityEngine.UI;
 using VContainer;
+using Views;
 using ZLinq;
 
 // Data structure for square blocks in the level
@@ -502,7 +504,10 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     [Inject] public CoinModel CoinModel;
     [Inject] public Models.StarModel StarModel;
     [Inject] public GameEventDispatcher GameEventDispatcher;
+    [Inject] public AdRewardService AdRewardService;
+    [Inject] public IronSourceManager IronSourceManager;
 
+    [Inject] public GameCompleteView GameCompleteView;
     // Field of getting and setting currently activated boost
     public BoostIcon ActivatedBoost
     {

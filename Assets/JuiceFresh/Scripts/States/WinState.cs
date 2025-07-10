@@ -48,6 +48,7 @@ public class WinState : GameStateBase
         menuCompleteUI = GameObject.Find("CanvasGlobal").transform.Find("MenuComplete").gameObject;
         menuCompleteUI.SetActive(true);
         LevelManager.THIS.CoinModel.Increase(100);
+        LevelManager.THIS.GameCompleteView.CoinsCollectedText.text = 100.ToString();
         // Set up the menu content
         SetupCompleteMenu();
     }
