@@ -27,6 +27,8 @@ namespace Initializers
         private readonly GameOverView _gameOverView;
         private readonly SceneLoader _sceneLoader;
         private readonly LevelManager _levelManager;
+        private readonly AdRewardService _adRewardService;
+        private readonly IronSourceManager _ironSourceManager;
 
         public GameInitializer(
             // IronSourceManager ironSourceManager,
@@ -36,7 +38,9 @@ namespace Initializers
             GamePauseView gamePauseView,
             GameOverView gameOverView,
             SceneLoader sceneLoader,
-            LevelManager levelManager
+            LevelManager levelManager,
+            AdRewardService adRewardService,
+            IronSourceManager ironSourceManager
         )
         {
             // _ironSourceManager = ironSourceManager;
@@ -47,6 +51,8 @@ namespace Initializers
             _gameOverView = gameOverView;
             _sceneLoader = sceneLoader;
             _levelManager = levelManager;
+            _adRewardService = adRewardService;
+            _ironSourceManager = ironSourceManager;
         }
 
         public void Initialize()
@@ -54,7 +60,6 @@ namespace Initializers
             _gameCompleteView.Home.onClick.RemoveAllListeners();
             _gameCompleteView.Home.onClick.AddListener(() =>
             {
-
                 Debug.Log("gameComplete woriking");
                 var currentLevel = PlayerPrefs.GetInt("OpenLevel", 1);
                 PlayerPrefs.SetInt("OpenLevel", currentLevel + 1);
@@ -69,6 +74,13 @@ namespace Initializers
 
                 PlayerPrefs.SetInt("OpenLevel", currentLevel + 1);
                 _sceneLoader.LoadGameAsync().Forget();
+            });
+
+            _gameCompleteView.AdsButton.onClick.RemoveAllListeners();
+            _gameCompleteView.AdsButton.onClick.AddListener(() =>
+            {
+                _adRewardService.SetAdRewardType(AdRewardType.Coin);
+                IronSourceManager.Instance.ShowRewardedAd();
             });
 
             _gamePauseView.Home.onClick.RemoveAllListeners();
@@ -97,7 +109,7 @@ namespace Initializers
         public void RestartGame()
         {
             Time.timeScale = 1f;
-            _sceneLoader.LoadGameAsync().Forget(); 
+            _sceneLoader.LoadGameAsync().Forget();
         }
 
         public void BackToBack()
@@ -105,7 +117,7 @@ namespace Initializers
             Time.timeScale = 1f;
             _sceneLoader.LoadLastSceneAsync().Forget();
         }
-        
+
         public async UniTask StartAsync(CancellationToken cancellation = new CancellationToken())
         {
             _gameEvents.OnGameLost += ShowInterstitial;

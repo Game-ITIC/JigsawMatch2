@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using Interfaces;
 using Monobehaviours.Buildings;
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace Views
         
         public event Action OnBuyClicked;
 
-        public void Warmup()
+        public async UniTask Warmup()
         {
             buyButton.onClick.RemoveAllListeners();
             buyButton.onClick.AddListener(() =>

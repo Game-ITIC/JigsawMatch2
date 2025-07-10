@@ -1,7 +1,9 @@
-using com.unity3d.mediation;
 using Configs;
+using Models;
+using Unity.Services.LevelPlay;
 using UnityEngine;
 using VContainer;
+using LevelPlayAdFormat = com.unity3d.mediation.LevelPlayAdFormat;
 
 public class IronSourceManager : MonoBehaviour
 {
@@ -9,21 +11,28 @@ public class IronSourceManager : MonoBehaviour
 
     private LevelPlayInterstitialAd _interstitial;
     private LevelPlayBannerAd _banner;
+    private LevelPlayRewardedAd _rewarded;
 
-    private const int MaxRetryAttempts = 3;
+    private const int MaxRetryAttempts = 2;
     private int _retryAttempts = 0;
     private const float RetryDelay = 5f;
 
     private bool _isInitialized = false;
     private bool _bannerLoaded = false;
     private bool _interstitialLoaded = false;
+    private bool _rewardedLoaded = false; // Добавлен флаг для rewarded
 
     private IronSourceConfigSO _config;
-
+    private AdEventModel _adEventModel;
+    
     [Inject]
-    void Construct(IronSourceConfigSO config)
+    void Construct(
+        IronSourceConfigSO config,
+        AdEventModel adEventModel
+        )
     {
         _config = config;
+        _adEventModel = adEventModel;
     }
 
     private void Awake()
@@ -40,14 +49,15 @@ public class IronSourceManager : MonoBehaviour
 
     public bool AreAdsReady()
     {
-        return _isInitialized && (_banner != null) && (_interstitial != null);
+        // Включен rewarded в проверку готовности
+        return _isInitialized && (_banner != null) && (_interstitial != null) && (_rewarded != null);
     }
 
     public void InitializeLevelPlay()
     {
         Debug.Log("Start Init IronSource");
 
-        IronSource.Agent.validateIntegration();
+        LevelPlay.ValidateIntegration();
 
         LevelPlay.OnInitSuccess += LevelPlayOnInitSuccess;
         LevelPlay.OnInitFailed += LevelPlayOnInitFailed;
@@ -55,7 +65,8 @@ public class IronSourceManager : MonoBehaviour
         LevelPlay.Init(_config.AppKey, null, new[]
         {
             LevelPlayAdFormat.BANNER,
-            LevelPlayAdFormat.INTERSTITIAL
+            LevelPlayAdFormat.INTERSTITIAL,
+            LevelPlayAdFormat.REWARDED
         });
     }
 
@@ -67,6 +78,7 @@ public class IronSourceManager : MonoBehaviour
 
         RegisterBanner();
         RegisterInterstitial();
+        RegisterRewarded(); // Добавлена регистрация rewarded
     }
 
     private void LevelPlayOnInitFailed(LevelPlayInitError obj)
@@ -90,8 +102,11 @@ public class IronSourceManager : MonoBehaviour
     private void RegisterBanner()
     {
         Debug.Log("Register Banner");
-        var adSize = LevelPlayAdSize.CreateAdaptiveAdSize();
-        _banner = new LevelPlayBannerAd(_config.BannerId, adSize);
+        com.unity3d.mediation.LevelPlayAdSize adSize = com.unity3d.mediation.LevelPlayAdSize.CreateAdaptiveAdSize();
+
+        var config = new LevelPlayBannerAd.Config.Builder().SetSize(adSize).Build();
+        
+        _banner = new LevelPlayBannerAd(_config.BannerId);
 
         _banner.OnAdLoaded += BannerOnAdLoadedEvent;
         _banner.OnAdLoadFailed += BannerOnAdLoadFailedEvent;
@@ -281,6 +296,120 @@ public class IronSourceManager : MonoBehaviour
 
     #endregion
 
+    #region Rewarded
+
+    // Переименован метод для соответствия паттерну
+    private void RegisterRewarded()
+    {
+        Debug.Log("Register Rewarded");
+        
+        //Create RewardedAd instance
+        _rewarded = new LevelPlayRewardedAd(_config.RewardedId);
+
+        //Subscribe RewardedAd events
+        _rewarded.OnAdLoaded += RewardedOnAdLoadedEvent;
+        _rewarded.OnAdLoadFailed += RewardedOnAdLoadFailedEvent;
+        _rewarded.OnAdDisplayed += RewardedOnAdDisplayedEvent;
+        _rewarded.OnAdDisplayFailed += RewardedOnAdDisplayFailedEvent;
+        _rewarded.OnAdClicked += RewardedOnAdClickedEvent;
+        _rewarded.OnAdClosed += RewardedOnAdClosedEvent;
+        _rewarded.OnAdRewarded += RewardedOnAdRewarded;
+        _rewarded.OnAdInfoChanged += RewardedOnAdInfoChangedEvent;
+
+        // Сразу загрузим
+        LoadRewardedAd();
+    }
+
+    public void LoadRewardedAd()
+    {
+        if (_rewarded == null) return;
+        Debug.Log("Load Rewarded");
+        _rewardedLoaded = false;
+        //Load or reload RewardedAd     
+        _rewarded.LoadAd();
+    }
+
+    public void ShowRewardedAd()
+    {
+        if (_rewarded == null)
+        {
+            Debug.LogWarning("Rewarded not created yet.");
+            return;
+        }
+
+        //Show RewardedAd, check if the ad is ready before showing
+        if (_rewarded.IsAdReady())
+        {
+            Debug.Log("Show Rewarded");
+            _rewarded.ShowAd();
+        }
+        else
+        {
+            Debug.LogWarning("Rewarded not loaded yet, retry load...");
+            LoadRewardedAd();
+        }
+    }
+
+    public void DestroyRewardedAd()
+    {
+        if (_rewarded != null)
+        {
+            _rewarded.DestroyAd();
+            _rewarded = null;
+        }
+
+        Debug.Log("Rewarded destroyed.");
+    }
+
+    //Implement RewardedAd events
+    private void RewardedOnAdLoadedEvent(LevelPlayAdInfo adInfo)
+    {
+        Debug.Log("Rewarded Loaded");
+        _rewardedLoaded = true;
+    }
+
+    private void RewardedOnAdLoadFailedEvent(LevelPlayAdError ironSourceError)
+    {
+        Debug.LogError("Rewarded Load Failed: " + ironSourceError.ErrorMessage);
+        Invoke(nameof(LoadRewardedAd), RetryDelay);
+    }
+
+    private void RewardedOnAdClickedEvent(LevelPlayAdInfo adInfo)
+    {
+        Debug.Log("Rewarded Clicked");
+    }
+
+    private void RewardedOnAdDisplayedEvent(LevelPlayAdInfo adInfo)
+    {
+        Debug.Log("Rewarded Displayed");
+    }
+
+    private void RewardedOnAdDisplayFailedEvent(LevelPlayAdDisplayInfoError adInfoError)
+    {
+        Debug.LogError("Rewarded Display Failed: " + adInfoError.LevelPlayError.ErrorMessage);
+    }
+
+    private void RewardedOnAdClosedEvent(LevelPlayAdInfo adInfo)
+    {
+        Debug.Log("Rewarded Closed. Reloading...");
+        LoadRewardedAd();
+    }
+
+    private void RewardedOnAdRewarded(LevelPlayAdInfo adInfo, LevelPlayReward adReward)
+    {
+        Debug.Log($"Rewarded Ad - User earned reward: {adReward.Amount} {adReward.Name}");
+        // Здесь добавить логику выдачи награды игроку
+        _adEventModel.InvokeOnRewardedReward();
+    }
+
+    private void RewardedOnAdInfoChangedEvent(LevelPlayAdInfo adInfo)
+    {
+        // При изменении параметров рекламы
+        Debug.Log("Rewarded AdInfo Changed");
+    }
+
+    #endregion
+
     void OnApplicationPause(bool isPaused)
     {
         IronSource.Agent.onApplicationPause(isPaused);
@@ -294,5 +423,6 @@ public class IronSourceManager : MonoBehaviour
         // Обязательно уничтожаем рекламу, чтобы освободить ресурсы
         DestroyBannerAd();
         DestroyInterstitial();
+        DestroyRewardedAd(); // Добавлено уничтожение rewarded
     }
 }

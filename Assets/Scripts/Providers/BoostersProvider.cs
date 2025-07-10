@@ -3,6 +3,7 @@ using Models;
 using Newtonsoft.Json;
 using UnityEngine;
 using Utils.Save;
+using ZLinq;
 
 namespace Providers
 {
@@ -15,6 +16,11 @@ namespace Providers
             Load();
         }
 
+        public BoosterModel GetBoosterModel(BoostType boostType)
+        {
+            return BoostersModels.AsValueEnumerable().First(v => v.Type == boostType);
+        }
+        
         public void Load()
         {
             var value = PlayerPrefs.GetString(PlayerPrefsKeys.Boosters, "empty");
@@ -34,7 +40,7 @@ namespace Providers
                 BoostersModels = JsonConvert.DeserializeObject<List<BoosterModel>>(value);
             }
         }
-
+        
         public void Save()
         {
             var value = JsonConvert.SerializeObject(BoostersModels);

@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Services;
 using Unity.VisualScripting;
 
 public enum BoostType
@@ -65,6 +66,12 @@ public class BoostShop : MonoBehaviour
         int count = int.Parse(button.transform.Find("Count").GetComponent<Text>().text.Replace("x", ""));
         int price = int.Parse(button.transform.Find("Price").GetComponent<Text>().text);
         GetComponent<AnimationManager>().BuyBoost(boostType, price, count);
+    }
+
+    public void WatchAd()
+    {
+        LevelManager.Instance.AdRewardService.SetAdRewardType(AdRewardType.Booster, boostType);
+        LevelManager.Instance.IronSourceManager.ShowRewardedAd();
     }
 }
 

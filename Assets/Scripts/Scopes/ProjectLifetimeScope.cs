@@ -35,7 +35,7 @@ namespace Scopes
             builder.Register<LifeModel>(Lifetime.Singleton);
             builder.Register<Models.StarModel>(Lifetime.Singleton);
 
-            builder.RegisterEntryPoint<ProjectInitializer>();
+            // builder.RegisterEntryPoint<ProjectInitializer>();
         }
     }
 }

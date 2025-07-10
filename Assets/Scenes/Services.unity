@@ -123,6 +123,50 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &299676440
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 299676442}
+  - component: {fileID: 299676441}
+  m_Layer: 0
+  m_Name: IronSourceManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &299676441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 299676440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91b1c81fb65845d48463848fbaeba8dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &299676442
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 299676440}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 770.99274, y: 1285.1327, z: -12.034154}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &771506831
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,6 +604,51 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &1661985464
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1661985466}
+  - component: {fileID: 1661985465}
+  m_Layer: 0
+  m_Name: IronSourceInitializer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1661985465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661985464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2996b40a6bba431db552ce33ebb3d418, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxWaitTime: 5
+--- !u!4 &1661985466
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661985464}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 770.99274, y: 1285.1327, z: -12.034154}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1966903335
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,6 +749,10 @@ MonoBehaviour:
   inAppConfig: {fileID: 11400000, guid: b61bce8b40b69c34bbbe4be5a1fb56ea, type: 2}
   levelConfig: {fileID: 11400000, guid: 476c7f1808b505a4a88601d77775607d, type: 2}
   systemDebug: {fileID: 2108957127}
+  ironSourceInitializer: {fileID: 1661985465}
+  ironSourceManager: {fileID: 299676441}
+  ironSourceConfig: {fileID: 11400000, guid: 19ac60da37b0f1a4aa1f738d78c0b15d, type: 2}
+  sceneLoadingConfig: {fileID: 11400000, guid: b60cfcfcdc8f0e34ea18df06b0526a40, type: 2}
 --- !u!114 &2108957127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -677,3 +770,5 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 2108957125}
+  - {fileID: 299676442}
+  - {fileID: 1661985466}
