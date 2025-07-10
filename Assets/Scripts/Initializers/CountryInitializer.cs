@@ -10,6 +10,7 @@ using Models;
 using Providers;
 using Services;
 using Services.InApp;
+using Systems;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using VContainer.Unity;
@@ -34,6 +35,7 @@ namespace Initializers
         private readonly RegionModel _regionModel;
         private readonly RegionUpgradeService _regionUpgradeService;
         private readonly HideUnhideScript _hideUnhideScript;
+        private readonly HealthSystem _healthSystem;
 
         public CountryInitializer(MenuView menuView,
             SceneLoader sceneLoader,
@@ -47,7 +49,8 @@ namespace Initializers
             LevelConfig levelConfig,
             RegionModel regionModel,
             RegionUpgradeService regionUpgradeService,
-            HideUnhideScript hideUnhideScript
+            HideUnhideScript hideUnhideScript,
+            HealthSystem healthSystem
         )
         {
             _menuView = menuView;
@@ -63,6 +66,7 @@ namespace Initializers
             _regionModel = regionModel;
             _regionUpgradeService = regionUpgradeService;
             _hideUnhideScript = hideUnhideScript;
+            _healthSystem = healthSystem;
         }
 
         public void Initialize()
@@ -111,11 +115,11 @@ namespace Initializers
 
             var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
             _menuView.StartGameText.SetText("LEVEL " + nextLevel);
-            
+
             _regionUpgradeService.Initialize(_regionModel);
             Debug.Log(_regionModel.CurrentLevelProgress);
             // var model = _regionModel._buildingsAnimationConfig.data[_regionModel.CurrentLevelProgress - 1];
-            
+
             _regionUpgradeService.JumpToFrame(0);
             if (_regionModel.CurrentLevelProgress != 0)
             {
@@ -162,8 +166,12 @@ namespace Initializers
                 nextLevel = _levelConfig.LevelToPlay;
             }
 
-            PlayerPrefs.SetInt("OpenLevel", nextLevel);
-            _sceneLoader.LoadGameAsync().Forget();
+            if (_healthSystem.CanPlay)
+            {
+                _healthSystem.TryUseLife();
+                PlayerPrefs.SetInt("OpenLevel", nextLevel);
+                _sceneLoader.LoadGameAsync().Forget();
+            }
         }
 
         private async UniTaskVoid HandlePurchaseInApp(ShopProductNames shopProduct)

@@ -6,6 +6,7 @@ using Itic.Services;
 using Models;
 using Providers;
 using Services;
+using Systems;
 using UnityEngine;
 using Utils.Debug;
 using VContainer;
@@ -47,6 +48,8 @@ namespace Scopes
             builder.Register<GemModel>(Lifetime.Singleton);
             builder.Register<LifeModel>(Lifetime.Singleton);
             builder.Register<Models.StarModel>(Lifetime.Singleton);
+            
+            builder.Register<HealthSystem>(Lifetime.Singleton);
 
             builder.Register<SceneModel>(Lifetime.Singleton);
             builder.Register<ScreenService>(Lifetime.Singleton).AsSelf();

@@ -80,7 +80,7 @@ namespace Initializers
             _gameCompleteView.AdsButton.onClick.AddListener(() =>
             {
                 _adRewardService.SetAdRewardType(AdRewardType.Coin);
-                IronSourceManager.Instance.ShowRewardedAd();
+                IronSourceManager.Instance.ShowRewardedAd(); 
             });
 
             _gamePauseView.Home.onClick.RemoveAllListeners();

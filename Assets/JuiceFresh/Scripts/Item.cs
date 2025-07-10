@@ -49,7 +49,7 @@ public class Item : MonoBehaviour
     private float xScale;
     private float yScale;
     private Text timerText;
-    private GameObject light;
+    private GameObject _light;
     private bool extraChecked;
     private int COLOR;
     #endregion
@@ -311,8 +311,8 @@ public class Item : MonoBehaviour
         if (currentType != ItemsTypes.BOMB)
             sprRenderer.sprite = items[color];
             
-        if (light != null)
-            light.SetActive(false);
+        if (_light != null)
+            _light.SetActive(false);
     }
 
     public void SetAppeared()
@@ -527,19 +527,19 @@ public class Item : MonoBehaviour
 
     public void SetLight()
     {
-        if (light == null)
+        if (_light == null)
         {
-            light = Instantiate(bombSelection) as GameObject;
-            light.transform.SetParent(transform);
-            light.name = "BombSelection";
-            light.transform.localPosition = Vector3.zero;
+            _light = Instantiate(bombSelection) as GameObject;
+            _light.transform.SetParent(transform);
+            _light.name = "BombSelection";
+            _light.transform.localPosition = Vector3.zero;
             
             if (currentType == ItemsTypes.BOMB)
-                light.transform.localScale = Vector3.one * 3.6f;
+                _light.transform.localScale = Vector3.one * 3.6f;
             else
-                light.transform.localScale = Vector3.one * 2f;
+                _light.transform.localScale = Vector3.one * 2f;
         }
-        light.SetActive(true);
+        _light.SetActive(true);
     }
     #endregion
 

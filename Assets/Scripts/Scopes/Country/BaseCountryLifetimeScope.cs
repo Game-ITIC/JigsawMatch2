@@ -75,6 +75,9 @@ namespace Scopes.Country
 
         [LabelText("Gems Display")] [Tooltip("Text view for displaying player's gems")] [SerializeField]
         private TextView gemTextView;
+        
+        [LabelText("Lifes Display")] [Tooltip("Text view for displaying player's lifes")] [SerializeField]
+        private TextView lifeTextView;
 
         [SerializeField] private InAppView inAppView;
 
@@ -109,6 +112,10 @@ namespace Scopes.Country
             builder.Register<DailyRewardsPresenter>(Lifetime.Scoped)
                 .As<IInitializable>()
                 .WithParameter(menuView.DailyButton);
+
+            builder.Register<LifePresenter>(Lifetime.Scoped)
+                .As<IInitializable>()
+                .WithParameter(lifeTextView);
 
             builder.Register<RegionModel>(Lifetime.Singleton).WithParameter(buildingsAnimationConfig);
             builder.Register<RegionUpgradeService>(Lifetime.Singleton);

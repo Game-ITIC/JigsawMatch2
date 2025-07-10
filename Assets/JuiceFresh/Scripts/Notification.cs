@@ -34,9 +34,9 @@ public class Notification : MonoBehaviour
     void Start()
     {
         // text = GetComponent<Text>();
-        TotalTimeForRestLife = InitScript.Instance.TotalTimeForRestLifeHours * 60 * 60 +
-                               InitScript.Instance.TotalTimeForRestLifeMin * 60 +
-                               InitScript.Instance.TotalTimeForRestLifeSec;
+        // TotalTimeForRestLife = InitScript.Instance.TotalTimeForRestLifeHours * 60 * 60 +
+        //                        InitScript.Instance.TotalTimeForRestLifeMin * 60 +
+        //                        InitScript.Instance.TotalTimeForRestLifeSec;
 
         // if (InitScript.lifes < InitScript.Instance.CapOfLife)
         // {
