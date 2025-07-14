@@ -1,4 +1,5 @@
 ﻿using System;
+using Configs;
 using R3;
 using UnityEngine;
 using Utils.Save;
@@ -21,8 +22,9 @@ namespace Systems
         public int MaxLives => _maxLives;
         public bool CanPlay => _currentLives.Value > 0;
 
-        public HealthSystem()
+        public HealthSystem(GameConfig gameConfig)
         {
+            _maxLives = gameConfig.MaxLifes;
             LoadData();
         }
 

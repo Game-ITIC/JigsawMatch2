@@ -20,13 +20,14 @@ namespace Scopes
         [SerializeField] private LoadingScreenView loadingScreenView;
         [SerializeField] private InAppConfig inAppConfig;
         [SerializeField] private LevelConfig levelConfig;
+        [SerializeField] private GameConfig gameConfig;
         [SerializeField] private SystemDebug systemDebug;
 
         [SerializeField] private IronSourceInitializer ironSourceInitializer;
         [SerializeField] private IronSourceManager ironSourceManager;
         [SerializeField] private IronSourceConfigSO ironSourceConfig;
         [SerializeField] private SceneLoadingConfig sceneLoadingConfig;
-
+        
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -34,6 +35,7 @@ namespace Scopes
             builder.RegisterComponent(systemDebug);
             builder.RegisterInstance(inAppConfig);
             builder.RegisterInstance(levelConfig);
+            builder.RegisterInstance(gameConfig);
 
             builder.RegisterComponent(ironSourceInitializer);
             builder.RegisterComponent(ironSourceManager);

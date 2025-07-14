@@ -130,7 +130,7 @@ public class PlayingState : GameStateBase
         {
             ClearSelection();
         }
-        
+
         Vector2 worldPos = gameCamera.ScreenToWorldPoint(Input.mousePosition);
 
         // Check if we hit an item
@@ -156,8 +156,8 @@ public class PlayingState : GameStateBase
                 }
             }
         }
-        
-        
+
+
         // Clear highlights
         HighlightManager.StopAndClearAll();
     }
@@ -177,7 +177,7 @@ public class PlayingState : GameStateBase
             Debug.Log("Item is ingredient or drag is blocked");
             return;
         }
-        
+
         // Handle boost activation
         if (ProcessBoostSelection(item))
         {
@@ -271,12 +271,12 @@ public class PlayingState : GameStateBase
         }
 
         levelManager.destroyAnyway.Add(item);
-        
+
         int selectingSoundNum = Mathf.Clamp(levelManager.destroyAnyway.Count - 1, 0, 9);
         SoundBase.Instance.PlaySound(SoundBase.Instance.selecting[selectingSoundNum]);
 
         int extraItemEvery = 6; // This should come from level manager
-        
+
         if ((levelManager.destroyAnyway.Count % (extraItemEvery + levelManager.extraCageAddItem) == 0) &&
             item.square.cageHP <= 0)
         {
@@ -366,7 +366,8 @@ public class PlayingState : GameStateBase
                     // Обработка разных типов бустов
                     BoostType? activeBoostType = levelManager.ActivatedBoost?.type ?? null;
 
-                    var boosterModel = levelManager.BoostersProvider.BoostersModels.Find(v => v.Type == activeBoostType);
+                    var boosterModel =
+                        levelManager.BoostersProvider.BoostersModels.Find(v => v.Type == activeBoostType);
 
                     if (activeBoostType == BoostType.Bomb && item.currentType != ItemsTypes.INGREDIENT)
                     {
@@ -383,6 +384,7 @@ public class PlayingState : GameStateBase
                         ActivateEnergyBoost(square);
                         boosterModel.Use();
                     }
+
                     levelManager.BoostersProvider.Save();
                 }
             }
@@ -454,7 +456,13 @@ public class PlayingState : GameStateBase
 
         // Increment the move counter
         levelManager.moveID++;
-
+        
+        if (!HasPossibleMoves())
+        {
+            HandleNoMatches();
+            return;
+        }
+        
         // Check win/lose conditions after the move
         levelManager.CheckWinLose();
     }
@@ -645,5 +653,92 @@ public class PlayingState : GameStateBase
             // Запустить новую корутину таймера
             CoroutineManager.Instance.StartManagedCoroutine("TimeTick", TimeTick());
         }
+    }
+
+    private bool HasPossibleMoves()
+    {
+        // Проверить все возможные стартовые позиции
+        for (int row = 0; row < levelManager.maxRows; row++)
+        {
+            for (int col = 0; col < levelManager.maxCols; col++)
+            {
+                Square startSquare = levelManager.GetSquare(col, row);
+                if (startSquare?.item != null && startSquare.item.currentType == ItemsTypes.NONE)
+                {
+                    // Проверить все 8 направлений от этой позиции
+                    if (CanMakeLineFromPosition(col, row, startSquare.item.color))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private bool CanMakeLineFromPosition(int startCol, int startRow, int color)
+    {
+        // 8 направлений: горизонталь, вертикаль, диагонали
+        int[,] directions =
+        {
+            { -1, 0 }, // влево
+            { 1, 0 }, // вправо  
+            { 0, -1 }, // вверх
+            { 0, 1 }, // вниз
+            { -1, -1 }, // влево-вверх
+            { 1, -1 }, // вправо-вверх
+            { -1, 1 }, // влево-вниз
+            { 1, 1 } // вправо-вниз
+        };
+
+        for (int dir = 0; dir < 8; dir++)
+        {
+            int deltaCol = directions[dir, 0];
+            int deltaRow = directions[dir, 1];
+
+            if (CountItemsInDirection(startCol, startRow, deltaCol, deltaRow, color) >= 3)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private int CountItemsInDirection(int startCol, int startRow, int deltaCol, int deltaRow, int color)
+    {
+        int count = 1; // Считаем стартовый элемент
+        int currentCol = startCol;
+        int currentRow = startRow;
+
+        // Идем в заданном направлении
+        while (true)
+        {
+            currentCol += deltaCol;
+            currentRow += deltaRow;
+
+            Square square = levelManager.GetSquare(currentCol, currentRow);
+
+            // Проверяем границы и наличие подходящего элемента
+            if (square?.item == null ||
+                square.item.currentType != ItemsTypes.NONE ||
+                square.item.color != color)
+            {
+                break;
+            }
+
+            count++;
+
+            // Проверяем расстояние (как в оригинальной логике)
+            Vector2 pos1 = new Vector2(startCol, startRow);
+            Vector2 pos2 = new Vector2(currentCol, currentRow);
+            if (Vector2.Distance(pos1, pos2) >= ITEM_SELECTION_DISTANCE_THRESHOLD * (count - 1))
+            {
+                break;
+            }
+        }
+
+        return count;
     }
 }

@@ -62,7 +62,7 @@ public class EventsListener : MonoBehaviour
     void OnWin()
     {
         //AnalyticsEvent("OnWin", LevelManager.THIS.currentLevel);
-        InitScript.Instance.AddGems(15);
+        // InitScript.Instance.AddGems(15);
         //InitScript.Instance.AddStars(3);
         // TinySauce.OnGameFinished(true, LevelManager.Score, LevelManager.THIS.currentLevel);
         gameEventDispatcher.DispatchWin();

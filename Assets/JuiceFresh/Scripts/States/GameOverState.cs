@@ -21,6 +21,8 @@ namespace JuiceFresh.States
 
             levelManager.GameEventDispatcher.DispatchLose();
             LevelManager.TriggerOnLose();
+
+            LevelManager.THIS.HealthSystem.TryUseLife();
         }
 
         public override void UpdateState()

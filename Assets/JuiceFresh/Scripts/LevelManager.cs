@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Configs;
 using Cysharp.Threading.Tasks;
 using JuiceFresh;
 using JuiceFresh.Scripts;
@@ -11,6 +12,8 @@ using Models;
 using Monobehaviours;
 using Providers;
 using Services;
+using Systems;
+using UI;
 using UnityEngine.UI;
 using VContainer;
 using Views;
@@ -506,8 +509,10 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     [Inject] public GameEventDispatcher GameEventDispatcher;
     [Inject] public AdRewardService AdRewardService;
     [Inject] public IronSourceManager IronSourceManager;
-
+    [Inject] public GameProvider GameProvider;
     [Inject] public GameCompleteView GameCompleteView;
+    [Inject] public GameConfig GameConfig;
+    [Inject] public HealthSystem HealthSystem;
     // Field of getting and setting currently activated boost
     public BoostIcon ActivatedBoost
     {

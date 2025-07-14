@@ -1,4 +1,5 @@
 using Configs;
+using R3;
 using UnityEngine;
 using Utils.Save;
 
@@ -8,7 +9,14 @@ namespace Models
     {
         private readonly StarModel _starModel;
         public readonly BuildingsAnimationConfig _buildingsAnimationConfig;
-        public int CurrentLevelProgress { get; private set; } = 0;
+
+        public int CurrentLevelProgress
+        {
+            get => CurrentLevelProgressReactiveProperty.Value;
+            private set => CurrentLevelProgressReactiveProperty.Value = value;
+        }
+
+        public readonly ReactiveProperty<int> CurrentLevelProgressReactiveProperty = new();
 
         public RegionModel(
             StarModel starModel,

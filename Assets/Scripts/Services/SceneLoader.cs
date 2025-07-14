@@ -59,12 +59,17 @@ namespace Itic.Scopes
                     throw new ArgumentOutOfRangeException(nameof(country), country, null);
             }
         }
-        
+
         public async UniTask LoadLastSceneAsync()
         {
-            if (_sceneModel.LastCountryConfig == null) return;
-
-            await LoadRegionScene(_sceneModel.LastCountryConfig.countryId);
+            if (_sceneModel.LastCountryConfig == null)
+            {
+                await LoadAsiaRegionAsync();
+            }
+            else
+            {
+                await LoadRegionScene(_sceneModel.LastCountryConfig.countryId);
+            }
         }
 
         private async UniTask LoadSceneAsync(int index)

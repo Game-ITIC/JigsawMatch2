@@ -30,8 +30,8 @@ namespace Views
 
         public async UniTask Warmup()
         {
-            closeButton.onClick.RemoveAllListeners();
-            closeButton.onClick.AddListener(Hide);
+            // closeButton.onClick.RemoveAllListeners();
+            // closeButton.onClick.AddListener(Hide);
         }
     }
 }

@@ -65,12 +65,17 @@ public class BoostShop : MonoBehaviour
     {
         int count = int.Parse(button.transform.Find("Count").GetComponent<Text>().text.Replace("x", ""));
         int price = int.Parse(button.transform.Find("Price").GetComponent<Text>().text);
-        GetComponent<AnimationManager>().BuyBoost(boostType, price, count);
+        
+        GetComponent<AnimationManager>().BuyBoost(boostType, price, count, boostProducts[(int)boostType].icon);
     }
 
     public void WatchAd()
     {
+        var boostProduct = boostProducts[(int)boostType];
+        icon.sprite = boostProduct.icon;
+        
         LevelManager.Instance.AdRewardService.SetAdRewardType(AdRewardType.Booster, boostType);
+        LevelManager.Instance.AdRewardService.SetInfo(boostProduct.icon, $"You got {boostType}");
         LevelManager.Instance.IronSourceManager.ShowRewardedAd();
     }
 }

@@ -26,7 +26,7 @@ namespace Itic.Services
         public async UniTask StartAsync(CancellationToken cancellation)
         {
             await _adsInitializer.Warmup();
-            await _sceneLoader.LoadMapAsync();
+            await _sceneLoader.LoadAsiaRegionAsync();
         }
     }
 }

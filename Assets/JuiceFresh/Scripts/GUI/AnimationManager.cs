@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Services;
 using UnityEngine.SceneManagement;
 using ZLinq;
 
@@ -13,13 +14,12 @@ using ZLinq;
 //#endif
 
 
-
-
 public class AnimationManager : MonoBehaviour
 {
-    public static AnimationManager THIS; 
+    public static AnimationManager THIS;
 
     public bool PlayOnEnable = true;
+
     //bool WaitForPickupFriends;
     public GameObject fireworkPrefab;
 
@@ -41,6 +41,7 @@ public class AnimationManager : MonoBehaviour
             //if( !GetComponent<SequencePlayer>().sequenceArray[0].isPlaying )
             //    GetComponent<SequencePlayer>().Play();
         }
+
         if (name == "MenuPlay")
         {
             // LoadLevel(PlayerPrefs.GetInt("OpenLevel"));
@@ -73,6 +74,7 @@ public class AnimationManager : MonoBehaviour
         {
             // GameObject
         }
+
         if (name == "PreFailed")
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.gameOver[0]);
@@ -93,24 +95,25 @@ public class AnimationManager : MonoBehaviour
                 transform.Find("Image/Music/MusicOff").gameObject.SetActive(true);
             else
                 transform.Find("Image/Music/MusicOff").gameObject.SetActive(false);
-
         }
 
         if (name == "GemsShop")
         {
             for (int i = 1; i <= 4; i++)
             {
-                transform.Find("Image/Pack" + i + "/Count").GetComponent<Text>().text = "" + LevelManager.THIS.gemsProducts[i - 1].count;
-                transform.Find("Image/Pack" + i + "/Buy/Price").GetComponent<Text>().text = "" + LevelManager.THIS.gemsProducts[i - 1].price;
+                transform.Find("Image/Pack" + i + "/Count").GetComponent<Text>().text =
+                    "" + LevelManager.THIS.gemsProducts[i - 1].count;
+                transform.Find("Image/Pack" + i + "/Buy/Price").GetComponent<Text>().text =
+                    "" + LevelManager.THIS.gemsProducts[i - 1].price;
             }
         }
+
         if (name == "MenuComplete")
         {
             for (int i = 1; i <= 3; i++)
             {
                 transform.Find("Image/Star" + i + "/Star").gameObject.SetActive(false);
             }
-
         }
         //if (transform.Find("Image/Video") != null)
         //{
@@ -140,10 +143,10 @@ public class AnimationManager : MonoBehaviour
 
     void Update()
     {
-
         if (Input.GetKeyUp(KeyCode.Escape))
         {
-            if (name == "MenuPlay" || name == "Settings" || name == "BoostInfo" || name == "GemsShop" || name == "LiveShop" || name == "BoostShop" || name == "Reward")
+            if (name == "MenuPlay" || name == "Settings" || name == "BoostInfo" || name == "GemsShop" ||
+                name == "LiveShop" || name == "BoostShop" || name == "Reward")
                 CloseMenu();
         }
     }
@@ -192,20 +195,22 @@ public class AnimationManager : MonoBehaviour
         if (name == "MenuComplete")
         {
             StartCoroutine(MenuComplete());
-            StartCoroutine(MenuCompleteScoring());
+            // StartCoroutine(MenuCompleteScoring());
         }
+
         if (name == "Reward")
         {
             //StartCoroutine(FireworkParticles());
         }
+
         if (name == "MenuPlay")
         {
             //            InitScript.Instance.currentTarget = InitScript.Instance.targets[PlayerPrefs.GetInt( "OpenLevel" )];
             //transform.Find("Image/Boost1").GetComponent<BoostIcon>().InitBoost();
             //transform.Find("Image/Boost2").GetComponent<BoostIcon>().InitBoost();
             // transform.Find("Image/Boost3").GetComponent<BoostIcon>().InitBoost();
-
         }
+
         if (name == "MenuPause")
         {
             if (LevelManager.THIS.gameStatus == GameState.Playing)
@@ -222,6 +227,7 @@ public class AnimationManager : MonoBehaviour
             {
                 TargetCheck(true, 2);
             }
+
             if (LevelManager.THIS.target == Target.BLOCKS)
             {
                 if (LevelManager.THIS.TargetBlocks > 0)
@@ -255,26 +261,24 @@ public class AnimationManager : MonoBehaviour
                     TargetCheck(true, 1);
                 }
             }
-
-
         }
+
         if (name == "PrePlay")
         {
             CloseMenu();
             LevelManager.THIS.gameStatus = GameState.WaitForPopup;
-
         }
+
         if (name == "MenuFailed")
         {
             if (LevelManager.THIS.Limit <= 0)
             {
-                if (LevelManager.THIS.gameStatus != GameState.GameOver)//1.3.3
+                if (LevelManager.THIS.gameStatus != GameState.GameOver) //1.3.3
                     LevelManager.THIS.gameStatus = GameState.GameOver;
             }
             //transform.Find("Image/Video").gameObject.SetActive(false);
 
             //    CloseMenu();
-
         }
 
         if (name.Contains("gratzWord"))
@@ -283,7 +287,6 @@ public class AnimationManager : MonoBehaviour
             gameObject.SetActive(false);
         if (name == "CompleteLabel")
             gameObject.SetActive(false);
-
     }
 
     void TargetCheck(bool check, int n = 1)
@@ -352,19 +355,20 @@ public class AnimationManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
         //StartCoroutine(FireworkParticles());
-
     }
 
     IEnumerator MenuCompleteScoring()
     {
-        Text scores = transform.Find("Image").Find("Score").GetComponent<Text>();
-        for (int i = 0; i <= LevelManager.Score; i += 500)
-        {
-            scores.text = "" + i;
+        // Text scores = transform.Find("Image").Find("Score").GetComponent<Text>();
+        // for (int i = 0; i <= LevelManager.Score; i += 500)
+        // {
+            // scores.text = "" + i;
             // SoundBase.Instance.audio.PlayOneShot( SoundBase.Instance.scoring );
-            yield return new WaitForSeconds(0.00001f);
-        }
-        scores.text = "" + LevelManager.Score;
+            // yield return new WaitForSeconds(0.00001f);
+        // }
+
+        // scores.text = "" + LevelManager.Score;
+        return null;
     }
 
     //public void Info()
@@ -374,11 +378,9 @@ public class AnimationManager : MonoBehaviour
     //}
 
 
-
     public void PlaySoundButton()
     {
         SoundBase.Instance.PlaySound(SoundBase.Instance.click);
-
     }
 
     public IEnumerator Close()
@@ -388,12 +390,12 @@ public class AnimationManager : MonoBehaviour
 
     public void CloseMenu()
     {
-
         SoundBase.Instance.PlaySound(SoundBase.Instance.click);
         if (gameObject.name == "MenuPreGameOver")
         {
             ShowGameOver();
         }
+
         if (gameObject.name == "MenuComplete")
         {
             LevelManager.THIS.gameStatus = GameState.Map;
@@ -406,12 +408,15 @@ public class AnimationManager : MonoBehaviour
             }
             else
             {
-                GameObject g = Instantiate(Resources.Load("Prefabs/Congratulations"), Vector2.zero, Quaternion.identity) as GameObject;
+                GameObject g =
+                    Instantiate(Resources.Load("Prefabs/Congratulations"), Vector2.zero, Quaternion.identity) as
+                        GameObject;
                 g.transform.SetParent(GameObject.Find("CanvasGlobal").transform);
                 g.transform.localScale = Vector3.one;
                 g.transform.localPosition = Vector3.zero;
             }
         }
+
         if (gameObject.name == "MenuFailed")
         {
             if (!keepGaming)
@@ -428,7 +433,6 @@ public class AnimationManager : MonoBehaviour
             if (LevelManager.Instance.gameStatus == GameState.Pause)
             {
                 LevelManager.Instance.gameStatus = GameState.WaitAfterClose;
-
             }
         }
 
@@ -440,6 +444,7 @@ public class AnimationManager : MonoBehaviour
                 Destroy(item.gameObject);
             }
         }
+
         SoundBase.Instance.PlaySound(SoundBase.Instance.swish[1]);
 
         gameObject.SetActive(false);
@@ -453,13 +458,11 @@ public class AnimationManager : MonoBehaviour
     public void SwishSound()
     {
         SoundBase.Instance.PlaySound(SoundBase.Instance.swish[1]);
-
     }
 
     public void ShowInfo()
     {
         GameObject.Find("CanvasGlobal").transform.Find("BoostInfo").gameObject.SetActive(true);
-
     }
 
     public void Play()
@@ -474,7 +477,6 @@ public class AnimationManager : MonoBehaviour
                 //                LevelData.LimitAmount += 12;
                 LevelManager.Instance.gameStatus = GameState.WaitAfterClose;
                 gameObject.SetActive(false);
-
             }
             else
             {
@@ -489,16 +491,15 @@ public class AnimationManager : MonoBehaviour
         {
             // if (InitScript.lifes > 0)
             // {
-                //InitScript.Instance.SpendLife(1);
-                LevelManager.THIS.gameStatus = GameState.PrepareGame;
-                CloseMenu();
-                //Application.LoadLevel( "game" );
+            //InitScript.Instance.SpendLife(1);
+            LevelManager.THIS.gameStatus = GameState.PrepareGame;
+            CloseMenu();
+            //Application.LoadLevel( "game" );
             // }
             // else
             // {
-                // BuyLifeShop();
+            // BuyLifeShop();
             // }
-
         }
         else if (gameObject.name == "MenuPause")
         {
@@ -541,21 +542,20 @@ public class AnimationManager : MonoBehaviour
         // if (InitScript.lifes > 0)
         // {
 
-            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
-            LevelManager.THIS.gameStatus = GameState.PrepareGame;
-            keepGaming = true;
-            CloseMenu();
+        SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+        LevelManager.THIS.gameStatus = GameState.PrepareGame;
+        keepGaming = true;
+        CloseMenu();
         // }
         // else
         // {
-            // BuyLifeShop();
+        // BuyLifeShop();
         // }
     }
 
 
     public void BuyGems()
     {
-
         SoundBase.Instance.PlaySound(SoundBase.Instance.click);
         GameObject.Find("CanvasGlobal").transform.Find("GemsShop").gameObject.SetActive(true);
     }
@@ -565,7 +565,8 @@ public class AnimationManager : MonoBehaviour
         SoundBase.Instance.PlaySound(SoundBase.Instance.click);
         if (pack.name == "Pack1")
         {
-            InitScript.waitedPurchaseGems = int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
+            InitScript.waitedPurchaseGems =
+                int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
 //#if UNITY_WEBPLAYER || UNITY_WEBGL
 //			InitScript.Instance.PurchaseSucceded ();
 //			CloseMenu ();
@@ -578,12 +579,12 @@ public class AnimationManager : MonoBehaviour
 //#else
 //            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//1.4.9
 //#endif
-
         }
 
         if (pack.name == "Pack2")
         {
-            InitScript.waitedPurchaseGems = int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
+            InitScript.waitedPurchaseGems =
+                int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
 //#if UNITY_WEBPLAYER || UNITY_WEBGL
 //			InitScript.Instance.PurchaseSucceded ();
 //			CloseMenu ();
@@ -596,12 +597,12 @@ public class AnimationManager : MonoBehaviour
 //#else
 //            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//1.4.9
 //#endif
-
-
         }
+
         if (pack.name == "Pack3")
         {
-            InitScript.waitedPurchaseGems = int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
+            InitScript.waitedPurchaseGems =
+                int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
 //#if UNITY_WEBPLAYER || UNITY_WEBGL
 //			InitScript.Instance.PurchaseSucceded ();
 //			CloseMenu ();
@@ -614,12 +615,12 @@ public class AnimationManager : MonoBehaviour
 //#else
 //            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//1.4.9
 //#endif
-
-
         }
+
         if (pack.name == "Pack4")
         {
-            InitScript.waitedPurchaseGems = int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
+            InitScript.waitedPurchaseGems =
+                int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
 //#if UNITY_WEBPLAYER || UNITY_WEBGL
 //			InitScript.Instance.PurchaseSucceded ();
 //			CloseMenu ();
@@ -632,20 +633,16 @@ public class AnimationManager : MonoBehaviour
 //#else
 //            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//1.4.9
 //#endif
-
-
         }
-        CloseMenu();
 
+        CloseMenu();
     }
 
     public void BuyLifeShop()
     {
-
         // SoundBase.Instance.PlaySound(SoundBase.Instance.click);
         // if (InitScript.lifes < InitScript.Instance.CapOfLife)
-            // GameObject.Find("CanvasGlobal").transform.Find("LiveShop").gameObject.SetActive(true);
-
+        // GameObject.Find("CanvasGlobal").transform.Find("LiveShop").gameObject.SetActive(true);
     }
 
     public void BuyLife(GameObject button)
@@ -653,15 +650,14 @@ public class AnimationManager : MonoBehaviour
         // SoundBase.Instance.PlaySound(SoundBase.Instance.click);
         // if (InitScript.Gems >= int.Parse(button.transform.Find("Price").GetComponent<Text>().text))
         // {
-            // InitScript.Instance.SpendGems(int.Parse(button.transform.Find("Price").GetComponent<Text>().text));
-            // InitScript.Instance.RestoreLifes();
-            // CloseMenu();
+        // InitScript.Instance.SpendGems(int.Parse(button.transform.Find("Price").GetComponent<Text>().text));
+        // InitScript.Instance.RestoreLifes();
+        // CloseMenu();
         // }
         // else
         // {
-            // GameObject.Find("CanvasGlobal").transform.Find("GemsShop").gameObject.SetActive(true);
+        // GameObject.Find("CanvasGlobal").transform.Find("GemsShop").gameObject.SetActive(true);
         // }
-
     }
 
     public void BuyFailed(GameObject button)
@@ -691,7 +687,7 @@ public class AnimationManager : MonoBehaviour
             LevelManager.THIS.Limit += LevelManager.THIS.ExtraFailedSecs;
         }
 
-        if (LevelManager.THIS.target == Target.BOMBS)//1.3
+        if (LevelManager.THIS.target == Target.BOMBS) //1.3
             LevelManager.THIS.RechargeBombs();
         //GetComponent<Animation>()["bannerFailed"].speed = 1;
         keepGaming = true;
@@ -700,7 +696,6 @@ public class AnimationManager : MonoBehaviour
 
         LevelManager.THIS.gameStatus = GameState.Playing;
         LevelManager.THIS.RestartTimer();
-
     }
 
     public void GiveUp()
@@ -714,28 +709,30 @@ public class AnimationManager : MonoBehaviour
 
         GameObject.Find("Canvas").transform.Find("MenuGameOver").gameObject.SetActive(true);
         gameObject.SetActive(false);
-
     }
 
     #region boosts
 
-    public void BuyBoost(BoostType boostType, int price, int count)
+    public void BuyBoost(BoostType boostType, int price, int count, Sprite icon)
     {
         SoundBase.Instance.PlaySound(SoundBase.Instance.click);
         // if (InitScript.Gems >= price)
         var coinModel = LevelManager.THIS.CoinModel;
-        
-        if(coinModel.Coins.Value >= price)
+
+        if (coinModel.Coins.Value >= price)
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.cash);
-            var booster = LevelManager.THIS.BoostersProvider.BoostersModels.AsValueEnumerable().First(v => v.Type == boostType);
+            var booster = LevelManager.THIS.BoostersProvider.BoostersModels.AsValueEnumerable()
+                .First(v => v.Type == boostType);
             booster.Add(count);
             coinModel.Decrease(price);
-            
+
             // InitScript.Instance.SpendGems(price);
             // InitScript.Instance.BuyBoost(boostType, price, count);
             //InitScript.Instance.SpendBoost(boostType);
             CloseMenu();
+            LevelManager.THIS.GameProvider.RewardPopup.Init(new RewardInfo { Icon = icon, Description = $"You got {boostType}" });
+            LevelManager.THIS.GameProvider.RewardPopup.Show();
         }
     }
 
@@ -756,11 +753,10 @@ public class AnimationManager : MonoBehaviour
             InitScript.sound = true;
 
             Off.SetActive(false);
-
         }
+
         PlayerPrefs.SetInt("Sound", (int)SoundBase.Instance.GetComponent<AudioSource>().volume);
         PlayerPrefs.Save();
-
     }
 
     public void MusicOff(GameObject Off)
@@ -778,11 +774,10 @@ public class AnimationManager : MonoBehaviour
             InitScript.music = true;
 
             Off.SetActive(false);
-
         }
+
         PlayerPrefs.SetInt("Music", (int)GameObject.Find("Music").GetComponent<AudioSource>().volume);
         PlayerPrefs.Save();
-
     }
 
     Target target;
@@ -823,31 +818,27 @@ public class AnimationManager : MonoBehaviour
                 else if (line.StartsWith("COLLECT COUNT "))
                 {
                     string blocksString = line.Replace("COLLECT COUNT", string.Empty).Trim();
-                    string[] blocksNumbers = blocksString.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] blocksNumbers =
+                        blocksString.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
                     for (int i = 0; i < blocksNumbers.Length; i++)
                     {
                         ingrCountTarget[i] = int.Parse(blocksNumbers[i]);
-
                     }
                 }
                 else if (line.StartsWith("COLLECT ITEMS "))
                 {
                     string blocksString = line.Replace("COLLECT ITEMS", string.Empty).Trim();
-                    string[] blocksNumbers = blocksString.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] blocksNumbers =
+                        blocksString.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
                     for (int i = 0; i < blocksNumbers.Length; i++)
                     {
                         if (target == Target.COLLECT)
                             ingrTarget[i] = (Ingredients)int.Parse(blocksNumbers[i]);
                         else if (target == Target.ITEMS)
                             collectItems[i] = (CollectItems)int.Parse(blocksNumbers[i]);
-
-
                     }
                 }
-
             }
         }
-
     }
-
 }

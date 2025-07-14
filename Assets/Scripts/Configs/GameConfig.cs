@@ -7,5 +7,6 @@ namespace Configs
     public class GameConfig : ScriptableObject
     {
         public int MaxLifes = 5;
+        public int CoinRewardForLevelPass = 100;
     }
 }

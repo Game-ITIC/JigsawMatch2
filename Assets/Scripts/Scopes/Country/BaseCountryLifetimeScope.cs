@@ -1,10 +1,13 @@
+using System;
 using Configs;
 using Initializers;
 using Models;
 using Monobehaviours.Buildings;
 using Presenters;
+using Providers;
 using Services;
 using Sirenix.OdinInspector;
+using UI;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -83,6 +86,14 @@ namespace Scopes.Country
 
         [SerializeField] private BuildingsAnimationConfig buildingsAnimationConfig;
         [SerializeField] private HideUnhideScript hideUnhideScript;
+
+        [SerializeField] private RegionUIProvider regionUIProvider;
+        [SerializeField] private RegionConfig regionConfig;
+
+        [SerializeField] private MenuNavigationProvider menuNavigationProvider;
+
+        [SerializeField] private LifePopup lifePopup;
+        [SerializeField] private RewardPopup rewardPopup;
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(menuView);
@@ -90,8 +101,13 @@ namespace Scopes.Country
             builder.RegisterComponent(inAppView);
             builder.RegisterComponent(buildingsAnimationConfig);
             builder.RegisterComponent(hideUnhideScript);
+            builder.RegisterComponent(regionUIProvider);
+            builder.RegisterComponent(menuNavigationProvider);
+            builder.RegisterComponent(lifePopup);
+            builder.RegisterComponent(rewardPopup);
             
             builder.RegisterInstance(countryConfig);
+            builder.RegisterInstance(regionConfig);
             
             builder.Register<CoinPresenter>(Lifetime.Scoped)
                 .As<IInitializable>()
@@ -119,6 +135,8 @@ namespace Scopes.Country
 
             builder.Register<RegionModel>(Lifetime.Singleton).WithParameter(buildingsAnimationConfig);
             builder.Register<RegionUpgradeService>(Lifetime.Singleton);
+
+            builder.Register<MenuTabs>(Lifetime.Singleton);
             
             ConfigureCountry(builder);
         }

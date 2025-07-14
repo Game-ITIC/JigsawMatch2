@@ -748,6 +748,7 @@ MonoBehaviour:
   loadingScreenView: {fileID: 1966903337}
   inAppConfig: {fileID: 11400000, guid: b61bce8b40b69c34bbbe4be5a1fb56ea, type: 2}
   levelConfig: {fileID: 11400000, guid: 476c7f1808b505a4a88601d77775607d, type: 2}
+  gameConfig: {fileID: 11400000, guid: e1ed78f630d63724db598084ea691555, type: 2}
   systemDebug: {fileID: 2108957127}
   ironSourceInitializer: {fileID: 1661985465}
   ironSourceManager: {fileID: 299676441}

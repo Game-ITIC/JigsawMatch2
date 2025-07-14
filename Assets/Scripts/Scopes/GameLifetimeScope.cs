@@ -3,6 +3,7 @@ using Initializers;
 using Models;
 using Monobehaviours;
 using Providers;
+using UI;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -20,12 +21,16 @@ namespace Scopes
         [SerializeField] private GamePauseView gamePauseView;
         [SerializeField] private GameOverView gameOverView;
         [SerializeField] private LevelManager levelManager;
-
+        [SerializeField] private GameProvider gameProvider;
+        [SerializeField] private BoostShopView boostShopView;
+        
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(gameCompleteView);
             builder.RegisterComponent(gamePauseView);
             builder.RegisterComponent(gameOverView);
+            builder.RegisterComponent(boostShopView);
+            builder.RegisterComponent(gameProvider);
             builder.RegisterComponent(levelManager);
             
             builder.RegisterComponent<IGameEvents>(gameEventDispatcher).AsSelf();
