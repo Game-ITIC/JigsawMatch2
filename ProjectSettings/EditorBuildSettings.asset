@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Bootstrap.unity
+    path: Assets/_Scenes/Bootstrap.unity
     guid: d52ac898d4cebbb4eb71c520a1d84d28
   - enabled: 1
-    path: Assets/Scenes/Services.unity
+    path: Assets/_Scenes/Services.unity
     guid: 6b5933439b345194a8e50f68f899ac0d
   - enabled: 1
     path: Assets/JuiceFresh/Scenes/main.unity
@@ -18,15 +18,15 @@ EditorBuildSettings:
     path: Assets/JuiceFresh/Scenes/game.unity
     guid: 5ddd8fe9c14b1c042b763bcdc7fd7b93
   - enabled: 1
-    path: Assets/Scenes/Park.unity
+    path: Assets/_Scenes/Park.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/Scenes/Islands.unity
+    path: Assets/_Scenes/Islands.unity
     guid: f6e4b8b7b2a600349a5c790be83b4ed7
   - enabled: 1
-    path: Assets/Scenes/JapanRegion.unity
+    path: Assets/_Scenes/JapanRegion.unity
     guid: 014a4cba0c90c874f8552a17a2baeeb5
   - enabled: 1
-    path: Assets/Scenes/EgyptRegion.unity
+    path: Assets/_Scenes/EgyptRegion.unity
     guid: 1a232fffe380c6e498670aa8ee535481
   m_configObjects: {}
