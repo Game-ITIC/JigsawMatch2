@@ -27,10 +27,7 @@ namespace UI
             {
                 var localIndex = i;
                 _menuNavigationProvider.NavigationButtons[i].onClick.RemoveAllListeners();
-                _menuNavigationProvider.NavigationButtons[i].onClick.AddListener(() =>
-                {
-                    SwitchPanel((NavigationPanels)localIndex).Forget();
-                });
+                _menuNavigationProvider.NavigationButtons[i].onClick.AddListener(() => { SwitchPanel((NavigationPanels)localIndex).Forget(); });
             }
 
             JumpToPanel(NavigationPanels.Main);
@@ -40,11 +37,11 @@ namespace UI
 
         private async UniTask SwitchPanel(NavigationPanels navigationPanel)
         {
-            if (_currentTab == navigationPanel) return;
+            if(_currentTab == navigationPanel) return;
 
             _currentTab = navigationPanel;
 
-            var canvasWidth = _menuNavigationProvider.SceneCanvas.pixelRect.width;
+            var canvasWidth = GetPanelWidth();
             var targetX = -(int)navigationPanel * canvasWidth;
 
             AnimateButtonsVisual();
@@ -58,15 +55,21 @@ namespace UI
 
         private void JumpToPanel(NavigationPanels navigationPanel)
         {
-            if (_currentTab == navigationPanel) return;
+            if(_currentTab == navigationPanel) return;
 
             _currentTab = navigationPanel;
 
-            var canvasWidth = _menuNavigationProvider.SceneCanvas.pixelRect.width;
+            var canvasWidth = GetPanelWidth();
             var targetX = -(int)navigationPanel * canvasWidth;
 
             _menuNavigationProvider.PanelsParent.anchoredPosition = new Vector2(targetX, 0);
             UpdateButtonsVisual();
+        }
+
+        private float GetPanelWidth()
+        {
+            var scaler = _menuNavigationProvider.SceneCanvas.GetComponent<CanvasScaler>();
+            return scaler.referenceResolution.y; // ← returns exactly 1080
         }
 
         private void UpdateButtonsVisual()
@@ -75,7 +78,7 @@ namespace UI
             {
                 var button = _menuNavigationProvider.NavigationButtons[i];
                 var isActive = (int)_currentTab == i;
-                
+
                 button.transform.localScale = isActive ? new Vector3(1, 1.1f, 1) : Vector3.one;
 
                 var currentColor = button.image.color;
