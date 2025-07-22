@@ -1,4 +1,5 @@
 ﻿using System;
+using Configs;
 using Interfaces;
 using Models;
 using Providers;
@@ -16,6 +17,7 @@ namespace Services
         private readonly GemModel _gemModel;
         private readonly BoostersProvider _boostersProvider;
         private readonly HealthSystem _healthSystem;
+        private readonly GameConfig _gameConfig;
 
         private AdRewardType _adRewardType;
         private bool _isTypeSet;
@@ -30,7 +32,8 @@ namespace Services
             CoinModel coinModel,
             GemModel gemModel,
             BoostersProvider boostersProvider,
-            HealthSystem healthSystem
+            HealthSystem healthSystem,
+            GameConfig gameConfig
         )
         {
             _adEventModel = adEventModel;
@@ -38,6 +41,7 @@ namespace Services
             _gemModel = gemModel;
             _boostersProvider = boostersProvider;
             _healthSystem = healthSystem;
+            _gameConfig = gameConfig;
         }
 
         public void Initialize()
@@ -49,7 +53,7 @@ namespace Services
 
         public void GrantReward(Unit _)
         {
-            if (!_isTypeSet) return;
+            if(!_isTypeSet) return;
 
             switch (_adRewardType)
             {
@@ -64,7 +68,7 @@ namespace Services
                     booster.Add(1);
                     break;
                 case AdRewardType.X2:
-                    
+                    _coinModel.Increase(_gameConfig.CoinRewardForLevelPass * 2);
                     break;
                 case AdRewardType.Life:
                     _healthSystem.AddLives(1);
@@ -82,7 +86,7 @@ namespace Services
             _isTypeSet = true;
             _adRewardType = adRewardType;
 
-            if (boostType != null)
+            if(boostType != null)
             {
                 _boostType = (BoostType)boostType;
             }
@@ -101,7 +105,10 @@ namespace Services
 
         public RewardInfo GetInfo()
         {
-            return new RewardInfo { Icon = _icon, Description = _description };
+            return new RewardInfo
+            {
+                Icon = _icon, Description = _description
+            };
         }
     }
 

@@ -102,7 +102,7 @@ namespace Initializers
                 {
                     _gameProvider.RewardPopup.Init(new RewardInfo{Icon = _gameProvider.CoinSprite, Description = "You 2x your reward"});
                     _gameCompleteView.CoinsCollectedText.text = (_gameConfig.CoinRewardForLevelPass * 2).ToString();
-                    _gameCompleteView.AdsButton.interactable = false;
+                    _gameCompleteView.AdsButton.gameObject.SetActive(false);
                     
                 }).AddTo(localDisposable);
 

@@ -37,12 +37,27 @@ public class BoostIcon : MonoBehaviour
 
     void OnEnable()
     {
-        if (name != "Main Camera")
+        if(name != "Main Camera")
         {
-            if (LevelManager.THIS != null)
+            if(LevelManager.THIS != null)
             {
-                if (LevelManager.THIS.gameStatus == GameState.Map)
+                if(LevelManager.THIS.gameStatus == GameState.Map)
+                {
                     transform.Find("Indicator/Count/Check").gameObject.SetActive(false);
+                }
+
+                if(LevelManager.THIS.BoostersProvider.GetBoosterModel(type) != null)
+                {
+                    _boosterModel = LevelManager.THIS.BoostersProvider.GetBoosterModel(type);
+                }
+                else
+                {
+                    if(_boosterModel == null)
+                    {
+                        Debug.LogWarning("Coudn't find booster, creating new zero one");
+                        _boosterModel = new BoosterModel(type);
+                    }
+                }
                 // if (!LevelManager.THIS.enableInApps)//1.4.9
                 //     gameObject.SetActive(false);
             }
@@ -51,12 +66,12 @@ public class BoostIcon : MonoBehaviour
 
     public void ActivateBoost()
     {
-        if (LevelManager.THIS.ActivatedBoost == this)
+        if(LevelManager.THIS.ActivatedBoost == this)
         {
             UnCheckBoost();
             return;
         }
-        else if (BoostCount() == 0)
+        else if(BoostCount() == 0)
         {
             OpenBoostShop(type);
         }
@@ -67,7 +82,7 @@ public class BoostIcon : MonoBehaviour
         }
 
 
-        if (BoostCount() > 0)
+        if(BoostCount() > 0)
         {
             //if (type != BoostType.Colorful_bomb && type != BoostType.Stripes && !LevelManager.THIS.DragBlocked)
             //    LevelManager.THIS.ActivatedBoost = this;
@@ -83,7 +98,6 @@ public class BoostIcon : MonoBehaviour
             //}
         }
     }
-
 
     void UnCheckBoost()
     {
@@ -139,7 +153,9 @@ public class BoostIcon : MonoBehaviour
     public void OpenBoostShop(BoostType boosType)
     {
         SoundBase.Instance.PlaySound(SoundBase.Instance.click);
-        GameObject.Find("CanvasGlobal").transform.Find("BoostShop").gameObject.GetComponent<BoostShop>()
+        GameObject.Find("CanvasGlobal")
+            .transform.Find("BoostShop")
+            .gameObject.GetComponent<BoostShop>()
             .SetBoost(boosType);
     }
 
@@ -149,15 +165,14 @@ public class BoostIcon : MonoBehaviour
         transform.Find("Indicator/Count").gameObject.SetActive(!show);
     }
 
-
     void Update()
     {
-        if (boostCount != null)
+        if(boostCount != null)
         {
             //boostCount.text = "" + PlayerPrefs.GetInt("" + type);
-            if (!check)
+            if(!check)
             {
-                if (BoostCount() > 0)
+                if(BoostCount() > 0)
                     ShowPlus(false);
                 else
                     ShowPlus(true);
