@@ -8,6 +8,10 @@ namespace Gley.EasyIAP
 	{
 		Coins,
 		RemoveAds,
+		CoinsSmall,
+		CoinsMedium,
+		DiamondSmall,
+		DiamondMedium
 	}
 }
 #endif
