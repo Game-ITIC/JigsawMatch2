@@ -5590,6 +5590,8 @@ MonoBehaviour:
   <RewardPopup>k__BackingField: {fileID: 2099332028}
   <CoinSprite>k__BackingField: {fileID: 21300000, guid: 01bccec376fe68942bd3d5aad4321e4c,
     type: 3}
+  <ExtraStepSprite>k__BackingField: {fileID: 21300000, guid: 6001e70faa5447842987b513f1b3bcd2,
+    type: 3}
 --- !u!1001 &231817006
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7391,7 +7393,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &339339232
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18590,7 +18592,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -968}
+  m_AnchoredPosition: {x: 0, y: -537}
   m_SizeDelta: {x: 450, y: 175}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &806320643
@@ -45236,7 +45238,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 22.200073, y: -695.10956}
+  m_AnchoredPosition: {x: 22.200073, y: -884}
   m_SizeDelta: {x: -976.23, y: 215}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2048961608

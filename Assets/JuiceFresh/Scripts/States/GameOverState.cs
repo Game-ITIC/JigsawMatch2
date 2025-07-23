@@ -1,3 +1,5 @@
+using R3;
+using Services;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,10 +7,21 @@ namespace JuiceFresh.States
 {
     public class GameOverState : GameStateBase
     {
+        private readonly AdRewardService _adRewardService;
         private GameObject _menuFailedUI;
+        private CompositeDisposable _disposables = new CompositeDisposable();
 
-        public GameOverState(LevelManager levelManager) : base(levelManager)
+        public GameOverState(LevelManager levelManager, AdRewardService adRewardService) : base(levelManager)
         {
+            _adRewardService = adRewardService;
+            _adRewardService.OnContinueRewardGranted
+                .Subscribe(OnRewardGranted)
+                .AddTo(_disposables);
+        }
+
+        private void OnRewardGranted(Unit unit)
+        {
+            OnContinueClicked();
         }
 
         public override void EnterState()
@@ -33,7 +46,7 @@ namespace JuiceFresh.States
         public override void ExitState()
         {
             // Hide the failed UI if it's still visible
-            if (_menuFailedUI != null && _menuFailedUI.activeSelf)
+            if(_menuFailedUI != null && _menuFailedUI.activeSelf)
             {
                 _menuFailedUI.SetActive(false);
             }
@@ -61,15 +74,16 @@ namespace JuiceFresh.States
         {
             // Get the score display and set it
             Text scoreText = _menuFailedUI.transform.Find("Score")?.GetComponent<Text>();
-            
-            if (scoreText != null)
+
+            if(scoreText != null)
             {
                 scoreText.text = LevelManager.Score.ToString();
             }
 
             // Set up retry button
             Button retryButton = _menuFailedUI.transform.Find("ButtonReplay")?.GetComponent<Button>();
-            if (retryButton != null)
+
+            if(retryButton != null)
             {
                 retryButton.onClick.RemoveAllListeners();
                 retryButton.onClick.AddListener(() => OnRetryClicked());
@@ -77,7 +91,8 @@ namespace JuiceFresh.States
 
             // Set up quit button
             Button quitButton = _menuFailedUI.transform.Find("ButtonQuit")?.GetComponent<Button>();
-            if (quitButton != null)
+
+            if(quitButton != null)
             {
                 quitButton.onClick.RemoveAllListeners();
                 quitButton.onClick.AddListener(() => OnQuitClicked());
@@ -90,18 +105,20 @@ namespace JuiceFresh.States
         private void SetupContinueOption()
         {
             // If the level allows continuing after failing
-            if (levelManager.FailedCost > 0)
+            if(levelManager.FailedCost > 0)
             {
                 // Set up continue button
                 Button continueButton = _menuFailedUI.transform.Find("ButtonContinue")?.GetComponent<Button>();
-                if (continueButton != null)
+
+                if(continueButton != null)
                 {
                     continueButton.onClick.RemoveAllListeners();
                     continueButton.onClick.AddListener(() => OnContinueClicked());
 
                     // Update the cost text
                     Text costText = continueButton.transform.Find("Cost")?.GetComponent<Text>();
-                    if (costText != null)
+
+                    if(costText != null)
                     {
                         costText.text = levelManager.FailedCost.ToString();
                     }
@@ -128,14 +145,14 @@ namespace JuiceFresh.States
         private void OnContinueClicked()
         {
             // Spend gems to continue
-            InitScript.Instance.SpendGems(levelManager.FailedCost);
+            // InitScript.Instance.SpendGems(levelManager.FailedCost);
 
             // Add extra moves or time
-            if (levelManager.limitType == LIMIT.MOVES)
+            if(levelManager.limitType == LIMIT.MOVES)
             {
                 levelManager.Limit += levelManager.ExtraFailedMoves;
             }
-            else if (levelManager.limitType == LIMIT.TIME)
+            else if(levelManager.limitType == LIMIT.TIME)
             {
                 levelManager.Limit += levelManager.ExtraFailedSecs;
             }

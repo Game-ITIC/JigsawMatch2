@@ -26,6 +26,7 @@ namespace Services
         private string _description;
 
         private CompositeDisposable _compositeDisposable = new();
+        public ReactiveCommand OnContinueRewardGranted = new ReactiveCommand();
 
         public AdRewardService(
             AdEventModel adEventModel,
@@ -72,6 +73,9 @@ namespace Services
                     break;
                 case AdRewardType.Life:
                     _healthSystem.AddLives(1);
+                    break;
+                case AdRewardType.Continue:
+                    OnContinueRewardGranted?.Execute(Unit.Default);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -124,6 +128,7 @@ namespace Services
         Gem,
         Booster,
         X2,
-        Life
+        Life,
+        Continue
     }
 }

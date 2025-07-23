@@ -119,6 +119,23 @@ namespace Initializers
                                                                 _adEventModel.OnRewardedReward.Subscribe(_ => { localDisposable.Dispose(); }).AddTo(localDisposable);
                                                                 IronSourceManager.Instance.ShowRewardedAd();
                                                             });
+            _gameOverView.AdsButton.onClick.AddListener(() =>
+                                                        {
+                                                            CompositeDisposable localDisposable = new();
+                                                            _adRewardService.SetAdRewardType(AdRewardType.Continue);
+                                                            _adEventModel.OnRewardGranted.Subscribe(_ =>
+                                                                                                    {
+                                                                                                        _gameProvider.RewardPopup.Init(new RewardInfo
+                                                                                                        {
+                                                                                                            Icon = _gameProvider.ExtraStepSprite,
+                                                                                                            Description = "You got yourself extra 5 steps!"
+                                                                                                        });
+                                                                                                    })
+                                                                .AddTo(localDisposable);
+
+                                                            _adEventModel.OnRewardedReward.Subscribe(_ => { localDisposable.Dispose(); }).AddTo(localDisposable);
+                                                            IronSourceManager.Instance.ShowRewardedAd();
+                                                        });
 
             _gamePauseView.Home.onClick.RemoveAllListeners();
             _gamePauseView.Home.onClick.AddListener(BackToBack);
@@ -145,6 +162,8 @@ namespace Initializers
                                                        _adRewardService.SetAdRewardType(AdRewardType.Booster, BoostType.ExtraMoves);
                                                        IronSourceManager.Instance.ShowRewardedAd();
                                                    });
+
+        
 
             _adEventModel.OnRewardGranted.Subscribe(_ =>
                                                     {
