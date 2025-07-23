@@ -1094,6 +1094,7 @@ GameObject:
   - component: {fileID: 64084072}
   - component: {fileID: 64084071}
   - component: {fileID: 64084070}
+  - component: {fileID: 64084074}
   m_Layer: 5
   m_Name: BoostBomb
   m_TagString: Untagged
@@ -1231,6 +1232,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 64084068}
   m_CullTransparentMesh: 0
+--- !u!114 &64084074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 64084068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7800044affb833e458ca3ac9868121dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayOnEnable: 1
+  fireworkPrefab: {fileID: 0}
 --- !u!1001 &64408034
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2444,6 +2459,7 @@ GameObject:
   - component: {fileID: 118832956}
   - component: {fileID: 118832955}
   - component: {fileID: 118832954}
+  - component: {fileID: 118832958}
   m_Layer: 5
   m_Name: BoostEnergy
   m_TagString: Untagged
@@ -2581,6 +2597,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 118832952}
   m_CullTransparentMesh: 0
+--- !u!114 &118832958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118832952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7800044affb833e458ca3ac9868121dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayOnEnable: 1
+  fireworkPrefab: {fileID: 0}
 --- !u!1 &120926925
 GameObject:
   m_ObjectHideFlags: 0
@@ -15947,11 +15977,11 @@ MonoBehaviour:
   - icon: {fileID: 21300000, guid: 5a81773906caf7f4db5aa95f798750f0, type: 3}
     description: Explodes an area
     count: 01000000
-    GemPrices: 96000000
+    GemPrices: 2c010000
   - icon: {fileID: 21300000, guid: 6001e70faa5447842987b513f1b3bcd2, type: 3}
     description: + 5 extra moves
     count: 01000000
-    GemPrices: 96000000
+    GemPrices: c2010000
 --- !u!114 &641363279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22533,6 +22563,7 @@ GameObject:
   - component: {fileID: 998237491}
   - component: {fileID: 998237490}
   - component: {fileID: 998237489}
+  - component: {fileID: 998237493}
   m_Layer: 5
   m_Name: BoostShovel
   m_TagString: Untagged
@@ -22670,6 +22701,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 998237487}
   m_CullTransparentMesh: 0
+--- !u!114 &998237493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998237487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7800044affb833e458ca3ac9868121dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayOnEnable: 1
+  fireworkPrefab: {fileID: 100000, guid: 4248fa84ca425b44296197fbfd6d87c6, type: 3}
 --- !u!1 &1001622835
 GameObject:
   m_ObjectHideFlags: 0
@@ -40609,6 +40654,7 @@ GameObject:
   - component: {fileID: 1823937791}
   - component: {fileID: 1823937793}
   - component: {fileID: 1823937794}
+  - component: {fileID: 1823937795}
   m_Layer: 5
   m_Name: BoostExtraMoves
   m_TagString: Untagged
@@ -40746,6 +40792,20 @@ MonoBehaviour:
   type: 3
   price: {fileID: 0}
   button: {fileID: 0}
+--- !u!114 &1823937795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823937789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7800044affb833e458ca3ac9868121dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayOnEnable: 1
+  fireworkPrefab: {fileID: 0}
 --- !u!1 &1824505028
 GameObject:
   m_ObjectHideFlags: 0
