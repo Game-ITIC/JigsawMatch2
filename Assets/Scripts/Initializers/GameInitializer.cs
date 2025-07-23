@@ -37,9 +37,10 @@ namespace Initializers
         private readonly GameProvider _gameProvider;
         private readonly BoostShopView _boostShopView;
         private readonly GameConfig _gameConfig;
+        private readonly CoinModel _coinModel;
 
         private CompositeDisposable _disposable = new();
-        
+
         public GameInitializer(
             // IronSourceManager ironSourceManager,
             IGameEvents gameEvents,
@@ -54,7 +55,8 @@ namespace Initializers
             AdEventModel adEventModel,
             GameProvider gameProvider,
             BoostShopView boostShopView,
-            GameConfig gameConfig
+            GameConfig gameConfig,
+            CoinModel coinModel
         )
         {
             // _ironSourceManager = ironSourceManager;
@@ -71,54 +73,62 @@ namespace Initializers
             _gameProvider = gameProvider;
             _boostShopView = boostShopView;
             _gameConfig = gameConfig;
+            _coinModel = coinModel;
         }
 
         public void Initialize()
         {
             _gameCompleteView.Home.onClick.RemoveAllListeners();
             _gameCompleteView.Home.onClick.AddListener(() =>
-            {
-                var currentLevel = PlayerPrefs.GetInt("OpenLevel", 1);
-                PlayerPrefs.SetInt("OpenLevel", currentLevel + 1);
+                                                       {
+                                                           var currentLevel = PlayerPrefs.GetInt("OpenLevel", 1);
+                                                           PlayerPrefs.SetInt("OpenLevel", currentLevel + 1);
 
-                _sceneLoader.LoadLastSceneAsync().Forget();
-            });
+                                                           // TODO Gomnokod change
+                                                           _coinModel.Increase(_gameConfig.CoinRewardForLevelPass);
+                                                           _sceneLoader.LoadLastSceneAsync().Forget();
+                                                       });
 
             _gameCompleteView.Next.onClick.RemoveAllListeners();
             _gameCompleteView.Next.onClick.AddListener(() =>
-            {
-                var currentLevel = PlayerPrefs.GetInt("OpenLevel", 1);
+                                                       {
+                                                           var currentLevel = PlayerPrefs.GetInt("OpenLevel", 1);
 
-                PlayerPrefs.SetInt("OpenLevel", currentLevel + 1);
-                _sceneLoader.LoadGameAsync().Forget();
-            });
+                                                           PlayerPrefs.SetInt("OpenLevel", currentLevel + 1);
+                                                           _coinModel.Increase(_gameConfig.CoinRewardForLevelPass);
+                                                           _sceneLoader.LoadGameAsync().Forget();
+                                                       });
 
             _gameCompleteView.AdsButton.onClick.RemoveAllListeners();
             _gameCompleteView.AdsButton.onClick.AddListener(() =>
-            {
-                CompositeDisposable localDisposable = new();
-                _adRewardService.SetAdRewardType(AdRewardType.X2);
-                _adEventModel.OnRewardGranted.Subscribe(_ =>
-                {
-                    _gameProvider.RewardPopup.Init(new RewardInfo{Icon = _gameProvider.CoinSprite, Description = "You 2x your reward"});
-                    _gameCompleteView.CoinsCollectedText.text = (_gameConfig.CoinRewardForLevelPass * 2).ToString();
-                    _gameCompleteView.AdsButton.gameObject.SetActive(false);
-                    
-                }).AddTo(localDisposable);
+                                                            {
+                                                                CompositeDisposable localDisposable = new();
+                                                                _adRewardService.SetAdRewardType(AdRewardType.X2);
+                                                                _adEventModel.OnRewardGranted.Subscribe(_ =>
+                                                                                                        {
+                                                                                                            _gameProvider.RewardPopup.Init(new RewardInfo
+                                                                                                            {
+                                                                                                                Icon = _gameProvider.CoinSprite, Description = "You 2x your reward"
+                                                                                                            });
+                                                                                                            _gameCompleteView.CoinsCollectedText.text =
+                                                                                                                (_gameConfig.CoinRewardForLevelPass * 2).ToString();
+                                                                                                            _gameCompleteView.AdsButton.gameObject.SetActive(false);
+                                                                                                        })
+                                                                    .AddTo(localDisposable);
 
-                _adEventModel.OnRewardedReward.Subscribe(_ => { localDisposable.Dispose(); }).AddTo(localDisposable);
-                IronSourceManager.Instance.ShowRewardedAd();
-            });
+                                                                _adEventModel.OnRewardedReward.Subscribe(_ => { localDisposable.Dispose(); }).AddTo(localDisposable);
+                                                                IronSourceManager.Instance.ShowRewardedAd();
+                                                            });
 
             _gamePauseView.Home.onClick.RemoveAllListeners();
             _gamePauseView.Home.onClick.AddListener(BackToBack);
 
             _gamePauseView.ContinueButton.onClick.RemoveAllListeners();
             _gamePauseView.ContinueButton.onClick.AddListener(() =>
-            {
-                _gamePauseView.Hide();
-                _levelManager.ResumeGame();
-            });
+                                                              {
+                                                                  _gamePauseView.Hide();
+                                                                  _levelManager.ResumeGame();
+                                                              });
 
             _gamePauseView.RestartButton.onClick.RemoveAllListeners();
             _gamePauseView.RestartButton.onClick.AddListener(RestartGame);
@@ -131,18 +141,19 @@ namespace Initializers
 
             _gameOverView.Home.onClick.RemoveAllListeners();
             _gameOverView.Home.onClick.AddListener(() =>
-            {
-                _adRewardService.SetAdRewardType(AdRewardType.Booster, BoostType.ExtraMoves);
-                IronSourceManager.Instance.ShowRewardedAd();
-            });
+                                                   {
+                                                       _adRewardService.SetAdRewardType(AdRewardType.Booster, BoostType.ExtraMoves);
+                                                       IronSourceManager.Instance.ShowRewardedAd();
+                                                   });
 
             _adEventModel.OnRewardGranted.Subscribe(_ =>
-            {
-                _boostShopView.Hide();
-                var popup = _gameProvider.RewardPopup;
-                popup.Init(_adRewardService.GetInfo());
-                popup.Show();
-            }).AddTo(_disposable);
+                                                    {
+                                                        _boostShopView.Hide();
+                                                        var popup = _gameProvider.RewardPopup;
+                                                        popup.Init(_adRewardService.GetInfo());
+                                                        popup.Show();
+                                                    })
+                .AddTo(_disposable);
 
             _levelManager.InvokeStart();
         }
@@ -188,10 +199,9 @@ namespace Initializers
             _gameEvents.OnGameLost -= ShowInterstitial;
             _gameEvents.OnGameWon -= ShowInterstitial;
             _gameEvents.OnEnterGame -= GameStart;
-            
+
             _disposable.Dispose();
         }
-
 
         public void Tick()
         {
