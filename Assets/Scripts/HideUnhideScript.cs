@@ -7,22 +7,24 @@ public class HideUnhideScript : MonoBehaviour
 {
     [SerializeField] private Button eyeButton;
     [SerializeField] private GameObject eyeHide, eyeUnhide;
-    [SerializeField] private GameObject uiElement1, uiElement2, uiElement3, uiElement4, uiElement5;
+    [SerializeField] private GameObject uiElement1, uiElement2, uiElement3, uiElement4, uiElement5, uiElement6;
     private bool isVisible = true;
 
     private void Start()
     {
         eyeButton.onClick.AddListener(OnEyeButtonClick);
     }
+
     public void OnEyeButtonClick()
     {
-        if (isVisible == true)
+        if(isVisible == true)
         {
             uiElement1.SetActive(false);
             uiElement2.SetActive(false);
             uiElement3.SetActive(false);
             uiElement4.SetActive(false);
             uiElement5.SetActive(false);
+            uiElement6.SetActive(false);
             isVisible = false;
             eyeHide.SetActive(false);
             eyeUnhide.SetActive(true);
@@ -34,10 +36,10 @@ public class HideUnhideScript : MonoBehaviour
             uiElement3.SetActive(true);
             uiElement4.SetActive(true);
             uiElement5.SetActive(true);
+            uiElement6.SetActive(true);
             isVisible = true;
             eyeHide.SetActive(true);
             eyeUnhide.SetActive(false);
         }
-        
     }
 }
