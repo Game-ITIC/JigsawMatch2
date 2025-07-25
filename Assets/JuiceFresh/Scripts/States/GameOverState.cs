@@ -1,5 +1,7 @@
 using R3;
 using Services;
+using Systems;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,10 +12,18 @@ namespace JuiceFresh.States
         private readonly AdRewardService _adRewardService;
         private GameObject _menuFailedUI;
         private CompositeDisposable _disposables = new CompositeDisposable();
+        private readonly HealthSystem _healthSystem;
+        private readonly LifePopup _lifePopup;
 
-        public GameOverState(LevelManager levelManager, AdRewardService adRewardService) : base(levelManager)
+        public GameOverState(
+            LevelManager levelManager,
+            AdRewardService adRewardService,
+            HealthSystem healthSystem,
+            LifePopup lifePopup) : base(levelManager)
         {
             _adRewardService = adRewardService;
+            _healthSystem = healthSystem;
+            _lifePopup = lifePopup;
             _adRewardService.OnContinueRewardGranted
                 .Subscribe(OnRewardGranted)
                 .AddTo(_disposables);
@@ -31,11 +41,39 @@ namespace JuiceFresh.States
             PlayGameOverSound();
 
             ShowFailedUI();
+            SetupPopus();
 
             levelManager.GameEventDispatcher.DispatchLose();
             LevelManager.TriggerOnLose();
 
             LevelManager.THIS.HealthSystem.TryUseLife();
+        }
+
+        private void SetupPopus()
+        {
+            // _lifePopup.AdsButton.onClick.RemoveAllListeners();
+            // _lifePopup.AdsButton.onClick.AddListener(() =>
+            //                                          {
+            //                                              _adRewardService.SetAdRewardType(AdRewardType.Life);
+            //
+            //                                              _ironSourceManager.ShowRewardedAd();
+            //                                          });
+            // _adEventModel.OnRewardGranted.Subscribe(_ =>
+            //                                         {
+            //                                             _lifePopup.Hide();
+            //                                             _rewardPopup.Show();
+            //                                         }).AddTo(_disposable);
+            //
+            // _lifePopup.BuyButton.onClick.RemoveAllListeners();
+            // _lifePopup.BuyButton.onClick.AddListener(() =>
+            //                                          {
+            //                                              if (_gemModel.Gems.Value >= 15)
+            //                                              {
+            //                                                  _healthSystem.AddLives(1);
+            //                                                  _gemModel.Decrease(15);
+            //                                                  _lifePopup.Hide();
+            //                                              }
+            //                                          });
         }
 
         public override void UpdateState()
@@ -132,8 +170,15 @@ namespace JuiceFresh.States
 
         private void OnRetryClicked()
         {
-            // Retry the current level
-            levelManager.gameStatus = GameState.PrepareGame;
+            if(_healthSystem.CanPlay)
+            {
+                // Retry the current level
+                levelManager.gameStatus = GameState.PrepareGame;
+            }
+            else
+            {
+                _lifePopup.Show();
+            }
         }
 
         private void OnQuitClicked()

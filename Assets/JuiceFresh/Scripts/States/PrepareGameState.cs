@@ -69,6 +69,7 @@ namespace JuiceFresh.States
             ConfigureBoostButtons();
 
             LevelManager.TriggerOnEnterGame();
+            LevelManager.THIS.HealthSystem.TryUseLife();
         }
 
         private void ResetUIElements()

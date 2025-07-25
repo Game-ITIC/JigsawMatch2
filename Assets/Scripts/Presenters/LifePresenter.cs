@@ -22,11 +22,9 @@ namespace Presenters
 
         public void Initialize()
         {
-            _healthSystem.CurrentLives.Subscribe((int newValue) => { _textView.SetText(newValue.ToString()); }
-            ).AddTo(_disposable);
+            _healthSystem.CurrentLives.Subscribe((int newValue) => { _textView.SetText(newValue.ToString()); }).AddTo(_disposable);
 
-            Observable.EveryUpdate(UnityFrameProvider.EarlyUpdate).Subscribe(_ => _healthSystem.UpdateRegeneration()
-            ).AddTo(_disposable);
+            Observable.EveryUpdate(UnityFrameProvider.EarlyUpdate).Subscribe(_ => _healthSystem.UpdateRegeneration()).AddTo(_disposable);
         }
 
         public void Dispose()
