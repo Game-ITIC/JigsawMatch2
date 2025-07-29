@@ -267,9 +267,8 @@ PlayerSettings:
   AndroidTargetDevices: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: C:/Users/Sardor Akhmadjonov/Downloads/Telegram Desktop/iticgames
-    (7).keystore
-  AndroidKeyaliasName: shokhaproitic
+  AndroidKeystoreName: '{dedicated}: Downloads/iticgames.keystore'
+  AndroidKeyaliasName: 
   AndroidEnableArmv9SecurityFeatures: 0
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 1
