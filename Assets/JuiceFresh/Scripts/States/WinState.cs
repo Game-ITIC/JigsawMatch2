@@ -9,9 +9,7 @@ public class WinState : GameStateBase
 {
     private GameObject menuCompleteUI;
 
-    public WinState(LevelManager levelManager) : base(levelManager)
-    {
-    }
+    public WinState(LevelManager levelManager) : base(levelManager) { }
 
     public override void EnterState()
     {
@@ -20,12 +18,23 @@ public class WinState : GameStateBase
 
         // Show the complete menu UI
         ShowCompleteUI();
-        
+
         levelManager.GameEventDispatcher.DispatchWin();
-        
+
         // Trigger the win events
         LevelManager.TriggerOnMenuComplete();
         LevelManager.TriggerOnWin();
+        
+        
+        int currentLevelPlay = PlayerPrefs.GetInt("LevelPlay", 1);
+        PlayerPrefs.SetInt("LevelPlay", currentLevelPlay + 1);
+
+        if(currentLevelPlay >= 3)
+        {
+            // _adRewardService.SetAdRewardType(AdRewardType.Booster, BoostType.ExtraMoves);
+            IronSourceManager.Instance.ShowRewardedAd();
+            PlayerPrefs.SetInt("LevelPlay", 1);
+        }
     }
 
     public override void UpdateState()
@@ -36,7 +45,7 @@ public class WinState : GameStateBase
     public override void ExitState()
     {
         // Hide the complete UI if it's still visible
-        if (menuCompleteUI != null && menuCompleteUI.activeSelf)
+        if(menuCompleteUI != null && menuCompleteUI.activeSelf)
         {
             menuCompleteUI.SetActive(false);
         }
@@ -48,7 +57,12 @@ public class WinState : GameStateBase
         menuCompleteUI = GameObject.Find("CanvasGlobal").transform.Find("MenuComplete").gameObject;
         menuCompleteUI.SetActive(true);
         // LevelManager.THIS.CoinModel.Increase(100);
-        LevelManager.THIS.GameCompleteView.CoinsCollectedText.text = LevelManager.THIS.GameConfig.CoinRewardForLevelPass.ToString();
+
+
+        LevelManager.THIS.GameCompleteView.CoinsCollectedText.text = LevelManager.THIS.stars >= 3
+            ? (LevelManager.THIS.GameConfig.CoinRewardForLevelPass + LevelManager.THIS.GameConfig.CoinRewardFor3StarPass).ToString()
+            : LevelManager.THIS.GameConfig.CoinRewardForLevelPass.ToString();
+
         // Set up the menu content
         SetupCompleteMenu();
     }
@@ -97,20 +111,22 @@ public class WinState : GameStateBase
     {
         // Find the stars container and set up the earned stars
         Transform starsTransform = menuCompleteUI.transform.Find("Stars");
-        if (starsTransform != null)
+
+        if(starsTransform != null)
         {
             // Set stars visibility based on earned stars
             for (int i = 1; i <= 3; i++)
             {
                 Transform star = starsTransform.Find("Star" + i);
-                if (star != null)
+
+                if(star != null)
                 {
                     bool earned = levelManager.stars >= i;
                     star.gameObject.SetActive(earned);
                 }
             }
         }
-        
+
         levelManager.StarModel.Increase(levelManager.stars);
     }
 
@@ -137,7 +153,7 @@ public class WinState : GameStateBase
     private void OnMapClicked()
     {
         // Return to map
-        
+
         levelManager.currentLevel++;
         PlayerPrefs.SetInt("OpenLevel", levelManager.currentLevel);
         levelManager.gameStatus = GameState.Map;

@@ -85,7 +85,16 @@ namespace Initializers
                                                            PlayerPrefs.SetInt("OpenLevel", currentLevel + 1);
 
                                                            // TODO Gomnokod change
-                                                           _coinModel.Increase(_gameConfig.CoinRewardForLevelPass);
+
+                                                           if(LevelManager.THIS.stars >= 3)
+                                                           {
+                                                               _coinModel.Increase(_gameConfig.CoinRewardForLevelPass + _gameConfig.CoinRewardFor3StarPass);
+                                                           }
+                                                           else
+                                                           {
+                                                               _coinModel.Increase(_gameConfig.CoinRewardForLevelPass);
+                                                           }
+
                                                            _sceneLoader.LoadLastSceneAsync().Forget();
                                                        });
 
@@ -95,7 +104,16 @@ namespace Initializers
                                                            var currentLevel = PlayerPrefs.GetInt("OpenLevel", 1);
 
                                                            PlayerPrefs.SetInt("OpenLevel", currentLevel + 1);
-                                                           _coinModel.Increase(_gameConfig.CoinRewardForLevelPass);
+
+                                                           if(LevelManager.THIS.stars >= 3)
+                                                           {
+                                                               _coinModel.Increase(_gameConfig.CoinRewardForLevelPass + _gameConfig.CoinRewardFor3StarPass);
+                                                           }
+                                                           else
+                                                           {
+                                                               _coinModel.Increase(_gameConfig.CoinRewardForLevelPass);
+                                                           }
+
                                                            _sceneLoader.LoadGameAsync().Forget();
                                                        });
 
@@ -110,8 +128,21 @@ namespace Initializers
                                                                                                             {
                                                                                                                 Icon = _gameProvider.CoinSprite, Description = "You 2x your reward"
                                                                                                             });
-                                                                                                            _gameCompleteView.CoinsCollectedText.text =
-                                                                                                                (_gameConfig.CoinRewardForLevelPass * 2).ToString();
+
+                                                                                                            if(LevelManager.THIS.stars >= 3)
+                                                                                                            {
+                                                                                                                _gameCompleteView.CoinsCollectedText.text =
+                                                                                                                    ((_gameConfig.CoinRewardForLevelPass +
+                                                                                                                      _gameConfig.CoinRewardFor3StarPass) *
+                                                                                                                     2).ToString();
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                _gameCompleteView.CoinsCollectedText.text =
+                                                                                                                    (_gameConfig.CoinRewardForLevelPass * 2).ToString();
+                                                                                                            }
+
+
                                                                                                             _gameCompleteView.AdsButton.gameObject.SetActive(false);
                                                                                                         })
                                                                     .AddTo(localDisposable);
@@ -155,15 +186,14 @@ namespace Initializers
 
             _gameOverView.Home.onClick.RemoveAllListeners();
             _gameOverView.Home.onClick.AddListener(BackToBack);
-
-            _gameOverView.Home.onClick.RemoveAllListeners();
+            // _gameOverView.Home.onClick.RemoveAllListeners();
             _gameOverView.Home.onClick.AddListener(() =>
                                                    {
-                                                       _adRewardService.SetAdRewardType(AdRewardType.Booster, BoostType.ExtraMoves);
-                                                       IronSourceManager.Instance.ShowRewardedAd();
+                                                       // _adRewardService.SetAdRewardType(AdRewardType.Booster, BoostType.ExtraMoves);
+                                                       // IronSourceManager.Instance.ShowRewardedAd();
+                                                       _coinModel.Increase(_gameConfig.CoinRewardForLevelLose);
                                                    });
 
-        
 
             _adEventModel.OnRewardGranted.Subscribe(_ =>
                                                     {

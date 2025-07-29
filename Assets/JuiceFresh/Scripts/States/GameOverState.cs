@@ -36,6 +36,15 @@ namespace JuiceFresh.States
             LevelManager.TriggerOnLose();
 
             LevelManager.THIS.HealthSystem.TryUseLife();
+            int currentLevelPlay = PlayerPrefs.GetInt("LevelPlay", 1);
+            PlayerPrefs.SetInt("LevelPlay", currentLevelPlay + 1);
+
+            if(currentLevelPlay >= 3)
+            {
+                // _adRewardService.SetAdRewardType(AdRewardType.Booster, BoostType.ExtraMoves);
+                IronSourceManager.Instance.ShowRewardedAd();
+                PlayerPrefs.SetInt("LevelPlay", 1);
+            }
         }
 
         public override void UpdateState()
