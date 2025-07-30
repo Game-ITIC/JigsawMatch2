@@ -69,7 +69,14 @@ namespace Services
                     booster.Add(1);
                     break;
                 case AdRewardType.X2:
-                    _coinModel.Increase(_gameConfig.CoinRewardForLevelPass * 2);
+                    if(LevelManager.THIS.stars >= 3)
+                    {
+                        _coinModel.Increase(_gameConfig.CoinRewardForLevelPass + _gameConfig.CoinRewardFor3StarPass);
+                    }
+                    else
+                    {
+                        _coinModel.Increase(_gameConfig.CoinRewardForLevelPass);
+                    }
                     break;
                 case AdRewardType.Life:
                     _healthSystem.AddLives(1);
