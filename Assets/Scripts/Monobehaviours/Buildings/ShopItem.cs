@@ -14,6 +14,7 @@ namespace Monobehaviours.Buildings
         public int cost;
         public Building[] buildingsToUnlock;
         public bool isPurchased;
+
         public void UnlockBuildings()
         {
             foreach (var building in buildingsToUnlock)
@@ -21,13 +22,13 @@ namespace Monobehaviours.Buildings
                 building.Unlock();
             }
         }
-        
+
         public void LockBuildings()
         {
-            foreach (var building in buildingsToUnlock)
-            {
-                building.Lock();
-            }
+            // foreach (var building in buildingsToUnlock)
+            // {
+            // building.Lock();
+            // }
         }
 
         public void SpawnBuildings()
