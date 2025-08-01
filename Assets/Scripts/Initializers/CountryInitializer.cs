@@ -109,28 +109,29 @@ namespace Initializers
 
             _lifePopup.AdsButton.onClick.RemoveAllListeners();
             _lifePopup.AdsButton.onClick.AddListener(() =>
-            {
-                _adRewardService.SetAdRewardType(AdRewardType.Life);
+                                                     {
+                                                         _adRewardService.SetAdRewardType(AdRewardType.Life);
 
-                _ironSourceManager.ShowRewardedAd();
-            });
+                                                         _ironSourceManager.ShowRewardedAd();
+                                                     });
 
             _adEventModel.OnRewardGranted.Subscribe(_ =>
-            {
-                _lifePopup.Hide();
-                _rewardPopup.Show();
-            }).AddTo(_disposable);
+                                                    {
+                                                        _lifePopup.Hide();
+                                                        _rewardPopup.Show();
+                                                    })
+                .AddTo(_disposable);
 
             _lifePopup.BuyButton.onClick.RemoveAllListeners();
             _lifePopup.BuyButton.onClick.AddListener(() =>
-            {
-                if (_gemModel.Gems.Value >= 15)
-                {
-                    _healthSystem.AddLives(1);
-                    _gemModel.Decrease(15);
-                    _lifePopup.Hide();
-                }
-            });
+                                                     {
+                                                         if(_gemModel.Gems.Value >= 15)
+                                                         {
+                                                             _healthSystem.AddLives(1);
+                                                             _gemModel.Decrease(15);
+                                                             _lifePopup.Hide();
+                                                         }
+                                                     });
 
             // _menuView.InAppButton.onClick.RemoveAllListeners();
             // _menuView.InAppButton.onClick.AddListener(ShowInAppView);
@@ -162,8 +163,10 @@ namespace Initializers
                 var parent = _inAppView.ButtonsParent;
 
                 var product = Object.Instantiate(_inAppConfig.ProductViewPrefab, parent);
-                product.Init(inAppProduct.productName, inAppProduct.icon, price,
-                    inAppProduct.amount.ToString());
+                product.Init(inAppProduct.productName,
+                             inAppProduct.icon,
+                             price,
+                             inAppProduct.amount.ToString());
 
                 product.BuyButton.onClick.RemoveAllListeners();
                 product.BuyButton.onClick.AddListener(() => { HandlePurchaseInApp(inAppProduct.product).Forget(); });
@@ -175,21 +178,23 @@ namespace Initializers
             foreach (var regionName in _regionConfig.Regions)
             {
                 var region = Object.Instantiate(_regionUIProvider.RegionUIViewPrefab,
-                    _regionUIProvider.RegionUIViewParent);
+                                                _regionUIProvider.RegionUIViewParent);
                 region.SetName(regionName);
-                if (regionName != "Soon")
+
+                if(regionName != "Soon")
                 {
-                    var max = _regionModel._buildingsAnimationConfig.data.Count - 1;
+                    var max = _regionModel._settingsProvider.ActiveRegion.data.Count - 1;
                     var current = _regionModel.CurrentLevelProgress;
 
                     region.SetProgress(current, max);
                     _regionModel.CurrentLevelProgressReactiveProperty.Subscribe(v =>
-                    {
-                        var max = _regionModel._buildingsAnimationConfig.data.Count - 1;
-                        var current = _regionModel.CurrentLevelProgress;
+                                                                                {
+                                                                                    var max = _regionModel._settingsProvider.ActiveRegion.data.Count - 1;
+                                                                                    var current = _regionModel.CurrentLevelProgress;
 
-                        region.SetProgress(current, max);
-                    }).AddTo(region);
+                                                                                    region.SetProgress(current, max);
+                                                                                })
+                        .AddTo(region);
                 }
             }
 
@@ -197,9 +202,10 @@ namespace Initializers
             // var model = _regionModel._buildingsAnimationConfig.data[_regionModel.CurrentLevelProgress - 1];
 
             _regionUpgradeService.JumpToFrame(0);
-            if (_regionModel.CurrentLevelProgress != 0)
+
+            if(_regionModel.CurrentLevelProgress != 0)
             {
-                int endFrame = _regionModel._buildingsAnimationConfig.data[_regionModel.CurrentLevelProgress - 1]
+                int endFrame = _regionModel._settingsProvider.ActiveRegion.data[_regionModel.CurrentLevelProgress - 1]
                     .endFrame;
                 _regionUpgradeService.JumpToFrame(endFrame);
             }
@@ -207,11 +213,11 @@ namespace Initializers
 
         private async UniTask Upgrade()
         {
-            if (_regionModel.CanUpgrade())
+            if(_regionModel.CanUpgrade())
             {
                 _regionModel.Upgrade();
 
-                int endFrame = _regionModel._buildingsAnimationConfig.data[_regionModel.CurrentLevelProgress - 1]
+                int endFrame = _regionModel._settingsProvider.ActiveRegion.data[_regionModel.CurrentLevelProgress - 1]
                     .endFrame;
 
                 _hideUnhideScript.OnEyeButtonClick();
@@ -232,16 +238,16 @@ namespace Initializers
             _inAppView.Show();
         }
 
-
         private void StartGame()
         {
             var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
-            if (_levelConfig.Testing)
+
+            if(_levelConfig.Testing)
             {
                 nextLevel = _levelConfig.LevelToPlay;
             }
 
-            if (_healthSystem.CanPlay)
+            if(_healthSystem.CanPlay)
             {
                 PlayerPrefs.SetInt("OpenLevel", nextLevel);
                 _sceneLoader.LoadGameAsync().Forget();
@@ -256,9 +262,10 @@ namespace Initializers
         {
             var isBought = await InAppPurchasingService.TryBuyConsumableAsync(shopProduct);
 
-            if (!isBought) return;
+            if(!isBought) return;
 
             var productConfig = _inAppConfig.InAppProducts.AsValueEnumerable().First(v => v.product == shopProduct);
+
             //TODO POKAZAT CHTO ON GEY POLUCHIL BABKI SVOI
             switch (shopProduct)
             {

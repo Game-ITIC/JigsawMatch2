@@ -26,8 +26,8 @@ namespace Services
             _regionModel = regionModel;
 
             Debug.Log(_regionModel.CurrentLevelProgress);
-            animator = regionModel._buildingsAnimationConfig.animator;
-            animationClip = regionModel._buildingsAnimationConfig.animationClip;
+            animator = regionModel._settingsProvider.ActiveRegion.animator;
+            animationClip = regionModel._settingsProvider.ActiveRegion.animationClip;
 
             _cancellationTokenSource = new CancellationTokenSource();
 
@@ -39,7 +39,6 @@ namespace Services
 
             playableGraph.Play();
         }
-
 
         [Button]
         public void JumpToFrame(int frame)

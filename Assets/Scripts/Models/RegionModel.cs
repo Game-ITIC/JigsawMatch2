@@ -8,7 +8,7 @@ namespace Models
     public class RegionModel
     {
         private readonly StarModel _starModel;
-        public readonly BuildingsAnimationConfig _buildingsAnimationConfig;
+        public readonly BuildingAnimationSettingsProvider _settingsProvider;
 
         public int CurrentLevelProgress
         {
@@ -20,17 +20,17 @@ namespace Models
 
         public RegionModel(
             StarModel starModel,
-            BuildingsAnimationConfig buildingsAnimationConfig
+            BuildingAnimationSettingsProvider settingsProvider
         )
         {
             _starModel = starModel;
-            _buildingsAnimationConfig = buildingsAnimationConfig;
+            _settingsProvider = settingsProvider;
             Load();
         }
 
         public bool CanUpgrade()
         {
-            return _starModel.Stars.CurrentValue > 5 && _buildingsAnimationConfig.data.Count > CurrentLevelProgress;
+            return _starModel.Stars.CurrentValue > 5 && _settingsProvider.ActiveRegion.data.Count > CurrentLevelProgress;
         }
 
         public void Upgrade()

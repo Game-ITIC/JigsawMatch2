@@ -43,7 +43,7 @@ namespace Scopes.Country
                 "asset",
                 "Please enter a file name to save the country configuration to");
 
-            if (!string.IsNullOrEmpty(path))
+            if(!string.IsNullOrEmpty(path))
             {
                 // Save the asset and refresh the AssetDatabase
                 UnityEditor.AssetDatabase.CreateAsset(newConfig, path);
@@ -65,12 +65,7 @@ namespace Scopes.Country
         [Tooltip("Manager for the building shop system")] [SerializeField]
         private BuildingShopManager buildingShopManager;
 
-        [Space(10)]
-        [Title("UI Components")]
-        [LabelWidth(130)]
-        [LabelText("Coins Display")]
-        [Tooltip("Text view for displaying player's coins")]
-        [SerializeField]
+        [Space(10)] [Title("UI Components")] [LabelWidth(130)] [LabelText("Coins Display")] [Tooltip("Text view for displaying player's coins")] [SerializeField]
         private TextView coinTextView;
 
         [LabelText("Stars Display")] [Tooltip("Text view for displaying player's stars")] [SerializeField]
@@ -78,7 +73,7 @@ namespace Scopes.Country
 
         [LabelText("Gems Display")] [Tooltip("Text view for displaying player's gems")] [SerializeField]
         private TextView gemTextView;
-        
+
         [LabelText("Lifes Display")] [Tooltip("Text view for displaying player's lifes")] [SerializeField]
         private TextView lifeTextView;
 
@@ -94,6 +89,8 @@ namespace Scopes.Country
 
         [SerializeField] private LifePopup lifePopup;
         [SerializeField] private RewardPopup rewardPopup;
+        [SerializeField] private BuildingAnimationSettingsProvider settingsProvider;
+
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(menuView);
@@ -105,10 +102,11 @@ namespace Scopes.Country
             builder.RegisterComponent(menuNavigationProvider);
             builder.RegisterComponent(lifePopup);
             builder.RegisterComponent(rewardPopup);
-            
+            builder.RegisterComponent(settingsProvider);
+
             builder.RegisterInstance(countryConfig);
             builder.RegisterInstance(regionConfig);
-            
+
             builder.Register<CoinPresenter>(Lifetime.Scoped)
                 .As<IInitializable>()
                 .WithParameter(coinTextView);
@@ -137,7 +135,7 @@ namespace Scopes.Country
             builder.Register<RegionUpgradeService>(Lifetime.Singleton);
 
             builder.Register<MenuTabs>(Lifetime.Singleton);
-            
+
             ConfigureCountry(builder);
         }
 
