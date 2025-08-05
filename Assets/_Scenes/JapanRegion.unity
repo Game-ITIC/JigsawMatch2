@@ -1017,7 +1017,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 1082, y: -43}
+  m_AnchoredPosition: {x: 1082, y: -43.000244}
   m_SizeDelta: {x: 0, y: 230}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &177305620
@@ -1416,7 +1416,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 107.49994, y: -51}
+  m_AnchoredPosition: {x: 107.49988, y: -51.000244}
   m_SizeDelta: {x: -215.00006, y: -149.99976}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &238044014
@@ -8367,6 +8367,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1686299094}
   m_CullTransparentMesh: 0
+--- !u!1 &1762512979 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3942191227059846450, guid: b0a640315d8b31d71ab5b405513a4246,
+    type: 3}
+  m_PrefabInstance: {fileID: 1905186714}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1788181523
 GameObject:
   m_ObjectHideFlags: 0
@@ -8653,7 +8659,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3942191227059846450, guid: b0a640315d8b31d71ab5b405513a4246,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1905186717}
   m_SourcePrefab: {fileID: 100100000, guid: b0a640315d8b31d71ab5b405513a4246, type: 3}
 --- !u!4 &1905186715 stripped
 Transform:
@@ -8661,6 +8671,33 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1905186714}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &1905186716 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5459824072474029302, guid: b0a640315d8b31d71ab5b405513a4246,
+    type: 3}
+  m_PrefabInstance: {fileID: 1905186714}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1905186717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1762512979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2654948292e4c9eb569cde5fc0e2319, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 1905186716}
+  animationClip: {fileID: 7400000, guid: e5c577cd4ecfe164fa1130163bab3b30, type: 2}
+  data:
+  - startFrame: 0
+    endFrame: 387
+  - startFrame: 387
+    endFrame: 898
+  - startFrame: 898
+    endFrame: 1584
 --- !u!1 &1929038659
 GameObject:
   m_ObjectHideFlags: 0
