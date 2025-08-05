@@ -30,7 +30,21 @@ namespace Models
 
         public bool CanUpgrade()
         {
-            return _starModel.Stars.CurrentValue > 5 && _settingsProvider.ActiveRegion.data.Count > CurrentLevelProgress;
+            if(_starModel.Stars.CurrentValue > 5 && _settingsProvider.ActiveRegion.data.Count > CurrentLevelProgress) return true;
+            return false;
+        }
+
+        public bool CanLoadNewRegion()
+        {
+            if(_starModel.Stars.CurrentValue > 5 && CurrentLevelProgress >= _settingsProvider.ActiveRegion.data.Count)
+            {
+                if(!_settingsProvider.CanLoadNextRegion()) return false;
+                _settingsProvider.LoadNextRegion();
+                CurrentLevelProgress = 0;
+                Save();
+            }
+
+            return true;
         }
 
         public void Upgrade()

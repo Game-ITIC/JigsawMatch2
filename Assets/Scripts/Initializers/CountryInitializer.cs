@@ -49,6 +49,7 @@ namespace Initializers
         private readonly RewardPopup _rewardPopup;
 
         private CompositeDisposable _disposable = new();
+        private BuildingAnimationSettingsProvider _settingsProvider;
 
         public CountryInitializer(MenuView menuView,
             SceneLoader sceneLoader,
@@ -71,8 +72,8 @@ namespace Initializers
             AdRewardService adRewardService,
             IronSourceManager ironSourceManager,
             AdEventModel adEventModel,
-            RewardPopup rewardPopup
-        )
+            RewardPopup rewardPopup, 
+            BuildingAnimationSettingsProvider settingsProvider)
         {
             _menuView = menuView;
             _sceneLoader = sceneLoader;
@@ -96,10 +97,12 @@ namespace Initializers
             _ironSourceManager = ironSourceManager;
             _adEventModel = adEventModel;
             _rewardPopup = rewardPopup;
+            _settingsProvider = settingsProvider;
         }
 
         public async UniTask StartAsync(CancellationToken cancellation = new CancellationToken())
         {
+            await _settingsProvider.Warmup();
             await _menuView.Warmup();
             await _inAppView.Warmup();
             await _menuTabs.Warmup();
@@ -213,6 +216,16 @@ namespace Initializers
 
         private async UniTask Upgrade()
         {
+            if(_regionModel.CanLoadNewRegion())
+            {
+                _regionModel.LoadNewRegion();
+            }
+            else
+            {
+                Debug.LogWarning("No regions available");
+                return;
+            }
+            
             if(_regionModel.CanUpgrade())
             {
                 _regionModel.Upgrade();
