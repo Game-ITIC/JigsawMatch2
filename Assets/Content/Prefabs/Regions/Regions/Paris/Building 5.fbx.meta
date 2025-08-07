@@ -3,7 +3,27 @@ guid: cddd528c006e48643bf2456a73cd783f
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Devor
+    second: {fileID: 2100000, guid: fc38d44e41548474da46b5f8f94c972f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Roof2
+    second: {fileID: 2100000, guid: 0990038a8d62acd4c89af075c3b1aae8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Windows.001
+    second: {fileID: 2100000, guid: bf37bc5306154ce469bf19b698b15422, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: windows_glass
+    second: {fileID: 2100000, guid: 722fdf61d99262c479383d3633a5f1e6, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
