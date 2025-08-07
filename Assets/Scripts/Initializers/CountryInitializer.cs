@@ -218,7 +218,7 @@ namespace Initializers
         {
             if(_regionModel.CanLoadNewRegion())
             {
-                _regionModel.LoadNewRegion();
+                // _regionModel.LoadNewRegion();
             }
             else
             {

@@ -30,7 +30,8 @@ namespace Configs
         public async UniTask Warmup()
         {
             Load();
-            LoadRegion(currentRegionIndex);
+            _activeRegion = buildingsAnimationConfigs[0];
+            // LoadRegion(currentRegionIndex);
         }
 
         private void Load()
