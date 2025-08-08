@@ -3,7 +3,97 @@ guid: 46080e64d3725dd409876e6216b304f0
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Platform
+    second: {fileID: 2100000, guid: f90b96b31ef74bd45a122a89371f5b79, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Street light
+    second: {fileID: 2100000, guid: 4e9972535b0c7a84b8fc86876264dac8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: border
+    second: {fileID: 2100000, guid: f55bb28bb3cfb9c4c81b93b67ab81025, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: cafe
+    second: {fileID: 2100000, guid: 996791a0182e2154896ae41475825846, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: cafe1
+    second: {fileID: 2100000, guid: decc07e7295f2d64bac90915410bb765, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: cafe_glass
+    second: {fileID: 2100000, guid: 0cca89e20634a4d4aa59bfa480963b79, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: facad2
+    second: {fileID: 2100000, guid: d95749cafcad0a443a3caa6b5cf29e8c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: facade
+    second: {fileID: 2100000, guid: 23a3071897808d745ba77fc514063e58, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: foliage
+    second: {fileID: 2100000, guid: fa89ea8da50c1d141b3328f9fcb60f63, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: foundation
+    second: {fileID: 2100000, guid: b5f178260f5a944439807b42a19db795, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ground
+    second: {fileID: 2100000, guid: 10da2fa87e6bce24698876cc8842788c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: light_glass
+    second: {fileID: 2100000, guid: 75c25c99299aa2642a245e9d6e94b1c7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: roof
+    second: {fileID: 2100000, guid: f17eac5ab3aa76240aad20ed4bdfedb6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: showcase_shop3
+    second: {fileID: 2100000, guid: 13e893b2ea5d44b4498a3d59c51f634f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: showcases_glasses
+    second: {fileID: 2100000, guid: bbf1d4543d75f234298b8ce3ba93b594, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tree trunk
+    second: {fileID: 2100000, guid: 0124487c7a6a4f24c9a156eae9fa9f4d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: window_frame
+    second: {fileID: 2100000, guid: 5e6fffab69128d54ab28a3ca57746f08, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: windows_glass
+    second: {fileID: 2100000, guid: 12c6eff8137dbf44ea1f883ca0c43fba, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

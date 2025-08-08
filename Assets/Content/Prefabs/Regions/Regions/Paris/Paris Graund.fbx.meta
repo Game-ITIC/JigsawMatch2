@@ -3,7 +3,17 @@ guid: 97936cf3bab915048b30319917aaa384
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Graund
+    second: {fileID: 2100000, guid: 2b36de409c79a0f44a217b23afda05b9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: 24be926ed3f5a3c4d97d8823b1cb8966, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

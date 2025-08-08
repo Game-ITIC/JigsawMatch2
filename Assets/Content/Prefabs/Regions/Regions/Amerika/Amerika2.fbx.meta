@@ -3,7 +3,102 @@ guid: e8f16cd37565ac0449b6c96767123783
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fantasy_Tree_Texture_11_Material
+    second: {fileID: 2100000, guid: e25fc1e36b9580a4aa3332f3a3363492, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fantasy_Tree_Texture_12_Material
+    second: {fileID: 2100000, guid: 00a43aaba7836644a8534cef9e239fc6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fantasy_Tree_Texture_1_Material
+    second: {fileID: 2100000, guid: 2de64d5e491ecf74dad4b5d2a21161d2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fantasy_Tree_Texture_2_Material
+    second: {fileID: 2100000, guid: a99edd56ae440fb4d89e15b1082cf711, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fantasy_Tree_Texture_3
+    second: {fileID: 2100000, guid: b50b2152274d5ad48b39656b7171cf1d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fantasy_Tree_Texture_4_Material
+    second: {fileID: 2100000, guid: c9ed00e984f7e0f40b5e1fb7c21c1865, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fantasy_Tree_Texture_5_Material
+    second: {fileID: 2100000, guid: ef4e4a65b4a0a25498219b57d376de25, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fantasy_Tree_Texture_6_Material
+    second: {fileID: 2100000, guid: f8a6fc75a98938040ae74ab9a75fff64, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fantasy_Tree_Texture_9
+    second: {fileID: 2100000, guid: 610eb307778aaaf43b0da8fe9abbef9a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: 394fe7049f372434387128caeee19122, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: 578700b7d91c0fa4b8fbe5e54f896358, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: a64233f8c1f6a834cbd73761f8881f30, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.003
+    second: {fileID: 2100000, guid: fc1f5538bf7fb6b41a82c5c25b185fb0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.004
+    second: {fileID: 2100000, guid: e563e3fd64ebc7b4f9f74fb1a407141a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.005
+    second: {fileID: 2100000, guid: d80c1e56a3ce2574c8c6c6d61c8ffddc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.007
+    second: {fileID: 2100000, guid: 70d3455228f117a408692c2b00117dba, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.008
+    second: {fileID: 2100000, guid: 2e2e0b9036d6b9749b087e91c310731f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.009
+    second: {fileID: 2100000, guid: 11b4213b26cf850429fa4fa2eab856c7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.010
+    second: {fileID: 2100000, guid: 2d29e088bfdf2a743be4b502db1f962b, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

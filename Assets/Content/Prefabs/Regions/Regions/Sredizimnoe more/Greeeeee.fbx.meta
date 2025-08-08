@@ -3,7 +3,17 @@ guid: f5eb78eed5a3e2f4cadfd6f4b2e8a67f
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gumbaz
+    second: {fileID: 2100000, guid: 9baee42ab3b86a549adbc042152c711e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert1.001
+    second: {fileID: 2100000, guid: b8f753b8841e1e74ea164741489745a9, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

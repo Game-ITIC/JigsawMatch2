@@ -3,7 +3,27 @@ guid: 160cee69a9ec13842bbbdf3317febc72
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Roof2
+    second: {fileID: 2100000, guid: 3082d074c403c444bbface455d4f8082, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Windows.001
+    second: {fileID: 2100000, guid: b41c49af3b8323543ab0a0f7ee772a56, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ground.001
+    second: {fileID: 2100000, guid: ab03dc228588da74c966697812f9ebab, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: windows_glass
+    second: {fileID: 2100000, guid: 9b06f1d73ff4181468b7e19acac07f9e, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
