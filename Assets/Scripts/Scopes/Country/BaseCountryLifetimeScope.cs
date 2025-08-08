@@ -79,7 +79,6 @@ namespace Scopes.Country
 
         [SerializeField] private InAppView inAppView;
 
-        [SerializeField] private BuildingsAnimationConfig buildingsAnimationConfig;
         [SerializeField] private HideUnhideScript hideUnhideScript;
 
         [SerializeField] private RegionUIProvider regionUIProvider;
@@ -96,7 +95,6 @@ namespace Scopes.Country
             builder.RegisterComponent(menuView);
             builder.RegisterComponent(buildingShopManager);
             builder.RegisterComponent(inAppView);
-            builder.RegisterComponent(buildingsAnimationConfig);
             builder.RegisterComponent(hideUnhideScript);
             builder.RegisterComponent(regionUIProvider);
             builder.RegisterComponent(menuNavigationProvider);
@@ -131,7 +129,7 @@ namespace Scopes.Country
                 .As<IInitializable>()
                 .WithParameter(lifeTextView);
 
-            builder.Register<RegionModel>(Lifetime.Singleton).WithParameter(buildingsAnimationConfig);
+            builder.Register<RegionModel>(Lifetime.Singleton);
             builder.Register<RegionUpgradeService>(Lifetime.Singleton);
 
             builder.Register<MenuTabs>(Lifetime.Singleton);

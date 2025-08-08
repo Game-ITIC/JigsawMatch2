@@ -30,8 +30,8 @@ namespace Configs
         public async UniTask Warmup()
         {
             Load();
-            _activeRegion = buildingsAnimationConfigs[0];
-            // LoadRegion(currentRegionIndex);
+            // _activeRegion = buildingsAnimationConfigs[0];
+            LoadRegion(currentRegionIndex);
         }
 
         private void Load()
@@ -68,6 +68,7 @@ namespace Configs
 
             var prefab = buildingsAnimationConfigs[index];
             _activeRegion = Instantiate(prefab, regionParent);
+            _activeRegion.gameObject.SetActive(true);
         }
     }
 }
