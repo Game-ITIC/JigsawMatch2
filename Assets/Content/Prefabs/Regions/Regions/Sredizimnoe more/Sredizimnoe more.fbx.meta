@@ -3,7 +3,177 @@ guid: b3f6312cd04a1a94a9ecc70fa8815cbd
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 2_graund
+    second: {fileID: 2100000, guid: e676c0c5d20346646b30be6addef8f88, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 3_devor
+    second: {fileID: 2100000, guid: ee5a1388108b09e42b5929e15fb56331, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 3zdaniya_krisha
+    second: {fileID: 2100000, guid: d97bc8d433ec00d488a68e7cff6956ba, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 5_graund
+    second: {fileID: 2100000, guid: 95ab6efa85c89c643ae2dea578a07729, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 5_graund.001
+    second: {fileID: 2100000, guid: 9e9db30eec3930d4da98ecc6aa421121, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 5zdaniya_krisha
+    second: {fileID: 2100000, guid: 3cc874979292cd14b97001abb8464c9c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Devor
+    second: {fileID: 2100000, guid: c3da582a6bd8958488606cf9dd3e3581, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Devor.002
+    second: {fileID: 2100000, guid: 112efaa9eeb4e5f4e8e97aa442cfb831, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fantasy_Tree_Texture_11_Material
+    second: {fileID: 2100000, guid: 5c91853277dfa094788935cbbb556d52, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fantasy_Tree_Texture_1_Material
+    second: {fileID: 2100000, guid: 92473495e299a9849ae6ca3ffe9a6e30, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fantasy_Tree_Texture_2_Material
+    second: {fileID: 2100000, guid: 8e39e3c2b85a86141b096cbe78869025, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fantasy_Tree_Texture_5_Material
+    second: {fileID: 2100000, guid: 47ff2abe7ae3d3744984a8584b6590cd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fantasy_Tree_Texture_6_Material
+    second: {fileID: 2100000, guid: ed102d1fa4f036b45884c07ed9148a0d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Graund
+    second: {fileID: 2100000, guid: fab9ab696722f9a4c9e6cd8d404d9d34, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Graund.001
+    second: {fileID: 2100000, guid: 850493c04eaba2d489ce42f4870e0503, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gumbaz
+    second: {fileID: 2100000, guid: d10b6f597eb3dbf41b4446ac2d4925a6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gumbaz1
+    second: {fileID: 2100000, guid: 13106319aadc8834c82ba44d07edaeed, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gumbaz2
+    second: {fileID: 2100000, guid: 09a6c90d8d45bd245803af043a20e7c9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gumbaz_oyna
+    second: {fileID: 2100000, guid: 391b756a0566d9b408c740ef9e0f7429, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Krisha
+    second: {fileID: 2100000, guid: b880219127d34854e94f8dfe7aec9516, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Krisha.001
+    second: {fileID: 2100000, guid: f3d93ff72b4d08145829d54160a07d79, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Light_Brown
+    second: {fileID: 2100000, guid: bd4b5e905d0d2444ca3f9b32587f99db, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Light_Brown.003
+    second: {fileID: 2100000, guid: a56161808354ff141a0b85756bd2cfd4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: bae830146958fe84282b863faa85e62f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: 7e648d46bee66e54a8adb6f6bbdd57d4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: 9437f1e6fc46a374ba9fc99e38860ac7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rock
+    second: {fileID: 2100000, guid: 33fce9c084c08484082f3d2c04ae216d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rock.001
+    second: {fileID: 2100000, guid: 3b913ea5dd39a7142bfcd3f105db94dc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rock.002
+    second: {fileID: 2100000, guid: 1f2347a128d640f4dbf38488fa394e25, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Roofing
+    second: {fileID: 2100000, guid: 9c1661198b4aff74bb8158ede458badc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert1.001
+    second: {fileID: 2100000, guid: 9ac7336434b9e9b4ebb5c9421e323ee6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert1.004
+    second: {fileID: 2100000, guid: 4c75200f68ab77949ba6b8a0fd53e5f6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert1.005
+    second: {fileID: 2100000, guid: f39ae1898d935de4491b70e16e455906, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: three
+    second: {fileID: 2100000, guid: a9d3e25af4ffda54a8b91cf3289c8f8e, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
