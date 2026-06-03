@@ -142,14 +142,20 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     // Second sprite of square
     public Sprite squareSprite1;
 
-    // Outline border for squares
+    // Outline side border for squares
     public Sprite outline1;
 
-    // Outline border for squares
+    // Top-left outline corner for squares
     public Sprite outline2;
 
-    // Outline border for squares
+    // Bottom-right outline corner for squares
     public Sprite outline3;
+
+    // Top-right outline corner for squares
+    public Sprite outline4;
+
+    // Bottom-left outline corner for squares
+    public Sprite outline5;
 
     // Sprites of collectable items
     public Sprite[] ingrediendSprites;
@@ -161,6 +167,45 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     public Sprite doubleSolidBlock;
 
     #endregion
+
+#if UNITY_EDITOR
+    private const string Outline1Path = "Assets/JuiceFresh/Textures/Blocks/border_01.png";
+    private const string Outline2Path = "Assets/JuiceFresh/Textures/Blocks/border_02.png";
+    private const string Outline3Path = "Assets/JuiceFresh/Textures/Blocks/border_03.png";
+    private const string Outline4Path = "Assets/JuiceFresh/Textures/Blocks/border_04.png";
+    private const string Outline5Path = "Assets/JuiceFresh/Textures/Blocks/border_05.png";
+
+    private void OnValidate()
+    {
+        AssignDefaultOutlineSprites();
+    }
+
+    [ContextMenu("Assign Default Outline Sprites")]
+    private void AssignDefaultOutlineSprites()
+    {
+        bool changed = false;
+
+        changed |= AssignSprite(ref outline1, Outline1Path);
+        changed |= AssignSprite(ref outline2, Outline2Path);
+        changed |= AssignSprite(ref outline3, Outline3Path);
+        changed |= AssignSprite(ref outline4, Outline4Path);
+        changed |= AssignSprite(ref outline5, Outline5Path);
+
+        if(changed)
+            UnityEditor.EditorUtility.SetDirty(this);
+    }
+
+    private static bool AssignSprite(ref Sprite target, string path)
+    {
+        Sprite sprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(path);
+
+        if(sprite == null || target == sprite)
+            return false;
+
+        target = sprite;
+        return true;
+    }
+#endif
 
     #region Level Configuration
 
@@ -1287,7 +1332,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         row = maxRows - 1;
 
-        for (col = 0; col < maxCols; col++)
+        for (col = 1; col < maxCols; col++)
         {
             // Right
             SetOutline(col, row, 90);
@@ -1295,7 +1340,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         col = maxCols - 1;
 
-        for (row = maxRows - 1; row >= 0; row--)
+        for (row = maxRows - 2; row >= 0; row--)
         {
             // Up
             SetOutline(col, row, 180);
@@ -1303,7 +1348,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         row = 0;
 
-        for (col = maxCols - 1; col >= 0; col--)
+        for (col = maxCols - 2; col > 0; col--)
         {
             // Left
             SetOutline(col, row, 270);
@@ -1343,32 +1388,28 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
                 if(row == 0 && col == 0)
                 {
                     // Top left
-                    spr.sprite = outline3;
-                    outline.transform.localRotation = Quaternion.Euler(0, 0, 180);
+                    SetCornerOutline(outline, spr, outline2);
                     outline.transform.localPosition = Vector3.zero + Vector3.left * 0.01f + Vector3.up * 0.01f;
                 }
 
                 if(row == 0 && col == maxCols - 1)
                 {
                     // Top right
-                    spr.sprite = outline3;
-                    outline.transform.localRotation = Quaternion.Euler(0, 0, 90);
+                    SetCornerOutline(outline, spr, outline4);
                     outline.transform.localPosition = Vector3.zero + Vector3.right * 0.01f + Vector3.up * 0.01f;
                 }
 
                 if(row == maxRows - 1 && col == 0)
                 {
                     // Bottom left
-                    spr.sprite = outline3;
-                    outline.transform.localRotation = Quaternion.Euler(0, 0, -90);
+                    SetCornerOutline(outline, spr, outline5);
                     outline.transform.localPosition = Vector3.zero + Vector3.left * 0.01f + Vector3.down * 0.01f;
                 }
 
                 if(row == maxRows - 1 && col == maxCols - 1)
                 {
                     // Bottom right
-                    spr.sprite = outline3;
-                    outline.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                    SetCornerOutline(outline, spr, outline3);
                     outline.transform.localPosition = Vector3.zero + Vector3.right * 0.01f + Vector3.down * 0.01f;
                 }
             }
@@ -1381,9 +1422,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
                 {
                     GameObject outline = CreateOutline(square);
                     SpriteRenderer spr = outline.GetComponent<SpriteRenderer>();
-                    spr.sprite = outline3;
+                    SetCornerOutline(outline, spr, outline2);
                     outline.transform.localPosition = Vector3.zero + Vector3.left * 0.015f + Vector3.up * 0.015f;
-                    outline.transform.localRotation = Quaternion.Euler(0, 0, 180);
                 }
 
                 // Top right
@@ -1393,9 +1433,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
                 {
                     GameObject outline = CreateOutline(square);
                     SpriteRenderer spr = outline.GetComponent<SpriteRenderer>();
-                    spr.sprite = outline3;
+                    SetCornerOutline(outline, spr, outline4);
                     outline.transform.localPosition = Vector3.zero + Vector3.right * 0.015f + Vector3.up * 0.015f;
-                    outline.transform.localRotation = Quaternion.Euler(0, 0, 90);
                 }
 
                 // Bottom left
@@ -1405,9 +1444,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
                 {
                     GameObject outline = CreateOutline(square);
                     SpriteRenderer spr = outline.GetComponent<SpriteRenderer>();
-                    spr.sprite = outline3;
+                    SetCornerOutline(outline, spr, outline5);
                     outline.transform.localPosition = Vector3.zero + Vector3.left * 0.015f + Vector3.down * 0.015f;
-                    outline.transform.localRotation = Quaternion.Euler(0, 0, 270);
                 }
 
                 // Bottom right
@@ -1417,9 +1455,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
                 {
                     GameObject outline = CreateOutline(square);
                     SpriteRenderer spr = outline.GetComponent<SpriteRenderer>();
-                    spr.sprite = outline3;
+                    SetCornerOutline(outline, spr, outline3);
                     outline.transform.localPosition = Vector3.zero + Vector3.right * 0.015f + Vector3.down * 0.015f;
-                    outline.transform.localRotation = Quaternion.Euler(0, 0, 0);
                 }
             }
         }
@@ -1432,9 +1469,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             {
                 GameObject outline = CreateOutline(square);
                 SpriteRenderer spr = outline.GetComponent<SpriteRenderer>();
-                spr.sprite = outline2;
+                SetCornerOutline(outline, spr, outline2);
                 outline.transform.localPosition = Vector3.zero;
-                outline.transform.localRotation = Quaternion.Euler(0, 0, 0);
                 corner = true;
             }
 
@@ -1443,9 +1479,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             {
                 GameObject outline = CreateOutline(square);
                 SpriteRenderer spr = outline.GetComponent<SpriteRenderer>();
-                spr.sprite = outline2;
+                SetCornerOutline(outline, spr, outline3);
                 outline.transform.localPosition = Vector3.zero;
-                outline.transform.localRotation = Quaternion.Euler(0, 0, 180);
                 corner = true;
             }
 
@@ -1454,9 +1489,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             {
                 GameObject outline = CreateOutline(square);
                 SpriteRenderer spr = outline.GetComponent<SpriteRenderer>();
-                spr.sprite = outline2;
+                SetCornerOutline(outline, spr, outline4);
                 outline.transform.localPosition = Vector3.zero;
-                outline.transform.localRotation = Quaternion.Euler(0, 0, 270);
                 corner = true;
             }
 
@@ -1465,9 +1499,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             {
                 GameObject outline = CreateOutline(square);
                 SpriteRenderer spr = outline.GetComponent<SpriteRenderer>();
-                spr.sprite = outline2;
+                SetCornerOutline(outline, spr, outline5);
                 outline.transform.localPosition = Vector3.zero;
-                outline.transform.localRotation = Quaternion.Euler(0, 0, 90);
                 corner = true;
             }
 
@@ -1506,6 +1539,12 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
                 }
             }
         }
+    }
+
+    void SetCornerOutline(GameObject outline, SpriteRenderer spr, Sprite sprite)
+    {
+        spr.sprite = sprite != null ? sprite : outline3;
+        outline.transform.localRotation = Quaternion.identity;
     }
 
     GameObject CreateOutline(Square square)

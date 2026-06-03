@@ -48,17 +48,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   items:
-  - {fileID: 21300000, guid: 5e89613e11e90bc40b61a8c009095839, type: 3}
-  - {fileID: 21300000, guid: ef826872dd58b7347bcc7701b8984748, type: 3}
-  - {fileID: 21300000, guid: eb40af5378fc151408b71a14b311c7ee, type: 3}
-  - {fileID: 21300000, guid: c44c2128b75f0ab4596c61a0e2d9b349, type: 3}
-  - {fileID: 21300000, guid: f6a3bb4b5cc2c8a409436b886dc4db43, type: 3}
+  - {fileID: -555909508, guid: b2f97baa93a4bc344850d1bd71b5050b, type: 3}
+  - {fileID: 1764671253, guid: b2f97baa93a4bc344850d1bd71b5050b, type: 3}
+  - {fileID: -864012474, guid: b2f97baa93a4bc344850d1bd71b5050b, type: 3}
+  - {fileID: 665385936, guid: b2f97baa93a4bc344850d1bd71b5050b, type: 3}
   itemsAnimation:
-  - {fileID: 21300000, guid: 5e89613e11e90bc40b61a8c009095839, type: 3}
-  - {fileID: 21300000, guid: ef826872dd58b7347bcc7701b8984748, type: 3}
-  - {fileID: 21300000, guid: eb40af5378fc151408b71a14b311c7ee, type: 3}
-  - {fileID: 21300000, guid: c44c2128b75f0ab4596c61a0e2d9b349, type: 3}
-  - {fileID: 21300000, guid: f6a3bb4b5cc2c8a409436b886dc4db43, type: 3}
+  - {fileID: -555909508, guid: b2f97baa93a4bc344850d1bd71b5050b, type: 3}
+  - {fileID: 1764671253, guid: b2f97baa93a4bc344850d1bd71b5050b, type: 3}
+  - {fileID: -864012474, guid: b2f97baa93a4bc344850d1bd71b5050b, type: 3}
+  - {fileID: 665385936, guid: b2f97baa93a4bc344850d1bd71b5050b, type: 3}
   stripedItems:
   - horizontal: {fileID: 21300000, guid: ab4ddda7d92b01c4085d3ac1a497aa4b, type: 3}
     vertical: {fileID: 21300000, guid: 68c7946ec52a0bb4dbba87e188efccff, type: 3}
@@ -79,11 +77,10 @@ MonoBehaviour:
   ChocoBombItems:
   - {fileID: 0}
   bombItems:
-  - {fileID: 21300000, guid: 5e89613e11e90bc40b61a8c009095839, type: 3}
-  - {fileID: 21300000, guid: ef826872dd58b7347bcc7701b8984748, type: 3}
-  - {fileID: 21300000, guid: eb40af5378fc151408b71a14b311c7ee, type: 3}
-  - {fileID: 21300000, guid: c44c2128b75f0ab4596c61a0e2d9b349, type: 3}
-  - {fileID: 21300000, guid: f6a3bb4b5cc2c8a409436b886dc4db43, type: 3}
+  - {fileID: -555909508, guid: b2f97baa93a4bc344850d1bd71b5050b, type: 3}
+  - {fileID: 1764671253, guid: b2f97baa93a4bc344850d1bd71b5050b, type: 3}
+  - {fileID: -864012474, guid: b2f97baa93a4bc344850d1bd71b5050b, type: 3}
+  - {fileID: 665385936, guid: b2f97baa93a4bc344850d1bd71b5050b, type: 3}
   sprRenderer: {fileID: 21290506}
   appearingEffect: {fileID: 157356, guid: 6edc18e850d8a134e88e99cb7a671687, type: 3}
   timerTextPrefab: {fileID: 146320, guid: a8088f5845f57544e806e54bb1a317ce, type: 3}
@@ -232,7 +229,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 5e89613e11e90bc40b61a8c009095839, type: 3}
+  m_Sprite: {fileID: -555909508, guid: b2f97baa93a4bc344850d1bd71b5050b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

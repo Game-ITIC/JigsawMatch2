@@ -11674,6 +11674,8 @@ MonoBehaviour:
   outline1: {fileID: 21300000, guid: aedfd74761eff26479a0969f4b6d5591, type: 3}
   outline2: {fileID: 21300000, guid: 440b23c6d2829de4fb99fd4ce4e0217f, type: 3}
   outline3: {fileID: 21300000, guid: d93fc221c44f6ca4a84c51271a3ae82b, type: 3}
+  outline4: {fileID: 21300000, guid: 6169ba38906e574478b0f6ba689dbc0a, type: 3}
+  outline5: {fileID: 21300000, guid: 0514fb4acf57bff4caeae307547697bd, type: 3}
   blockPrefab: {fileID: 179862, guid: 20204f83f367d93428a3e824b6ba4eb3, type: 3}
   wireBlockPrefab: {fileID: 153778, guid: d7a0ec3bdb439fb43a4ec9e26fe3f22c, type: 3}
   solidBlockPrefab: {fileID: 141174, guid: 546ef16483e777141b1e45b2f676d8b3, type: 3}
