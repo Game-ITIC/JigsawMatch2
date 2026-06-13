@@ -528,7 +528,7 @@ public class AnimationManager : MonoBehaviour
         Time.timeScale = 1;
         LevelManager.THIS.gameStatus = GameState.ToMap;
         CloseMenu();
-        SceneManager.LoadScene("RegionTest 1");
+        SceneManager.LoadScene("RegionSandbox");
     }
 
     public void Next()
