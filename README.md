@@ -12,6 +12,8 @@ Unity project for the JigsawMatch2 mobile game.
   - `UnityPurchasing` for IAP-related code.
   - `Testing` for temporary/runtime experiment scripts.
 - `Assets/Content` - first-party art, prefabs, animation, shaders, UI assets, configs, and models.
+  - Region art lives under `Assets/Content/Models/Regions`.
+  - Region prefabs and scene art live under `Assets/Content/Prefabs/Regions`.
 - `Assets/_TerrainData` - generated terrain and water profile assets.
 - `Assets/Settings` - Unity/rendering settings assets that should not live in the root.
 - `Assets/Resources` - Unity Resources assets that must be loaded by Resources API.
@@ -26,6 +28,14 @@ Unity project for the JigsawMatch2 mobile game.
 - Put scenes in `Assets/_Scenes`; avoid re-creating a parallel `Assets/Scenes` folder.
 - Put project art under `Assets/Content`; put imported store/vendor packs under `Assets/ThirdParty` unless they already have an established vendor folder.
 - Keep generated terrain/water data in `Assets/_TerrainData`.
+
+## Naming Rules
+
+- Use descriptive English names for folders, scenes, prefabs, models, animations, and materials.
+- Use `PascalCase` for Unity assets and folders, for example `AsiaRegion`, `ChinaVillage`, `MediterraneanSea`, and `ParisLandmarks`.
+- Avoid personal names, temporary jokes, transliteration, repeated-letter placeholders, and generated filenames such as `ChatGPT Image ...`.
+- Keep test/prototype scenes named by purpose, for example `RegionSandbox`, `AnimationSandbox`, and `VisualPolishSandbox`.
+- Keep legacy/source-only assets in clearly named folders such as `Legacy`, `SourceOBJ`, or `SourceMaterials`.
 
 ## Mobile URP Quality
 
