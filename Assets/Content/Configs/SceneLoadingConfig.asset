@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: SceneLoadingConfig
   m_EditorClassIdentifier: 
   <GameplaySceneName>k__BackingField: game
-  <Region>k__BackingField: RegionTest 1
+  <Region>k__BackingField: RegionSandbox
   <PersistentScenes>k__BackingField:
   - Bootstrap

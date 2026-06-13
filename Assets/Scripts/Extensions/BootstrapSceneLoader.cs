@@ -12,7 +12,7 @@ namespace Extensions
         private const string BootstrapScenePath = "Assets/_Scenes/Bootstrap.unity";
         private const string BootstrapSceneName = "Bootstrap";
         private const string MenuSceneName = "game";
-        private const string GameSceneName = "JapanRegion";
+        private const string GameSceneName = "AsiaRegion";
 
         static BootstrapSceneLoader()
         {
