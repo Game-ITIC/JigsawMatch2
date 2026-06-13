@@ -307,7 +307,7 @@ PrefabInstance:
     - target: {fileID: 5156420618786063633, guid: c3684eb18a1e9544796ecabc80398301,
         type: 3}
       propertyPath: m_Name
-      value: Amerika2 1
+      value: America
       objectReference: {fileID: 0}
     - target: {fileID: 5386702919316517026, guid: c3684eb18a1e9544796ecabc80398301,
         type: 3}

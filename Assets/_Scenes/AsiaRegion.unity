@@ -2566,7 +2566,7 @@ PrefabInstance:
     - target: {fileID: 7558752167140743591, guid: 747cfdab7b6bd9f9491eafe662e3efde,
         type: 3}
       propertyPath: m_Name
-      value: chinigaaa 1
+      value: ChinaVillageVariant
       objectReference: {fileID: 0}
     - target: {fileID: 7558752167140743591, guid: 747cfdab7b6bd9f9491eafe662e3efde,
         type: 3}
