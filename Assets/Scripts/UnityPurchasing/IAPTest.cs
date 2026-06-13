@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InappTest : MonoBehaviour
+public class IAPTest : MonoBehaviour
 {
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private Button removeAdsButton;
