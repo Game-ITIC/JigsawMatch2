@@ -1025,7 +1025,7 @@ PrefabInstance:
     - target: {fileID: 2916869223643293402, guid: 465fa63277134dcfd8aab1f6fa017230,
         type: 3}
       propertyPath: m_Name
-      value: chinigaaa
+      value: ChinaVillage
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
