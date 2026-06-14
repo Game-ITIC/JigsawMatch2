@@ -23,6 +23,12 @@ namespace UI
 
         public async UniTask Warmup()
         {
+            if (!CanWarmup())
+            {
+                await UniTask.Yield();
+                return;
+            }
+
             for (var i = 0; i < _menuNavigationProvider.NavigationButtons.Length; i++)
             {
                 var localIndex = i;
@@ -33,6 +39,15 @@ namespace UI
             JumpToPanel(NavigationPanels.Main);
 
             await UniTask.Yield();
+        }
+
+        private bool CanWarmup()
+        {
+            return _menuNavigationProvider != null
+                   && _menuNavigationProvider.SceneCanvas != null
+                   && _menuNavigationProvider.PanelsParent != null
+                   && _menuNavigationProvider.NavigationButtons != null
+                   && _menuNavigationProvider.NavigationButtons.Length > 0;
         }
 
         private async UniTask SwitchPanel(NavigationPanels navigationPanel)

@@ -1744,6 +1744,7 @@ GameObject:
   - component: {fileID: 1910930534}
   - component: {fileID: 1910930533}
   - component: {fileID: 1910930532}
+  - component: {fileID: 1910930535}
   m_Layer: 0
   m_Name: MenuLifetimeScope
   m_TagString: Untagged
@@ -1788,6 +1789,42 @@ MonoBehaviour:
   <SceneCanvas>k__BackingField: {fileID: 1625503489}
   <NavigationButtons>k__BackingField: []
   <PanelsParent>k__BackingField: {fileID: 0}
+--- !u!114 &1910930535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910930530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a62d7e8d15bb4ed8b5d1f0bb30bf983a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  taskButtonNames:
+  - Task Button 01
+  shopButtonNames:
+  - ShopButton
+  - Shop Button
+  starsCountButtonNames:
+  - Stars Count Button
+  - StarsCountButton
+  diamondCountButtonNames:
+  - Diamond Count Button
+  - Diamond Count Button Variant
+  - Dimond Count Button Variant
+  dailyAndTasksPanelNames:
+  - Daily And Tasks Panel
+  shopPanelNames:
+  - Shop Panel
+  closeButtonNames:
+  - Close Button
+  - CloseButton
+  - Close
+  - Back Button
+  - BackButton
+  hidePanelsOnStart: 1
+  closeOtherPanelsOnOpen: 1
 --- !u!114 &1910930533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1801,9 +1838,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: 
-  autoRun: 1
-  autoInjectGameObjects: []
+    TypeName: Scopes.ServicesLifetimeScope
+  autoRun: 0
+  autoInjectGameObjects:
+  - {fileID: 1959823092}
   countryConfig: {fileID: 11400000, guid: 44a6920bb34179741b78d59ffdf34175, type: 2}
   menuView: {fileID: 1910930534}
   buildingShopManager: {fileID: 0}
@@ -1815,7 +1853,7 @@ MonoBehaviour:
   hideUnhideScript: {fileID: 0}
   regionUIProvider: {fileID: 0}
   regionConfig: {fileID: 11400000, guid: ecd52e9beba42cb4c9606de3292f48aa, type: 2}
-  menuNavigationProvider: {fileID: 0}
+  menuNavigationProvider: {fileID: 1910930532}
   lifePopup: {fileID: 0}
   rewardPopup: {fileID: 0}
   settingsProvider: {fileID: 0}

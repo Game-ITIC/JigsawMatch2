@@ -29,4 +29,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/AfricaRegion.unity
     guid: 1a232fffe380c6e498670aa8ee535481
+  - enabled: 1
+    path: Assets/_Scenes/MainMenu.unity
+    guid: eeebe0157439afa4fbc1d734d2efd262
   m_configObjects: {}
