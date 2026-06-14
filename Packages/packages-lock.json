@@ -31,13 +31,13 @@
       "hash": "5764d44d4232c8ea628549137559050ea6f6dc10"
     },
     "com.ivanmurzak.unity.mcp": {
-      "version": "0.72.1",
+      "version": "0.81.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.test-framework": "1.1.33",
         "com.unity.modules.uielements": "1.0.0",
-        "extensions.unity.playerprefsex": "2.1.3"
+        "extensions.unity.playerprefsex": "2.1.5"
       },
       "url": "https://package.openupm.com"
     },
@@ -444,7 +444,7 @@
       "url": "https://packages.unity.com"
     },
     "extensions.unity.playerprefsex": {
-      "version": "2.1.3",
+      "version": "2.1.5",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
