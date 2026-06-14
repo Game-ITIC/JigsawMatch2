@@ -31,8 +31,11 @@ namespace Presenters
 
         public void Initialize()
         {
-            _dailyButton.onClick.RemoveAllListeners();
-            _dailyButton.onClick.AddListener(OpenCalendar);
+            if(_dailyButton != null)
+            {
+                _dailyButton.onClick.RemoveListener(OpenCalendar);
+                _dailyButton.onClick.AddListener(OpenCalendar);
+            }
             
             Calendar.AddClickListener(OnDayClick);
         }

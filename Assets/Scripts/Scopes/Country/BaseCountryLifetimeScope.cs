@@ -62,6 +62,9 @@ namespace Scopes.Country
         [Tooltip("Main menu view controller")] [SerializeField]
         private MenuView menuView;
 
+        [Tooltip("Enable old Gley DailyRewards Calendar on the assigned daily button.")]
+        [SerializeField] private bool enableLegacyDailyRewards;
+
         [Tooltip("Manager for the building shop system")] [SerializeField]
         private BuildingShopManager buildingShopManager;
 
@@ -133,11 +136,11 @@ namespace Scopes.Country
                     .AsSelf();
             }
 
-            if(menuView != null && menuView.DailyButton != null)
+            if(enableLegacyDailyRewards && menuView != null && menuView.DailyRewardsButton != null)
             {
                 builder.Register<DailyRewardsPresenter>(Lifetime.Scoped)
                     .As<IInitializable>()
-                    .WithParameter(menuView.DailyButton);
+                    .WithParameter(menuView.DailyRewardsButton);
             }
 
             if(lifeTextView != null)

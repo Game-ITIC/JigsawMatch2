@@ -1,5 +1,4 @@
 ﻿using System;
-using DG.Tweening;
 using Services;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,33 +11,55 @@ namespace UI
         [SerializeField] private Button adsButton;
         [SerializeField] private Button buyButton;
         [SerializeField] private Button closeButton;
+        [SerializeField] private bool animatePanelTransitions = true;
+        [SerializeField, Min(0f)] private float panelOpenDuration = 0.3f;
+        [SerializeField, Min(0f)] private float panelCloseDuration = 0.18f;
+        [SerializeField] private AnimationCurve panelOpenCurve = CurvedUIPanelAnimator.CreateDefaultOpenCurve();
+        [SerializeField] private AnimationCurve panelCloseCurve = CurvedUIPanelAnimator.CreateDefaultCloseCurve();
+        [SerializeField] private AnimationCurve panelFadeCurve = CurvedUIPanelAnimator.CreateDefaultFadeCurve();
 
         public Button AdsButton => adsButton;
         public Button BuyButton => buyButton;
 
         private void Start()
         {
-            closeButton.onClick.RemoveAllListeners();
-            closeButton.onClick.AddListener(Hide);
+            if(closeButton != null)
+            {
+                closeButton.onClick.RemoveListener(Hide);
+                closeButton.onClick.AddListener(Hide);
+            }
         }
 
         public void Show()
         {
             gameObject.SetActive(true);
-            popupPanel.SetActive(true);
 
-            popupPanel.transform.localScale = Vector3.zero;
-            popupPanel.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack);
+            if(popupPanel == null)
+            {
+                return;
+            }
+
+            CurvedUIPanelAnimator.Show(
+                popupPanel,
+                animatePanelTransitions ? panelOpenDuration : 0f,
+                panelOpenCurve,
+                panelFadeCurve);
         }
 
         public void Hide()
         {
-            popupPanel.transform.DOScale(0f, 0.2f)
-                .OnComplete(() =>
-                {
-                    popupPanel.SetActive(false);
-                    gameObject.SetActive(false);
-                });
+            if(popupPanel == null)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+
+            CurvedUIPanelAnimator.Hide(
+                popupPanel,
+                animatePanelTransitions ? panelCloseDuration : 0f,
+                panelCloseCurve,
+                panelFadeCurve,
+                () => gameObject.SetActive(false));
         }
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,34 +10,46 @@ public class HideUnhideScript : MonoBehaviour
 
     private void Start()
     {
-        eyeButton.onClick.AddListener(OnEyeButtonClick);
+        if(eyeButton != null)
+        {
+            eyeButton.onClick.RemoveListener(OnEyeButtonClick);
+            eyeButton.onClick.AddListener(OnEyeButtonClick);
+        }
     }
 
     public void OnEyeButtonClick()
     {
         if(isVisible == true)
         {
-            uiElement1.SetActive(false);
-            uiElement2.SetActive(false);
-            uiElement3.SetActive(false);
-            uiElement4.SetActive(false);
-            uiElement5.SetActive(false);
-            uiElement6.SetActive(false);
+            SetActiveIfPresent(uiElement1, false);
+            SetActiveIfPresent(uiElement2, false);
+            SetActiveIfPresent(uiElement3, false);
+            SetActiveIfPresent(uiElement4, false);
+            SetActiveIfPresent(uiElement5, false);
+            SetActiveIfPresent(uiElement6, false);
             isVisible = false;
-            eyeHide.SetActive(false);
-            eyeUnhide.SetActive(true);
+            SetActiveIfPresent(eyeHide, false);
+            SetActiveIfPresent(eyeUnhide, true);
         }
         else
         {
-            uiElement1.SetActive(true);
-            uiElement2.SetActive(true);
-            uiElement3.SetActive(true);
-            uiElement4.SetActive(true);
-            uiElement5.SetActive(true);
-            uiElement6.SetActive(true);
+            SetActiveIfPresent(uiElement1, true);
+            SetActiveIfPresent(uiElement2, true);
+            SetActiveIfPresent(uiElement3, true);
+            SetActiveIfPresent(uiElement4, true);
+            SetActiveIfPresent(uiElement5, true);
+            SetActiveIfPresent(uiElement6, true);
             isVisible = true;
-            eyeHide.SetActive(true);
-            eyeUnhide.SetActive(false);
+            SetActiveIfPresent(eyeHide, true);
+            SetActiveIfPresent(eyeUnhide, false);
+        }
+    }
+
+    private static void SetActiveIfPresent(GameObject target, bool active)
+    {
+        if(target != null)
+        {
+            target.SetActive(active);
         }
     }
 }

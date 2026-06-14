@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UI;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -7,7 +8,7 @@ using UnityEngine.UI;
 
 public class MainMenuPanelController : MonoBehaviour
 {
-    [SerializeField] private string[] taskButtonNames = { "Task Button 01" };
+    [SerializeField] private string[] taskButtonNames = { "Task Button 01", "TaskButton", "Tasks Button", "Daily Button", "DailyButton" };
     [SerializeField] private string[] shopButtonNames = { "ShopButton", "Shop Button" };
     [SerializeField] private string[] starsCountButtonNames = { "Stars Count Button", "StarsCountButton" };
     [SerializeField] private string[] diamondCountButtonNames =
@@ -17,11 +18,17 @@ public class MainMenuPanelController : MonoBehaviour
         "Dimond Count Button Variant"
     };
 
-    [SerializeField] private string[] dailyAndTasksPanelNames = { "Daily And Tasks Panel" };
-    [SerializeField] private string[] shopPanelNames = { "Shop Panel" };
+    [SerializeField] private string[] dailyAndTasksPanelNames = { "Daily And Tasks Panel", "DailyAndTasksPanel", "Daily Tasks Panel", "Tasks Panel", "DailyRewardsPanel", "Daily Rewards Panel" };
+    [SerializeField] private string[] shopPanelNames = { "Shop Panel", "Shop Content Panel", "ShopContentPanel" };
     [SerializeField] private string[] closeButtonNames = { "Close Button", "CloseButton", "Close", "Back Button", "BackButton" };
     [SerializeField] private bool hidePanelsOnStart = true;
     [SerializeField] private bool closeOtherPanelsOnOpen = true;
+    [SerializeField] private bool animatePanelTransitions = true;
+    [SerializeField, Min(0f)] private float panelOpenDuration = 0.28f;
+    [SerializeField, Min(0f)] private float panelCloseDuration = 0.18f;
+    [SerializeField] private AnimationCurve panelOpenCurve = CurvedUIPanelAnimator.CreateDefaultOpenCurve();
+    [SerializeField] private AnimationCurve panelCloseCurve = CurvedUIPanelAnimator.CreateDefaultCloseCurve();
+    [SerializeField] private AnimationCurve panelFadeCurve = CurvedUIPanelAnimator.CreateDefaultFadeCurve();
 
     private readonly List<Button> dailyCloseButtons = new List<Button>();
     private readonly List<Button> shopCloseButtons = new List<Button>();
@@ -52,7 +59,7 @@ public class MainMenuPanelController : MonoBehaviour
         ResolveObjects();
 
         if (hidePanelsOnStart)
-            CloseAllPanels();
+            CloseAllPanelsImmediate();
     }
 
     private void OnEnable()
@@ -67,7 +74,7 @@ public class MainMenuPanelController : MonoBehaviour
         WireButtons();
 
         if (hidePanelsOnStart)
-            CloseAllPanels();
+            CloseAllPanelsImmediate();
     }
 
     private void LateUpdate()
@@ -139,10 +146,10 @@ public class MainMenuPanelController : MonoBehaviour
         ResolveObjects();
 
         if (dailyAndTasksPanel != null)
-            dailyAndTasksPanel.SetActive(false);
+            HidePanel(dailyAndTasksPanel);
 
         if (shopPanel != null)
-            shopPanel.SetActive(false);
+            HidePanel(shopPanel);
     }
 
     private void SetDailyAndTasksPanelVisible(bool isVisible)
@@ -154,9 +161,9 @@ public class MainMenuPanelController : MonoBehaviour
         }
 
         if (isVisible && closeOtherPanelsOnOpen && shopPanel != null)
-            shopPanel.SetActive(false);
+            HidePanel(shopPanel);
 
-        dailyAndTasksPanel.SetActive(isVisible);
+        SetPanelVisible(dailyAndTasksPanel, isVisible);
         ResolveCloseButtons();
         WireCloseButtons();
     }
@@ -170,11 +177,47 @@ public class MainMenuPanelController : MonoBehaviour
         }
 
         if (isVisible && closeOtherPanelsOnOpen && dailyAndTasksPanel != null)
-            dailyAndTasksPanel.SetActive(false);
+            HidePanel(dailyAndTasksPanel);
 
-        shopPanel.SetActive(isVisible);
+        SetPanelVisible(shopPanel, isVisible);
         ResolveCloseButtons();
         WireCloseButtons();
+    }
+
+    private void SetPanelVisible(GameObject panel, bool isVisible)
+    {
+        if (isVisible)
+            ShowPanel(panel);
+        else
+            HidePanel(panel);
+    }
+
+    private void ShowPanel(GameObject panel)
+    {
+        CurvedUIPanelAnimator.Show(
+            panel,
+            animatePanelTransitions ? panelOpenDuration : 0f,
+            panelOpenCurve,
+            panelFadeCurve);
+    }
+
+    private void HidePanel(GameObject panel)
+    {
+        if (animatePanelTransitions)
+        {
+            CurvedUIPanelAnimator.Hide(panel, panelCloseDuration, panelCloseCurve, panelFadeCurve);
+            return;
+        }
+
+        CurvedUIPanelAnimator.HideImmediate(panel);
+    }
+
+    private void CloseAllPanelsImmediate()
+    {
+        ResolveObjects();
+
+        CurvedUIPanelAnimator.HideImmediate(dailyAndTasksPanel);
+        CurvedUIPanelAnimator.HideImmediate(shopPanel);
     }
 
     private void ResolveObjects()

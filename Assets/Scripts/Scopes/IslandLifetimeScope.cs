@@ -35,6 +35,7 @@ namespace Scopes
         private TextView gemTextView;
 
         [SerializeField] private Button dailyButton;
+        [SerializeField] private bool enableLegacyDailyRewards;
         [SerializeField] private CameraProvider cameraProvider;
 
         [SerializeField] private DailyQuestSettings dailyQuestSettings;
@@ -64,9 +65,12 @@ namespace Scopes
                 .As<IInitializable>()
                 .WithParameter(gemTextView);
 
-            builder.Register<DailyRewardsPresenter>(Lifetime.Scoped)
-                .As<IInitializable>()
-                .WithParameter(dailyButton);
+            if(enableLegacyDailyRewards && dailyButton != null)
+            {
+                builder.Register<DailyRewardsPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .WithParameter(dailyButton);
+            }
             
 
             builder.Register<IDailyQuestService, DailyQuestService>(Lifetime.Singleton);

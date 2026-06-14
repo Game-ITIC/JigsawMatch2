@@ -1,5 +1,4 @@
 ﻿using System;
-using DG.Tweening;
 using Services;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,36 +11,65 @@ namespace UI
         [SerializeField] private Button okButton;
         [SerializeField] private Image iconImage;
         [SerializeField] private Text description;
+        [SerializeField] private bool animatePanelTransitions = true;
+        [SerializeField, Min(0f)] private float panelOpenDuration = 0.3f;
+        [SerializeField, Min(0f)] private float panelCloseDuration = 0.18f;
+        [SerializeField] private AnimationCurve panelOpenCurve = CurvedUIPanelAnimator.CreateDefaultOpenCurve();
+        [SerializeField] private AnimationCurve panelCloseCurve = CurvedUIPanelAnimator.CreateDefaultCloseCurve();
+        [SerializeField] private AnimationCurve panelFadeCurve = CurvedUIPanelAnimator.CreateDefaultFadeCurve();
 
         private void Start()
         {
-            okButton.onClick.RemoveAllListeners();
-            okButton.onClick.AddListener(Hide);
+            if(okButton != null)
+            {
+                okButton.onClick.RemoveListener(Hide);
+                okButton.onClick.AddListener(Hide);
+            }
         }
 
         public void Init(RewardInfo rewardInfo)
         {
-            iconImage.sprite = rewardInfo.Icon;
-            description.text = rewardInfo.Description;
+            if(iconImage != null)
+            {
+                iconImage.sprite = rewardInfo.Icon;
+            }
+
+            if(description != null)
+            {
+                description.text = rewardInfo.Description;
+            }
         }
 
         public void Show()
         {
             gameObject.SetActive(true);
-            popupPanel.SetActive(true);
 
-            popupPanel.transform.localScale = Vector3.zero;
-            popupPanel.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack);
+            if(popupPanel == null)
+            {
+                return;
+            }
+
+            CurvedUIPanelAnimator.Show(
+                popupPanel,
+                animatePanelTransitions ? panelOpenDuration : 0f,
+                panelOpenCurve,
+                panelFadeCurve);
         }
 
         private void Hide()
         {
-            popupPanel.transform.DOScale(0f, 0.2f)
-                .OnComplete(() =>
-                {
-                    popupPanel.SetActive(false);
-                    gameObject.SetActive(false);
-                });
+            if(popupPanel == null)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+
+            CurvedUIPanelAnimator.Hide(
+                popupPanel,
+                animatePanelTransitions ? panelCloseDuration : 0f,
+                panelCloseCurve,
+                panelFadeCurve,
+                () => gameObject.SetActive(false));
         }
     }
 }

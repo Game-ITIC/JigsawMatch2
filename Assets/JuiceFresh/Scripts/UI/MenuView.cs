@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Interfaces;
 using Models;
@@ -5,8 +6,10 @@ using Monobehaviours.Buildings;
 using R3;
 using Systems;
 using TMPro;
+using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using VContainer;
 using Views;
@@ -19,7 +22,14 @@ public class MenuView : MonoBehaviour, IPreload
     [SerializeField] private Button starsCountButton;
     [SerializeField] private Button diamondCountButton;
     [SerializeField] private GameObject dailyAndTasksPanel;
+    [SerializeField] private GameObject dailyRewardsPanel;
     [SerializeField] private GameObject shopPanel;
+    [SerializeField] private bool animatePanelTransitions = true;
+    [SerializeField, Min(0f)] private float panelOpenDuration = 0.28f;
+    [SerializeField, Min(0f)] private float panelCloseDuration = 0.18f;
+    [SerializeField] private AnimationCurve panelOpenCurve = CurvedUIPanelAnimator.CreateDefaultOpenCurve();
+    [SerializeField] private AnimationCurve panelCloseCurve = CurvedUIPanelAnimator.CreateDefaultCloseCurve();
+    [SerializeField] private AnimationCurve panelFadeCurve = CurvedUIPanelAnimator.CreateDefaultFadeCurve();
 
     [SerializeField] private Button startGame;
     [SerializeField] private TextView startGameText;
@@ -33,13 +43,14 @@ public class MenuView : MonoBehaviour, IPreload
     private StarModel _starModel;
     private GemModel _gemModel;
     private HealthSystem _healthSystem;
-    private TMP_Text _starsCountText;
-    private TMP_Text _diamondCountText;
-    private TMP_Text _lifeCountText;
+    private readonly List<TMP_Text> _starsCountTexts = new();
+    private readonly List<TMP_Text> _diamondCountTexts = new();
+    private readonly List<TMP_Text> _lifeCountTexts = new();
     private bool _hudBound;
 
     public Button StartGame => startGame;
     public Button DailyButton => dailyButton;
+    public Button DailyRewardsButton => dailyButton != null && dailyButton != taskButton ? dailyButton : null;
     public Button InAppButton => inAppButton;
     public TextView StartGameText => startGameText;
     public Button MapButton => mapButton;
@@ -76,39 +87,56 @@ public class MenuView : MonoBehaviour, IPreload
         starsCountButton = starsCountButton != null ? starsCountButton : FindButton("Stars Count Button", "StarsCountButton");
         diamondCountButton = diamondCountButton != null
             ? diamondCountButton
-            : FindButton("Diamond Count Button", "Diamond Count Button Variant", "Dimond Count Button Variant");
+            : FindButton("Diamond Count Button Variant", "Dimond Count Button Variant", "Diamond Count Button");
 
         dailyAndTasksPanel = dailyAndTasksPanel != null
             ? dailyAndTasksPanel
             : FindSceneObject("Daily And Tasks Panel");
-        shopPanel = shopPanel != null ? shopPanel : FindSceneObject("Shop Panel");
+        dailyRewardsPanel = dailyRewardsPanel != null
+            ? dailyRewardsPanel
+            : FindSceneObject("DailyRewardsPanel", "Daily Rewards Panel");
+        shopPanel = shopPanel != null ? shopPanel : FindSceneObject("Shop Panel", "Shop Content Panel");
 
-        _starsCountText = _starsCountText != null ? _starsCountText : FindTextInsideButton(starsCountButton);
-        _diamondCountText = _diamondCountText != null ? _diamondCountText : FindTextInsideButton(diamondCountButton);
-        _lifeCountText = _lifeCountText != null ? _lifeCountText : FindText("CountHelth", "CountHealth", "Life Count", "Lives Count");
+        RefreshCounterTextCaches();
     }
 
     private void WirePanelButtons()
     {
-        if(dailyAndTasksPanel != null)
+        var dailyPanel = GetDailyPanel();
+
+        if(dailyPanel != null)
         {
-            WireButton(taskButton, ToggleDailyAndTasksPanel);
-            WireCloseButtons(dailyAndTasksPanel, CloseDailyAndTasksPanel);
-            dailyAndTasksPanel.SetActive(false);
+            WireButtons(FindButtons(taskButton, dailyButton, "Task Button 01", "Daily Button", "DailyButton"), ToggleDailyAndTasksPanel);
+            WireCloseButtons(dailyPanel, CloseDailyAndTasksPanel);
+            HidePanelImmediate(dailyPanel);
         }
 
         if(shopPanel != null)
         {
-            WireButton(shopButton, OpenShopPanel);
-            WireButton(starsCountButton, OpenShopPanel);
-            WireButton(diamondCountButton, OpenShopPanel);
+            WireButtons(
+                FindButtons(
+                    shopButton,
+                    inAppButton,
+                    starsCountButton,
+                    diamondCountButton,
+                    "ShopButton",
+                    "Shop Button",
+                    "Stars Count Button",
+                    "StarsCountButton",
+                    "Diamond Count Button Variant",
+                    "Dimond Count Button Variant",
+                    "Diamond Count Button"),
+                OpenShopPanel);
+
             WireCloseButtons(shopPanel, CloseShopPanel);
-            shopPanel.SetActive(false);
+            HidePanelImmediate(shopPanel);
         }
 
-        if(dailyAndTasksPanel != null || shopPanel != null)
+        if(dailyPanel != null || shopPanel != null)
         {
-            WireButton(mainButton, CloseAllPanels);
+            WireButtons(
+                FindButtons(mainButton, mapButton, "MainMenuButton", "Main Button", "MainMenu Button", "IslandButton"),
+                CloseAllPanels);
         }
     }
 
@@ -122,19 +150,19 @@ public class MenuView : MonoBehaviour, IPreload
 
         _hudBound = true;
 
-        if(_starModel != null && _starsCountText != null)
+        if(_starModel != null && _starsCountTexts.Count > 0)
         {
-            _starModel.Stars.Subscribe(value => _starsCountText.SetText(value.ToString())).AddTo(_disposable);
+            _starModel.Stars.Subscribe(value => SetTexts(_starsCountTexts, value)).AddTo(_disposable);
         }
 
-        if(_gemModel != null && _diamondCountText != null)
+        if(_gemModel != null && _diamondCountTexts.Count > 0)
         {
-            _gemModel.Gems.Subscribe(value => _diamondCountText.SetText(value.ToString())).AddTo(_disposable);
+            _gemModel.Gems.Subscribe(value => SetTexts(_diamondCountTexts, value)).AddTo(_disposable);
         }
 
-        if(_healthSystem != null && _lifeCountText != null)
+        if(_healthSystem != null && _lifeCountTexts.Count > 0)
         {
-            _healthSystem.CurrentLives.Subscribe(value => _lifeCountText.SetText(value.ToString())).AddTo(_disposable);
+            _healthSystem.CurrentLives.Subscribe(value => SetTexts(_lifeCountTexts, value)).AddTo(_disposable);
             Observable.EveryUpdate(UnityFrameProvider.EarlyUpdate)
                 .Subscribe(_ => _healthSystem.UpdateRegeneration())
                 .AddTo(_disposable);
@@ -145,79 +173,129 @@ public class MenuView : MonoBehaviour, IPreload
 
     private void UpdateHudValues()
     {
-        if(_starModel != null && _starsCountText != null)
+        if(_starModel != null)
         {
-            _starsCountText.SetText(_starModel.Stars.Value.ToString());
+            SetTexts(_starsCountTexts, _starModel.Stars.Value);
         }
 
-        if(_gemModel != null && _diamondCountText != null)
+        if(_gemModel != null)
         {
-            _diamondCountText.SetText(_gemModel.Gems.Value.ToString());
+            SetTexts(_diamondCountTexts, _gemModel.Gems.Value);
         }
 
-        if(_healthSystem != null && _lifeCountText != null)
+        if(_healthSystem != null)
         {
-            _lifeCountText.SetText(_healthSystem.CurrentLives.Value.ToString());
+            SetTexts(_lifeCountTexts, _healthSystem.CurrentLives.Value);
         }
     }
 
-    private void ToggleDailyAndTasksPanel()
+    public void ToggleDailyAndTasksPanel()
     {
-        if(dailyAndTasksPanel == null)
+        var dailyPanel = GetDailyPanel();
+
+        if(dailyPanel == null)
         {
             return;
         }
 
-        var isVisible = !dailyAndTasksPanel.activeSelf;
-        CloseAllPanels();
-        dailyAndTasksPanel.SetActive(isVisible);
+        if(dailyPanel.activeSelf)
+        {
+            HidePanel(dailyPanel);
+            return;
+        }
+
+        CloseShopPanel();
+        ShowPanel(dailyPanel);
     }
 
-    private void OpenShopPanel()
+    public void OpenShopPanel()
     {
         if(shopPanel == null)
         {
             return;
         }
 
-        CloseAllPanels();
-        shopPanel.SetActive(true);
+        CloseDailyAndTasksPanel();
+        ShowPanel(shopPanel);
     }
 
-    private void CloseDailyAndTasksPanel()
+    public void CloseDailyAndTasksPanel()
     {
         if(dailyAndTasksPanel != null)
         {
-            dailyAndTasksPanel.SetActive(false);
+            HidePanel(dailyAndTasksPanel);
+        }
+
+        if(dailyRewardsPanel != null)
+        {
+            HidePanel(dailyRewardsPanel);
         }
     }
 
-    private void CloseShopPanel()
+    public void CloseShopPanel()
     {
         if(shopPanel != null)
         {
-            shopPanel.SetActive(false);
+            HidePanel(shopPanel);
         }
     }
 
-    private void CloseAllPanels()
+    public void CloseAllPanels()
     {
         CloseDailyAndTasksPanel();
         CloseShopPanel();
     }
 
-    private static void WireButton(Button button, UnityEngine.Events.UnityAction action)
+    private GameObject GetDailyPanel()
+    {
+        return dailyAndTasksPanel != null ? dailyAndTasksPanel : dailyRewardsPanel;
+    }
+
+    private void ShowPanel(GameObject panel)
+    {
+        CurvedUIPanelAnimator.Show(
+            panel,
+            animatePanelTransitions ? panelOpenDuration : 0f,
+            panelOpenCurve,
+            panelFadeCurve);
+    }
+
+    private void HidePanel(GameObject panel)
+    {
+        if(animatePanelTransitions)
+        {
+            CurvedUIPanelAnimator.Hide(panel, panelCloseDuration, panelCloseCurve, panelFadeCurve);
+            return;
+        }
+
+        CurvedUIPanelAnimator.HideImmediate(panel);
+    }
+
+    private static void HidePanelImmediate(GameObject panel)
+    {
+        CurvedUIPanelAnimator.HideImmediate(panel);
+    }
+
+    private static void WireButtons(List<Button> buttons, UnityAction action)
+    {
+        foreach (var button in buttons)
+        {
+            WireButton(button, action);
+        }
+    }
+
+    private static void WireButton(Button button, UnityAction action)
     {
         if(button == null)
         {
             return;
         }
 
-        button.onClick.RemoveAllListeners();
+        button.onClick.RemoveListener(action);
         button.onClick.AddListener(action);
     }
 
-    private static void WireCloseButtons(GameObject panel, UnityEngine.Events.UnityAction action)
+    private static void WireCloseButtons(GameObject panel, UnityAction action)
     {
         var buttons = panel.GetComponentsInChildren<Button>(true);
 
@@ -234,31 +312,107 @@ public class MenuView : MonoBehaviour, IPreload
         }
     }
 
+    private void RefreshCounterTextCaches()
+    {
+        _starsCountTexts.Clear();
+        _diamondCountTexts.Clear();
+        _lifeCountTexts.Clear();
+
+        AddCounterTexts(_starsCountTexts, starsCountButton);
+        AddCounterTexts(_diamondCountTexts, diamondCountButton);
+
+        AddCounterTextsByName(_starsCountTexts, "Stars Count Button", "StarsCountButton");
+        AddCounterTextsByName(_diamondCountTexts, "Diamond Count Button Variant", "Dimond Count Button Variant", "Diamond Count Button");
+        AddCounterTextsByName(_lifeCountTexts, "CountHelth", "CountHealth", "Life Count", "Lives Count");
+    }
+
     private Button FindButton(params string[] names)
     {
         var buttonObject = FindSceneObject(names);
         return buttonObject != null ? buttonObject.GetComponent<Button>() : null;
     }
 
-    private TMP_Text FindText(params string[] names)
+    private static List<Button> FindButtons(params object[] referencesAndNames)
     {
-        var textObject = FindSceneObject(names);
-        return textObject != null ? textObject.GetComponent<TMP_Text>() : null;
+        var buttons = new List<Button>();
+
+        foreach (var referenceOrName in referencesAndNames)
+        {
+            if(referenceOrName is Button button)
+            {
+                AddUnique(buttons, button);
+                continue;
+            }
+
+            var name = referenceOrName as string;
+
+            if(name == null)
+            {
+                continue;
+            }
+
+            foreach (var sceneObject in FindSceneObjects(name))
+            {
+                var sceneButton = sceneObject.GetComponent<Button>();
+                AddUnique(buttons, sceneButton);
+            }
+        }
+
+        return buttons;
     }
 
-    private static TMP_Text FindTextInsideButton(Button button)
+    private static void AddCounterTexts(List<TMP_Text> texts, Button button)
     {
         if(button == null)
         {
-            return null;
+            return;
         }
 
-        return button.GetComponentInChildren<TMP_Text>(true);
+        AddCounterTexts(texts, button.gameObject);
+    }
+
+    private static void AddCounterTextsByName(List<TMP_Text> texts, params string[] names)
+    {
+        foreach (var sceneObject in FindSceneObjects(names))
+        {
+            AddCounterTexts(texts, sceneObject);
+        }
+    }
+
+    private static void AddCounterTexts(List<TMP_Text> texts, GameObject root)
+    {
+        if(root == null)
+        {
+            return;
+        }
+
+        var rootText = root.GetComponent<TMP_Text>();
+        AddUnique(texts, rootText);
+
+        foreach (var text in root.GetComponentsInChildren<TMP_Text>(true))
+        {
+            AddUnique(texts, text);
+        }
     }
 
     private static GameObject FindSceneObject(params string[] names)
     {
-        GameObject inactiveMatch = null;
+        var matches = FindSceneObjects(names);
+
+        foreach (var match in matches)
+        {
+            if(match.activeInHierarchy)
+            {
+                return match;
+            }
+        }
+
+        return matches.Count > 0 ? matches[0] : null;
+    }
+
+    private static List<GameObject> FindSceneObjects(params string[] names)
+    {
+        var matches = new List<GameObject>();
 
         for (var sceneIndex = 0; sceneIndex < SceneManager.sceneCount; sceneIndex++)
         {
@@ -273,56 +427,63 @@ public class MenuView : MonoBehaviour, IPreload
 
             foreach (var root in roots)
             {
-                var match = FindInChildren(root.transform, names, ref inactiveMatch);
-
-                if(match != null)
-                {
-                    return match;
-                }
+                FindInChildren(root.transform, names, matches);
             }
         }
 
-        return inactiveMatch;
+        return matches;
     }
 
-    private static GameObject FindInChildren(Transform parent, string[] names, ref GameObject inactiveMatch)
+    private static void FindInChildren(Transform parent, string[] names, List<GameObject> matches)
     {
         var current = parent.gameObject;
 
         if(MatchesName(current.name, names))
         {
-            if(current.activeInHierarchy)
-            {
-                return current;
-            }
-
-            inactiveMatch ??= current;
+            AddUnique(matches, current);
         }
 
         for (var i = 0; i < parent.childCount; i++)
         {
-            var match = FindInChildren(parent.GetChild(i), names, ref inactiveMatch);
-
-            if(match != null)
-            {
-                return match;
-            }
+            FindInChildren(parent.GetChild(i), names, matches);
         }
-
-        return null;
     }
 
     private static bool MatchesName(string objectName, string[] names)
     {
+        var normalizedObjectName = objectName.Trim();
+
         foreach (var name in names)
         {
-            if(string.Equals(objectName, name, System.StringComparison.OrdinalIgnoreCase))
+            if(string.Equals(normalizedObjectName, name.Trim(), System.StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
         }
 
         return false;
+    }
+
+    private static void SetTexts(List<TMP_Text> texts, int value)
+    {
+        var valueText = value.ToString();
+
+        foreach (var text in texts)
+        {
+            if(text != null)
+            {
+                text.SetText(valueText);
+            }
+        }
+    }
+
+    private static void AddUnique<T>(List<T> items, T item)
+        where T : Object
+    {
+        if(item != null && !items.Contains(item))
+        {
+            items.Add(item);
+        }
     }
 
     private void OnDestroy()

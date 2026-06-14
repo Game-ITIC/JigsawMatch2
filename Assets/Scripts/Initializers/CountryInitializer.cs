@@ -3,7 +3,6 @@ using System.Threading;
 using Configs;
 using Cysharp.Threading.Tasks;
 using Data;
-using Gley.DailyRewards.API;
 using Gley.EasyIAP;
 using Itic.Scopes;
 using Models;
@@ -52,7 +51,6 @@ namespace Initializers
 
         public CountryInitializer(MenuView menuView,
             SceneLoader sceneLoader,
-            InAppView inAppView,
             CoinModel coinModel,
             GemModel gemModel,
             StarModel starModel,
@@ -287,7 +285,7 @@ namespace Initializers
 
         private void ShowInAppView()
         {
-            _inAppView.Show();
+            _inAppView?.Show();
         }
 
         private void StartGame()

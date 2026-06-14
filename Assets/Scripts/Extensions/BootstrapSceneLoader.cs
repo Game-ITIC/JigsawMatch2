@@ -11,8 +11,9 @@ namespace Extensions
     {
         private const string BootstrapScenePath = "Assets/_Scenes/Bootstrap.unity";
         private const string BootstrapSceneName = "Bootstrap";
-        private const string MenuSceneName = "game";
-        private const string GameSceneName = "AsiaRegion";
+        private const string MainMenuSceneName = "MainMenu";
+        private const string LegacyGameSceneName = "game";
+        private const string RegionSceneName = "AsiaRegion";
 
         static BootstrapSceneLoader()
         {
@@ -25,7 +26,7 @@ namespace Extensions
             {
                 case PlayModeStateChange.ExitingEditMode:
                 {
-                    if(SceneManager.GetActiveScene().name == GameSceneName || SceneManager.GetActiveScene().name == MenuSceneName)
+                    if(ShouldStartFromBootstrap(SceneManager.GetActiveScene().name))
                     {
                         var bootstrapSceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(BootstrapScenePath);
 
@@ -49,6 +50,13 @@ namespace Extensions
                     EditorSceneManager.playModeStartScene = null;
                     break;
             }
+        }
+
+        private static bool ShouldStartFromBootstrap(string activeSceneName)
+        {
+            return activeSceneName == MainMenuSceneName
+                   || activeSceneName == LegacyGameSceneName
+                   || activeSceneName == RegionSceneName;
         }
     }
 }

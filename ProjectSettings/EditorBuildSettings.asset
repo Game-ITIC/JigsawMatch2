@@ -32,4 +32,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/MainMenu.unity
     guid: eeebe0157439afa4fbc1d734d2efd262
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.editor.playmodeStartScene: {fileID: 102900000, guid: d52ac898d4cebbb4eb71c520a1d84d28, type: 3}
