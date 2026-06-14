@@ -92,49 +92,91 @@ namespace Scopes.Country
 
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.RegisterComponent(menuView);
-            builder.RegisterComponent(buildingShopManager);
-            builder.RegisterComponent(inAppView);
-            builder.RegisterComponent(hideUnhideScript);
-            builder.RegisterComponent(regionUIProvider);
-            builder.RegisterComponent(menuNavigationProvider);
-            builder.RegisterComponent(lifePopup);
-            builder.RegisterComponent(rewardPopup);
-            builder.RegisterComponent(settingsProvider);
+            RegisterComponentIfPresent(builder, menuView);
+            RegisterComponentIfPresent(builder, buildingShopManager);
+            RegisterComponentIfPresent(builder, inAppView);
+            RegisterComponentIfPresent(builder, hideUnhideScript);
+            RegisterComponentIfPresent(builder, regionUIProvider);
+            RegisterComponentIfPresent(builder, menuNavigationProvider);
+            RegisterComponentIfPresent(builder, lifePopup);
+            RegisterComponentIfPresent(builder, rewardPopup);
+            RegisterComponentIfPresent(builder, settingsProvider);
 
-            builder.RegisterInstance(countryConfig);
-            builder.RegisterInstance(regionConfig);
+            RegisterInstanceIfPresent(builder, countryConfig);
+            RegisterInstanceIfPresent(builder, regionConfig);
 
-            builder.Register<CoinPresenter>(Lifetime.Scoped)
-                .As<IInitializable>()
-                .WithParameter(coinTextView);
+            if(coinTextView != null)
+            {
+                builder.Register<CoinPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .WithParameter(coinTextView);
+            }
 
-            builder.Register<StarPresenter>(Lifetime.Scoped)
-                .As<IInitializable>()
-                .WithParameter(starTextView);
+            if(starTextView != null)
+            {
+                builder.Register<StarPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .WithParameter(starTextView);
+            }
 
-            builder.Register<GemPresenter>(Lifetime.Scoped)
-                .As<IInitializable>()
-                .WithParameter(gemTextView);
+            if(gemTextView != null)
+            {
+                builder.Register<GemPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .WithParameter(gemTextView);
+            }
 
-            builder.Register<BuildingShopInitializer>(Lifetime.Scoped)
-                .As<IInitializable>()
-                .AsSelf();
+            if(buildingShopManager != null && countryConfig != null)
+            {
+                builder.Register<BuildingShopInitializer>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .AsSelf();
+            }
 
-            builder.Register<DailyRewardsPresenter>(Lifetime.Scoped)
-                .As<IInitializable>()
-                .WithParameter(menuView.DailyButton);
+            if(menuView != null && menuView.DailyButton != null)
+            {
+                builder.Register<DailyRewardsPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .WithParameter(menuView.DailyButton);
+            }
 
-            builder.Register<LifePresenter>(Lifetime.Scoped)
-                .As<IInitializable>()
-                .WithParameter(lifeTextView);
+            if(lifeTextView != null)
+            {
+                builder.Register<LifePresenter>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .WithParameter(lifeTextView);
+            }
 
-            builder.Register<RegionModel>(Lifetime.Singleton);
-            builder.Register<RegionUpgradeService>(Lifetime.Singleton);
+            if(settingsProvider != null)
+            {
+                builder.Register<RegionModel>(Lifetime.Singleton);
+                builder.Register<RegionUpgradeService>(Lifetime.Singleton);
+            }
 
-            builder.Register<MenuTabs>(Lifetime.Singleton);
+            if(menuNavigationProvider != null)
+            {
+                builder.Register<MenuTabs>(Lifetime.Singleton);
+            }
 
             ConfigureCountry(builder);
+        }
+
+        private static void RegisterComponentIfPresent<T>(IContainerBuilder builder, T component)
+            where T : Component
+        {
+            if(component != null)
+            {
+                builder.RegisterComponent(component);
+            }
+        }
+
+        private static void RegisterInstanceIfPresent<T>(IContainerBuilder builder, T instance)
+            where T : class
+        {
+            if(instance != null)
+            {
+                builder.RegisterInstance(instance);
+            }
         }
 
         protected virtual void ConfigureCountry(IContainerBuilder builder)

@@ -26,7 +26,7 @@ namespace Itic.Scopes
 
         public async UniTask LoadMenuAsync()
         {
-            await LoadSceneAsync(2);
+            await LoadSceneAsync("MainMenu");
         }
 
         public async UniTask LoadGameAsync()
@@ -88,6 +88,44 @@ namespace Itic.Scopes
 
             await UniTask.WaitUntil(() => sceneLoadingOperation is { isDone: true });
             var scene = SceneManager.GetSceneByBuildIndex(index);
+
+            SceneManager.SetActiveScene(scene);
+
+            var rootGameObjects = scene.GetRootGameObjects();
+
+            foreach (var scope in rootGameObjects)
+            {
+                Debug.Log(scope.name);
+                if (!scope.TryGetComponent(out ScopeInstaller installer))
+                {
+                    continue;
+                }
+
+                await installer.InstallScopeAsync();
+                break;
+            }
+
+            await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+
+            OnSceneLoaded?.Invoke();
+            await _screenService.HideLoadingScreenAsync();
+        }
+
+        private async UniTask LoadSceneAsync(string sceneName)
+        {
+            var unloadSceneAsyncTask = SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+
+            await _screenService.ShowLoadingScreenAsync();
+
+            if (unloadSceneAsyncTask != null)
+            {
+                await unloadSceneAsyncTask;
+            }
+
+            var sceneLoadingOperation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+
+            await UniTask.WaitUntil(() => sceneLoadingOperation is { isDone: true });
+            var scene = SceneManager.GetSceneByName(sceneName);
 
             SceneManager.SetActiveScene(scene);
 
