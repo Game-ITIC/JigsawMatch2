@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 29d12f5daf3bb094bb1dd0de17e69c8a
+guid: 61a9582dfbb5450419212eec879e61fa
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,169 +110,64 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Frame 54_0
+      name: "ChatGPT Image 15 \u0438\u044E\u043D. 2026 \u0433., 10_24_04_0"
       rect:
         serializedVersion: 2
-        x: 64
-        y: 723
-        width: 528
-        height: 209
+        x: 83
+        y: 168
+        width: 400
+        height: 400
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 100, y: 100, z: 100, w: 100}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c1873be6b10ec474686af7c42dd69e0b
-      internalID: -718473989
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Frame 54_1
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 467
-        width: 528
-        height: 209
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 100, y: 100, z: 100, w: 100}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: bf758a18e0f288a4fbb32a7fcb5709e2
-      internalID: 1338323686
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Frame 54_2
-      rect:
-        serializedVersion: 2
-        x: 62
-        y: 135
-        width: 818
-        height: 289
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 100, y: 100, z: 100, w: 100}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2756bd23b3a1b4a448dce0abc651e15a
-      internalID: -707110903
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Frame 54_3
-      rect:
-        serializedVersion: 2
-        x: 640
-        y: 657
-        width: 319
-        height: 306
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 62c2215bc9331d54fbcf8925f96e5c82
-      internalID: -1295779602
+      spriteID: 19fd957cc54018e4e889fd24b0c3858a
+      internalID: -2072844756
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Frame 54_4
+      name: "ChatGPT Image 15 \u0438\u044E\u043D. 2026 \u0433., 10_24_04_1"
       rect:
         serializedVersion: 2
-        x: 1011
-        y: 659
-        width: 294
-        height: 304
+        x: 580
+        y: 168
+        width: 400
+        height: 400
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8303a77c5c3dd30428cc675c5114beca
-      internalID: 1525004970
+      spriteID: 78c171d9a61e02b4e8ad35da5568e98f
+      internalID: 649952514
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Frame 54_5
+      name: "ChatGPT Image 15 \u0438\u044E\u043D. 2026 \u0433., 10_24_04_2"
       rect:
         serializedVersion: 2
-        x: 1399
-        y: 585
-        width: 371
-        height: 349
+        x: 1101
+        y: 171
+        width: 400
+        height: 400
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 04de03c04da31934dbf0189ef63ad9ef
-      internalID: 1413355274
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Frame 54_6
-      rect:
-        serializedVersion: 2
-        x: 948
-        y: 143
-        width: 278
-        height: 278
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 40, y: 40, z: 40, w: 40}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: fa3956a1682d4754cbb634871540954d
-      internalID: -1816605912
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Frame 54_7
-      rect:
-        serializedVersion: 2
-        x: 1263
-        y: 137
-        width: 628
-        height: 277
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 200, y: 100, z: 200, w: 100}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 937f6b5e4aeb86543b1334db86c8606b
-      internalID: 1622955662
+      spriteID: ab676e9ee4a51914dafd8fde89e152ed
+      internalID: 1310175541
       vertices: []
       indices: 
       edges: []
@@ -288,14 +183,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Frame 54_0: -718473989
-      Frame 54_1: 1338323686
-      Frame 54_2: -707110903
-      Frame 54_3: -1295779602
-      Frame 54_4: 1525004970
-      Frame 54_5: 1413355274
-      Frame 54_6: -1816605912
-      Frame 54_7: 1622955662
+      "ChatGPT Image 15 \u0438\u044E\u043D. 2026 \u0433., 10_24_04_0": -2072844756
+      "ChatGPT Image 15 \u0438\u044E\u043D. 2026 \u0433., 10_24_04_1": 649952514
+      "ChatGPT Image 15 \u0438\u044E\u043D. 2026 \u0433., 10_24_04_2": 1310175541
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

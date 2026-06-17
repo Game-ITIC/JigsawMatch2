@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: GameConfig
   m_EditorClassIdentifier: 
   MaxLifes: 5
+  LifeRegenTimeMinutes: 20
