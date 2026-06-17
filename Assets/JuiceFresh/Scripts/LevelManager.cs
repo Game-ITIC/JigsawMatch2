@@ -554,6 +554,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     [Inject] public Models.StarModel StarModel;
     [Inject] public GameEventDispatcher GameEventDispatcher;
     [Inject] public AdRewardService AdRewardService;
+    [Inject] public Itic.Scopes.SceneLoader SceneLoader;
     [Inject] public IronSourceManager IronSourceManager;
     [Inject] public GameProvider GameProvider;
     [Inject] public GameCompleteView GameCompleteView;
@@ -703,7 +704,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
                 GameState.Playing, new PlayingState(this)
             },
             {
-                GameState.GameOver, new GameOverState(this, AdRewardService)
+                GameState.GameOver, new GameOverState(this, AdRewardService, SceneLoader)
             },
             {
                 GameState.PreWinAnimations, new PreWinAnimationsState(this)

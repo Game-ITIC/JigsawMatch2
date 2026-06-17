@@ -46,7 +46,9 @@ public class MenuView : MonoBehaviour, IPreload
     private readonly List<TMP_Text> _starsCountTexts = new();
     private readonly List<TMP_Text> _diamondCountTexts = new();
     private readonly List<TMP_Text> _lifeCountTexts = new();
+    private readonly List<TMP_Text> _lifeStatusTexts = new();
     private bool _hudBound;
+    private string _lastLifeStatusText;
 
     public Button StartGame => startGame;
     public Button DailyButton => dailyButton;
@@ -160,11 +162,15 @@ public class MenuView : MonoBehaviour, IPreload
             _gemModel.Gems.Subscribe(value => SetTexts(_diamondCountTexts, value)).AddTo(_disposable);
         }
 
-        if(_healthSystem != null && _lifeCountTexts.Count > 0)
+        if(_healthSystem != null && (_lifeCountTexts.Count > 0 || _lifeStatusTexts.Count > 0))
         {
-            _healthSystem.CurrentLives.Subscribe(value => SetTexts(_lifeCountTexts, value)).AddTo(_disposable);
+            _healthSystem.CurrentLives.Subscribe(_ => UpdateLifeTexts()).AddTo(_disposable);
             Observable.EveryUpdate(UnityFrameProvider.EarlyUpdate)
-                .Subscribe(_ => _healthSystem.UpdateRegeneration())
+                .Subscribe(_ =>
+                           {
+                               _healthSystem.UpdateRegeneration();
+                               SetLifeStatusTexts();
+                           })
                 .AddTo(_disposable);
         }
 
@@ -185,7 +191,7 @@ public class MenuView : MonoBehaviour, IPreload
 
         if(_healthSystem != null)
         {
-            SetTexts(_lifeCountTexts, _healthSystem.CurrentLives.Value);
+            UpdateLifeTexts();
         }
     }
 
@@ -317,6 +323,7 @@ public class MenuView : MonoBehaviour, IPreload
         _starsCountTexts.Clear();
         _diamondCountTexts.Clear();
         _lifeCountTexts.Clear();
+        _lifeStatusTexts.Clear();
 
         AddCounterTexts(_starsCountTexts, starsCountButton);
         AddCounterTexts(_diamondCountTexts, diamondCountButton);
@@ -324,6 +331,7 @@ public class MenuView : MonoBehaviour, IPreload
         AddCounterTextsByName(_starsCountTexts, "Stars Count Button", "StarsCountButton");
         AddCounterTextsByName(_diamondCountTexts, "Diamond Count Button Variant", "Dimond Count Button Variant", "Diamond Count Button");
         AddCounterTextsByName(_lifeCountTexts, "CountHelth", "CountHealth", "Life Count", "Lives Count");
+        AddLifeStatusTexts();
     }
 
     private Button FindButton(params string[] names)
@@ -392,6 +400,28 @@ public class MenuView : MonoBehaviour, IPreload
         foreach (var text in root.GetComponentsInChildren<TMP_Text>(true))
         {
             AddUnique(texts, text);
+        }
+    }
+
+    private void AddLifeStatusTexts()
+    {
+        AddCounterTextsByName(_lifeStatusTexts, "TimeLives");
+
+        foreach (var healthBar in FindSceneObjects("HealthBar"))
+        {
+            foreach (var text in healthBar.GetComponentsInChildren<TMP_Text>(true))
+            {
+                if(IsLifeCountText(text.gameObject.name))
+                {
+                    continue;
+                }
+
+                if(MatchesName(text.gameObject.name, new[] { "TimeLives" })
+                   || text.gameObject.name.StartsWith("Text (TMP", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    AddUnique(_lifeStatusTexts, text);
+                }
+            }
         }
     }
 
@@ -464,6 +494,19 @@ public class MenuView : MonoBehaviour, IPreload
         return false;
     }
 
+    private static bool IsLifeCountText(string objectName)
+    {
+        var lifeCountNames = new[]
+        {
+            "CountHelth",
+            "CountHealth",
+            "Life Count",
+            "Lives Count"
+        };
+
+        return MatchesName(objectName, lifeCountNames);
+    }
+
     private static void SetTexts(List<TMP_Text> texts, int value)
     {
         var valueText = value.ToString();
@@ -473,6 +516,37 @@ public class MenuView : MonoBehaviour, IPreload
             if(text != null)
             {
                 text.SetText(valueText);
+            }
+        }
+    }
+
+    private void UpdateLifeTexts()
+    {
+        SetTexts(_lifeCountTexts, _healthSystem.CurrentLives.Value);
+        SetLifeStatusTexts();
+    }
+
+    private void SetLifeStatusTexts()
+    {
+        if(_lifeStatusTexts.Count <= 0)
+        {
+            return;
+        }
+
+        var statusText = _healthSystem.GetLifeStatusText();
+
+        if(_lastLifeStatusText == statusText)
+        {
+            return;
+        }
+
+        _lastLifeStatusText = statusText;
+
+        foreach (var text in _lifeStatusTexts)
+        {
+            if(text != null)
+            {
+                text.SetText(statusText);
             }
         }
     }

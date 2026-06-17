@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using Itic.Scopes;
 using R3;
 using Services;
 using UnityEngine;
@@ -8,12 +10,14 @@ namespace JuiceFresh.States
     public class GameOverState : GameStateBase
     {
         private readonly AdRewardService _adRewardService;
+        private readonly SceneLoader _sceneLoader;
         private GameObject _menuFailedUI;
         private CompositeDisposable _disposables = new CompositeDisposable();
 
-        public GameOverState(LevelManager levelManager, AdRewardService adRewardService) : base(levelManager)
+        public GameOverState(LevelManager levelManager, AdRewardService adRewardService, SceneLoader sceneLoader) : base(levelManager)
         {
             _adRewardService = adRewardService;
+            _sceneLoader = sceneLoader;
             _adRewardService.OnContinueRewardGranted
                 .Subscribe(OnRewardGranted)
                 .AddTo(_disposables);
@@ -147,7 +151,14 @@ namespace JuiceFresh.States
 
         private void OnQuitClicked()
         {
-            // Return to map
+            Time.timeScale = 1f;
+
+            if(_sceneLoader != null)
+            {
+                _sceneLoader.LoadMenuAsync().Forget();
+                return;
+            }
+
             levelManager.gameStatus = GameState.Map;
         }
 

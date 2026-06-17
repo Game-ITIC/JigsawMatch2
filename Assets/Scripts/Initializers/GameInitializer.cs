@@ -185,14 +185,7 @@ namespace Initializers
             _gameOverView.RestartButton.onClick.AddListener(RestartGame);
 
             _gameOverView.Home.onClick.RemoveAllListeners();
-            _gameOverView.Home.onClick.AddListener(BackToBack);
-            // _gameOverView.Home.onClick.RemoveAllListeners();
-            _gameOverView.Home.onClick.AddListener(() =>
-                                                   {
-                                                       // _adRewardService.SetAdRewardType(AdRewardType.Booster, BoostType.ExtraMoves);
-                                                       // IronSourceManager.Instance.ShowRewardedAd();
-                                                       _coinModel.Increase(_gameConfig.CoinRewardForLevelLose);
-                                                   });
+            _gameOverView.Home.onClick.AddListener(ReturnToMainMenuAfterLose);
 
 
             _adEventModel.OnRewardGranted.Subscribe(_ =>
@@ -217,6 +210,13 @@ namespace Initializers
         {
             Time.timeScale = 1f;
             _sceneLoader.LoadLastSceneAsync().Forget();
+        }
+
+        public void ReturnToMainMenuAfterLose()
+        {
+            Time.timeScale = 1f;
+            _coinModel.Increase(_gameConfig.CoinRewardForLevelLose);
+            _sceneLoader.LoadMenuAsync().Forget();
         }
 
         public async UniTask StartAsync(CancellationToken cancellation = new CancellationToken())

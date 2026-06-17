@@ -9,22 +9,39 @@ namespace Systems
 {
     public class HealthSystem
     {
+        private const string FullLivesText = "Full";
+
         private int _maxLives = 5;
-        private float _regenTimeMinutes = 20f; // Время восстановления одной жизни в минутах
-        
-        // Приватные поля
+        private float _regenTimeMinutes = 20f;
+
         private ReactiveProperty<int> _currentLives = new();
         private DateTime _lastSaveTime;
         private bool _isRegenerating = false;
 
-
         public ReactiveProperty<int> CurrentLives => _currentLives;
         public int MaxLives => _maxLives;
         public bool CanPlay => _currentLives.Value > 0;
+        public TimeSpan TimeUntilNextLife
+        {
+            get
+            {
+                if (_currentLives.Value >= _maxLives)
+                {
+                    return TimeSpan.Zero;
+                }
+
+                var elapsedSeconds = Math.Max(0d, (DateTime.Now - _lastSaveTime).TotalSeconds);
+                var regenSeconds = Math.Max(1d, _regenTimeMinutes * 60d);
+                var remainingSeconds = Math.Max(0d, regenSeconds - elapsedSeconds);
+
+                return TimeSpan.FromSeconds(Math.Ceiling(remainingSeconds));
+            }
+        }
 
         public HealthSystem(GameConfig gameConfig)
         {
             _maxLives = gameConfig.MaxLifes;
+            _regenTimeMinutes = Mathf.Max(1f, gameConfig.LifeRegenTimeMinutes);
             LoadData();
         }
 
@@ -39,7 +56,6 @@ namespace Systems
             SaveData();
             UpdateUI();
 
-
             if (!_isRegenerating && _currentLives.Value < _maxLives)
             {
                 StartRegeneration();
@@ -50,22 +66,28 @@ namespace Systems
 
         public void AddLives(int amount)
         {
-            _currentLives.Value = Mathf.Min(_currentLives.Value + amount, _maxLives);
-            SaveData();
-            UpdateUI();
+            _currentLives.Value = Mathf.Clamp(_currentLives.Value + amount, 0, _maxLives);
 
             if (_currentLives.Value >= _maxLives)
             {
+                _isRegenerating = false;
             }
+            else if (!_isRegenerating)
+            {
+                StartRegeneration();
+            }
+
+            SaveData();
+            UpdateUI();
         }
 
         public void RestoreAllLives()
         {
             _currentLives.Value = _maxLives;
+            _isRegenerating = false;
             SaveData();
             UpdateUI();
         }
-
 
         private void StartRegeneration()
         {
@@ -79,10 +101,19 @@ namespace Systems
         {
             if (_currentLives.Value >= _maxLives)
             {
+                _isRegenerating = false;
                 return;
             }
 
             TimeSpan timePassed = DateTime.Now - _lastSaveTime;
+
+            if (timePassed.TotalSeconds < 0)
+            {
+                _lastSaveTime = DateTime.Now;
+                SaveData();
+                return;
+            }
+
             double minutesPassed = timePassed.TotalMinutes;
 
             int livesToAdd = Mathf.FloorToInt((float)(minutesPassed / _regenTimeMinutes));
@@ -95,9 +126,17 @@ namespace Systems
 
                 if (_currentLives.Value >= _maxLives)
                 {
+                    _isRegenerating = false;
                     return;
                 }
             }
+        }
+
+        public string GetLifeStatusText()
+        {
+            return _currentLives.Value >= _maxLives
+                ? FullLivesText
+                : FormatTime(TimeUntilNextLife);
         }
 
         private void SaveData()
@@ -110,12 +149,12 @@ namespace Systems
         private void LoadData()
         {
             _currentLives.Value = PlayerPrefs.GetInt(PlayerPrefsKeys.Life, _maxLives);
+            _currentLives.Value = Mathf.Clamp(_currentLives.Value, 0, _maxLives);
 
             string lastSaveTimeString = PlayerPrefs.GetString(PlayerPrefsKeys.LifeLastSavedTime, "");
 
             if (string.IsNullOrEmpty(lastSaveTimeString))
             {
-                // Первый запуск
                 _lastSaveTime = DateTime.Now;
                 _currentLives.Value = _maxLives;
             }
@@ -145,7 +184,16 @@ namespace Systems
                 }
             }
 
+            _isRegenerating = _currentLives.Value < _maxLives;
             SaveData();
+        }
+
+        private static string FormatTime(TimeSpan remaining)
+        {
+            var totalMinutes = Math.Max(0, (int)remaining.TotalMinutes);
+            var seconds = Math.Max(0, remaining.Seconds);
+
+            return $"{totalMinutes:00}:{seconds:00}";
         }
 
         #region UI
