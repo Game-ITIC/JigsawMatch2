@@ -883,10 +883,24 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Android: VS_ATT;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled;LEVELPLAY_DEPENDENCIES_INSTALLED;GLEY_IAP_GOOGLEPLAY
-    Standalone: LEVELPLAY_DEPENDENCIES_INSTALLED
-    Windows Store Apps: UNITY_ADS
-    iPhone: UNITY_ADS;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled
+    Android: VS_ATT;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled;LEVELPLAY_DEPENDENCIES_INSTALLED;GLEY_IAP_GOOGLEPLAY;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;DOTWEEN;GRIFFIN
+    EmbeddedLinux: DOTWEEN
+    GameCoreScarlett: DOTWEEN
+    GameCoreXboxOne: DOTWEEN
+    Kepler: DOTWEEN
+    LinuxHeadlessSimulation: DOTWEEN
+    Nintendo Switch: DOTWEEN
+    Nintendo Switch 2: DOTWEEN
+    PS4: DOTWEEN
+    PS5: DOTWEEN
+    QNX: DOTWEEN
+    Standalone: LEVELPLAY_DEPENDENCIES_INSTALLED;DOTWEEN
+    VisionOS: DOTWEEN
+    WebGL: DOTWEEN
+    Windows Store Apps: UNITY_ADS;DOTWEEN
+    XboxOne: DOTWEEN
+    iPhone: UNITY_ADS;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled;DOTWEEN
+    tvOS: DOTWEEN
   additionalCompilerArguments: {}
   platformArchitecture:
     iPhone: 1
@@ -989,7 +1003,7 @@ PlayerSettings:
     Collab: 1
     ErrorHub: 0
     Hub: 0
-    Purchasing: 0
+    Purchasing: 1
     UNet: 1
   luminIcon:
     m_Name: 

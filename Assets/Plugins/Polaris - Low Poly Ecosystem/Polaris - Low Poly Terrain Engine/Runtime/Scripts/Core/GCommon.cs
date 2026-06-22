@@ -86,7 +86,7 @@ namespace Pinwheel.Griffin
         {
             get
             {
-                RenderPipelineAsset rpAsset = GraphicsSettings.renderPipelineAsset;
+                RenderPipelineAsset rpAsset = GraphicsSettings.defaultRenderPipeline;
                 if (rpAsset == null)
                 {
                     return GRenderPipelineType.Builtin;
