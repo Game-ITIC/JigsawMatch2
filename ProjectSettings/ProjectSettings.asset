@@ -144,8 +144,7 @@ PlayerSettings:
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
   bundleVersion: 1.0.0
-  preloadedAssets:
-  - {fileID: 11400000, guid: c967c0192f024c0409c56948fd2a6e68, type: 2}
+  preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   xboxOneDisableKinectGpuReservation: 0
@@ -273,7 +272,7 @@ PlayerSettings:
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
   AndroidKeystoreName: '{dedicated}: Downloads/iticgames.keystore'
-  AndroidKeyaliasName: shokhaproitic
+  AndroidKeyaliasName: 
   AndroidEnableArmv9SecurityFeatures: 0
   AndroidEnableArm64MTE: 0
   AndroidBuildApkPerCpuArchitecture: 0
@@ -883,7 +882,7 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Android: VS_ATT;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled;LEVELPLAY_DEPENDENCIES_INSTALLED;GLEY_IAP_GOOGLEPLAY;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;DOTWEEN;GRIFFIN
+    Android: VS_ATT;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled;LEVELPLAY_DEPENDENCIES_INSTALLED;GLEY_IAP_GOOGLEPLAY;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;DOTWEEN;GRIFFIN;GRIFFIN_2021;POSEIDON;JUPITER;TEXTURE_GRAPH;TG_SEARCHER
     EmbeddedLinux: DOTWEEN
     GameCoreScarlett: DOTWEEN
     GameCoreXboxOne: DOTWEEN

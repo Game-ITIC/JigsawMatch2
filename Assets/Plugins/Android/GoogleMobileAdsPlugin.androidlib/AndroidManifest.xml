@@ -4,6 +4,6 @@
   <application>
     <uses-library android:required="false" android:name="org.apache.http.legacy" />
     <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-4981577085737170~4719018446" />
-    <meta-data android:name="com.google.unity.ads.UNITY_VERSION" android:value="6000.4.3f1" />
+    <meta-data android:name="com.google.unity.ads.UNITY_VERSION" android:value="6000.4.12f1" />
   </application>
 </manifest>

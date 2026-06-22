@@ -11,46 +11,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c8bc5122-cbac-4efe-813b-118ec8437e54" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.JigsawMatch2/.idea/AndroidProjectSystem.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.JigsawMatch2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JigsawMatch2/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Content/Free Stylized Skybox/Assets/Test Scenes/Linear Multiple Color/Scene.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Content/Free Stylized Skybox/Assets/Test Scenes/Linear Three Color/Scene.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Content/Prefabs/DailyQuestsPanel .prefab.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Content/Prefabs/DailyRewardsPanel.prefab.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Content/Prefabs/UI/Old/Canvas.prefab.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Content/Prefabs/UI/Task.prefab.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Demo TCP2/Cat Demo Assets/Materials/TCP2_Demo_BrickWall.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Demo TCP2/SG Demo Assets/_Misc Assets/TCP2_Demo_3DText.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Fonts/Roboto/Roboto-Bold.ttf.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Inspectors/MaterialInspector_Hybrid.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Inspectors/MaterialInspector_Hybrid.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Inspectors/MaterialInspector_SG2.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Inspectors/MaterialInspector_SG2.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Inspectors/TCP2_MaterialInspector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Inspectors/TCP2_MaterialInspector.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Inspectors/TCP2_OutlineInspector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Inspectors/TCP2_OutlineInspector.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Legacy/TCP2_MaterialInspector_PBS_SG.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Legacy/TCP2_MaterialInspector_PBS_SG.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Legacy/TCP2_MaterialInspector_SG.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Legacy/TCP2_MaterialInspector_SG.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Legacy/TCP2_MaterialInspector_SurfacePBS_SG.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Legacy/TCP2_MaterialInspector_SurfacePBS_SG.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Utils/TCP2_GUI.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Editor/Utils/TCP2_GUI.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JMO Assets/Toony Colors Pro/Textures/Sketch/TCP2_SketchGradient_Halftone.png.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/LevelPlay/Editor/LevelPlayVersions.json" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/LevelPlay/Editor/LevelPlayVersions.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Polaris - Low Poly Ecosystem/Jupiter - Procedural Sky/Sample/Scenes/StarryNight-Baked.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Polaris - Low Poly Ecosystem/Jupiter - Procedural Sky/Sample/Scenes/StarryNight.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Polaris - Low Poly Ecosystem/Jupiter - Procedural Sky/Sample/Scenes/SunnyDay.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Polaris - Low Poly Ecosystem/Low Poly Tools Bundle/Scenes/Demo.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Polaris - Low Poly Ecosystem/Polaris - Low Poly Terrain Engine/Runtime/Scripts/Core/GCommon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/Polaris - Low Poly Ecosystem/Polaris - Low Poly Terrain Engine/Runtime/Scripts/Core/GCommon.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Polaris - Low Poly Ecosystem/Polaris - Low Poly Terrain Engine/Samples/Pinwheel Studio/Materials/NightSky.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Polaris - Low Poly Ecosystem/Polaris - Low Poly Terrain Engine/Samples/Pinwheel Studio/Textures/WhiteSquare.psd.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Polaris - Low Poly Ecosystem/Poseidon - Low Poly Water System/Runtime/Scripts/Core/PCommon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/Polaris - Low Poly Ecosystem/Poseidon - Low Poly Water System/Runtime/Scripts/Core/PCommon.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Polaris - Low Poly Ecosystem/TextureGraph/Core/Editor/GraphEditor/TGraphView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/Polaris - Low Poly Ecosystem/TextureGraph/Core/Editor/GraphEditor/TGraphView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Polaris - Low Poly Ecosystem/TextureGraph/Core/Sample/Sample.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/DOTweenSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/DOTweenSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Configs/Butterflies.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Configs/Butterflies.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Testing/Test.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Testing/Test.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Scenes/AsiaRegion.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/UI/MenuView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/UI/MenuView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Initializers/CountryInitializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Initializers/CountryInitializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Meta/Quests/Presenters/DailyQuestPresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Meta/Quests/Presenters/DailyQuestPresenter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Presenters/LifePresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Presenters/LifePresenter.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/PackageManagerSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/PackageManagerSettings.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/UnityConnectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/UnityConnectSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +26,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="49" />
+    <option name="cachedIndexableFilesCount" value="32" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -234,7 +202,7 @@
       <workItem from="1738057468529" duration="1086000" />
       <workItem from="1777015356934" duration="11000" />
       <workItem from="1777105699462" duration="786000" />
-      <workItem from="1782116501747" duration="1624000" />
+      <workItem from="1782116501747" duration="2249000" />
     </task>
     <servers />
   </component>

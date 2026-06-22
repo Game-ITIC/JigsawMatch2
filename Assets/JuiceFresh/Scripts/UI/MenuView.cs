@@ -165,13 +165,13 @@ public class MenuView : MonoBehaviour, IPreload
         if(_healthSystem != null && (_lifeCountTexts.Count > 0 || _lifeStatusTexts.Count > 0))
         {
             _healthSystem.CurrentLives.Subscribe(_ => UpdateLifeTexts()).AddTo(_disposable);
-            Observable.EveryUpdate(UnityFrameProvider.EarlyUpdate)
-                .Subscribe(_ =>
-                           {
-                               _healthSystem.UpdateRegeneration();
-                               SetLifeStatusTexts();
-                           })
-                .AddTo(_disposable);
+            // Observable.EveryUpdate(UnityFrameProvider.EarlyUpdate)
+            //     .Subscribe(_ =>
+            //                {
+            //                    _healthSystem.UpdateRegeneration();
+            //                    SetLifeStatusTexts();
+            //                })
+            //     .AddTo(_disposable);
         }
 
         UpdateHudValues();
