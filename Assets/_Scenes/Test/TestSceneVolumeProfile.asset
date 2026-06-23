@@ -21,7 +21,7 @@ MonoBehaviour:
     m_Value: {x: 1, y: 1, z: 1, w: 0}
   highlights:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: -0.2409638}
+    m_Value: {x: 1, y: 1, z: 1, w: -0.050849754}
   shadowsStart:
     m_OverrideState: 0
     m_Value: 0
@@ -94,10 +94,10 @@ MonoBehaviour:
   active: 1
   postExposure:
     m_OverrideState: 1
-    m_Value: 0.6
+    m_Value: 1
   contrast:
     m_OverrideState: 1
-    m_Value: 60
+    m_Value: 40
   colorFilter:
     m_OverrideState: 0
     m_Value: {r: 1, g: 1, b: 1, a: 1}
