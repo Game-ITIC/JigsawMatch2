@@ -274,8 +274,8 @@ PlayerSettings:
   AndroidAllowedArchitectures: -1
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: '{dedicated}: Downloads/iticgames.keystore'
-  AndroidKeyaliasName: 
+  AndroidKeystoreName: D:/Projects/Unity/ITIC/iticgames.keystore
+  AndroidKeyaliasName: shokhaproitic
   AndroidEnableArmv9SecurityFeatures: 0
   AndroidEnableArm64MTE: 0
   AndroidBuildApkPerCpuArchitecture: 0
@@ -885,7 +885,7 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Android: VS_ATT;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled;LEVELPLAY_DEPENDENCIES_INSTALLED;GLEY_IAP_GOOGLEPLAY;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;DOTWEEN;GRIFFIN;GRIFFIN_2021;POSEIDON;JUPITER;TEXTURE_GRAPH;TG_SEARCHER;POSEIDON_URP
+    Android: VS_ATT;gameanalytics_admob_enabled;gameanalytics_ironsource_enabled;LEVELPLAY_DEPENDENCIES_INSTALLED;GLEY_IAP_GOOGLEPLAY;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;DOTWEEN;GRIFFIN;GRIFFIN_2021;POSEIDON;JUPITER;TEXTURE_GRAPH;TG_SEARCHER;POSEIDON_URP;MOREMOUNTAINS_NICEVIBRATIONS_INSTALLED;URP_COMPATIBILITY_MODE
     EmbeddedLinux: DOTWEEN
     GameCoreScarlett: DOTWEEN
     GameCoreXboxOne: DOTWEEN

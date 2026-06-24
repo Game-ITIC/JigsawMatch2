@@ -12,7 +12,7 @@ android {
     ndkPath "**NDKPATH**"
 
 
-    compileSdk **APIVERSION**
+    compileSdkVersion **APIVERSION**
     buildToolsVersion '**BUILDTOOLS**'
 
     compileOptions {
@@ -47,13 +47,13 @@ android {
         debug {
             minifyEnabled **MINIFY_DEBUG**
             
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')**SIGNCONFIG**
+            proguardFiles getDefaultProguardFile('proguard-android.txt')**SIGNCONFIG**
             jniDebuggable true
         }
         release {
             minifyEnabled **MINIFY_RELEASE**
             
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')**SIGNCONFIG**
+            proguardFiles getDefaultProguardFile('proguard-android.txt')**SIGNCONFIG**
         }
     }
 }
