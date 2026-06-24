@@ -71,17 +71,17 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - Vector1_17E53C12: 5.53
+    - Vector1_17E53C12: 1
     - Vector1_244B0600: -1
     - Vector1_34CF798A: 1.75
-    - Vector1_36E8227: 0.04
-    - Vector1_3D886DA1: 0.388
-    - Vector1_46E42935: 0.463
-    - Vector1_47683D42: 0.529
-    - Vector1_A0EAD698: 0.69
+    - Vector1_36E8227: 0.03
+    - Vector1_3D886DA1: 0
+    - Vector1_46E42935: 0.08
+    - Vector1_47683D42: 0
+    - Vector1_A0EAD698: 0
     - Vector1_A6A0BC26: 0
-    - Vector1_B9F56378: 1
-    - Vector1_C360A163: 9
+    - Vector1_B9F56378: 0
+    - Vector1_C360A163: 12
     - Vector1_DF445019: 1.5
     - Vector1_E03AB928: 0.05
     - Vector1_E5C51606: 0
@@ -113,7 +113,7 @@ Material:
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_7D9A58EC: {r: 0.21306516, g: 0.55586517, b: 0.7169812, a: 1}
+    - Color_7D9A58EC: {r: 0.103462085, g: 0.5153382, b: 0.7075472, a: 1}
     - Color_F01C36BF: {r: 1, g: 1, b: 1, a: 1}
     - Vector2_37B21477: {r: 0.5, g: 4, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}

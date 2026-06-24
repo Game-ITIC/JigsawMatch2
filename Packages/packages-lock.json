@@ -23,6 +23,12 @@
       "dependencies": {},
       "hash": "5764d44d4232c8ea628549137559050ea6f6dc10"
     },
+    "com.unity.2d.sprite": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
     "com.unity.bindings.openimageio": {
       "version": "1.0.2",
       "depth": 1,
