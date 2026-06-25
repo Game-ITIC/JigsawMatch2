@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8931473674410049206}
   - component: {fileID: 2118431966158244442}
   - component: {fileID: 6561909888996704413}
+  - component: {fileID: 5829103746581928374}
   - component: {fileID: 2412395156752851442}
   m_Layer: 5
   m_Name: Bar
@@ -76,6 +77,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5829103746581928374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3385038535184308954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8f2a1b34e5d6789a0b1c2d3e4f56789, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2412395156752851442
 MonoBehaviour:
   m_ObjectHideFlags: 0

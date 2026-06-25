@@ -2623,10 +2623,12 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     void UpdateBar()
     {
-        ProgressBarScript.Instance.UpdateDisplay((float)Score *
-                                                 100f /
-                                                 ((float)star1 / ((star1 * 100f / star3)) * 100f) /
-                                                 100f);
+        if (ProgressBarScript.Instance == null)
+        {
+            return;
+        }
+
+        ProgressBarScript.Instance.SetProgress(Score, star3);
     }
 
     void CheckStars()
