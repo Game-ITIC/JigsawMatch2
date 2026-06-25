@@ -1913,6 +1913,11 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5561324103903232226, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: m_Name
+      value: fonar3
+      objectReference: {fileID: 0}
     - target: {fileID: 5784001037267482016, guid: 102d4ceced9d34c4a8de912ec2125993,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1923,6 +1928,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -53
       objectReference: {fileID: 0}
+    - target: {fileID: 5971357469421233363, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: m_Name
+      value: fonar2
+      objectReference: {fileID: 0}
     - target: {fileID: 6225021925073061284, guid: 102d4ceced9d34c4a8de912ec2125993,
         type: 3}
       propertyPath: m_Name
@@ -1931,7 +1941,7 @@ PrefabInstance:
     - target: {fileID: 6225021925073061284, guid: 102d4ceced9d34c4a8de912ec2125993,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7496815627590055673, guid: 102d4ceced9d34c4a8de912ec2125993,
         type: 3}
@@ -1982,6 +1992,81 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819023456789012345, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: preset
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819023456789012345, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: duration
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819023456789012345, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: initialDelay
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819023456789012345, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: targets.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819023456789012345, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: delayBetweenEffects
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819023456789012345, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: skipNames.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819023456789012345, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: 'skipNames.Array.data[0]'
+      value: Terrain
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819023456789012345, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: appearPriority.Array.size
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819023456789012345, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: 'appearPriority.Array.data[5]'
+      value: Tree 01
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819023456789012345, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: 'appearPriority.Array.data[6]'
+      value: tree (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819023456789012345, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: 'appearPriority.Array.data[7]'
+      value: all_stones
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819023456789012345, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: 'appearPriority.Array.data[8]'
+      value: all_rocks
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819023456789012345, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: 'appearPriority.Array.data[9]'
+      value: fonar1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819023456789012345, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: 'appearPriority.Array.data[10]'
+      value: fonar2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819023456789012345, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: 'appearPriority.Array.data[11]'
+      value: fonar3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -2279,7 +2364,7 @@ PrefabInstance:
     - target: {fileID: 4196150323201231134, guid: 1d0ef5f9712463b458871d91a2a8ba06,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6158589966617830449, guid: 1d0ef5f9712463b458871d91a2a8ba06,
         type: 3}

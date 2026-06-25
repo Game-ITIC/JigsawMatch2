@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,9 @@ namespace UI
         Tweener _fillTween;
 
         public float NormalizedFill { get; private set; }
+        public float DisplayFill { get; private set; }
+
+        public event Action<float> FillValueChanged;
 
         void Awake()
         {
@@ -23,6 +27,8 @@ namespace UI
                 _fillImage.fillMethod = Image.FillMethod.Horizontal;
                 _fillImage.fillOrigin = (int)Image.OriginHorizontal.Left;
             }
+
+            DisplayFill = _fillImage != null ? _fillImage.fillAmount : 0f;
         }
 
         void OnDisable()
@@ -54,13 +60,22 @@ namespace UI
             if (!animated || fillDuration <= 0f)
             {
                 _fillImage.fillAmount = NormalizedFill;
+                SetDisplayFill(NormalizedFill);
                 return;
             }
 
             _fillTween = _fillImage
                 .DOFillAmount(NormalizedFill, fillDuration)
                 .SetEase(fillEase)
-                .SetTarget(_fillImage);
+                .SetTarget(_fillImage)
+                .OnUpdate(() => SetDisplayFill(_fillImage.fillAmount))
+                .OnComplete(() => SetDisplayFill(NormalizedFill));
+        }
+
+        void SetDisplayFill(float value)
+        {
+            DisplayFill = Mathf.Clamp01(value);
+            FillValueChanged?.Invoke(DisplayFill);
         }
 
         void KillFillTween()

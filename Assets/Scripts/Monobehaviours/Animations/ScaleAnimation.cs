@@ -60,6 +60,7 @@ public class ScaleAnimation : MonoBehaviour
     private ScalePreset lastPreset;
 
     private bool wasScalingPreviousFrame = false;
+    private bool hasCapturedTargetScale;
 
     private void Start()
     {
@@ -81,10 +82,20 @@ public class ScaleAnimation : MonoBehaviour
         if (clickCamera == null)
             clickCamera = Camera.main;
 
-        // IMPORTANT:
-        // Save original scale before changing anything.
-        // Example: if object scale is 2,3,2, this becomes the real final scale.
-        targetScale = transform.localScale;
+        // Save authored scale once, before reveal hides the object at zero scale.
+        if (!hasCapturedTargetScale)
+        {
+            Vector3 currentScale = transform.localScale;
+            if (currentScale.sqrMagnitude > 0.000001f)
+            {
+                targetScale = currentScale;
+                hasCapturedTargetScale = true;
+            }
+            else if (targetScale.sqrMagnitude > 0.000001f)
+            {
+                hasCapturedTargetScale = true;
+            }
+        }
 
         ApplyPreset();
 

@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class IronSourceInitializer : MonoBehaviour
 {
-    [SerializeField] private float maxWaitTime = 15f; // Максимальное время ожидания, секунд
+    [SerializeField] private float maxWaitTime = 15f;
 
     public async UniTask<bool> WaitForIronSourceInit()
     {
-        var isReady = false;
         IronSourceManager.Instance.InitializeLevelPlay();
 
         var checkAdsTask = UniTask.WaitUntil(() =>
@@ -19,17 +18,6 @@ public class IronSourceInitializer : MonoBehaviour
 
         int completedTaskIndex = await UniTask.WhenAny(checkAdsTask, timeoutTask);
 
-        if (completedTaskIndex == 0)
-        {
-            Debug.Log("IronSource готов, переходим в MainMenu");
-            isReady = true;
-        }
-        else
-        {
-            Debug.LogWarning("Превышено время ожидания IronSource");
-            isReady = false;
-        }
-
-        return isReady;
+        return completedTaskIndex == 0;
     }
 }

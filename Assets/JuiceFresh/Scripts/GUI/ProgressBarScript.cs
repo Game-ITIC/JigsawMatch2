@@ -11,6 +11,7 @@ public class ProgressBarScript : MonoBehaviour
     public Vector3 angles;
 
     UIFillBar _fillBar;
+    UIFillBarMilestones _milestones;
     RectTransform _barTrack;
 
     void OnEnable()
@@ -20,6 +21,12 @@ public class ProgressBarScript : MonoBehaviour
         if (_fillBar == null)
         {
             _fillBar = gameObject.AddComponent<UIFillBar>();
+        }
+
+        _milestones = GetComponent<UIFillBarMilestones>();
+        if (_milestones == null)
+        {
+            _milestones = gameObject.AddComponent<UIFillBarMilestones>();
         }
 
         _barTrack = transform.parent as RectTransform;
@@ -55,6 +62,7 @@ public class ProgressBarScript : MonoBehaviour
 
     public void ResetBar()
     {
+        _milestones?.ResetMilestones();
         _fillBar.SetNormalizedFill(0f, animated: false);
     }
 
@@ -75,11 +83,24 @@ public class ProgressBarScript : MonoBehaviour
         float halfWidth = width * 0.5f;
         PositionStar(stars[0], LevelManager.Instance.star1, width, halfWidth, maxScore);
         PositionStar(stars[1], LevelManager.Instance.star2, width, halfWidth, maxScore);
+        PositionStar(stars[2], maxScore, width, halfWidth, maxScore);
 
-        if (stars[2] != null && stars[2].transform.childCount > 0)
+        _milestones.Setup(_fillBar, _barTrack, new[]
         {
-            stars[2].transform.GetChild(0).gameObject.SetActive(false);
-        }
+            CreateStarMilestone(LevelManager.Instance.star1, maxScore, stars[0]),
+            CreateStarMilestone(LevelManager.Instance.star2, maxScore, stars[1]),
+            CreateStarMilestone(maxScore, maxScore, stars[2])
+        });
+    }
+
+    static UIFillMilestone CreateStarMilestone(int score, int maxScore, GameObject star)
+    {
+        return new UIFillMilestone
+        {
+            threshold = maxScore > 0 ? Mathf.Clamp01((float)score / maxScore) : 0f,
+            target = star,
+            revealMode = MilestoneRevealMode.ActivateFirstChild
+        };
     }
 
     static void PositionStar(GameObject star, int starScore, float width, float halfWidth, int maxScore)
@@ -92,11 +113,6 @@ public class ProgressBarScript : MonoBehaviour
         float x = starScore * width / maxScore - halfWidth;
         var position = star.transform.localPosition;
         star.transform.localPosition = new Vector3(x, position.y, position.z);
-
-        if (star.transform.childCount > 0)
-        {
-            star.transform.GetChild(0).gameObject.SetActive(false);
-        }
     }
 
     public Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivotPoint, Vector3 rotationAngles)

@@ -5,6 +5,7 @@ using Data;
 using Gley.EasyIAP;
 using Interfaces;
 using Itic.Scopes;
+using Itic.Services;
 using JetBrains.Annotations;
 using Services;
 using VContainer.Unity;
@@ -18,14 +19,12 @@ namespace Initializers
         private readonly IronSourceInitializer _ironSourceInitializer;
         private readonly IronSourceManager _ironSourceManager;
         private readonly InternetChecker _internetChecker;
-        private readonly SceneLoader _sceneLoader;
         private readonly InternetState _internetState;
-        private readonly LoadingScreenView _loadingScreenView;
+        private readonly ScreenService _screenService;
 
-        // Таймауты в миллисекундах
-        private const int INTERNET_CHECK_TIMEOUT = 10000; // 10 секунд
-        private const int IRONSOURCE_INIT_TIMEOUT = 15000; // 15 секунд
-        private const int IAP_INIT_TIMEOUT = 10000; // 10 секунд
+        private const int INTERNET_CHECK_TIMEOUT = 10000;
+        private const int IRONSOURCE_INIT_TIMEOUT = 15000;
+        private const int IAP_INIT_TIMEOUT = 10000;
 
         public AdsInitializer(
             IronSourceInitializer ironSourceInitializer,
@@ -33,34 +32,35 @@ namespace Initializers
             InternetChecker internetChecker,
             SceneLoader sceneLoader,
             InternetState internetState,
-            LoadingScreenView loadingScreenView
+            ScreenService screenService
         )
         {
             _ironSourceInitializer = ironSourceInitializer;
             _ironSourceManager = ironSourceManager;
             _internetChecker = internetChecker;
-            _sceneLoader = sceneLoader;
             _internetState = internetState;
-            _loadingScreenView = loadingScreenView;
+            _screenService = screenService;
         }
 
         public async UniTask Warmup()
-        {   
-            _loadingScreenView.Show();
-            
+        {
+            await _screenService.ShowLoadingScreenAsync();
+            _screenService.SetLoadingProgress(0f);
+
             try
             {
-                // Проверка интернета с таймаутом
+                _screenService.SetLoadingProgress(0.08f);
                 var hasInternetAccess = await CheckInternetWithTimeout();
                 _internetState.HasInternet = hasInternetAccess;
+                _screenService.SetLoadingProgress(0.18f);
 
                 if (hasInternetAccess)
                 {
-                    // IronSource инициализация с таймаутом
                     var isReady = await WaitForIronSourceWithTimeout();
-                    
-                    // IAP инициализация с таймаутом
+                    _screenService.SetLoadingProgress(0.26f);
+
                     await InitializeIAPWithTimeout();
+                    _screenService.SetLoadingProgress(0.32f);
 
                     if (isReady && _internetState.HasRemoveAds)
                     {
@@ -68,17 +68,13 @@ namespace Initializers
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Логируем ошибку и продолжаем работу
-                UnityEngine.Debug.LogError($"AdsInitializer error: {ex.Message}");
-                // Устанавливаем значения по умолчанию
                 _internetState.HasInternet = false;
                 _internetState.HasRemoveAds = false;
             }
 
-            // await _sceneLoader.LoadGameAsync();
-            _loadingScreenView.Hide();
+            _screenService.SetLoadingProgress(0.35f);
         }
 
         private async UniTask<bool> CheckInternetWithTimeout()
@@ -92,12 +88,10 @@ namespace Initializers
             }
             catch (OperationCanceledException)
             {
-                UnityEngine.Debug.LogWarning("Internet check timeout");
                 return false;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                UnityEngine.Debug.LogError($"Internet check error: {ex.Message}");
                 return false;
             }
         }
@@ -113,12 +107,10 @@ namespace Initializers
             }
             catch (OperationCanceledException)
             {
-                UnityEngine.Debug.LogWarning("IronSource initialization timeout");
                 return false;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                UnityEngine.Debug.LogError($"IronSource initialization error: {ex.Message}");
                 return false;
             }
         }
@@ -130,9 +122,8 @@ namespace Initializers
                 using (var cts = new CancellationTokenSource(IAP_INIT_TIMEOUT))
                 {
                     var completionSource = new UniTaskCompletionSource();
-                    
-                    // Регистрируем отмену таймаута
-                    cts.Token.Register(() => 
+
+                    cts.Token.Register(() =>
                     {
                         if (!completionSource.Task.Status.IsCompleted())
                         {
@@ -150,13 +141,11 @@ namespace Initializers
                             }
                             else
                             {
-                                UnityEngine.Debug.LogWarning($"IAP initialization failed: {status} - {message}");
                                 _internetState.HasRemoveAds = false;
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
-                            UnityEngine.Debug.LogError($"IAP callback error: {ex.Message}");
                             _internetState.HasRemoveAds = false;
                         }
                         finally
@@ -170,12 +159,10 @@ namespace Initializers
             }
             catch (OperationCanceledException)
             {
-                UnityEngine.Debug.LogWarning("IAP initialization timeout");
                 _internetState.HasRemoveAds = false;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                UnityEngine.Debug.LogError($"IAP initialization error: {ex.Message}");
                 _internetState.HasRemoveAds = false;
             }
         }

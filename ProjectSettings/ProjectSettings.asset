@@ -275,7 +275,7 @@ PlayerSettings:
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
   AndroidKeystoreName: D:/Projects/Unity/ITIC/iticgames.keystore
-  AndroidKeyaliasName: shokhaproitic
+  AndroidKeyaliasName: 
   AndroidEnableArmv9SecurityFeatures: 0
   AndroidEnableArm64MTE: 0
   AndroidBuildApkPerCpuArchitecture: 0
@@ -896,7 +896,7 @@ PlayerSettings:
     PS4: DOTWEEN
     PS5: DOTWEEN
     QNX: DOTWEEN
-    Standalone: LEVELPLAY_DEPENDENCIES_INSTALLED;DOTWEEN
+    Standalone: LEVELPLAY_DEPENDENCIES_INSTALLED;DOTWEEN;MOREMOUNTAINS_NICEVIBRATIONS_INSTALLED;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3
     VisionOS: DOTWEEN
     WebGL: DOTWEEN
     Windows Store Apps: UNITY_ADS;DOTWEEN

@@ -12,6 +12,9 @@ namespace Itic.Scopes
     {
         public event Action OnSceneLoaded = delegate { };
 
+        private const float LoadProgressStart = 0.35f;
+        private const float LoadProgressEnd = 0.98f;
+
         private readonly ScreenService _screenService;
         private readonly SceneModel _sceneModel;
 
@@ -74,19 +77,27 @@ namespace Itic.Scopes
 
         private async UniTask LoadSceneAsync(int index)
         {
+            await EnsureLoadingScreenVisibleAsync();
+
             var unloadSceneAsyncTask = SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
 
-            await _screenService.ShowLoadingScreenAsync();
-
-            //TODO maybe it's better to use SceneManager.GetActiveScene().IsValid?
             if (unloadSceneAsyncTask != null)
             {
-                await unloadSceneAsyncTask;
+                while (!unloadSceneAsyncTask.isDone)
+                {
+                    _screenService.SetLoadingProgress(MapUnloadProgress(unloadSceneAsyncTask.progress));
+                    await UniTask.Yield();
+                }
             }
 
             var sceneLoadingOperation = SceneManager.LoadSceneAsync(index, LoadSceneMode.Additive);
 
-            await UniTask.WaitUntil(() => sceneLoadingOperation is { isDone: true });
+            while (sceneLoadingOperation is { isDone: false })
+            {
+                _screenService.SetLoadingProgress(MapLoadProgress(sceneLoadingOperation.progress));
+                await UniTask.Yield();
+            }
+
             var scene = SceneManager.GetSceneByBuildIndex(index);
 
             SceneManager.SetActiveScene(scene);
@@ -95,16 +106,17 @@ namespace Itic.Scopes
 
             foreach (var scope in rootGameObjects)
             {
-                Debug.Log(scope.name);
                 if (!scope.TryGetComponent(out ScopeInstaller installer))
                 {
                     continue;
                 }
 
+                _screenService.SetLoadingProgress(0.92f);
                 await installer.InstallScopeAsync();
                 break;
             }
 
+            _screenService.SetLoadingProgress(LoadProgressEnd);
             await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
 
             OnSceneLoaded?.Invoke();
@@ -113,18 +125,27 @@ namespace Itic.Scopes
 
         private async UniTask LoadSceneAsync(string sceneName)
         {
-            var unloadSceneAsyncTask = SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+            await EnsureLoadingScreenVisibleAsync();
 
-            await _screenService.ShowLoadingScreenAsync();
+            var unloadSceneAsyncTask = SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
 
             if (unloadSceneAsyncTask != null)
             {
-                await unloadSceneAsyncTask;
+                while (!unloadSceneAsyncTask.isDone)
+                {
+                    _screenService.SetLoadingProgress(MapUnloadProgress(unloadSceneAsyncTask.progress));
+                    await UniTask.Yield();
+                }
             }
 
             var sceneLoadingOperation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
-            await UniTask.WaitUntil(() => sceneLoadingOperation is { isDone: true });
+            while (sceneLoadingOperation is { isDone: false })
+            {
+                _screenService.SetLoadingProgress(MapLoadProgress(sceneLoadingOperation.progress));
+                await UniTask.Yield();
+            }
+
             var scene = SceneManager.GetSceneByName(sceneName);
 
             SceneManager.SetActiveScene(scene);
@@ -133,20 +154,40 @@ namespace Itic.Scopes
 
             foreach (var scope in rootGameObjects)
             {
-                Debug.Log(scope.name);
                 if (!scope.TryGetComponent(out ScopeInstaller installer))
                 {
                     continue;
                 }
 
+                _screenService.SetLoadingProgress(0.92f);
                 await installer.InstallScopeAsync();
                 break;
             }
 
+            _screenService.SetLoadingProgress(LoadProgressEnd);
             await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
 
             OnSceneLoaded?.Invoke();
             await _screenService.HideLoadingScreenAsync();
+        }
+
+        async UniTask EnsureLoadingScreenVisibleAsync()
+        {
+            if (!_screenService.IsLoadingScreenVisible)
+            {
+                await _screenService.ShowLoadingScreenAsync();
+                _screenService.SetLoadingProgress(LoadProgressStart);
+            }
+        }
+
+        static float MapUnloadProgress(float progress)
+        {
+            return LoadProgressStart + Mathf.Clamp01(progress) * 0.08f;
+        }
+
+        static float MapLoadProgress(float progress)
+        {
+            return LoadProgressStart + 0.08f + Mathf.Clamp01(progress) * (LoadProgressEnd - LoadProgressStart - 0.08f);
         }
     }
 }

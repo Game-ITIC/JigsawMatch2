@@ -15,23 +15,24 @@ EditorBuildSettings:
     path: Assets/JuiceFresh/Scenes/main.unity
     guid: 4bc5e408c1b1f874f8a64d9cfe1906b9
   - enabled: 1
-    path: Assets/JuiceFresh/Scenes/game.unity
+    path: Assets/_Scenes/game.unity
     guid: 5ddd8fe9c14b1c042b763bcdc7fd7b93
   - enabled: 1
-    path: Assets/_Scenes/Park.unity
+    path: Assets/_Scenes/OLD/Park.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/_Scenes/Islands.unity
+    path: Assets/_Scenes/OLD/Islands.unity
     guid: f6e4b8b7b2a600349a5c790be83b4ed7
   - enabled: 0
     path: Assets/_Scenes/AsiaRegion.unity
     guid: 014a4cba0c90c874f8552a17a2baeeb5
   - enabled: 1
-    path: Assets/_Scenes/AfricaRegion.unity
-    guid: 664b34c090cd5e249acc7692f1e717d8
+    path: Assets/_Scenes/OLD/AfricaRegion.unity
+    guid: 1a232fffe380c6e498670aa8ee535481
   - enabled: 1
     path: Assets/_Scenes/MainMenu.unity
     guid: eeebe0157439afa4fbc1d734d2efd262
   m_configObjects:
     com.unity.editor.playmodeStartScene: {fileID: 102900000, guid: d52ac898d4cebbb4eb71c520a1d84d28,
       type: 3}
+  m_UseUCBPForAssetBundles: 0
