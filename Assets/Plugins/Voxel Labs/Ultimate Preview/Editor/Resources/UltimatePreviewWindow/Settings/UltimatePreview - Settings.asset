@@ -85,7 +85,7 @@ MonoBehaviour:
       cameraFieldOfView: 30
       clearFlags: 2
       skyboxMaterial: {fileID: 0}
-      backgroundColor: {r: 0.2249911, g: 0.6037736, b: 0.38151276, a: 1}
+      backgroundColor: {r: 0.49461553, g: 0.87111425, b: 0.8962264, a: 1}
     lightingSettings:
       isLightsEnable: 1
       additionalLights:
