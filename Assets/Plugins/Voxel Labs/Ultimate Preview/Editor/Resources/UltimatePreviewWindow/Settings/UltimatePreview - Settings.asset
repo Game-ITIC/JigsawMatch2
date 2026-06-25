@@ -74,7 +74,7 @@ MonoBehaviour:
     isEnable: 1
     disablePlayModeColorTint: 1
     optimizePreviewInPlayMode: 1
-    isLightsEnable: 1
+    isLightsEnable: 0
     ambientColor: {r: 0.5882353, g: 0.5882353, b: 0.5882353, a: 1}
     cameraSettings:
       orbitCamera: 1
@@ -85,7 +85,7 @@ MonoBehaviour:
       cameraFieldOfView: 30
       clearFlags: 2
       skyboxMaterial: {fileID: 0}
-      backgroundColor: {r: 0.827451, g: 0.99607843, b: 1, a: 1}
+      backgroundColor: {r: 0.2249911, g: 0.6037736, b: 0.38151276, a: 1}
     lightingSettings:
       isLightsEnable: 1
       additionalLights:
