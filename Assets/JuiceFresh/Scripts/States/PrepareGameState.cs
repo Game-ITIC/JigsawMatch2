@@ -74,16 +74,24 @@ namespace JuiceFresh.States
         private void ResetUIElements()
         {
             // Reset all UI panels
-            levelManager.blocksObject.SetActive(false);
-            levelManager.ingrObject.SetActive(false);
-            levelManager.scoreTargetObject.SetActive(false);
-            levelManager.cageTargetObject.SetActive(false);
-            levelManager.bombTargetObject.SetActive(false);
+            SetActiveIfAssigned(levelManager.blocksObject, false);
+            SetActiveIfAssigned(levelManager.ingrObject, false);
+            SetActiveIfAssigned(levelManager.scoreTargetObject, false);
+            SetActiveIfAssigned(levelManager.cageTargetObject, false);
+            SetActiveIfAssigned(levelManager.bombTargetObject, false);
 
             // Reset star animations
-            levelManager.star1Anim.SetActive(false);
-            levelManager.star2Anim.SetActive(false);
-            levelManager.star3Anim.SetActive(false);
+            SetActiveIfAssigned(levelManager.star1Anim, false);
+            SetActiveIfAssigned(levelManager.star2Anim, false);
+            SetActiveIfAssigned(levelManager.star3Anim, false);
+        }
+
+        private static void SetActiveIfAssigned(GameObject target, bool active)
+        {
+            if (target != null)
+            {
+                target.SetActive(active);
+            }
         }
 
         private void ResetTargetData()

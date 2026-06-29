@@ -677,6 +677,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     public void InvokeStart()
     {
+        ResolveTargetUIReferences();
+
         _boardMechanicsService = new BoardMechanicsService(this);
 
         ingrCountTarget = new int[NumIngredients]; // Necessary amount of collectable items
@@ -741,6 +743,56 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         gameStatus = GameState.PrepareGame;
         LoadLevel();
+    }
+
+    private void ResolveTargetUIReferences()
+    {
+        if (Level == null)
+        {
+            return;
+        }
+
+        Transform topBarTransform = Level.transform.Find("Canvas/Panel/TopBarPanel");
+        if (topBarTransform != null)
+        {
+            AssignIfMissing(ref ingrObject, topBarTransform, "TargetIngr");
+            AssignIfMissing(ref blocksObject, topBarTransform, "TargetBlocks");
+            AssignIfMissing(ref scoreTargetObject, topBarTransform, "TargetScore");
+            AssignIfMissing(ref cageTargetObject, topBarTransform, "TargetCages");
+            AssignIfMissing(ref bombTargetObject, topBarTransform, "TargetBombs");
+            AssignIfMissing(ref star1Anim, topBarTransform, "Stars/Star1/Star1Anim");
+            AssignIfMissing(ref star2Anim, topBarTransform, "Stars/Star2/Star2Anim");
+            AssignIfMissing(ref star3Anim, topBarTransform, "Stars/Star3/Star3Anim");
+        }
+
+        Transform prePlayTransform = Level.transform.Find("Canvas/PrePlay");
+        if (prePlayTransform != null && prePlayTransform.TryGetComponent(out PrePlay prePlay))
+        {
+            if (ingrObject == null)
+                ingrObject = prePlay.ingrObject;
+            if (blocksObject == null)
+                blocksObject = prePlay.blocksObject;
+            if (scoreTargetObject == null)
+                scoreTargetObject = prePlay.scoreTargetObject;
+            if (cageTargetObject == null)
+                cageTargetObject = prePlay.cage;
+            if (bombTargetObject == null)
+                bombTargetObject = prePlay.bomb;
+        }
+    }
+
+    private static void AssignIfMissing(ref GameObject target, Transform root, string path)
+    {
+        if (target != null)
+        {
+            return;
+        }
+
+        Transform child = root.Find(path);
+        if (child != null)
+        {
+            target = child.gameObject;
+        }
     }
 
     public void InvokeUpdate()
@@ -2650,24 +2702,33 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         if(Score >= star1)
         {
-            if(!star1Anim.activeSelf)
-                SoundBase.Instance.PlaySound(SoundBase.Instance.getStarIngr);
-            star1Anim.SetActive(true);
+            ActivateStarAnimation(star1Anim);
         }
 
         if(Score >= star2)
         {
-            if(!star2Anim.activeSelf)
-                SoundBase.Instance.PlaySound(SoundBase.Instance.getStarIngr);
-            star2Anim.SetActive(true);
+            ActivateStarAnimation(star2Anim);
         }
 
         if(Score >= star3)
         {
-            if(!star3Anim.activeSelf)
-                SoundBase.Instance.PlaySound(SoundBase.Instance.getStarIngr);
-            star3Anim.SetActive(true);
+            ActivateStarAnimation(star3Anim);
         }
+    }
+
+    private static void ActivateStarAnimation(GameObject starAnimation)
+    {
+        if (starAnimation == null)
+        {
+            return;
+        }
+
+        if (!starAnimation.activeSelf)
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.getStarIngr);
+        }
+
+        starAnimation.SetActive(true);
     }
 
     #endregion

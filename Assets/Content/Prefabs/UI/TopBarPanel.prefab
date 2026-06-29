@@ -3418,10 +3418,50 @@ PrefabInstance:
       propertyPath: 'stars.Array.data[2]'
       value: 
       objectReference: {fileID: 4756073394704833471}
+    - target: {fileID: 6561909888996704413, guid: 09be1d8ccb6eaa64285e3434e45ada7d,
+        type: 3}
+      propertyPath: m_FillAmount
+      value: 0.309
+      objectReference: {fileID: 0}
     - target: {fileID: 7747106244051954197, guid: 09be1d8ccb6eaa64285e3434e45ada7d,
         type: 3}
       propertyPath: m_Name
       value: BackBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 8931473674410049206, guid: 09be1d8ccb6eaa64285e3434e45ada7d,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8931473674410049206, guid: 09be1d8ccb6eaa64285e3434e45ada7d,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8931473674410049206, guid: 09be1d8ccb6eaa64285e3434e45ada7d,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8931473674410049206, guid: 09be1d8ccb6eaa64285e3434e45ada7d,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8931473674410049206, guid: 09be1d8ccb6eaa64285e3434e45ada7d,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 31
+      objectReference: {fileID: 0}
+    - target: {fileID: 8931473674410049206, guid: 09be1d8ccb6eaa64285e3434e45ada7d,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8931473674410049206, guid: 09be1d8ccb6eaa64285e3434e45ada7d,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 15.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

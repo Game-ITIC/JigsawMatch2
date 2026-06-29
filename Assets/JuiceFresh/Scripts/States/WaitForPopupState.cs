@@ -56,11 +56,11 @@ namespace JuiceFresh.States
 
         private void InitTargets()
         {
-            levelManager.blocksObject.SetActive(false);
-            levelManager.ingrObject.SetActive(false);
-            levelManager.scoreTargetObject.SetActive(false);
-            levelManager.cageTargetObject.SetActive(false);
-            levelManager.bombTargetObject.SetActive(false);
+            SetActiveIfAssigned(levelManager.blocksObject, false);
+            SetActiveIfAssigned(levelManager.ingrObject, false);
+            SetActiveIfAssigned(levelManager.scoreTargetObject, false);
+            SetActiveIfAssigned(levelManager.cageTargetObject, false);
+            SetActiveIfAssigned(levelManager.bombTargetObject, false);
 
             foreach (GameObject item in levelManager.listIngredientsGUIObjects)
             {
@@ -76,45 +76,78 @@ namespace JuiceFresh.States
         {
             if (levelManager.target != Target.COLLECT && levelManager.target != Target.ITEMS)
             {
-                levelManager.ingrObject.SetActive(false);
+                SetActiveIfAssigned(levelManager.ingrObject, false);
             }
             else if (levelManager.target == Target.COLLECT)
             {
-                levelManager.blocksObject.SetActive(false);
-                _levelManagerActions.CreateCollectableTarget(levelManager.ingrObject, levelManager.target, false);
+                SetActiveIfAssigned(levelManager.blocksObject, false);
+                CreateCollectableTargetIfAssigned();
             }
             else if (levelManager.target == Target.ITEMS)
             {
-                levelManager.blocksObject.SetActive(false);
-                _levelManagerActions.CreateCollectableTarget(levelManager.ingrObject, levelManager.target, false);
+                SetActiveIfAssigned(levelManager.blocksObject, false);
+                CreateCollectableTargetIfAssigned();
             }
 
             if (levelManager.targetBlocks > 0 && levelManager.target == Target.BLOCKS)
             {
-                levelManager.blocksObject.SetActive(true);
-                levelManager.blocksObject.GetComponent<TargetGUI>().text.GetComponent<Counter_>().totalCount =
-                    levelManager.targetBlocks;
+                SetActiveIfAssigned(levelManager.blocksObject, true);
+                SetTargetCount(levelManager.blocksObject, levelManager.targetBlocks);
             }
             else if (levelManager.target == Target.CAGES)
             {
-                levelManager.cageTargetObject.SetActive(true);
-                levelManager.cageTargetObject.GetComponent<TargetGUI>().text.GetComponent<Counter_>().totalCount =
-                    levelManager.TargetCages;
+                SetActiveIfAssigned(levelManager.cageTargetObject, true);
+                SetTargetCount(levelManager.cageTargetObject, levelManager.TargetCages);
             }
             else if (levelManager.target == Target.BOMBS)
             {
                 levelManager.StartCoroutine(_levelManagerActions.InitBombs());
-                levelManager.bombTargetObject.SetActive(true);
-                levelManager.bombTargetObject.GetComponent<TargetGUI>().text.GetComponent<Counter_>().totalCount =
-                    levelManager.bombsCollect;
+                SetActiveIfAssigned(levelManager.bombTargetObject, true);
+                SetTargetCount(levelManager.bombTargetObject, levelManager.bombsCollect);
             }
             else if (levelManager.target == Target.SCORE)
             {
-                levelManager.ingrObject.SetActive(false);
-                levelManager.blocksObject.SetActive(false);
-                levelManager.scoreTargetObject.SetActive(true);
-                levelManager.cageTargetObject.SetActive(false);
-                levelManager.bombTargetObject.SetActive(false);
+                SetActiveIfAssigned(levelManager.ingrObject, false);
+                SetActiveIfAssigned(levelManager.blocksObject, false);
+                SetActiveIfAssigned(levelManager.scoreTargetObject, true);
+                SetActiveIfAssigned(levelManager.cageTargetObject, false);
+                SetActiveIfAssigned(levelManager.bombTargetObject, false);
+            }
+        }
+
+        private void CreateCollectableTargetIfAssigned()
+        {
+            if (levelManager.ingrObject != null)
+            {
+                _levelManagerActions.CreateCollectableTarget(levelManager.ingrObject, levelManager.target, false);
+            }
+        }
+
+        private static void SetTargetCount(GameObject target, int count)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            TargetGUI targetGui = target.GetComponent<TargetGUI>();
+            if (targetGui == null || targetGui.text == null)
+            {
+                return;
+            }
+
+            Counter_ counter = targetGui.text.GetComponent<Counter_>();
+            if (counter != null)
+            {
+                counter.totalCount = count;
+            }
+        }
+
+        private static void SetActiveIfAssigned(GameObject target, bool active)
+        {
+            if (target != null)
+            {
+                target.SetActive(active);
             }
         }
 

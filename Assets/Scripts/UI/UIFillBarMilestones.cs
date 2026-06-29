@@ -46,6 +46,8 @@ namespace UI
 
         void OnEnable()
         {
+            EnsureRevealedStateSize();
+
             if (fillBar != null)
             {
                 fillBar.FillValueChanged += HandleFillChanged;
@@ -202,6 +204,11 @@ namespace UI
 
         void EnsureRevealedStateSize()
         {
+            if (milestones == null)
+            {
+                milestones = Array.Empty<UIFillMilestone>();
+            }
+
             if (_revealed == null || _revealed.Length != milestones.Length)
             {
                 _revealed = new bool[milestones.Length];

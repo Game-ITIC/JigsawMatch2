@@ -122,9 +122,17 @@ namespace JuiceFresh.States
             canvas.GetComponent<GraphicRaycaster>().enabled = false;
             canvas.GetComponent<GraphicRaycaster>().enabled = true;
 
-            var panel = canvas.transform.Find("Panel/Panel").GetComponent<RectTransform>();
-            if (aspect == 2.17f)
+            Transform panelTransform = canvas.transform.Find("Panel/Panel");
+            if (panelTransform == null)
+            {
+                panelTransform = canvas.transform.Find("Panel");
+            }
+
+            if (aspect == 2.17f && panelTransform != null &&
+                panelTransform.TryGetComponent(out RectTransform panel))
+            {
                 panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, 935) + Vector2.down * 100;
+            }
         }
 
         private void SetupGameCamera()
