@@ -31,6 +31,8 @@ namespace UI
 
         bool[] _revealed;
 
+        public event Action<int, UIFillMilestone> MilestoneRevealed;
+
         void Awake()
         {
             if (fillBar == null)
@@ -107,6 +109,7 @@ namespace UI
 
                 _revealed[i] = true;
                 RevealMilestone(milestones[i]);
+                MilestoneRevealed?.Invoke(i, milestones[i]);
             }
         }
 

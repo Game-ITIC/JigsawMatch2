@@ -159,13 +159,6 @@ public class Counter_ : MonoBehaviour
             if (LevelManager.THIS.ingrTarget[ingrTrackNumber].count == 0)
                 parentGUI.Done();
         }
-        if (name == "CountStar")
-        {
-            //StarModel.instance.UpdateStarsDisplay();
-            DisplayText = "" + (LevelManager.THIS.stars) + "/" + (int)LevelManager.THIS.starsTargetCount;
-            if (LevelManager.THIS.stars == (int)LevelManager.THIS.starsTargetCount)
-                parentGUI.Done();
-        }
         if (name == "CountIngrForMenu")
         {
             DisplayText = "" + totalCount;

@@ -2691,50 +2691,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     void CheckStars()
     {
-        if(Score >= star1 && stars <= 0)
-        {
-            stars = 1;
-        }
-
-        if(Score >= star2 && stars <= 1)
-        {
-            stars = 2;
-        }
-
-        if(Score >= star3 && stars <= 2)
-        {
-            stars = 3;
-        }
-
-        if(Score >= star1)
-        {
-            ActivateStarAnimation(star1Anim);
-        }
-
-        if(Score >= star2)
-        {
-            ActivateStarAnimation(star2Anim);
-        }
-
-        if(Score >= star3)
-        {
-            ActivateStarAnimation(star3Anim);
-        }
-    }
-
-    private static void ActivateStarAnimation(GameObject starAnimation)
-    {
-        if (starAnimation == null)
-        {
-            return;
-        }
-
-        if (!starAnimation.activeSelf)
-        {
-            SoundBase.Instance.PlaySound(SoundBase.Instance.getStarIngr);
-        }
-
-        starAnimation.SetActive(true);
+        int earnedStars = Score >= star3 ? 3 : Score >= star2 ? 2 : Score >= star1 ? 1 : 0;
+        stars = Mathf.Max(stars, earnedStars);
     }
 
     #endregion

@@ -1,14 +1,18 @@
 ﻿using UI;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(UIFillBar))]
 public class ProgressBarScript : MonoBehaviour
 {
-    public static ProgressBarScript Instance;
+    public static ProgressBarScript Instance { get; private set; }
 
     public GameObject[] stars;
     public Vector3 pivot;
     public Vector3 angles;
+
+    public int DisplayedStars { get; private set; }
+    public event Action<int> DisplayedStarsChanged;
 
     UIFillBar _fillBar;
     UIFillBarMilestones _milestones;
@@ -29,9 +33,25 @@ public class ProgressBarScript : MonoBehaviour
             _milestones = gameObject.AddComponent<UIFillBarMilestones>();
         }
 
+        _milestones.MilestoneRevealed -= HandleMilestoneRevealed;
+        _milestones.MilestoneRevealed += HandleMilestoneRevealed;
+
         _barTrack = transform.parent as RectTransform;
         ResetBar();
         PrepareStars();
+    }
+
+    void OnDisable()
+    {
+        if (_milestones != null)
+        {
+            _milestones.MilestoneRevealed -= HandleMilestoneRevealed;
+        }
+
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 
     public void SetProgress(float currentValue, float maxValue)
@@ -62,8 +82,31 @@ public class ProgressBarScript : MonoBehaviour
 
     public void ResetBar()
     {
-        _milestones?.ResetMilestones();
         _fillBar.SetNormalizedFill(0f, animated: false);
+        SetDisplayedStars(0);
+        _milestones?.ResetMilestones();
+    }
+
+    void HandleMilestoneRevealed(int milestoneIndex, UIFillMilestone _)
+    {
+        SetDisplayedStars(milestoneIndex + 1);
+
+        if (SoundBase.Instance != null)
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.getStarIngr);
+        }
+    }
+
+    void SetDisplayedStars(int value)
+    {
+        int clampedValue = Mathf.Clamp(value, 0, 3);
+        if (DisplayedStars == clampedValue)
+        {
+            return;
+        }
+
+        DisplayedStars = clampedValue;
+        DisplayedStarsChanged?.Invoke(DisplayedStars);
     }
 
     void PrepareStars()
