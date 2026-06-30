@@ -437,8 +437,11 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     // Counted squares
     public Hashtable countedSquares;
 
-    // Is ingredient flying flag
-    public bool ingredientFly;
+    CollectedTargetFlyController _collectedTargetFlyController;
+
+    // Kept as a property for the board state checks that wait for target flights to finish.
+    public bool ingredientFly => _collectedTargetFlyController != null &&
+                                 _collectedTargetFlyController.IsFlying;
 
     // Test by play flag
     public bool testByPlay;
@@ -678,6 +681,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     public void InvokeStart()
     {
         ResolveTargetUIReferences();
+        InitializeCollectedTargetFlyController();
 
         _boardMechanicsService = new BoardMechanicsService(this);
 
@@ -743,6 +747,21 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         gameStatus = GameState.PrepareGame;
         LoadLevel();
+    }
+
+    void InitializeCollectedTargetFlyController()
+    {
+        if (_collectedTargetFlyController == null)
+        {
+            _collectedTargetFlyController = GetComponent<CollectedTargetFlyController>();
+        }
+
+        if (_collectedTargetFlyController == null)
+        {
+            _collectedTargetFlyController = gameObject.AddComponent<CollectedTargetFlyController>();
+        }
+
+        _collectedTargetFlyController.Initialize(this);
     }
 
     private void ResolveTargetUIReferences()
@@ -2295,161 +2314,12 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     public void CheckCollectedTarget(GameObject _item)
     {
-        for (int i = 0; i < NumIngredients; i++)
+        if (_collectedTargetFlyController == null)
         {
-            if(ingrTarget[i].count > 0)
-            {
-                if(_item.GetComponent<Item>() != null)
-                {
-                    if(_item.GetComponent<Item>().currentType == ItemsTypes.NONE)
-                    {
-                        if(_item.GetComponent<Item>().color == (int)collectItems[i] - 1)
-                        {
-                            GameObject item = new GameObject();
-                            item.transform.position = _item.transform.position;
-                            item.transform.localScale = Vector3.one / 2f;
-                            SpriteRenderer spr = item.AddComponent<SpriteRenderer>();
-                            spr.sprite = _item.GetComponent<Item>().items[_item.GetComponent<Item>().color];
-                            spr.sortingLayerName = "UI";
-                            spr.sortingOrder = 1;
-
-                            StartCoroutine(StartAnimateIngredient(item, i));
-                        }
-                    }
-                    else if(_item.GetComponent<Item>().currentType == ItemsTypes.INGREDIENT)
-                    {
-                        if(ingrTarget[i].count > 0)
-                        {
-                            if(_item.GetComponent<Item>().color == i + 1000)
-                            {
-                                GameObject item = new GameObject();
-                                item.transform.position = _item.transform.position;
-                                item.transform.localScale = Vector3.one / 2f;
-                                SpriteRenderer spr = item.AddComponent<SpriteRenderer>();
-                                spr.sprite = _item.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
-                                spr.sortingLayerName = "UI";
-                                spr.sortingOrder = 1;
-
-                                StartCoroutine(StartAnimateIngredient(item, i));
-                            }
-                        }
-                    }
-                }
-            }
+            InitializeCollectedTargetFlyController();
         }
 
-        if(targetBlocks > 0)
-        {
-            if(_item.GetComponent<Square>() != null)
-            {
-                GameObject item = new GameObject();
-                item.transform.position = _item.transform.position;
-                item.transform.localScale = Vector3.one / 2f;
-                SpriteRenderer spr = item.AddComponent<SpriteRenderer>();
-                spr.sprite = _item.GetComponent<SpriteRenderer>().sprite;
-                spr.sortingLayerName = "UI";
-                spr.sortingOrder = 1;
-
-                StartCoroutine(StartAnimateIngredient(item, 0));
-            }
-        }
-
-        if(target == Target.BOMBS)
-        {
-            if(_item.GetComponent<Item>().currentType == ItemsTypes.BOMB)
-            {
-                GameObject item = new GameObject();
-                item.transform.position = _item.transform.position;
-                SpriteRenderer spr = item.AddComponent<SpriteRenderer>();
-                spr.sprite = _item.GetComponent<Item>().sprRenderer.sprite;
-                spr.sortingLayerName = "UI";
-                spr.sortingOrder = 1;
-                item.transform.localScale /= 4f;
-
-                StartCoroutine(StartAnimateIngredient(item, 0));
-            }
-        }
-    }
-
-    IEnumerator StartAnimateIngredient(GameObject item, int i)
-    {
-        ingredientFly = true;
-        GameObject[] ingr = new GameObject[GetActualIngredients()];
-
-        if(target == Target.COLLECT || target == Target.ITEMS)
-        {
-            for (int j = 0; j < NumIngredients; j++)
-            {
-                if(ingrObject.transform.Find("Ingr" + j) != null)
-                {
-                    ingr[j] = ingrObject.transform.Find("Ingr" + j).gameObject;
-                }
-            }
-        }
-        else if(target == Target.BLOCKS || target == Target.BOMBS)
-            ingr = new GameObject[1];
-
-        if(target == Target.BLOCKS)
-        {
-            ingr[0] = blocksObject.transform.gameObject;
-        }
-        else if(target == Target.BOMBS)
-        {
-            ingr[0] = bombTargetObject.transform.gameObject;
-        }
-
-        AnimationCurve curveX = new AnimationCurve(new Keyframe(0, item.transform.localPosition.x),
-                                                   new Keyframe(0.4f, ingr[i].transform.position.x));
-        AnimationCurve curveY = new AnimationCurve(new Keyframe(0, item.transform.localPosition.y),
-                                                   new Keyframe(0.5f, ingr[i].transform.position.y));
-        curveY.AddKey(0.2f, item.transform.localPosition.y + UnityEngine.Random.Range(-2, 0.5f));
-        float startTime = Time.time;
-        Vector3 startPos = item.transform.localPosition;
-        float speed = UnityEngine.Random.Range(0.4f, 0.6f);
-        float distCovered = 0;
-
-        if(ingrTarget.Count > 0)
-        {
-            if(ingrTarget[i].count > 0)
-                ingrTarget[i].count--;
-        }
-
-        while (distCovered < 0.5f)
-        {
-            distCovered = (Time.time - startTime) * speed;
-            item.transform.localPosition = new Vector3(curveX.Evaluate(distCovered), curveY.Evaluate(distCovered), 0);
-            item.transform.Rotate(Vector3.back, Time.deltaTime * 1000);
-            yield return new WaitForFixedUpdate();
-        }
-
-        if(target == Target.BOMBS)
-            TargetBombs++;
-        Destroy(item);
-        if(gameStatus == GameState.Playing)
-            CheckWinLose();
-        ingredientFly = false;
-    }
-
-    public int GetActualIngredients()
-    {
-        int count = 0;
-
-        if(target == Target.COLLECT)
-        {
-            for (int i = 0; i < ingrTarget.Count; i++)
-            {
-                count++;
-            }
-        }
-        else if(target == Target.ITEMS)
-        {
-            for (int i = 0; i < collectItems.Length; i++)
-            {
-                count++;
-            }
-        }
-
-        return count;
+        _collectedTargetFlyController.TryFly(_item);
     }
 
     public int GetRestIngredients()
