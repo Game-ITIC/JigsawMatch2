@@ -848,9 +848,10 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     private void OnDestroy()
     {
-        if(CoroutineManager.Instance != null)
+        CoroutineManager coroutineManager = CoroutineManager.ExistingInstance;
+        if(coroutineManager != null)
         {
-            CoroutineManager.Instance.StopAllManagedCoroutines();
+            coroutineManager.StopAllManagedCoroutines();
         }
 
         THIS = null;
@@ -2443,9 +2444,20 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         //     InitScript.Instance.AddLife(1);
 
         SoundBase.Instance.PlaySound(SoundBase.Instance.complete[1]);
-        GameObject.Find("Level/Canvas").transform.Find("PreCompleteBanner").gameObject.SetActive(true);
-        yield return new WaitForSeconds(3);
-        GameObject.Find("Level/Canvas").transform.Find("PreCompleteBanner").gameObject.SetActive(false);
+        GameObject preCompleteBanner = GameObject.Find("Level/Canvas").transform.Find("PreCompleteBanner").gameObject;
+        preCompleteBanner.SetActive(true);
+
+        UIPreCompleteBannerTweenAnimation bannerAnimation = preCompleteBanner.GetComponent<UIPreCompleteBannerTweenAnimation>();
+        if(bannerAnimation != null)
+        {
+            yield return bannerAnimation.WaitForCompletion();
+        }
+        else
+        {
+            yield return new WaitForSeconds(3f);
+            preCompleteBanner.SetActive(false);
+        }
+
         Vector3 pos1 = GameObject.Find("Limit").transform.position;
 
         yield return new WaitForSeconds(1);

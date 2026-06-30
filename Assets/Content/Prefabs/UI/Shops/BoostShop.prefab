@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 1984177778604669009}
   - component: {fileID: 317940633287551959}
   - component: {fileID: 1740093688113256536}
-  - component: {fileID: 2569527249084319258}
+  - component: {fileID: 4225148289062972928}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -151,23 +151,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!111 &2569527249084319258
-Animation:
+--- !u!114 &4225148289062972928
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709237189911211277}
   m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: a59c8170f5d4c11408cf5715954a15a0, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: a59c8170f5d4c11408cf5715954a15a0, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3242c818749d4e61b7e531204d8c96d8, type: 3}
+  playOnEnable: 1
+  useUnscaledTime: 1
+  rotationDelta: {x: 0, y: 0, z: -360}
+  duration: 6
+  ease: 1
+  loops: 1
 --- !u!1 &2248288572549356413
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,7 +178,7 @@ GameObject:
   - component: {fileID: 7211569087886854231}
   - component: {fileID: 9199691408093898284}
   - component: {fileID: 3993796472012639153}
-  - component: {fileID: 1367885033706694469}
+  - component: {fileID: 8921839933453256704}
   - component: {fileID: 437372546855606131}
   - component: {fileID: 6215928793007062223}
   - component: {fileID: 4663424645804010219}
@@ -248,23 +247,35 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!111 &1367885033706694469
-Animation:
+--- !u!114 &8921839933453256704
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2248288572549356413}
   m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: 3f3e123f0f49c7f4796ea1dcafd0638d, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 3f3e123f0f49c7f4796ea1dcafd0638d, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b70a2b8fcf7b4e67ac4d91524cd21931, type: 3}
+  playOnEnable: 1
+  useUnscaledTime: 1
+  target: {fileID: 0}
+  fallbackTargetPath: Image
+  callbackReceiver: {fileID: 0}
+  startScale: {x: 1.64, y: 0.53, z: 1}
+  firstScale: {x: 0.8113925, y: 1.2218723, z: 1}
+  secondScale: {x: 0.8783424, y: 1.3427415, z: 1}
+  thirdScale: {x: 1.1781013, y: 0.90030205, z: 1}
+  endScale: {x: 1, y: 1, z: 1}
+  firstDuration: 0.11666667
+  secondDuration: 0.0375
+  thirdDuration: 0.1
+  finalDuration: 0.07916668
+  completeDelay: 0.0125
+  ease: 4
+  playClickEvents: 1
+  firstClickTime: 0.25
+  secondClickTime: 0.32916668
 --- !u!114 &437372546855606131
 MonoBehaviour:
   m_ObjectHideFlags: 0

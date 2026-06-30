@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4632965614990775712}
   - component: {fileID: 7925937088498508853}
   - component: {fileID: 8941430264449482628}
-  - component: {fileID: 3583079278550777872}
+  - component: {fileID: 5613273657929194496}
   m_Layer: 5
   m_Name: Star1
   m_TagString: Untagged
@@ -77,23 +77,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!111 &3583079278550777872
-Animation:
+--- !u!114 &5613273657929194496
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 214109864549663616}
   m_Enabled: 0
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: faabb0d212471b249bcde29e9d17fbcf, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: faabb0d212471b249bcde29e9d17fbcf, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81f35c09f07f456888a49ee2157cc934, type: 3}
+  playOnEnable: 1
+  useUnscaledTime: 1
+  from: {x: 1, y: 1, z: 1}
+  to: {x: 0.35, y: 0.35, z: 0.35}
+  duration: 0.5
+  ease: 1
 --- !u!1 &1031063941013282423
 GameObject:
   m_ObjectHideFlags: 0
@@ -578,7 +577,7 @@ GameObject:
   - component: {fileID: 7211495350774204365}
   - component: {fileID: 8579741828028205700}
   - component: {fileID: 8357412286486312684}
-  - component: {fileID: 865018636022835315}
+  - component: {fileID: 2869887986740574208}
   m_Layer: 5
   m_Name: Star3
   m_TagString: Untagged
@@ -644,23 +643,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!111 &865018636022835315
-Animation:
+--- !u!114 &2869887986740574208
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3201002701593988591}
   m_Enabled: 0
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: faabb0d212471b249bcde29e9d17fbcf, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: faabb0d212471b249bcde29e9d17fbcf, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81f35c09f07f456888a49ee2157cc934, type: 3}
+  playOnEnable: 1
+  useUnscaledTime: 1
+  from: {x: 1, y: 1, z: 1}
+  to: {x: 0.35, y: 0.35, z: 0.35}
+  duration: 0.5
+  ease: 1
 --- !u!1 &3442100077294954571
 GameObject:
   m_ObjectHideFlags: 0
@@ -885,7 +883,7 @@ GameObject:
   - component: {fileID: 4365125948044180453}
   - component: {fileID: 2006801831021826378}
   - component: {fileID: 2087269828299449585}
-  - component: {fileID: 5556901605564657401}
+  - component: {fileID: 3202569102232949760}
   m_Layer: 5
   m_Name: Star
   m_TagString: Untagged
@@ -950,23 +948,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!111 &5556901605564657401
-Animation:
+--- !u!114 &3202569102232949760
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3946863375020187436}
   m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: faabb0d212471b249bcde29e9d17fbcf, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: faabb0d212471b249bcde29e9d17fbcf, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81f35c09f07f456888a49ee2157cc934, type: 3}
+  playOnEnable: 1
+  useUnscaledTime: 1
+  from: {x: 1, y: 1, z: 1}
+  to: {x: 0.35, y: 0.35, z: 0.35}
+  duration: 0.5
+  ease: 1
 --- !u!1 &4003073644352506348
 GameObject:
   m_ObjectHideFlags: 0
@@ -1064,7 +1061,7 @@ GameObject:
   - component: {fileID: 1497281244629303066}
   - component: {fileID: 9178018157629167911}
   - component: {fileID: 3796647458571181084}
-  - component: {fileID: 623224122170939483}
+  - component: {fileID: 3091336688040339968}
   m_Layer: 5
   m_Name: Star2
   m_TagString: Untagged
@@ -1130,23 +1127,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!111 &623224122170939483
-Animation:
+--- !u!114 &3091336688040339968
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4599684480287397903}
   m_Enabled: 0
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: faabb0d212471b249bcde29e9d17fbcf, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: faabb0d212471b249bcde29e9d17fbcf, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81f35c09f07f456888a49ee2157cc934, type: 3}
+  playOnEnable: 1
+  useUnscaledTime: 1
+  from: {x: 1, y: 1, z: 1}
+  to: {x: 0.35, y: 0.35, z: 0.35}
+  duration: 0.5
+  ease: 1
 --- !u!1 &5330826933980578912
 GameObject:
   m_ObjectHideFlags: 0
@@ -1296,7 +1292,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3020768943991966465}
   - component: {fileID: 336100396499481890}
-  - component: {fileID: 5823019736418920642}
+  - component: {fileID: 1219557723195462912}
   - component: {fileID: 7612386044814690805}
   - component: {fileID: 2458322094908578514}
   - component: {fileID: 7416089194166521181}
@@ -1335,23 +1331,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5546445335885587636}
   m_CullTransparentMesh: 0
---- !u!111 &5823019736418920642
-Animation:
+--- !u!114 &1219557723195462912
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5546445335885587636}
   m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: 3f3e123f0f49c7f4796ea1dcafd0638d, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 3f3e123f0f49c7f4796ea1dcafd0638d, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b70a2b8fcf7b4e67ac4d91524cd21931, type: 3}
+  playOnEnable: 1
+  useUnscaledTime: 1
+  target: {fileID: 0}
+  fallbackTargetPath: Image
+  callbackReceiver: {fileID: 0}
+  startScale: {x: 1.64, y: 0.53, z: 1}
+  firstScale: {x: 0.8113925, y: 1.2218723, z: 1}
+  secondScale: {x: 0.8783424, y: 1.3427415, z: 1}
+  thirdScale: {x: 1.1781013, y: 0.90030205, z: 1}
+  endScale: {x: 1, y: 1, z: 1}
+  firstDuration: 0.11666667
+  secondDuration: 0.0375
+  thirdDuration: 0.1
+  finalDuration: 0.07916668
+  completeDelay: 0.0125
+  ease: 4
+  playClickEvents: 1
+  firstClickTime: 0.25
+  secondClickTime: 0.32916668
 --- !u!114 &7612386044814690805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2107,7 +2115,7 @@ GameObject:
   - component: {fileID: 1375494052140394220}
   - component: {fileID: 3179914369253800171}
   - component: {fileID: 9033189248881907266}
-  - component: {fileID: 3919843012748864884}
+  - component: {fileID: 2331761547508530176}
   m_Layer: 5
   m_Name: Star
   m_TagString: Untagged
@@ -2172,23 +2180,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!111 &3919843012748864884
-Animation:
+--- !u!114 &2331761547508530176
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7212810791288582218}
   m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: faabb0d212471b249bcde29e9d17fbcf, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: faabb0d212471b249bcde29e9d17fbcf, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81f35c09f07f456888a49ee2157cc934, type: 3}
+  playOnEnable: 1
+  useUnscaledTime: 1
+  from: {x: 1, y: 1, z: 1}
+  to: {x: 0.35, y: 0.35, z: 0.35}
+  duration: 0.5
+  ease: 1
 --- !u!1 &7511643672820911906
 GameObject:
   m_ObjectHideFlags: 0
@@ -2322,7 +2329,7 @@ GameObject:
   - component: {fileID: 5801884767554312911}
   - component: {fileID: 5314234071726388673}
   - component: {fileID: 111265262996765878}
-  - component: {fileID: 8815563991015716680}
+  - component: {fileID: 4622732945506052096}
   m_Layer: 5
   m_Name: Image (2)
   m_TagString: Untagged
@@ -2387,23 +2394,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!111 &8815563991015716680
-Animation:
+--- !u!114 &4622732945506052096
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8047488112758457537}
   m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: a59c8170f5d4c11408cf5715954a15a0, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: a59c8170f5d4c11408cf5715954a15a0, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3242c818749d4e61b7e531204d8c96d8, type: 3}
+  playOnEnable: 1
+  useUnscaledTime: 1
+  rotationDelta: {x: 0, y: 0, z: -360}
+  duration: 6
+  ease: 1
+  loops: 1
 --- !u!1 &9112599188177414395
 GameObject:
   m_ObjectHideFlags: 0
@@ -2415,7 +2421,7 @@ GameObject:
   - component: {fileID: 3146380928237416493}
   - component: {fileID: 9131455011029900015}
   - component: {fileID: 5490891300634585080}
-  - component: {fileID: 8581785776045571615}
+  - component: {fileID: 2386711261026619392}
   m_Layer: 5
   m_Name: Star
   m_TagString: Untagged
@@ -2480,20 +2486,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!111 &8581785776045571615
-Animation:
+--- !u!114 &2386711261026619392
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9112599188177414395}
   m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: faabb0d212471b249bcde29e9d17fbcf, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: faabb0d212471b249bcde29e9d17fbcf, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81f35c09f07f456888a49ee2157cc934, type: 3}
+  playOnEnable: 1
+  useUnscaledTime: 1
+  from: {x: 1, y: 1, z: 1}
+  to: {x: 0.35, y: 0.35, z: 0.35}
+  duration: 0.5
+  ease: 1

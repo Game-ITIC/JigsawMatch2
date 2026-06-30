@@ -1454,7 +1454,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5287725307289939151}
   - component: {fileID: 239333657630805869}
-  - component: {fileID: 5401707121428352964}
+  - component: {fileID: 6770995018466156544}
   - component: {fileID: 8712641846267246479}
   - component: {fileID: 198139142440059004}
   m_Layer: 5
@@ -1494,23 +1494,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9031831711833070284}
   m_CullTransparentMesh: 0
---- !u!111 &5401707121428352964
-Animation:
+--- !u!114 &6770995018466156544
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9031831711833070284}
   m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: c0ea1929907839e4c825408950f52b80, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: c0ea1929907839e4c825408950f52b80, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e90b911b94649d594d5382192b6cb0f, type: 3}
+  playOnEnable: 0
+  useUnscaledTime: 1
+  banner: {fileID: 1620851289153681275}
+  cloud: {fileID: 2108738509920103169}
+  targetDescription: {fileID: 3299835708635376123}
+  callbackReceiver: {fileID: 8712641846267246479}
+  prePlay: {fileID: 198139142440059004}
+  bannerDropOffset: 220
+  goalDropOffset: 90
+  cloudRiseOffset: 120
+  bannerDelay: 0
+  goalDelay: 0.18
+  cloudDelay: 0.32
+  bannerDuration: 0.52
+  goalDuration: 0.42
+  cloudDuration: 0.48
+  holdDuration: 1.35
+  exitDuration: 0.48
+  exitLiftOffset: 180
+  completeDelay: 0.04
+  swishTime: 0.72
 --- !u!114 &8712641846267246479
 MonoBehaviour:
   m_ObjectHideFlags: 0

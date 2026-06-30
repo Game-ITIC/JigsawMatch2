@@ -258,23 +258,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayOnEnable: 1
   fireworkPrefab: {fileID: 0}
---- !u!111 &8064993746918309593
-Animation:
+--- !u!114 &8064993746918309593
+MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 11109138, guid: f210d2a20a0bdaf439e836afc4ec7144,
-    type: 2}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8064993746918309595}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 3f3e123f0f49c7f4796ea1dcafd0638d, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 3f3e123f0f49c7f4796ea1dcafd0638d, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b70a2b8fcf7b4e67ac4d91524cd21931, type: 3}
+  playOnEnable: 1
+  useUnscaledTime: 1
+  target: {fileID: 0}
+  fallbackTargetPath: Image
+  callbackReceiver: {fileID: 0}
+  startScale: {x: 1.64, y: 0.53, z: 1}
+  firstScale: {x: 0.8113925, y: 1.2218723, z: 1}
+  secondScale: {x: 0.8783424, y: 1.3427415, z: 1}
+  thirdScale: {x: 1.1781013, y: 0.90030205, z: 1}
+  endScale: {x: 1, y: 1, z: 1}
+  firstDuration: 0.11666667
+  secondDuration: 0.0375
+  thirdDuration: 0.1
+  finalDuration: 0.07916668
+  completeDelay: 0.0125
+  ease: 4
+  playClickEvents: 1
+  firstClickTime: 0.25
+  secondClickTime: 0.32916668
 --- !u!1 &8064993747008975086
 GameObject:
   m_ObjectHideFlags: 0

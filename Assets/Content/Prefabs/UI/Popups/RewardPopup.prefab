@@ -464,7 +464,7 @@ GameObject:
   - component: {fileID: 6795420566763727039}
   - component: {fileID: 8184084342330924227}
   - component: {fileID: 820078872877564064}
-  - component: {fileID: 4467252733757412169}
+  - component: {fileID: 2221791805061395712}
   m_Layer: 5
   m_Name: Cosmetics
   m_TagString: Untagged
@@ -529,23 +529,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!111 &4467252733757412169
-Animation:
+--- !u!114 &2221791805061395712
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4866413576496284065}
   m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: a59c8170f5d4c11408cf5715954a15a0, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: a59c8170f5d4c11408cf5715954a15a0, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3242c818749d4e61b7e531204d8c96d8, type: 3}
+  playOnEnable: 1
+  useUnscaledTime: 1
+  rotationDelta: {x: 0, y: 0, z: -360}
+  duration: 6
+  ease: 1
+  loops: 1
 --- !u!1 &5333590480715554994
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,6 +10,8 @@ namespace JuiceFresh.Scripts
     {
         private static CoroutineManager _instance;
 
+        public static CoroutineManager ExistingInstance => _instance;
+
         public static CoroutineManager Instance
         {
             get
@@ -80,6 +82,14 @@ namespace JuiceFresh.Scripts
         public bool IsCoroutineRunning(string name)
         {
             return _activeCoroutines.ContainsKey(name) && _activeCoroutines[name] != null;
+        }
+
+        private void OnDestroy()
+        {
+            if(_instance == this)
+            {
+                _instance = null;
+            }
         }
     }
 }

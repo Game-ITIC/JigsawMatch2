@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using JuiceFresh.States;
+using UI;
 
 public class PreWinAnimationsState : GameStateBase
 {
@@ -52,11 +53,17 @@ public class PreWinAnimationsState : GameStateBase
         GameObject preCompleteBanner = GameObject.Find("Level/Canvas").transform.Find("PreCompleteBanner").gameObject;
         preCompleteBanner.SetActive(true);
         Debug.Log("Pre-complete banner activated");
-        
-        yield return new WaitForSeconds(3);
-        
-        // Hide pre-complete banner
-        preCompleteBanner.SetActive(false);
+
+        UIPreCompleteBannerTweenAnimation bannerAnimation = preCompleteBanner.GetComponent<UIPreCompleteBannerTweenAnimation>();
+        if(bannerAnimation != null)
+        {
+            yield return bannerAnimation.WaitForCompletion();
+        }
+        else
+        {
+            yield return new WaitForSeconds(3f);
+            preCompleteBanner.SetActive(false);
+        }
         
         // Get position for flower animations
         Vector3 limitPos = GameObject.Find("Limit").transform.position;

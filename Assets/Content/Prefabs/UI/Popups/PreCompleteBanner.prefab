@@ -85,7 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2939102927108934643}
   - component: {fileID: 7699369487129195425}
-  - component: {fileID: 876576760442050446}
+  - component: {fileID: 8462851378761009152}
   - component: {fileID: 9170055552425651330}
   m_Layer: 5
   m_Name: PreCompleteBanner
@@ -125,23 +125,44 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1438378755902001466}
   m_CullTransparentMesh: 0
---- !u!111 &876576760442050446
-Animation:
+--- !u!114 &8462851378761009152
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1438378755902001466}
   m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: caf2b6a1b3d35174ba45d5ba08c78dc6, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: caf2b6a1b3d35174ba45d5ba08c78dc6, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c641834cf504ef0b4d69c2bcc6e5c84, type: 3}
+  playOnEnable: 1
+  hideOnComplete: 1
+  useUnscaledTime: 1
+  firstBurst: {fileID: 2216795071797887885}
+  secondBurst: {fileID: 6387419651913450200}
+  topRibbon: {fileID: 7253920856757334909}
+  bottomRibbon: {fileID: 3738899464941436545}
+  callbackReceiver: {fileID: 9170055552425651330}
+  rootStartScaleFactor: 0.12
+  rootDuration: 0.55
+  rootEase: 27
+  starsStartTime: 0.42
+  starStagger: 0.2
+  starDuration: 0.6
+  starSpinDegrees: -540
+  starStartScaleFactor: 0.08
+  starScaleEase: 27
+  starRotationEase: 9
+  holdAfterEntry: 1.15
+  starExitDuration: 0.38
+  starExitStagger: 0.1
+  starExitSpinDegrees: 240
+  starExitScaleFactor: 0.05
+  starExitScaleEase: 26
+  starExitRotationEase: 8
+  rootExitDuration: 0.45
+  rootExitEase: 26
+  ribbonFadeDuration: 0.35
 --- !u!114 &9170055552425651330
 MonoBehaviour:
   m_ObjectHideFlags: 0

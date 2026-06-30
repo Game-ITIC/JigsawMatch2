@@ -8093,12 +8093,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 229438419}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &889631136 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7569295239088477127, guid: 44f9baddab6514c45b5a54fb86637b6c,
-    type: 3}
-  m_PrefabInstance: {fileID: 5414642566524131717}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &889631137 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7765233418883786539, guid: 44f9baddab6514c45b5a54fb86637b6c,
@@ -9483,12 +9477,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1119674160}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1162009076 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8352917440831517741, guid: e654ab557225ecc4ab980c9e393aed43,
-    type: 3}
-  m_PrefabInstance: {fileID: 2808273008373868527}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1162009077 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4872893155369871170, guid: e654ab557225ecc4ab980c9e393aed43,
@@ -9981,6 +9969,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6811250016834780490, guid: 2d5dc2e8dd4f4fa4fbc90cf9c9e9e777,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6811250016834780490, guid: 2d5dc2e8dd4f4fa4fbc90cf9c9e9e777,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.63529414
+      objectReference: {fileID: 0}
+    - target: {fileID: 6811250016834780490, guid: 2d5dc2e8dd4f4fa4fbc90cf9c9e9e777,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.9960785
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10918,12 +10921,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1293626731}
   m_CullTransparentMesh: 0
---- !u!1 &1303933588 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8973016444900183995, guid: 2c59edf7ef1856d4095ed215024100ba,
-    type: 3}
-  m_PrefabInstance: {fileID: 1896502959252967333}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1303933589 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8439343298758448677, guid: 2c59edf7ef1856d4095ed215024100ba,
@@ -19213,6 +19210,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: MenuPause
       objectReference: {fileID: 0}
+    - target: {fileID: 427838633352046623, guid: a08ab1d599d41b7408392fbabec98bae,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 952517375257795146, guid: a08ab1d599d41b7408392fbabec98bae,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 1756899443056062321, guid: a08ab1d599d41b7408392fbabec98bae,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
     - target: {fileID: 2038874574504513555, guid: a08ab1d599d41b7408392fbabec98bae,
         type: 3}
       propertyPath: m_Pivot.x
@@ -19312,6 +19324,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4098833630808770749, guid: a08ab1d599d41b7408392fbabec98bae,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 4540786533217183893, guid: a08ab1d599d41b7408392fbabec98bae,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 7134421550594500937, guid: a08ab1d599d41b7408392fbabec98bae,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 7527943253874089262, guid: a08ab1d599d41b7408392fbabec98bae,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -19567,10 +19599,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1375642409}
     m_Modifications:
+    - target: {fileID: 3640959914979681897, guid: f565070190e248b4695dece52b162af8,
+        type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 3221225783
+      objectReference: {fileID: 0}
     - target: {fileID: 3895068237034891195, guid: f565070190e248b4695dece52b162af8,
         type: 3}
       propertyPath: m_Name
       value: TutorialManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5742988272385705122, guid: f565070190e248b4695dece52b162af8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6144350701760824335, guid: f565070190e248b4695dece52b162af8,
         type: 3}
@@ -19986,6 +20028,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: MenuFailed
       objectReference: {fileID: 0}
+    - target: {fileID: 4642875983521366372, guid: f6e119442f8726541ae7ef3ffc90c3ed,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -20103,6 +20150,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Tutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 6440267560758453436, guid: c5b177a8620878a40ba9b8a85d447756,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -20227,6 +20279,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: LiveShop
       objectReference: {fileID: 0}
+    - target: {fileID: 8275816931297835145, guid: 75a28308ddde4e14d87932878616ee84,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -20244,6 +20301,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BoostShop
+      objectReference: {fileID: 0}
+    - target: {fileID: 2248288572549356413, guid: a7d7ba11f2486b34db731f8c24e4afbb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7211569087886854231, guid: a7d7ba11f2486b34db731f8c24e4afbb,
         type: 3}
@@ -20358,6 +20420,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1970235630}
     m_Modifications:
+    - target: {fileID: 2723554651009467327, guid: be6fc4bd43eb1934fb7821c53e913131,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5287725307289939151, guid: be6fc4bd43eb1934fb7821c53e913131,
         type: 3}
       propertyPath: m_Pivot.x
@@ -20485,6 +20552,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: gratzWord3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7569295239088477127, guid: 44f9baddab6514c45b5a54fb86637b6c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7765233418883786539, guid: 44f9baddab6514c45b5a54fb86637b6c,
         type: 3}
@@ -20709,6 +20781,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GemsShop
       objectReference: {fileID: 0}
+    - target: {fileID: 5359120546940908878, guid: 3d318e81193e2d34c945ae4db9bae359,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -20827,6 +20904,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: NoMoreMatches
       objectReference: {fileID: 0}
+    - target: {fileID: 9045272372153556616, guid: f4ead57b78a6e7f47a0f4dbf8324e399,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -20844,6 +20926,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PreCompleteBanner
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438378755902001466, guid: e6a9fc3fc72a49e40ad4ca50016bd252,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2939102927108934643, guid: e6a9fc3fc72a49e40ad4ca50016bd252,
         type: 3}
@@ -20884,6 +20971,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 346
+      objectReference: {fileID: 0}
+    - target: {fileID: 2939102927108934643, guid: e6a9fc3fc72a49e40ad4ca50016bd252,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2939102927108934643, guid: e6a9fc3fc72a49e40ad4ca50016bd252,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2939102927108934643, guid: e6a9fc3fc72a49e40ad4ca50016bd252,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2939102927108934643, guid: e6a9fc3fc72a49e40ad4ca50016bd252,
         type: 3}
@@ -21063,6 +21165,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: MenuComplete
       objectReference: {fileID: 0}
+    - target: {fileID: 5546445335885587636, guid: e7783f51287aa7c4889ad51152c5597c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -21180,6 +21287,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MenuPlay
+      objectReference: {fileID: 0}
+    - target: {fileID: 6471169026873132129, guid: 276270159de0e024caec795010943362,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

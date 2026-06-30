@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
+using UI;
 using UnityEngine.UI;
 
 public class PrePlay : MonoBehaviour
 {
+    private const float IntroFallbackDelay = 3.2f;
+
     public GameObject ingrObject;
     public GameObject blocksObject;
     public GameObject scoreTargetObject;
@@ -11,10 +15,28 @@ public class PrePlay : MonoBehaviour
     public GameObject bomb;
     public GameObject items;
 
+    private Tween introFallback;
+    private bool introCompleting;
+
     // Use this for initialization
     void OnEnable()
     {
+        introCompleting = false;
         InitTargets();
+
+        if(TryGetComponent(out UIPrePlayBannerTweenAnimation tweenAnimation))
+        {
+            tweenAnimation.Play();
+        }
+
+        KillIntroFallback();
+        introFallback = DOVirtual.DelayedCall(IntroFallbackDelay, CompleteIntro, true)
+            .SetTarget(this);
+    }
+
+    private void OnDisable()
+    {
+        KillIntroFallback();
     }
 
     void InitTargets()
@@ -76,5 +98,46 @@ public class PrePlay : MonoBehaviour
             blocksObject.SetActive(false);
             scoreTargetObject.SetActive(true);
         }
+    }
+
+    public void CompleteIntro()
+    {
+        if(introCompleting)
+        {
+            return;
+        }
+
+        introCompleting = true;
+        KillIntroFallback();
+
+        try
+        {
+            if(TryGetComponent(out AnimationManager animationManager))
+            {
+                animationManager.CloseMenu();
+            }
+        }
+        finally
+        {
+            if(gameObject.activeSelf)
+            {
+                gameObject.SetActive(false);
+            }
+
+            if(LevelManager.THIS != null)
+            {
+                LevelManager.THIS.gameStatus = GameState.WaitForPopup;
+            }
+        }
+    }
+
+    private void KillIntroFallback()
+    {
+        if(introFallback != null && introFallback.IsActive())
+        {
+            introFallback.Kill();
+        }
+
+        introFallback = null;
     }
 }
