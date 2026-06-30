@@ -113,9 +113,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     public GameObject star2Anim;
     public GameObject star3Anim;
 
-    // UI objects
-    public GameObject[] gratzWords;
-
     // UI objects for targets
     public GameObject ingrObject;
     public GameObject blocksObject;

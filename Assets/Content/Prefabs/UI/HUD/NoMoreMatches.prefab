@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4100981463774884713}
   - component: {fileID: 1520483148137083179}
   - component: {fileID: 9211948539301988043}
-  - component: {fileID: 7907921249764656143}
   - component: {fileID: 5745646865002169347}
   m_Layer: 5
   m_Name: NoMoreMatches
@@ -77,28 +76,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &7907921249764656143
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9045272372153556616}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 93b57d36faeb80f43986cb04eed24c59, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &5745646865002169347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,8 +85,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 9045272372153556616}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7800044affb833e458ca3ac9868121dd, type: 3}
+  m_Script: {fileID: 11500000, guid: d8c9ab51c194466a88d97363d11a6616, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayOnEnable: 1
-  fireworkPrefab: {fileID: 0}
+  playOnEnable: 1
+  useUnscaledTime: 1
+  deactivateOnComplete: 1
+  delay: 0
+  popInDuration: 0.42
+  settleDuration: 0.12
+  holdDuration: 0.24
+  fadeOutDuration: 0.3
+  startOffset: {x: 0, y: 0}
+  endOffset: {x: 0, y: 38.68}
+  startScaleMultiplier: {x: 0.2, y: 0.2, z: 0.2}
+  peakScaleMultiplier: {x: 1.18, y: 1.18, z: 1.18}
+  endScaleMultiplier: {x: 1, y: 1, z: 1}
+  popEase: 27
+  settleEase: 9
+  moveEase: 9
+  fadeEase: 4

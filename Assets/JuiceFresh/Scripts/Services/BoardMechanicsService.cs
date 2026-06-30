@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using UI;
 using UnityEngine;
 
 namespace JuiceFresh.Scripts
@@ -557,12 +558,10 @@ namespace JuiceFresh.Scripts
 
         private void ShowComboText(int combo)
         {
-            if (combo > 11 && levelManager.gameStatus == GameState.Playing)
-                levelManager.gratzWords[2].SetActive(true);
-            else if (combo > 8 && levelManager.gameStatus == GameState.Playing)
-                levelManager.gratzWords[1].SetActive(true);
-            else if (combo > 5 && levelManager.gameStatus == GameState.Playing)
-                levelManager.gratzWords[0].SetActive(true);
+            if (levelManager.gameStatus != GameState.Playing)
+                return;
+
+            ComboTextFeedbackView.ShowForCombo(combo);
         }
 
         private void UpdateBombTimers()

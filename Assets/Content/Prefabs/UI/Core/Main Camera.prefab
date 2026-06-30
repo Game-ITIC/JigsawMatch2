@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 1443408711946074614}
   - component: {fileID: 2088461024340755594}
   - component: {fileID: 6876123512815634357}
+  - component: {fileID: 6278313701975494898}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -237,8 +238,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 639bbcaee2a8592429bb372ded78e875, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   collectedIngredients:
   - name: ingredient_01
     sprite: {fileID: 21300000, guid: 63938c0f13ed90f44a5a7ad659f6262a, type: 3}
@@ -265,10 +266,6 @@ MonoBehaviour:
   star1Anim: {fileID: 0}
   star2Anim: {fileID: 0}
   star3Anim: {fileID: 0}
-  gratzWords:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   ingrObject: {fileID: 0}
   blocksObject: {fileID: 0}
   scoreTargetObject: {fileID: 0}
@@ -503,8 +500,8 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 323fba191c1f74042a50981a5a4c2f67, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name: ''
+  m_EditorClassIdentifier: ''
   boostCount: {fileID: 0}
   type: 10
   price: {fileID: 0}
@@ -594,3 +591,24 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &6278313701975494898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7491772303093536022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32d917b0ffdc43a6881ba0b803340f42, type: 3}
+  searchRoot: {fileID: 0}
+  feedbacks:
+  - minimumCombo: 6
+    fallbackName: gratzWord1
+    target: {fileID: 0}
+  - minimumCombo: 9
+    fallbackName: gratzWord2
+    target: {fileID: 0}
+  - minimumCombo: 12
+    fallbackName: gratzWord3
+    target: {fileID: 0}
