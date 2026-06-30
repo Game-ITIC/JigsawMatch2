@@ -12,18 +12,35 @@ public class Line : MonoBehaviour
     public int lineWidth = 1;
     #endregion
 
+    #region Trace Style
+    [Header("Butterfly Trace Style")]
+    [SerializeField] private string resourcesMaterialPath = "ButterflyTrace";
+    [SerializeField, Range(0.25f, 1.25f)] private float widthMultiplier = 0.72f;
+    [SerializeField, Range(0, 8)] private int roundedCorners = 4;
+    [SerializeField, Range(0, 8)] private int roundedCaps = 4;
+    #endregion
+
     #region Private Fields
     private Mesh mesh;
     private Vector3 start;
     private Vector3 end;
     private List<LineRenderer> lines = new List<LineRenderer>();
     private Vector3[] points = new Vector3[200]; // Cache for point positions
+    private Material runtimeMaterial;
+    private bool ownsRuntimeMaterial;
     #endregion
 
     #region Unity Lifecycle
     void Start()
     {
+        InitializeMaterial();
         InitializeLineRenderers();
+    }
+
+    private void OnDestroy()
+    {
+        if (ownsRuntimeMaterial && runtimeMaterial != null)
+            Destroy(runtimeMaterial);
     }
     #endregion
 
@@ -34,14 +51,17 @@ public class Line : MonoBehaviour
     /// <param name="count">Number of vertices</param>
     public void SetVertexCount(int count)
     {
+        int requiredSegmentCount = Mathf.Max(0, count - 1);
+
         // Ensure we have enough line renderers
-        if (lines.Count < count)
+        while (lines.Count < requiredSegmentCount)
             AddLine();
         
-        // Enable/disable line renderers based on count
+        // N points need N - 1 segments. Keeping an extra zero-length segment
+        // enabled would render its rounded cap at world origin (the board center).
         for (int i = 0; i < lines.Count; i++)
         {
-            if (i < count)
+            if (i < requiredSegmentCount)
             {
                 lines[i].enabled = true;
                 SetSortingLayer(lines[i]);
@@ -65,8 +85,9 @@ public class Line : MonoBehaviour
         // If not the first point, connect it to the previous point
         if (index > 0)
         {
-            lines[index].SetPosition(0, points[index - 1]);
-            lines[index].SetPosition(1, points[index]);
+            LineRenderer segment = lines[index - 1];
+            segment.SetPosition(0, points[index - 1]);
+            segment.SetPosition(1, points[index]);
         }
     }
     #endregion
@@ -77,11 +98,72 @@ public class Line : MonoBehaviour
     /// </summary>
     private void InitializeLineRenderers()
     {
+        lines.Clear();
+
         foreach (Transform item in transform)
         {
-            if (item.GetComponent<LineRenderer>() != null)
-                lines.Add(item.GetComponent<LineRenderer>());
+            LineRenderer lineRenderer = item.GetComponent<LineRenderer>();
+            if (lineRenderer == null)
+                continue;
+
+            ConfigureLineRenderer(lineRenderer);
+            lines.Add(lineRenderer);
         }
+    }
+
+    /// <summary>
+    /// Loads the project trace material without requiring scene changes.
+    /// A runtime fallback keeps the effect working if the resource is moved.
+    /// </summary>
+    private void InitializeMaterial()
+    {
+        if (material != null)
+        {
+            runtimeMaterial = material;
+            return;
+        }
+
+        Material template = Resources.Load<Material>(resourcesMaterialPath);
+        if (template != null)
+        {
+            runtimeMaterial = new Material(template)
+            {
+                name = template.name + " (Runtime)"
+            };
+            ownsRuntimeMaterial = true;
+            return;
+        }
+
+        Shader traceShader = Shader.Find("JigsawMatch2/Butterfly Trace");
+        if (traceShader == null)
+        {
+            Debug.LogWarning("Butterfly Trace shader was not found. The original line material will be used.", this);
+            return;
+        }
+
+        runtimeMaterial = new Material(traceShader)
+        {
+            name = "ButterflyTrace (Runtime Fallback)"
+        };
+        ownsRuntimeMaterial = true;
+    }
+
+    /// <summary>
+    /// Applies the soft gold, violet and aqua ribbon style to a trace segment.
+    /// </summary>
+    private void ConfigureLineRenderer(LineRenderer lineRenderer)
+    {
+        if (runtimeMaterial != null)
+            lineRenderer.sharedMaterial = runtimeMaterial;
+
+        lineRenderer.widthMultiplier = widthMultiplier;
+        lineRenderer.numCornerVertices = roundedCorners;
+        lineRenderer.numCapVertices = roundedCaps;
+        lineRenderer.alignment = LineAlignment.View;
+        lineRenderer.textureMode = LineTextureMode.Stretch;
+        lineRenderer.startColor = Color.white;
+        lineRenderer.endColor = Color.white;
+        SetSortingLayer(lineRenderer);
     }
 
     /// <summary>
@@ -90,8 +172,11 @@ public class Line : MonoBehaviour
     private void AddLine()
     {
         GameObject newLine = Instantiate(transform.GetChild(0).gameObject) as GameObject;
-        newLine.transform.SetParent(transform);
-        lines.Add(newLine.GetComponent<LineRenderer>());
+        newLine.transform.SetParent(transform, false);
+
+        LineRenderer lineRenderer = newLine.GetComponent<LineRenderer>();
+        ConfigureLineRenderer(lineRenderer);
+        lines.Add(lineRenderer);
     }
 
     /// <summary>

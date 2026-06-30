@@ -1,20 +1,41 @@
 ﻿using UnityEngine;
 using System.Collections;
+using TMPro;
 using UnityEngine.UI;
 
 public class Counter_ : MonoBehaviour
 {
     public int ingrTrackNumber;
-    Text txt;
+    private Text legacyText;
+    private TMP_Text tmpText;
     private float lastTime;
     bool alert;
     public int totalCount;
     TargetGUI parentGUI;
 
+    private string DisplayText
+    {
+        get => tmpText != null ? tmpText.text : legacyText != null ? legacyText.text : string.Empty;
+        set
+        {
+            if (tmpText != null)
+                tmpText.text = value;
+            else if (legacyText != null)
+                legacyText.text = value;
+        }
+    }
+
+    private Transform TextTransform => tmpText != null ? tmpText.transform : legacyText.transform;
+
+    private void Awake()
+    {
+        tmpText = GetComponent<TMP_Text>();
+        legacyText = GetComponent<Text>();
+    }
+
     // Use this for initialization
     void Start()
     {
-        txt = GetComponent<Text>();
         if (transform.parent.GetComponent<TargetGUI>() != null)
             parentGUI = transform.parent.GetComponent<TargetGUI>();
     }
@@ -27,7 +48,7 @@ public class Counter_ : MonoBehaviour
         if (name == "TargetScore" && LevelManager.THIS != null)
         {
             if (LevelManager.THIS.target == Target.SCORE)
-                txt.text = "" + LevelManager.THIS.GetScoresOfTargetStars();
+                DisplayText = "" + LevelManager.THIS.GetScoresOfTargetStars();
         }
 
     }
@@ -36,7 +57,7 @@ public class Counter_ : MonoBehaviour
     {
         if (name == "StarsT")
         {
-            txt.text = "" + (LevelManager.THIS.stars);
+            DisplayText = "" + (LevelManager.THIS.stars);
         }
         // Добавьте другие проверки для обновления текста в зависимости от имени компонента, если нужно
     }
@@ -46,27 +67,27 @@ public class Counter_ : MonoBehaviour
     {
         if (name == "Score")
         {
-            txt.text = "" + LevelManager.Score;
+            DisplayText = "" + LevelManager.Score;
         }
         if (name == "LabelKeepPlay")
         {
             if (LevelManager.THIS.limitType == LIMIT.MOVES)
-                txt.text = "GET + " + LevelManager.THIS.ExtraFailedMoves + " moves";
+                DisplayText = "GET + " + LevelManager.THIS.ExtraFailedMoves + " moves";
             else
-                txt.text = "GET + " + LevelManager.THIS.ExtraFailedSecs + " secs";
+                DisplayText = "GET + " + LevelManager.THIS.ExtraFailedSecs + " secs";
 
         }
 
         if (name == "BestScore")
         {
-            txt.text = "Best score:" + PlayerPrefs.GetInt("Score" + PlayerPrefs.GetInt("OpenLevel"));
+            DisplayText = "Best score:" + PlayerPrefs.GetInt("Score" + PlayerPrefs.GetInt("OpenLevel"));
         }
 
         if (name == "Limit")
         {
             if (LevelManager.Instance.limitType == LIMIT.MOVES)
             {
-                txt.text = "" + LevelManager.THIS.Limit;
+                DisplayText = "" + LevelManager.THIS.Limit;
                 //txt.transform.GetComponent<RectTransform>().anchoredPosition = new Vector3(-460, -42, 0);
                 //txt.transform.localScale = Vector3.one;
                 if (LevelManager.THIS.Limit <= 5)
@@ -92,8 +113,8 @@ public class Counter_ : MonoBehaviour
             {
                 int minutes = Mathf.FloorToInt(LevelManager.THIS.Limit / 60F);
                 int seconds = Mathf.FloorToInt(LevelManager.THIS.Limit - minutes * 60);
-                txt.text = "" + string.Format("{0:00}:{1:00}", minutes, seconds);
-                txt.transform.localScale = Vector3.one * 0.35f;
+                DisplayText = "" + string.Format("{0:00}:{1:00}", minutes, seconds);
+                TextTransform.localScale = Vector3.one * 0.35f;
                 //txt.transform.GetComponent<RectTransform>().anchoredPosition = new Vector3(-445, -42, 0);
                 if (LevelManager.THIS.Limit <= 30 && LevelManager.THIS.gameStatus == GameState.Playing)
                 {
@@ -116,41 +137,41 @@ public class Counter_ : MonoBehaviour
         }
         if (name == "TargetBlocks")
         {
-            txt.text = "" + (totalCount - LevelManager.THIS.targetBlocks) + "/" + totalCount;
+            DisplayText = "" + (totalCount - LevelManager.THIS.targetBlocks) + "/" + totalCount;
             if (LevelManager.THIS.targetBlocks == 0)
                 parentGUI.Done();
         }
         if (name == "TargetCages")
         {
-            txt.text = "" + (totalCount - LevelManager.THIS.TargetCages) + "/" + totalCount;
+            DisplayText = "" + (totalCount - LevelManager.THIS.TargetCages) + "/" + totalCount;
             if (LevelManager.THIS.TargetCages == 0)
                 parentGUI.Done();
         }
         if (name == "TargetBombs")
         {
-            txt.text = "" + (LevelManager.THIS.TargetBombs) + "/" + totalCount;
+            DisplayText = "" + (LevelManager.THIS.TargetBombs) + "/" + totalCount;
             if (LevelManager.THIS.TargetBombs >= totalCount)
                 parentGUI.Done();
         }
         if (name == "CountIngr")
         {
-            txt.text = "" + (totalCount - LevelManager.THIS.ingrTarget[ingrTrackNumber].count) + "/" + totalCount;
+            DisplayText = "" + (totalCount - LevelManager.THIS.ingrTarget[ingrTrackNumber].count) + "/" + totalCount;
             if (LevelManager.THIS.ingrTarget[ingrTrackNumber].count == 0)
                 parentGUI.Done();
         }
         if (name == "CountStar")
         {
             //StarModel.instance.UpdateStarsDisplay();
-            txt.text = "" + (LevelManager.THIS.stars) + "/" + (int)LevelManager.THIS.starsTargetCount;
+            DisplayText = "" + (LevelManager.THIS.stars) + "/" + (int)LevelManager.THIS.starsTargetCount;
             if (LevelManager.THIS.stars == (int)LevelManager.THIS.starsTargetCount)
                 parentGUI.Done();
         }
         if (name == "CountIngrForMenu")
         {
-            txt.text = "" + totalCount;
+            DisplayText = "" + totalCount;
             if (LevelManager.THIS.target == Target.BOMBS)
             {
-                txt.text = "" + LevelManager.THIS.bombsCollect; //1.4.5
+                DisplayText = "" + LevelManager.THIS.bombsCollect; //1.4.5
             }
         }
 
@@ -164,26 +185,26 @@ public class Counter_ : MonoBehaviour
 
         if (name == "Gems")
         {
-            txt.text = "" + LevelManager.THIS.CoinModel.Coins.Value;
+            DisplayText = "" + LevelManager.THIS.CoinModel.Coins.Value;
         }
         if (name == "Level")
         {
-            txt.text = "LEVEL " + PlayerPrefs.GetInt("OpenLevel");
+            DisplayText = "LEVEL " + PlayerPrefs.GetInt("OpenLevel");
         }
         if (name == "TargetDescription1")
         {
             if (LevelManager.THIS.target == Target.SCORE)
-                txt.text = LevelManager.THIS.targetDiscriptions[6].Replace("%n", "" + LevelManager.THIS.GetScoresOfTargetStars()).Replace("%s", "" + (int)LevelManager.THIS.starsTargetCount);
+                DisplayText = LevelManager.THIS.targetDiscriptions[6].Replace("%n", "" + LevelManager.THIS.GetScoresOfTargetStars()).Replace("%s", "" + (int)LevelManager.THIS.starsTargetCount);
             else if (LevelManager.THIS.target == Target.BLOCKS)
-                txt.text = LevelManager.THIS.targetDiscriptions[1];
+                DisplayText = LevelManager.THIS.targetDiscriptions[1];
             else if (LevelManager.THIS.target == Target.COLLECT)
-                txt.text = LevelManager.THIS.targetDiscriptions[2];
+                DisplayText = LevelManager.THIS.targetDiscriptions[2];
             else if (LevelManager.THIS.target == Target.ITEMS)
-                txt.text = LevelManager.THIS.targetDiscriptions[3];
+                DisplayText = LevelManager.THIS.targetDiscriptions[3];
             else if (LevelManager.THIS.target == Target.CAGES)
-                txt.text = LevelManager.THIS.targetDiscriptions[4];
+                DisplayText = LevelManager.THIS.targetDiscriptions[4];
             else if (LevelManager.THIS.target == Target.BOMBS)
-                txt.text = LevelManager.THIS.targetDiscriptions[5];
+                DisplayText = LevelManager.THIS.targetDiscriptions[5];
         }
 
 

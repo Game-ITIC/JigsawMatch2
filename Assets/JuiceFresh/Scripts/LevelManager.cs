@@ -755,11 +755,11 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         Transform topBarTransform = Level.transform.Find("Canvas/Panel/TopBarPanel");
         if (topBarTransform != null)
         {
-            AssignIfMissing(ref ingrObject, topBarTransform, "TargetIngr");
-            AssignIfMissing(ref blocksObject, topBarTransform, "TargetBlocks");
-            AssignIfMissing(ref scoreTargetObject, topBarTransform, "TargetScore");
-            AssignIfMissing(ref cageTargetObject, topBarTransform, "TargetCages");
-            AssignIfMissing(ref bombTargetObject, topBarTransform, "TargetBombs");
+            AssignIfMissing(ref ingrObject, topBarTransform, "Mission/TargetIngr", "TargetIngr");
+            AssignIfMissing(ref blocksObject, topBarTransform, "Mission/TargetBlocks", "TargetBlocks");
+            AssignIfMissing(ref scoreTargetObject, topBarTransform, "Mission/TargetScore", "TargetScore");
+            AssignIfMissing(ref cageTargetObject, topBarTransform, "Mission/TargetCages", "TargetCages");
+            AssignIfMissing(ref bombTargetObject, topBarTransform, "Mission/TargetBombs", "TargetBombs");
             AssignIfMissing(ref star1Anim, topBarTransform, "Stars/Star1/Star1Anim");
             AssignIfMissing(ref star2Anim, topBarTransform, "Stars/Star2/Star2Anim");
             AssignIfMissing(ref star3Anim, topBarTransform, "Stars/Star3/Star3Anim");
@@ -781,17 +781,23 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         }
     }
 
-    private static void AssignIfMissing(ref GameObject target, Transform root, string path)
+    private static void AssignIfMissing(ref GameObject target, Transform root, params string[] paths)
     {
         if (target != null)
         {
             return;
         }
 
-        Transform child = root.Find(path);
-        if (child != null)
+        foreach (string path in paths)
         {
+            Transform child = root.Find(path);
+            if (child == null)
+            {
+                continue;
+            }
+
             target = child.gameObject;
+            return;
         }
     }
 

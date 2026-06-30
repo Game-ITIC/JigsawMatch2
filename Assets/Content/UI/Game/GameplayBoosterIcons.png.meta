@@ -129,7 +129,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData:
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
@@ -137,7 +137,7 @@ TextureImporter:
       spriteID: 21c8f4d03ce8a6fc0800000000000000
       internalID: -3500828791934055406
       vertices: []
-      indices:
+      indices: 
       edges: []
       weights: []
     - serializedVersion: 2
@@ -151,7 +151,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData:
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
@@ -159,7 +159,7 @@ TextureImporter:
       spriteID: 69e2f0e64baf8c0b0800000000000000
       internalID: -5708036874844557674
       vertices: []
-      indices:
+      indices: 
       edges: []
       weights: []
     - serializedVersion: 2
@@ -173,7 +173,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData:
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
@@ -181,17 +181,17 @@ TextureImporter:
       spriteID: 36046b528bdaa6d80800000000000000
       internalID: -8256595960412094365
       vertices: []
-      indices:
+      indices: 
       edges: []
       weights: []
     outline: []
-    customData:
+    customData: 
     physicsShape: []
     bones: []
-    spriteID:
+    spriteID: 
     internalID: 0
     vertices: []
-    indices:
+    indices: 
     edges: []
     weights: []
     secondaryTextures: []
@@ -201,8 +201,8 @@ TextureImporter:
       "ChatGPT_Image_29_\u0438\u044E\u043D._2026_\u0433.__21_04_22-removebg-preview_0": -3500828791934055406
       "ChatGPT_Image_29_\u0438\u044E\u043D._2026_\u0433.__21_04_22-removebg-preview_1": -5708036874844557674
       "ChatGPT_Image_29_\u0438\u044E\u043D._2026_\u0433.__21_04_22-removebg-preview_2": -8256595960412094365
-  mipmapLimitGroupName:
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  userData:
-  assetBundleName:
-  assetBundleVariant:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
