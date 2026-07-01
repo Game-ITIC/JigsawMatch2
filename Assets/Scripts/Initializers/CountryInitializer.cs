@@ -270,11 +270,11 @@ namespace Initializers
                 int endFrame = _regionModel._settingsProvider.ActiveRegion.data[_regionModel.CurrentLevelProgress - 1]
                     .endFrame;
 
-                _hideUnhideScript.OnEyeButtonClick();
+                _hideUnhideScript?.OnEyeButtonClick();
 
                 await _regionUpgradeService.PlayToFrame(endFrame);
 
-                _hideUnhideScript.OnEyeButtonClick();
+                _hideUnhideScript?.OnEyeButtonClick();
             }
         }
 

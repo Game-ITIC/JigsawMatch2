@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Utils.Save;
@@ -18,9 +16,11 @@ namespace Configs
 
         public bool CanLoadNextRegion()
         {
-            if(currentRegionIndex < 0 || currentRegionIndex >= buildingsAnimationConfigs.Count)
+            var nextRegionIndex = currentRegionIndex + 1;
+
+            if(nextRegionIndex < 0 || nextRegionIndex >= buildingsAnimationConfigs.Count)
             {
-                Debug.LogWarning($"Invalid region index {currentRegionIndex}");
+                Debug.LogWarning($"No region is configured after index {currentRegionIndex}");
                 return false;
             }
 
@@ -37,6 +37,18 @@ namespace Configs
         private void Load()
         {
             currentRegionIndex = PlayerPrefs.GetInt(PlayerPrefsKeys.RegionIndex, 0);
+
+            if(buildingsAnimationConfigs == null || buildingsAnimationConfigs.Count == 0)
+            {
+                currentRegionIndex = -1;
+                return;
+            }
+
+            if(currentRegionIndex < 0 || currentRegionIndex >= buildingsAnimationConfigs.Count)
+            {
+                currentRegionIndex = 0;
+                Save();
+            }
         }
 
         private void Save()
@@ -67,6 +79,13 @@ namespace Configs
             }
 
             var prefab = buildingsAnimationConfigs[index];
+
+            if(prefab == null)
+            {
+                Debug.LogWarning($"Region config at index {index} is not assigned");
+                return;
+            }
+
             _activeRegion = Instantiate(prefab, regionParent);
             _activeRegion.gameObject.SetActive(true);
         }
