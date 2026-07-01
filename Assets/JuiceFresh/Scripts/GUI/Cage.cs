@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using JuiceFresh;
-using UnityEngine.UI;
+using TMPro;
 
 public class Cage : MonoBehaviour
 {
-    public Text HP;
+    public TMP_Text HP;
     private Square square;
 
     // Use this for initialization

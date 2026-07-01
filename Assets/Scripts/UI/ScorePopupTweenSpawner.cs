@@ -1,4 +1,5 @@
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -48,7 +49,7 @@ namespace UI
             GameObject popup = Instantiate(popupPrefab, worldPosition, Quaternion.identity, parent);
             popup.transform.position = worldPosition;
 
-            Text text = popup.GetComponentInChildren<Text>();
+            TMP_Text text = popup.GetComponentInChildren<TMP_Text>();
             if(text != null)
             {
                 text.text = value.ToString();

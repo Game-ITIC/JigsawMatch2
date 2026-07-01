@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using TMPro;
-using UnityEngine.UI;
 
+[RequireComponent(typeof(TMP_Text))]
 public class Counter_ : MonoBehaviour
 {
     public int ingrTrackNumber;
-    private Text legacyText;
-    private TMP_Text tmpText;
+    private TMP_Text text;
     private float lastTime;
     bool alert;
     public int totalCount;
@@ -15,22 +14,15 @@ public class Counter_ : MonoBehaviour
 
     private string DisplayText
     {
-        get => tmpText != null ? tmpText.text : legacyText != null ? legacyText.text : string.Empty;
-        set
-        {
-            if (tmpText != null)
-                tmpText.text = value;
-            else if (legacyText != null)
-                legacyText.text = value;
-        }
+        get => text.text;
+        set => text.text = value;
     }
 
-    private Transform TextTransform => tmpText != null ? tmpText.transform : legacyText.transform;
+    private Transform TextTransform => text.transform;
 
     private void Awake()
     {
-        tmpText = GetComponent<TMP_Text>();
-        legacyText = GetComponent<Text>();
+        text = GetComponent<TMP_Text>();
     }
 
     // Use this for initialization

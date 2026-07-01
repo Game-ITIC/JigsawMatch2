@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using JuiceFresh;
+using TMPro;
 using UnityEngine.UI;
 
 public enum ItemsTypes
@@ -48,7 +49,7 @@ public class Item : MonoBehaviour
     private Sprite[] ingredientItems;
     private float xScale;
     private float yScale;
-    private Text timerText;
+    private TMP_Text timerText;
     private GameObject _light;
     private bool extraChecked;
     private int COLOR;
@@ -495,7 +496,7 @@ public class Item : MonoBehaviour
         t.transform.SetParent(transform);
         t.transform.localPosition = new Vector3(1.5f, -0.8f, 0);
         t.transform.localScale = Vector3.one;
-        timerText = t.transform.GetChild(0).GetComponent<Text>();
+        timerText = t.transform.GetChild(0).GetComponent<TMP_Text>();
         
         if (bombTimer <= 0)
             bombTimer = LevelManager.Instance.bombTimer;

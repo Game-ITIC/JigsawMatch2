@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using UnityEngine.UI;
 
 public class LIFESAddCounter : MonoBehaviour
 {
-    Text text;
     static float TimeLeft;
     float TotalTimeForRestLife = 15f * 60;  //8 minutes for restore life
     bool startTimer;

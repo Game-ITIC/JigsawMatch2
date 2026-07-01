@@ -2,12 +2,12 @@ using System.Collections;
 using UnityEngine;
 using Unity.Notifications.Android;
 using UnityEngine.Android;
-using UnityEngine.UI;
+using TMPro;
 using System;
 
 public class Notification : MonoBehaviour
 {
-    [SerializeField] private Text text;
+    [SerializeField] private TMP_Text text;
     private bool startTimer;
     private float TotalTimeForRestLife = 15f * 60; // 15 minutes for restore life
 

@@ -4,14 +4,15 @@ using System.Collections;
 using DG.Tweening;
 using Models;
 using R3;
+using TMPro;
 using UnityEngine.UI;
 
 public class BoostIcon : MonoBehaviour
 {
-    public Text boostCount;
+    public TMP_Text boostCount;
     public BoostType type;
     bool check;
-    public Text price;
+    public TMP_Text price;
     public Button button;
 
     private BoosterModel _boosterModel;

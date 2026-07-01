@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using Services;
+using TMPro;
 using Unity.VisualScripting;
 
 public enum BoostType
@@ -19,7 +20,7 @@ public class BoostShop : MonoBehaviour
     public string[] descriptions;
     public int[] prices;
     public Image icon;
-    public Text description;
+    public TMP_Text description;
 
     BoostType boostType;
 
@@ -44,7 +45,7 @@ public class BoostShop : MonoBehaviour
 
         if(countTextTransform != null)
         {
-            var countText = countTextTransform.GetComponent<Text>();
+            var countText = countTextTransform.GetComponent<TMP_Text>();
 
             if(countText != null)
             {
@@ -54,7 +55,7 @@ public class BoostShop : MonoBehaviour
 
         if(priceTextTransform != null)
         {
-            var priceText = priceTextTransform.GetComponent<Text>();
+            var priceText = priceTextTransform.GetComponent<TMP_Text>();
 
             if(priceText != null)
             {
@@ -66,7 +67,7 @@ public class BoostShop : MonoBehaviour
     public void BuyBoost(GameObject button)
     {
         // int count = int.Parse(button.transform.Find("Count").GetComponent<Text>().text.Replace("x", ""));
-        int price = int.Parse(button.transform.Find("Image/Buttons/BuyButton/Price").GetComponent<Text>().text);
+        int price = int.Parse(button.transform.Find("Image/Buttons/BuyButton/Price").GetComponent<TMP_Text>().text);
 
         GetComponent<AnimationManager>().BuyBoost(boostType, price, 1, boostProducts[(int)boostType].icon);
     }

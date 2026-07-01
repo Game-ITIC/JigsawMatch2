@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 public class NicerOutline : BaseMeshEffect
 {
@@ -126,13 +127,13 @@ public class NicerOutline : BaseMeshEffect
         List<UIVertex> verts = new List<UIVertex>();
         vh.GetUIVertexStream(verts);
 
-        Text foundtext = GetComponent<Text>();
+        TMP_Text foundtext = GetComponent<TMP_Text>();
 
         float best_fit_adjustment = 1f;
 
-        if (foundtext && foundtext.resizeTextForBestFit)
+        if (foundtext && foundtext.enableAutoSizing)
         {
-            best_fit_adjustment = (float)foundtext.cachedTextGenerator.fontSizeUsedForBestFit / (foundtext.resizeTextMaxSize - 1); //max size seems to be exclusive 
+            best_fit_adjustment = foundtext.fontSize / Mathf.Max(1f, foundtext.fontSizeMax);
 
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using Services;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +11,7 @@ namespace UI
         [SerializeField] private GameObject popupPanel;
         [SerializeField] private Button okButton;
         [SerializeField] private Image iconImage;
-        [SerializeField] private Text description;
+        [SerializeField] private TMP_Text description;
         [SerializeField] private bool animatePanelTransitions = true;
         [SerializeField, Min(0f)] private float panelOpenDuration = 0.3f;
         [SerializeField, Min(0f)] private float panelCloseDuration = 0.18f;

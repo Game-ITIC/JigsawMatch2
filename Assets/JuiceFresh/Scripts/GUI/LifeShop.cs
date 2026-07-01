@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
+using TMPro;
 
 public class LifeShop : MonoBehaviour
 {
@@ -8,7 +8,7 @@ public class LifeShop : MonoBehaviour
 	// Use this for initialization
 	void OnEnable ()
 	{
-		transform.Find ("Image/BuyLife/Price").GetComponent<Text> ().text = "" + CostIfRefill;
+		transform.Find ("Image/BuyLife/Price").GetComponent<TMP_Text> ().text = "" + CostIfRefill;
 		//if (!LevelManager.THIS.enableInApps)
 			//transform.Find ("Image/BuyLife").gameObject.SetActive (false);
 		

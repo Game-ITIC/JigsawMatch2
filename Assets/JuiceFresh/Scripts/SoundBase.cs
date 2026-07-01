@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
+[DefaultExecutionOrder(-1000)]
 public class SoundBase : MonoBehaviour {
     public static SoundBase Instance;
     public AudioClip click;

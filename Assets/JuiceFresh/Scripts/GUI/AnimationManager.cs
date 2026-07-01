@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using Services;
@@ -101,9 +102,9 @@ public class AnimationManager : MonoBehaviour
         {
             for (int i = 1; i <= 4; i++)
             {
-                transform.Find("Image/Pack" + i + "/Count").GetComponent<Text>().text =
+                transform.Find("Image/Pack" + i + "/Count").GetComponent<TMP_Text>().text =
                     "" + LevelManager.THIS.gemsProducts[i - 1].count;
-                transform.Find("Image/Pack" + i + "/Buy/Price").GetComponent<Text>().text =
+                transform.Find("Image/Pack" + i + "/Buy/Price").GetComponent<TMP_Text>().text =
                     "" + LevelManager.THIS.gemsProducts[i - 1].price;
             }
         }
@@ -562,7 +563,7 @@ public class AnimationManager : MonoBehaviour
         if (pack.name == "Pack1")
         {
             InitScript.waitedPurchaseGems =
-                int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
+                int.Parse(pack.transform.Find("Count").GetComponent<TMP_Text>().text.Replace("x ", ""));
 //#if UNITY_WEBPLAYER || UNITY_WEBGL
 //			InitScript.Instance.PurchaseSucceded ();
 //			CloseMenu ();
@@ -580,7 +581,7 @@ public class AnimationManager : MonoBehaviour
         if (pack.name == "Pack2")
         {
             InitScript.waitedPurchaseGems =
-                int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
+                int.Parse(pack.transform.Find("Count").GetComponent<TMP_Text>().text.Replace("x ", ""));
 //#if UNITY_WEBPLAYER || UNITY_WEBGL
 //			InitScript.Instance.PurchaseSucceded ();
 //			CloseMenu ();
@@ -598,7 +599,7 @@ public class AnimationManager : MonoBehaviour
         if (pack.name == "Pack3")
         {
             InitScript.waitedPurchaseGems =
-                int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
+                int.Parse(pack.transform.Find("Count").GetComponent<TMP_Text>().text.Replace("x ", ""));
 //#if UNITY_WEBPLAYER || UNITY_WEBGL
 //			InitScript.Instance.PurchaseSucceded ();
 //			CloseMenu ();
@@ -616,7 +617,7 @@ public class AnimationManager : MonoBehaviour
         if (pack.name == "Pack4")
         {
             InitScript.waitedPurchaseGems =
-                int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
+                int.Parse(pack.transform.Find("Count").GetComponent<TMP_Text>().text.Replace("x ", ""));
 //#if UNITY_WEBPLAYER || UNITY_WEBGL
 //			InitScript.Instance.PurchaseSucceded ();
 //			CloseMenu ();

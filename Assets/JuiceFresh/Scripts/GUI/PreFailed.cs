@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using TMPro;
 using UnityEngine.UI;
 
 public class PreFailed : MonoBehaviour
@@ -11,7 +12,7 @@ public class PreFailed : MonoBehaviour
     void OnEnable()
     {
         FailedCost = LevelManager.THIS.FailedCost;
-        transform.Find("Buy/Price").GetComponent<Text>().text = "" + FailedCost;
+        transform.Find("Buy/Price").GetComponent<TMP_Text>().text = "" + FailedCost;
         if (LevelManager.THIS.limitType == LIMIT.MOVES)
             buyButton.sprite = buyButtons[0];
         else if (LevelManager.THIS.limitType == LIMIT.TIME)

@@ -1,6 +1,7 @@
 ﻿using System;
 using Models;
 using R3;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
@@ -9,7 +10,7 @@ namespace Views
 {
     public class BoostShopView : MonoBehaviour
     {
-        [SerializeField] private Text currentCoinsText;
+        [SerializeField] private TMP_Text currentCoinsText;
 
         [Inject] public CoinModel CoinModel;
 

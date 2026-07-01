@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using Itic.Scopes;
 using R3;
 using Services;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -86,7 +87,7 @@ namespace JuiceFresh.States
         private void SetupFailedMenu()
         {
             // Get the score display and set it
-            Text scoreText = _menuFailedUI.transform.Find("Score")?.GetComponent<Text>();
+            TMP_Text scoreText = _menuFailedUI.transform.Find("Score")?.GetComponent<TMP_Text>();
 
             if(scoreText != null)
             {
@@ -129,7 +130,7 @@ namespace JuiceFresh.States
                     continueButton.onClick.AddListener(() => OnContinueClicked());
 
                     // Update the cost text
-                    Text costText = continueButton.transform.Find("Cost")?.GetComponent<Text>();
+                    TMP_Text costText = continueButton.transform.Find("Cost")?.GetComponent<TMP_Text>();
 
                     if(costText != null)
                     {
