@@ -1,0 +1,22 @@
+public enum GameState
+{
+    Map,
+    PrepareGame,
+    PrepareBoosts,
+    Playing,
+    Highscore,
+    GameOver,
+    Pause,
+    PreWinAnimations,
+    Win,
+    WaitForPopup,
+    WaitAfterClose,
+    BlockedGame,
+    Tutorial,
+    PreTutorial,
+    WaitForPotion,
+    PreFailed,
+    PreFailedBomb,
+    RegenLevel,
+    ToMap
+}

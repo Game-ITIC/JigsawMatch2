@@ -19,37 +19,6 @@ using VContainer;
 using Views;
 using ZLinq;
 
-// Data structure for square blocks in the level
-public class SquareBlocks
-{
-    public SquareTypes block;
-    public SquareTypes obstacle;
-}
-
-// Game state enum
-public enum GameState
-{
-    Map,
-    PrepareGame,
-    PrepareBoosts,
-    Playing,
-    Highscore,
-    GameOver,
-    Pause,
-    PreWinAnimations,
-    Win,
-    WaitForPopup,
-    WaitAfterClose,
-    BlockedGame,
-    Tutorial,
-    PreTutorial,
-    WaitForPotion,
-    PreFailed,
-    PreFailedBomb,
-    RegenLevel,
-    ToMap
-}
-
 public class LevelManager : MonoBehaviour, ILevelManagerActions
 {
     #region Static References
@@ -464,6 +433,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     #region Board Mechanics
 
     private BoardMechanicsService _boardMechanicsService;
+    private ScoreTrackerService _scoreTrackerService;
 
     public BoardMechanicsService BoardMechanics
     {
@@ -688,6 +658,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         _levelEffectsController?.Initialize(this);
 
         _boardMechanicsService = new BoardMechanicsService(this);
+        _scoreTrackerService = new ScoreTrackerService(this);
 
         ingrCountTarget = new int[NumIngredients]; // Necessary amount of collectable items
 
@@ -925,7 +896,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         if(currentLevel == 0)
             currentLevel = 1;
 
-        currentLevel = CalculateLevel(currentLevel);
+        currentLevel = LevelProgressionHelper.CalculateLevel(currentLevel);
         LoadDataFromLocal(currentLevel);
         NumIngredients = ingrTarget.Count;
     }
@@ -942,30 +913,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         }
 
         ProcessGameDataFromString(mapText.text);
-    }
-
-    int CalculateLevel(int playerLevel)
-    {
-        // Если уровень меньше или равен 45, просто возвращаем его
-        if(playerLevel <= 45)
-            return playerLevel;
-
-        // Вычисляем, сколько раз игрок "прошел полный круг" после 45
-        int beyond45 = playerLevel - 45;
-
-        // Используем модуло для циклического расчета
-        // Диапазон уровней в цикле: от 10 до 45 (всего 36 уровней)
-        int cyclePosition = beyond45 % 36;
-
-        // Прибавляем 10 (начальный уровень цикла) и учитываем особый случай
-        int result = cyclePosition + 10;
-
-        // Если результат получился 46 или больше, это означает,
-        // что мы вышли за пределы диапазона 10-45, поэтому начинаем с 10 снова
-        if(result > 45)
-            result = (result - 45) + 9;
-
-        return result;
     }
 
     void ProcessGameDataFromString(string mapText)
@@ -2318,27 +2265,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     public void PopupScore(int value, Vector3 pos, int color)
     {
-        Score += value;
-        UpdateBar();
-        CheckStars();
-
-        ScorePopupTweenSpawner?.Show(value, pos, color, scoresColors);
-    }
-
-    void UpdateBar()
-    {
-        if (ProgressBarScript.Instance == null)
-        {
-            return;
-        }
-
-        ProgressBarScript.Instance.SetProgress(Score, star3);
-    }
-
-    void CheckStars()
-    {
-        int earnedStars = Score >= star3 ? 3 : Score >= star2 ? 2 : Score >= star1 ? 1 : 0;
-        stars = Mathf.Max(stars, earnedStars);
+        _scoreTrackerService.PopupScore(value, pos, color);
     }
 
     #endregion
@@ -2379,11 +2306,4 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     }
 
     #endregion
-}
-
-[System.Serializable]
-public class GemProduct
-{
-    public int count;
-    public float price;
 }
