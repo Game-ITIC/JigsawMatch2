@@ -25,6 +25,7 @@ public class ColorMix : MonoBehaviour {
     public void Explosion() {
         GameObject boom = Instantiate(Resources.Load("Prefabs/Effects/bomb_selection")) as GameObject;
         SoundBase.Instance.PlaySound(SoundBase.Instance.explosion);
+        GameFeelManager.Instance?.OnBoostExplosion(transform.position);
 
         boom.transform.position = transform.position;
         Destroy(boom, 0.5f);

@@ -49,6 +49,7 @@ public class PreWinAnimationsState : GameStateBase
 
         // Play completion sound
         SoundBase.Instance.PlaySound(SoundBase.Instance.complete[1]);
+        GameFeelManager.Instance?.OnPreWin();
         
         // Find and show pre-complete banner
         GameObject preCompleteBanner = GameObject.Find("Level/Canvas").transform.Find("PreCompleteBanner").gameObject;

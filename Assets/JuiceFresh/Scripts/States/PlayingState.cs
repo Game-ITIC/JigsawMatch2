@@ -126,10 +126,24 @@ public class PlayingState : GameStateBase
         // Process the selected items if we have enough of them
         if(levelManager.destroyAnyway.Count >= 3)
         {
+            int matchedCount = levelManager.destroyAnyway.Count;
+            Vector3 matchCenter = Vector3.zero;
+            foreach(Item matchedItem in levelManager.destroyAnyway)
+            {
+                matchCenter += matchedItem.transform.position;
+            }
+
+            matchCenter /= matchedCount;
+            GameFeelManager.Instance?.OnMatchReleased(matchedCount, matchCenter);
             ProcessMatchedItems().Forget();
         }
         else
         {
+            if(levelManager.destroyAnyway.Count > 0)
+            {
+                GameFeelManager.Instance?.OnInvalidMove();
+            }
+
             ClearSelection();
         }
 
@@ -278,6 +292,7 @@ public class PlayingState : GameStateBase
 
         int selectingSoundNum = Mathf.Clamp(levelManager.destroyAnyway.Count - 1, 0, 9);
         SoundBase.Instance.PlaySound(SoundBase.Instance.selecting[selectingSoundNum]);
+        GameFeelManager.Instance?.OnItemSelected(item.transform, selectingSoundNum);
 
         int extraItemEvery = 6; // This should come from level manager
 

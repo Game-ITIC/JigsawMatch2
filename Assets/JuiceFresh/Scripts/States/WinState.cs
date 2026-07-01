@@ -18,6 +18,7 @@ public class WinState : GameStateBase
 
         // Show the complete menu UI
         ShowCompleteUI();
+        GameFeelManager.Instance?.OnWin();
 
         levelManager.GameEventDispatcher.DispatchWin();
 

@@ -658,6 +658,16 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         _levelEffectsController = GetComponent<LevelEffectsController>();
         _levelEffectsController?.Initialize(this);
 
+        if(GameFeelManager.Instance != null)
+        {
+            GameFeelManager.Instance.BindCamera(gameCamera);
+            GameFeelManager.Instance.BindBoard(GameField);
+        }
+        else
+        {
+            GameFeelManager.EnsureInitialized(gameCamera, GameField);
+        }
+
         _boardMechanicsService = new BoardMechanicsService(this);
         _scoreTrackerService = new ScoreTrackerService(this);
         _boardQueryService = new BoardQueryService(this);

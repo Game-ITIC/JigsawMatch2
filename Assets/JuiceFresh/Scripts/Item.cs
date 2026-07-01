@@ -803,6 +803,7 @@ public class Item : MonoBehaviour
             partcl.transform.rotation = Quaternion.Euler(new Vector3(0, 0, UnityEngine.Random.Range(0f, 360f)));
             partcl.GetComponent<Animator>().SetInteger("color", color);
             SoundBase.Instance.PlaySoundsRandom(SoundBase.Instance.pops);
+            GameFeelManager.Instance?.OnItemDestroyed(transform.position);
         }
     }
 

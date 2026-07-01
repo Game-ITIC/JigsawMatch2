@@ -34,6 +34,7 @@ namespace JuiceFresh.States
             StopGameMusic();
 
             PlayGameOverSound();
+            GameFeelManager.Instance?.OnLose();
 
             ShowFailedUI();
 

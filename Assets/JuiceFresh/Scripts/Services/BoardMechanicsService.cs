@@ -562,6 +562,7 @@ namespace JuiceFresh.Scripts
                 return;
 
             ComboTextFeedbackView.ShowForCombo(combo);
+            GameFeelManager.Instance?.OnCombo(combo);
         }
 
         private void UpdateBombTimers()
