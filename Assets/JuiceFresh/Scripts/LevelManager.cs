@@ -652,7 +652,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     public void InvokeStart()
     {
-        ResolveTargetUIReferences();
+        new TargetUIResolverService(this).Resolve();
         InitializeCollectedTargetFlyController();
         _scorePopupTweenSpawner = GetComponent<ScorePopupTweenSpawner>();
         _levelEffectsController = GetComponent<LevelEffectsController>();
@@ -723,59 +723,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         }
 
         _collectedTargetFlyController.Initialize(this);
-    }
-
-    private void ResolveTargetUIReferences()
-    {
-        if (Level == null)
-        {
-            return;
-        }
-
-        Transform topBarTransform = Level.transform.Find("Canvas/Panel/TopBarPanel");
-        if (topBarTransform != null)
-        {
-            AssignIfMissing(ref ingrObject, topBarTransform, "Mission/TargetIngr", "TargetIngr");
-            AssignIfMissing(ref blocksObject, topBarTransform, "Mission/TargetBlocks", "TargetBlocks");
-            AssignIfMissing(ref scoreTargetObject, topBarTransform, "Mission/TargetScore", "TargetScore");
-            AssignIfMissing(ref cageTargetObject, topBarTransform, "Mission/TargetCages", "TargetCages");
-            AssignIfMissing(ref bombTargetObject, topBarTransform, "Mission/TargetBombs", "TargetBombs");
-        }
-
-        Transform prePlayTransform = Level.transform.Find("Canvas/PrePlay");
-        if (prePlayTransform != null && prePlayTransform.TryGetComponent(out PrePlay prePlay))
-        {
-            if (ingrObject == null)
-                ingrObject = prePlay.ingrObject;
-            if (blocksObject == null)
-                blocksObject = prePlay.blocksObject;
-            if (scoreTargetObject == null)
-                scoreTargetObject = prePlay.scoreTargetObject;
-            if (cageTargetObject == null)
-                cageTargetObject = prePlay.cage;
-            if (bombTargetObject == null)
-                bombTargetObject = prePlay.bomb;
-        }
-    }
-
-    private static void AssignIfMissing(ref GameObject target, Transform root, params string[] paths)
-    {
-        if (target != null)
-        {
-            return;
-        }
-
-        foreach (string path in paths)
-        {
-            Transform child = root.Find(path);
-            if (child == null)
-            {
-                continue;
-            }
-
-            target = child.gameObject;
-            return;
-        }
     }
 
     public void InvokeUpdate()

@@ -3,6 +3,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using JuiceFresh.States;
 using UI;
 
@@ -114,33 +115,7 @@ public class PreWinAnimationsState : GameStateBase
         }
         Debug.Log("All flowers completed flight");
 
-        // Destroy any remaining extra items
-        while (levelManager.GetAllExtraItems().Count > 0)
-        {
-            Item item = levelManager.GetAllExtraItems()[0];
-            item.DestroyItem(false, "", false, true);
-            levelManager.DragBlocked = true;
-        
-            yield return new WaitForSeconds(0.1f);
-        
-            // Use the shared board mechanics service
-            levelManager.ProcessMatchesAndFalling();
-        
-            yield return new WaitForSeconds(1f);
-        
-            // Add timeout for safety
-            float timeout = Time.time + 10f;
-            while (levelManager.DragBlocked && Time.time < timeout)
-            {
-                yield return new WaitForFixedUpdate();
-            }
-        
-            if (Time.time >= timeout)
-            {
-                Debug.LogWarning("PreWinAnimations: DragBlocked stuck - forcing to false");
-                levelManager.DragBlocked = false;
-            }
-        }
+        yield return ClearRemainingExtraItems();
 
         yield return new WaitForSeconds(1f);
         
@@ -158,6 +133,35 @@ public class PreWinAnimationsState : GameStateBase
         // Transition to Win state
         Debug.Log("Transitioning to Win state");
         levelManager.gameStatus = GameState.Win;
+    }
+
+    IEnumerator ClearRemainingExtraItems()
+    {
+        while (levelManager.GetAllExtraItems().Count > 0)
+        {
+            List<Item> extraItems = new List<Item>(levelManager.GetAllExtraItems());
+            levelManager.DragBlocked = true;
+
+            foreach (Item item in extraItems)
+            {
+                item.DestroyItem(false, "", false, true);
+            }
+
+            yield return new WaitForSeconds(0.1f);
+            yield return levelManager.ProcessMatchesAndFalling().ToCoroutine();
+
+            float timeout = Time.time + 10f;
+            while (levelManager.DragBlocked && Time.time < timeout)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+
+            if (Time.time >= timeout)
+            {
+                Debug.LogWarning("PreWinAnimations: DragBlocked stuck - forcing to false");
+                levelManager.DragBlocked = false;
+            }
+        }
     }
 
 
