@@ -434,6 +434,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     private BoardMechanicsService _boardMechanicsService;
     private ScoreTrackerService _scoreTrackerService;
+    private BoardQueryService _boardQueryService;
 
     public BoardMechanicsService BoardMechanics
     {
@@ -659,6 +660,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
         _boardMechanicsService = new BoardMechanicsService(this);
         _scoreTrackerService = new ScoreTrackerService(this);
+        _boardQueryService = new BoardQueryService(this);
 
         ingrCountTarget = new int[NumIngredients]; // Necessary amount of collectable items
 
@@ -1675,242 +1677,32 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     #region Square and Item Queries
 
-    public Square GetSquare(int col, int row, bool safe = false)
-    {
-        if(!safe)
-        {
-            if(row >= maxRows || col >= maxCols || row < 0 || col < 0) // 1.4.7
-                return null;
-            return squaresArray[row * maxCols + col];
-        }
-        else
-        {
-            row = Mathf.Clamp(row, 0, maxRows - 1);
-            col = Mathf.Clamp(col, 0, maxCols - 1);
-            return squaresArray[row * maxCols + col];
-        }
-    }
+    public Square GetSquare(int col, int row, bool safe = false) =>
+        _boardQueryService.GetSquare(col, row, safe);
 
-    public List<Item> GetRow(int row)
-    {
-        List<Item> itemsList = new List<Item>();
+    public List<Item> GetRow(int row) => _boardQueryService.GetRow(row);
 
-        for (int col = 0; col < maxCols; col++)
-        {
-            itemsList.Add(GetSquare(col, row, true).item);
-        }
+    public List<Square> GetRowSquare(int row) => _boardQueryService.GetRowSquare(row);
 
-        return itemsList;
-    }
+    public List<Item> GetColumn(int col) => _boardQueryService.GetColumn(col);
 
-    public List<Square> GetRowSquare(int row)
-    {
-        List<Square> itemsList = new List<Square>();
+    public List<Square> GetColumnSquare(int col) => _boardQueryService.GetColumnSquare(col);
 
-        for (int col = 0; col < maxCols; col++)
-        {
-            itemsList.Add(GetSquare(col, row, true));
-        }
+    public List<Item> GetRandomItems(int count) => _boardQueryService.GetRandomItems(count);
 
-        return itemsList;
-    }
+    public List<Item> GetAllExtraItems() => _boardQueryService.GetAllExtraItems();
 
-    public List<Item> GetColumn(int col)
-    {
-        List<Item> itemsList = new List<Item>();
+    public List<Item> GetItemsAround(Square square) => _boardQueryService.GetItemsAround(square);
 
-        for (int row = 0; row < maxRows; row++)
-        {
-            itemsList.Add(GetSquare(col, row, true).item);
-        }
+    public List<Square> GetSquaresAround(Square square) => _boardQueryService.GetSquaresAround(square);
 
-        return itemsList;
-    }
+    public List<Item> GetItems() => _boardQueryService.GetItems();
 
-    public List<Square> GetColumnSquare(int col)
-    {
-        List<Square> itemsList = new List<Square>();
+    public List<Square> GetSquares() => _boardQueryService.GetSquares();
 
-        for (int row = 0; row < maxRows; row++)
-        {
-            itemsList.Add(GetSquare(col, row, true));
-        }
+    public List<Square> GetBottomRow() => _boardQueryService.GetBottomRow();
 
-        return itemsList;
-    }
-
-    public List<Item> GetRandomItems(int count)
-    {
-        List<Item> list = new List<Item>();
-        List<Item> list2 = new List<Item>();
-        if(count <= 0)
-            return list2;
-        GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
-        if(items.Length < count)
-            count = items.Length;
-
-        foreach (GameObject item in items)
-        {
-            if(!item.GetComponent<Item>().destroying &&
-               item.GetComponent<Item>().currentType == ItemsTypes.NONE &&
-               item.GetComponent<Item>().nextType == ItemsTypes.NONE &&
-               item.GetComponent<Item>().square.type != SquareTypes.WIREBLOCK)
-            {
-                list.Add(item.GetComponent<Item>());
-            }
-        }
-
-        while (list2.Count < count)
-        {
-            Item newItem = list[UnityEngine.Random.Range(0, list.Count)];
-
-            if(list2.IndexOf(newItem) < 0)
-            {
-                list2.Add(newItem);
-            }
-        }
-
-        return list2;
-    }
-
-    public List<Item> GetAllExtraItems()
-    {
-        List<Item> list = new List<Item>();
-        GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
-
-        foreach (GameObject item in items)
-        {
-            if(item.GetComponent<Item>().currentType != ItemsTypes.NONE)
-            {
-                list.Add(item.GetComponent<Item>());
-            }
-        }
-
-        return list;
-    }
-
-    public List<Item> GetItemsAround(Square square)
-    {
-        int col = square.col;
-        int row = square.row;
-        List<Item> itemsList = new List<Item>();
-
-        for (int r = row - 1; r <= row + 1; r++)
-        {
-            for (int c = col - 1; c <= col + 1; c++)
-            {
-                itemsList.Add(GetSquare(c, r, true).item);
-            }
-        }
-
-        return itemsList;
-    }
-
-    public List<Square> GetSquaresAround(Square square)
-    {
-        int col = square.col;
-        int row = square.row;
-        List<Square> itemsList = new List<Square>();
-
-        for (int r = row - 1; r <= row + 1; r++)
-        {
-            for (int c = col - 1; c <= col + 1; c++)
-            {
-                itemsList.Add(GetSquare(c, r, true));
-            }
-        }
-
-        return itemsList;
-    }
-
-    public List<Item> GetItems()
-    {
-        List<Item> itemsList = new List<Item>();
-
-        for (int row = 0; row < maxRows; row++)
-        {
-            for (int col = 0; col < maxCols; col++)
-            {
-                if(GetSquare(col, row) != null)
-                {
-                    if(GetSquare(col, row).item != null)
-                    {
-                        itemsList.Add(GetSquare(col, row, true).item);
-                    }
-                }
-            }
-        }
-
-        return itemsList;
-    }
-
-    public List<Square> GetSquares()
-    {
-        List<Square> itemsList = new List<Square>();
-
-        for (int row = 0; row < maxRows; row++)
-        {
-            for (int col = 0; col < maxCols; col++)
-            {
-                if(GetSquare(col, row) != null)
-                {
-                    itemsList.Add(GetSquare(col, row));
-                }
-            }
-        }
-
-        return itemsList;
-    }
-
-    public List<Square> GetBottomRow()
-    {
-        List<Square> itemsList = new List<Square>();
-        int listCounter = 0;
-
-        for (int col = 0; col < maxCols; col++)
-        {
-            for (int row = maxRows - 1; row >= 0; row--)
-            {
-                Square square = GetSquare(col, row, true);
-
-                if(square.type != SquareTypes.NONE)
-                {
-                    itemsList.Add(square);
-                    listCounter++;
-                    break;
-                }
-            }
-        }
-
-        return itemsList;
-    }
-
-    public List<Item> GetIngredients(int i = -1)
-    {
-        List<Item> list = new List<Item>();
-        GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
-
-        foreach (GameObject item in items)
-        {
-            if(i > -1)
-            {
-                if(item.GetComponent<Item>().currentType == ItemsTypes.INGREDIENT &&
-                   item.GetComponent<Item>().color == 1000 + i)
-                {
-                    list.Add(item.GetComponent<Item>());
-                }
-            }
-            else
-            {
-                if(item.GetComponent<Item>().currentType == ItemsTypes.INGREDIENT)
-                {
-                    list.Add(item.GetComponent<Item>());
-                }
-            }
-        }
-
-        return list;
-    }
+    public List<Item> GetIngredients(int i = -1) => _boardQueryService.GetIngredients(i);
 
     #endregion
 
