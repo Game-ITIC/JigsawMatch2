@@ -26,7 +26,6 @@ GameObject:
   - component: {fileID: 22200000}
   - component: {fileID: 11400000}
   - component: {fileID: 11400002}
-  - component: {fileID: 11100000}
   - component: {fileID: 11471302}
   m_Layer: 0
   m_Name: PopupScores
@@ -35,22 +34,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!111 &11100000
-Animation:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 1bb584c855e95bd44bec39a618faf00a, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 1bb584c855e95bd44bec39a618faf00a, type: 2}
-  - {fileID: 7400000, guid: c98ab6377b5f6ec43ab92c6d20d20d05, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1

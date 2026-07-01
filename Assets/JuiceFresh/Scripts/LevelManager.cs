@@ -96,22 +96,13 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     // Gamefield scene object
     public Transform GameField;
 
-    // Prefab for popuping scores
-    public GameObject popupScore;
-
-    // Prefab of row explosion effect
-    public GameObject stripesEffect;
+    public Vector3 GameFieldTargetLocalPosition { get; private set; }
 
     // Scene object
     public GameObject LevelsMap;
 
     // UI object
     public GameObject Level;
-
-    // UI Star objects
-    public GameObject star1Anim;
-    public GameObject star2Anim;
-    public GameObject star3Anim;
 
     // UI objects for targets
     public GameObject ingrObject;
@@ -125,9 +116,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     // Line renderer
     public Line line;
-
-    // Flower object
-    public GameObject flower;
 
     #endregion
 
@@ -242,9 +230,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     // Position of the first square on the game field
     public Vector2 firstSquarePosition;
 
-    // Editor option to show popup scores
-    public bool showPopupScores;
-
     // Editor variable for limitation of colors
     public int colorLimit;
 
@@ -292,9 +277,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     // Array of colors for popup scores
     public Color[] scoresColors;
-
-    // Array of outline colors for popup scores
-    public Color[] scoresColorsOutline;
 
     // Stars amount on current level
     public int stars;
@@ -385,12 +367,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     // Waiting boost
     public BoostIcon waitingBoost;
 
-    // Pool of explosion effects for items
-    public GameObject[] itemExplPool = new GameObject[20];
-
-    // Pool of flowers
-    public GameObject[] flowersPool = new GameObject[20];
-
     #endregion
 
     #region Game Data
@@ -435,6 +411,34 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     public Hashtable countedSquares;
 
     CollectedTargetFlyController _collectedTargetFlyController;
+    ScorePopupTweenSpawner _scorePopupTweenSpawner;
+    LevelEffectsController _levelEffectsController;
+
+    public ScorePopupTweenSpawner ScorePopupTweenSpawner
+    {
+        get
+        {
+            if(_scorePopupTweenSpawner == null)
+            {
+                _scorePopupTweenSpawner = GetComponent<ScorePopupTweenSpawner>();
+            }
+
+            return _scorePopupTweenSpawner;
+        }
+    }
+
+    public LevelEffectsController LevelEffectsController
+    {
+        get
+        {
+            if(_levelEffectsController == null)
+            {
+                _levelEffectsController = GetComponent<LevelEffectsController>();
+            }
+
+            return _levelEffectsController;
+        }
+    }
 
     // Kept as a property for the board state checks that wait for target flights to finish.
     public bool ingredientFly => _collectedTargetFlyController != null &&
@@ -679,6 +683,9 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     {
         ResolveTargetUIReferences();
         InitializeCollectedTargetFlyController();
+        _scorePopupTweenSpawner = GetComponent<ScorePopupTweenSpawner>();
+        _levelEffectsController = GetComponent<LevelEffectsController>();
+        _levelEffectsController?.Initialize(this);
 
         _boardMechanicsService = new BoardMechanicsService(this);
 
@@ -724,22 +731,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         Instance = this;
         // gameStatus = GameState.Map;
 
-        // Initialize explosion pool
-        for (int i = 0; i < 20; i++)
-        {
-            itemExplPool[i] = Instantiate(Resources.Load("Prefabs/Effects/ItemExpl"),
-                                          transform.position,
-                                          Quaternion.identity) as GameObject;
-            itemExplPool[i].GetComponent<SpriteRenderer>().enabled = false;
-        }
-
-        // Initialize flowers pool
-        for (int i = 0; i < 20; i++)
-        {
-            flowersPool[i] = Instantiate(flower, transform.position, Quaternion.identity) as GameObject;
-            flowersPool[i].GetComponent<SpriteRenderer>().enabled = false;
-        }
-
         passLevelCounter = 0;
 
         gameStatus = GameState.PrepareGame;
@@ -776,9 +767,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             AssignIfMissing(ref scoreTargetObject, topBarTransform, "Mission/TargetScore", "TargetScore");
             AssignIfMissing(ref cageTargetObject, topBarTransform, "Mission/TargetCages", "TargetCages");
             AssignIfMissing(ref bombTargetObject, topBarTransform, "Mission/TargetBombs", "TargetBombs");
-            AssignIfMissing(ref star1Anim, topBarTransform, "Stars/Star1/Star1Anim");
-            AssignIfMissing(ref star2Anim, topBarTransform, "Stars/Star2/Star2Anim");
-            AssignIfMissing(ref star3Anim, topBarTransform, "Stars/Star3/Star3Anim");
         }
 
         Transform prePlayTransform = Level.transform.Find("Canvas/PrePlay");
@@ -893,11 +881,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             MusicBase.Instance.GetComponent<AudioSource>().Stop();
             SoundBase.Instance.PlaySound(SoundBase.Instance.gameOver[0]);
             GameObject.Find("CanvasGlobal").transform.Find("MenuFailed").gameObject.SetActive(true);
-        }
-        else if(state == GameState.PreWinAnimations)
-        {
-            MusicBase.Instance.GetComponent<AudioSource>().Stop();
-            StartCoroutine(PreWinAnimationsCor());
         }
     }
 
@@ -1215,31 +1198,10 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
             }
         }
 
-        AnimateField(fieldPos);
-    }
-
-    void AnimateField(Vector3 pos)
-    {
         float yOffset = 0;
         if(target == Target.COLLECT)
             yOffset = 0.3f;
-        Animation anim = GameField.GetComponent<Animation>();
-        AnimationClip clip = new AnimationClip();
-        AnimationCurve curveX = new AnimationCurve(new Keyframe(0, pos.x + 15),
-                                                   new Keyframe(0.7f, pos.x - 0.2f),
-                                                   new Keyframe(0.8f, pos.x));
-        AnimationCurve curveY = new AnimationCurve(new Keyframe(0, pos.y + yOffset), new Keyframe(1, pos.y + yOffset));
-        clip.legacy = true; // 1.4.9
-        clip.SetCurve("", typeof(Transform), "localPosition.x", curveX);
-        clip.SetCurve("", typeof(Transform), "localPosition.y", curveY);
-        clip.AddEvent(new AnimationEvent()
-        {
-            time = 1, functionName = "EndAnimGamField"
-        });
-        anim.AddClip(clip, "appear");
-        anim.Play("appear");
-
-        GameField.transform.position = new Vector2(pos.x + 15, pos.y + yOffset);
+        GameFieldTargetLocalPosition = new Vector3(fieldPos.x, fieldPos.y + yOffset, GameField.localPosition.z);
     }
 
     void CreateSquare(int col, int row, bool chessColor = false)
@@ -1759,20 +1721,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     public void SetColorToRandomItems()
     {
-        StartCoroutine(SetColorToRandomItemscCor());
-    }
-
-    IEnumerator SetColorToRandomItemscCor()
-    {
-        int p = UnityEngine.Random.Range(0, colorLimit);
-        List<Item> items = GetRandomItems((GameObject.FindGameObjectsWithTag("Item").Length) / 3);
-
-        foreach (Item item in items)
-        {
-            yield return new WaitForSeconds(0.01f);
-            item.SetColor(p);
-            item.anim.SetTrigger("appear");
-        }
+        LevelEffectsController?.PlayRandomColorReveal();
     }
 
     #endregion
@@ -2022,109 +1971,27 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     public void DestroyDoubleBomb(int col)
     {
-        StartCoroutine(DestroyDoubleBombCor(col));
-        StartCoroutine(DestroyDoubleBombCorBack(col));
-    }
-
-    IEnumerator DestroyDoubleBombCor(int col)
-    {
-        for (int i = col; i < maxCols; i++)
-        {
-            List<Item> list = GetColumn(i);
-
-            foreach (Item item in list)
-            {
-                if(item != null)
-                    item.DestroyItem(true, "", true);
-            }
-
-            yield return new WaitForSeconds(0.3f);
-        }
-
-        if(col <= maxCols - col - 1)
-            FindMatches();
-    }
-
-    IEnumerator DestroyDoubleBombCorBack(int col)
-    {
-        for (int i = col - 1; i >= 0; i--)
-        {
-            List<Item> list = GetColumn(i);
-
-            foreach (Item item in list)
-            {
-                if(item != null)
-                    item.DestroyItem(true, "", true);
-            }
-
-            yield return new WaitForSeconds(0.3f);
-        }
-
-        if(col > maxCols - col - 1)
-            FindMatches();
+        LevelEffectsController?.PlayDoubleBombWave(col);
     }
 
     public void StrippedShow(GameObject obj, bool horrizontal)
     {
-        GameObject effect = Instantiate(stripesEffect, obj.transform.position, Quaternion.identity) as GameObject;
-        if(!horrizontal)
-            effect.transform.Rotate(Vector3.back, 90);
-        Destroy(effect, 1);
+        LevelEffectsController?.PlayStripedEffect(obj, horrizontal);
     }
 
     public GameObject GetExplFromPool()
     {
-        for (int i = 0; i < itemExplPool.Length; i++)
-        {
-            if(!itemExplPool[i].GetComponent<SpriteRenderer>().enabled)
-            {
-                itemExplPool[i].GetComponent<SpriteRenderer>().enabled = true;
-                StartCoroutine(HideDelayed(itemExplPool[i]));
-                return itemExplPool[i];
-            }
-        }
-
-        return null;
+        return LevelEffectsController != null ? LevelEffectsController.GetExplosion() : null;
     }
 
     public GameObject GetFlowerFromPool()
     {
-        for (int i = 0; i < flowersPool.Length; i++)
-        {
-            if(!flowersPool[i].GetComponent<SpriteRenderer>().enabled)
-            {
-                return flowersPool[i];
-            }
-        }
-
-        return null;
+        return LevelEffectsController != null ? LevelEffectsController.GetFlower() : null;
     }
 
     public bool CheckFlowerStillFly()
     {
-        // Check if any flower still not reached his target
-        for (int i = 0; i < flowersPool.Length; i++)
-        {
-            if(flowersPool[i].GetComponent<SpriteRenderer>().enabled)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    IEnumerator HideDelayed(GameObject gm)
-    {
-        yield return new WaitForSeconds(1);
-
-        if(gm.GetComponent<Animator>())
-        {
-            gm.GetComponent<Animator>().SetTrigger("stop");
-            gm.GetComponent<Animator>().SetInteger("color", 10);
-        }
-
-        gm.GetComponent<SpriteRenderer>().enabled = false;
+        return LevelEffectsController != null && LevelEffectsController.HasFlyingFlowers();
     }
 
     #endregion
@@ -2438,88 +2305,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         }
     }
 
-    IEnumerator PreWinAnimationsCor()
-    {
-        // if (!InitScript.Instance.losingLifeEveryGame)
-        //     InitScript.Instance.AddLife(1);
-
-        SoundBase.Instance.PlaySound(SoundBase.Instance.complete[1]);
-        GameObject preCompleteBanner = GameObject.Find("Level/Canvas").transform.Find("PreCompleteBanner").gameObject;
-        preCompleteBanner.SetActive(true);
-
-        UIPreCompleteBannerTweenAnimation bannerAnimation = preCompleteBanner.GetComponent<UIPreCompleteBannerTweenAnimation>();
-        if(bannerAnimation != null)
-        {
-            yield return bannerAnimation.WaitForCompletion();
-        }
-        else
-        {
-            yield return new WaitForSeconds(3f);
-            preCompleteBanner.SetActive(false);
-        }
-
-        Vector3 pos1 = GameObject.Find("Limit").transform.position;
-
-        yield return new WaitForSeconds(1);
-        MusicBase.Instance.GetComponent<AudioSource>().loop = true;
-        MusicBase.Instance.GetComponent<AudioSource>().clip = MusicBase.Instance.music[0];
-        MusicBase.Instance.GetComponent<AudioSource>().Play();
-
-        int countFlowers = limitType == LIMIT.MOVES ? Mathf.Clamp(Limit, 0, 8) : 3;
-        List<Item> items = GetRandomItems(limitType == LIMIT.MOVES ? Mathf.Clamp(Limit, 0, 8) : 3);
-
-        for (int i = 1; i <= countFlowers; i++)
-        {
-            if(limitType == LIMIT.MOVES)
-                Limit--;
-            GameObject flowerParticle = GetFlowerFromPool();
-            flowerParticle.GetComponent<SpriteRenderer>().sortingLayerName = "UI";
-            flowerParticle.GetComponent<Flower>().StartFly(pos1, true);
-
-            yield return new WaitForSeconds(0.5f);
-        }
-
-        Limit = 0;
-
-        while (CheckFlowerStillFly())
-            yield return new WaitForSeconds(0.3f);
-
-        while (GetAllExtraItems().Count > 0)
-        {
-            Item item = GetAllExtraItems()[0];
-            item.DestroyItem(false, "", false, true);
-            dragBlocked = true;
-            yield return new WaitForSeconds(0.1f);
-            FindMatches();
-            yield return new WaitForSeconds(1f);
-
-            while (dragBlocked)
-                yield return new WaitForFixedUpdate();
-        }
-
-        yield return new WaitForSeconds(1f);
-        while (dragBlocked)
-            yield return new WaitForSeconds(0.2f);
-
-        Debug.Log($"Current level: {currentLevel}, Stars: {stars}");
-
-        if(PlayerPrefs.GetInt(string.Format("Level.{0:000}.StarsCount", currentLevel), 0) < stars)
-        {
-            PlayerPrefs.SetInt(string.Format("Level.{0:000}.StarsCount", currentLevel), stars);
-            Debug.Log($"Stars saved: {stars} for level {currentLevel}");
-        }
-
-        if(Score > PlayerPrefs.GetInt("Score" + currentLevel))
-        {
-            PlayerPrefs.SetInt("Score" + currentLevel, Score);
-        }
-
-        LevelsMap.SetActive(false); // 1.4.4
-        LevelsMap.SetActive(true); // 1.4.4
-
-        gameStatus = GameState.Win;
-    }
-
     public int GetScoresOfTargetStars()
     {
         return (int)this.GetType()
@@ -2537,25 +2322,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         UpdateBar();
         CheckStars();
 
-        if(showPopupScores)
-        {
-            Transform parent = GameObject.Find("CanvasScore").transform;
-            GameObject poptxt = Instantiate(popupScore, pos, Quaternion.identity) as GameObject;
-            poptxt.transform.GetComponentInChildren<Text>().text = "" + value;
-
-            if(color <= scoresColors.Length - 1)
-            {
-                var t = poptxt.transform.GetComponentInChildren<Text>();
-                if(t != null) t.color = scoresColors[color];
-                var o = poptxt.transform.GetComponentInChildren<Outline>();
-                if(o != null) o.effectColor = scoresColorsOutline[color];
-            }
-
-            poptxt.transform.SetParent(parent);
-            poptxt.transform.position = pos; // Scores position in Unity 2017.3
-            poptxt.transform.localScale = Vector3.one / 1.5f;
-            Destroy(poptxt, 1.4f);
-        }
+        ScorePopupTweenSpawner?.Show(value, pos, color, scoresColors);
     }
 
     void UpdateBar()

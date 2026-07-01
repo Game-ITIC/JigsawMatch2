@@ -9,6 +9,7 @@ using System.Reflection;
 using JuiceFresh;
 //using JuiceFresh.Scripts.Integrations;
 using UnityEditor.SceneManagement;
+using UI;
 
 public class LevelMakerEditor : EditorWindow
 {
@@ -927,10 +928,11 @@ public class LevelMakerEditor : EditorWindow
 			});
 			GUILayout.Space(10);
 
-			lm.showPopupScores = EditorGUILayout.Toggle("Show popup scores", lm.showPopupScores, new GUILayoutOption[] {
-				GUILayout.Width (50),
-				GUILayout.MaxWidth (200)
-			});
+			ScorePopupTweenSpawner popupSpawner = lm.ScorePopupTweenSpawner;
+			if (popupSpawner != null)
+			{
+				popupSpawner.ShowPopups = EditorGUILayout.Toggle("Show popup scores", popupSpawner.ShowPopups);
+			}
 			GUILayout.Space(10);
 
 			lm.scoresColors[0] = EditorGUILayout.ColorField("Score color item 1", lm.scoresColors[0], new GUILayoutOption[] {
@@ -959,30 +961,17 @@ public class LevelMakerEditor : EditorWindow
 			});
 			GUILayout.Space(10);
 
-			lm.scoresColorsOutline[0] = EditorGUILayout.ColorField("Score color outline item 1", lm.scoresColorsOutline[0], new GUILayoutOption[] {
-				GUILayout.Width (200),
-				GUILayout.MaxWidth (200)
-			});
-			lm.scoresColorsOutline[1] = EditorGUILayout.ColorField("Score color outline item 2", lm.scoresColorsOutline[1], new GUILayoutOption[] {
-				GUILayout.Width (200),
-				GUILayout.MaxWidth (200)
-			});
-			lm.scoresColorsOutline[2] = EditorGUILayout.ColorField("Score color outline item 3", lm.scoresColorsOutline[2], new GUILayoutOption[] {
-				GUILayout.Width (200),
-				GUILayout.MaxWidth (200)
-			});
-			lm.scoresColorsOutline[3] = EditorGUILayout.ColorField("Score color outline item 4", lm.scoresColorsOutline[3], new GUILayoutOption[] {
-				GUILayout.Width (200),
-				GUILayout.MaxWidth (200)
-			});
-			lm.scoresColorsOutline[4] = EditorGUILayout.ColorField("Score color outline item 5", lm.scoresColorsOutline[4], new GUILayoutOption[] {
-				GUILayout.Width (200),
-				GUILayout.MaxWidth (200)
-			});
-			lm.scoresColorsOutline[5] = EditorGUILayout.ColorField("Score color outline item 6", lm.scoresColorsOutline[5], new GUILayoutOption[] {
-				GUILayout.Width (200),
-				GUILayout.MaxWidth (200)
-			});
+			if (popupSpawner != null)
+			{
+				for (int i = 0; i < 6; i++)
+				{
+					Color[] outlineColors = popupSpawner.OutlineColors;
+					Color current = outlineColors != null && i < outlineColors.Length ? outlineColors[i] : Color.white;
+					Color updated = EditorGUILayout.ColorField("Score color outline item " + (i + 1), current,
+						GUILayout.Width(200), GUILayout.MaxWidth(200));
+					popupSpawner.SetOutlineColor(i, updated);
+				}
+			}
 			GUILayout.EndVertical();
 			GUILayout.EndHorizontal();
 		}
@@ -1095,7 +1084,11 @@ public class LevelMakerEditor : EditorWindow
 		lm.scoreForWireBlock = 100;
 		lm.scoreForSolidBlock = 100;
 		lm.scoreForThrivingBlock = 100;
-		lm.showPopupScores = true;
+		ScorePopupTweenSpawner popupSpawner = lm.ScorePopupTweenSpawner;
+		if (popupSpawner != null)
+		{
+			popupSpawner.ShowPopups = true;
+		}
 		lm.scoresColors[0] = new Color(183 / 255f, 3 / 255f, 3 / 255f);
 		lm.scoresColors[1] = new Color(255 / 255f, 193 / 255f, 22 / 255f);
 		lm.scoresColors[2] = new Color(237 / 255f, 13 / 255f, 233 / 255f);
@@ -1103,12 +1096,13 @@ public class LevelMakerEditor : EditorWindow
 		lm.scoresColors[4] = new Color(41 / 255f, 157 / 255f, 255 / 255f);
 		lm.scoresColors[5] = new Color(255 / 255f, 255 / 255f, 38 / 255f);
 
-		lm.scoresColorsOutline[0] = new Color(255f / 255f, 255f / 255f, 255f / 255f);
-		lm.scoresColorsOutline[1] = new Color(255f / 255f, 255f / 255f, 255f / 255f);
-		lm.scoresColorsOutline[2] = new Color(255f / 255f, 255f / 255f, 255f / 255f);
-		lm.scoresColorsOutline[3] = new Color(255f / 255f, 255f / 255f, 255f / 255f);
-		lm.scoresColorsOutline[4] = new Color(255f / 255f, 255f / 255f, 255f / 255f);
-		lm.scoresColorsOutline[5] = new Color(255f / 255f, 255f / 255f, 255f / 255f);
+		if (popupSpawner != null)
+		{
+			for (int i = 0; i < 6; i++)
+			{
+				popupSpawner.SetOutlineColor(i, Color.white);
+			}
+		}
 
 		// initscript.CapOfLife = 5;
 		initscript.TotalTimeForRestLifeHours = 0;

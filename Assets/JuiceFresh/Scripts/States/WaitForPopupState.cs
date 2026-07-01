@@ -1,4 +1,5 @@
 using UnityEngine;
+using UI;
 
 namespace JuiceFresh.States
 {
@@ -43,6 +44,21 @@ namespace JuiceFresh.States
             InitTargets();
 
             levelManager.GameField.gameObject.SetActive(true);
+            PlayGameFieldIntro();
+        }
+
+        private void PlayGameFieldIntro()
+        {
+            GameFieldTweenAnimation animation = levelManager.GameField.GetComponent<GameFieldTweenAnimation>();
+            if(animation == null)
+            {
+                levelManager.GameField.localPosition = levelManager.GameFieldTargetLocalPosition;
+                levelManager.gameStatus = GameState.PrepareBoosts;
+                return;
+            }
+
+            animation.Play(levelManager.GameFieldTargetLocalPosition,
+                () => levelManager.gameStatus = GameState.PrepareBoosts);
         }
 
         private void RestartTimer()

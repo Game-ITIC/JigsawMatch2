@@ -20,6 +20,8 @@ GameObject:
   - component: {fileID: 2088461024340755594}
   - component: {fileID: 6876123512815634357}
   - component: {fileID: 6278313701975494898}
+  - component: {fileID: 775001234567890123}
+  - component: {fileID: 775001234567890124}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -259,13 +261,8 @@ MonoBehaviour:
   thrivingBlockPrefab: {fileID: 142200, guid: 4d22c0ca6aa3c2f44a8136e879b88ed3, type: 3}
   lifeShop: {fileID: 0}
   GameField: {fileID: 0}
-  popupScore: {fileID: 100000, guid: 045b1a17bc5268b419f9a7fa7af3c2ba, type: 3}
-  stripesEffect: {fileID: 100804, guid: c1d86e442930a7b40835a0fbad225fbd, type: 3}
   LevelsMap: {fileID: 0}
   Level: {fileID: 0}
-  star1Anim: {fileID: 0}
-  star2Anim: {fileID: 0}
-  star3Anim: {fileID: 0}
   ingrObject: {fileID: 0}
   blocksObject: {fileID: 0}
   scoreTargetObject: {fileID: 0}
@@ -273,7 +270,6 @@ MonoBehaviour:
   bombTargetObject: {fileID: 0}
   gameCamera: {fileID: 856183521863649967}
   line: {fileID: 0}
-  flower: {fileID: 107552, guid: 0a071ea80298917468648bade3061b0a, type: 3}
   squareSprite: {fileID: 21300000, guid: 8d6dfee8217441946b4f9a8a0617806f, type: 3}
   squareSprite1: {fileID: 21300000, guid: f8037e2d044c3af4b82ee2cc57325685, type: 3}
   outline1: {fileID: 21300000, guid: aedfd74761eff26479a0969f4b6d5591, type: 3}
@@ -300,7 +296,6 @@ MonoBehaviour:
   squareWidth: 1.6
   squareHeight: 1.6
   firstSquarePosition: {x: -2.4, y: 3.3}
-  showPopupScores: 1
   colorLimit: 4
   targetDiscriptions:
   - 'Achieve score of %n '
@@ -327,13 +322,6 @@ MonoBehaviour:
   - {r: 0.5661765, g: 0, b: 0.556066, a: 1}
   - {r: 0.0919286, g: 0.5441177, b: 0, a: 1}
   - {r: 0, g: 0.3547279, b: 0.6544118, a: 1}
-  scoresColorsOutline:
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
   stars: 0
   star1: 2300
   star2: 5300
@@ -490,6 +478,54 @@ MonoBehaviour:
   GameProvider: {fileID: 0}
   GameCompleteView: {fileID: 0}
   GameConfig: {fileID: 0}
+--- !u!114 &775001234567890123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7491772303093536022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4b52acdfcab43c480aac96eecc21002, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: ''
+  popupPrefab: {fileID: 100000, guid: 045b1a17bc5268b419f9a7fa7af3c2ba, type: 3}
+  popupParent: {fileID: 0}
+  showPopups: 1
+  outlineColors:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  useUnscaledTime: 1
+  visibleScale: {x: 0.6666667, y: 0.6666667, z: 0.6666667}
+  startScale: {x: 0.2, y: 0.2, z: 0.2}
+  peakScale: {x: 0.78, y: 0.78, z: 0.78}
+  riseDistance: 0.8
+  popDuration: 0.24
+  settleDuration: 0.1
+  holdDuration: 0.55
+  fadeDuration: 0.32
+--- !u!114 &775001234567890124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7491772303093536022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c63bd0fcab43c480aac96eecc21003, type: 3}
+  m_Name: ''
+  m_EditorClassIdentifier: ''
+  stripesEffectPrefab: {fileID: 100804, guid: c1d86e442930a7b40835a0fbad225fbd, type: 3}
+  flowerPrefab: {fileID: 107552, guid: 0a071ea80298917468648bade3061b0a, type: 3}
+  poolSize: 20
+  explosionLifetime: 1
+  doubleBombStepDelay: 0.3
 --- !u!114 &86081862826246477
 MonoBehaviour:
   m_ObjectHideFlags: 0

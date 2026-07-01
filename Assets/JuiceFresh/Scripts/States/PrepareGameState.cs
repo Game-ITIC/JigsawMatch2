@@ -80,10 +80,6 @@ namespace JuiceFresh.States
             SetActiveIfAssigned(levelManager.cageTargetObject, false);
             SetActiveIfAssigned(levelManager.bombTargetObject, false);
 
-            // Reset star animations
-            SetActiveIfAssigned(levelManager.star1Anim, false);
-            SetActiveIfAssigned(levelManager.star2Anim, false);
-            SetActiveIfAssigned(levelManager.star3Anim, false);
         }
 
         private static void SetActiveIfAssigned(GameObject target, bool active)

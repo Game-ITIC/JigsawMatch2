@@ -9114,8 +9114,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1050245871}
-  - component: {fileID: 1050245872}
-  - component: {fileID: 1050245873}
+  - component: {fileID: 1050245874}
   m_Layer: 0
   m_Name: GameField
   m_TagString: Untagged
@@ -9138,23 +9137,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1375642409}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!111 &1050245872
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1050245870}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 0}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
---- !u!114 &1050245873
+--- !u!114 &1050245874
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9163,9 +9146,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1050245870}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fccfa6e110cd02b46afb631788d49755, type: 3}
+  m_Script: {fileID: 11500000, guid: c3a419bcfbab43c480aac96eecc21001, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useUnscaledTime: 0
+  startOffsetX: 15
+  duration: 0.8
+  ease: 26
 --- !u!1001 &1070834259
 PrefabInstance:
   m_ObjectHideFlags: 0
