@@ -54,11 +54,6 @@ public class PlayingState : GameStateBase
         // Check for bombs that need to tick down
         ProcessBombTimers();
 
-        // Debug selection status
-        if(levelManager.destroyAnyway.Count > 0)
-        {
-            DebugSelectionStatus();
-        }
     }
 
     public override void ExitState()
@@ -107,7 +102,6 @@ public class PlayingState : GameStateBase
 
             if(item != null)
             {
-                Debug.Log("TouchDown detected on item: " + item.name);
                 ProcessItemTouch(item);
             }
         }
@@ -185,33 +179,25 @@ public class PlayingState : GameStateBase
         // Skip if item is null
         if(item == null)
         {
-            Debug.Log("Item is null in ProcessItemTouch");
             return;
         }
 
         // Skip if the item is an ingredient or the game is blocked
         if(item.currentType == ItemsTypes.INGREDIENT || levelManager.DragBlocked)
         {
-            Debug.Log("Item is ingredient or drag is blocked");
             return;
         }
 
         // Handle boost activation
         if(ProcessBoostSelection(item))
         {
-            Debug.Log("Boost being processed");
             return;
         }
 
         // Regular item selection logic
         if(selectedColor == -1 || selectedColor == item.color)
         {
-            Debug.Log("Selecting item with color: " + item.color);
             SelectItem(item);
-        }
-        else
-        {
-            Debug.Log("Color mismatch - selected: " + selectedColor + ", item: " + item.color);
         }
     }
 
@@ -222,17 +208,14 @@ public class PlayingState : GameStateBase
 
         if(activeBoostType == BoostType.Bomb && item.currentType != ItemsTypes.INGREDIENT)
         {
-            Debug.Log("Bomb");
             return true;
         }
         else if(activeBoostType == BoostType.Shovel && item.currentType != ItemsTypes.INGREDIENT)
         {
-            Debug.Log("Shovel");
             return true;
         }
         else if(activeBoostType == BoostType.Energy && item.currentType != ItemsTypes.INGREDIENT)
         {
-            Debug.Log("Energy");
             return true;
         }
 
@@ -292,7 +275,7 @@ public class PlayingState : GameStateBase
 
         int selectingSoundNum = Mathf.Clamp(levelManager.destroyAnyway.Count - 1, 0, 9);
         SoundBase.Instance.PlaySound(SoundBase.Instance.selecting[selectingSoundNum]);
-        GameFeelManager.Instance?.OnItemSelected(item.transform, selectingSoundNum);
+        GameFeelManager.Instance?.OnItemSelected(item.transform, levelManager.destroyAnyway.Count);
 
         int extraItemEvery = 6; // This should come from level manager
 
@@ -300,7 +283,6 @@ public class PlayingState : GameStateBase
            item.square.cageHP <= 0)
         {
             // This would highlight or mark the item for special treatment
-            Debug.Log("setlight");
             item.SetLight();
         }
         else if((levelManager.destroyAnyway.Count % (extraItemEvery + levelManager.extraCageAddItem) == 0) &&
@@ -357,6 +339,10 @@ public class PlayingState : GameStateBase
 
             // Remove from selection
             levelManager.destroyAnyway.Remove(lastItem);
+            GameFeelManager.Instance?.OnItemDeselected(
+                lastItem.transform,
+                item.transform,
+                levelManager.destroyAnyway.Count);
         }
     }
 

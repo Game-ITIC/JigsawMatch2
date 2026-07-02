@@ -745,7 +745,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         // Now draw the lines based on the updated destroyAnyway list
         if(destroyAnyway.Count > 0)
         {
-            Debug.Log("Drawing lines for " + destroyAnyway.Count + " items");
             int i = 0;
             line.SetVertexCount(destroyAnyway.Count);
 

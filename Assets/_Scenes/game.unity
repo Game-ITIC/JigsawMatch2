@@ -6542,13 +6542,18 @@ MonoBehaviour:
   enableHaptics: 1
   enableCameraShake: 1
   enableBoardShake: 1
-  enableFreezeFrames: 1
+  enableFreezeFrames: 0
   enableItemPunch: 1
-  globalIntensity: 1.6
-  matchShakeStrength: 0.45
-  boardShakeStrength: 0.18
-  comboShakeStrength: 0.75
-  winShakeStrength: 1
+  globalIntensity: 0.9
+  matchShakeStrength: 0.045
+  boardShakeStrength: 0.06
+  comboShakeStrength: 0.085
+  winShakeStrength: 0.14
+  itemPulseStrength: 0.095
+  boardPulseStrength: 0.028
+  selectionGlowAlpha: 0.26
+  selectionGlowScale: 1.12
+  selectionGlowBreathing: 0.035
 --- !u!1001 &661672068
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9382,9 +9387,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useUnscaledTime: 0
-  startOffsetX: 15
-  duration: 0.8
-  ease: 26
+  cellStartScale: 0.32
+  cellPeakScale: 1.045
+  cellRiseDuration: 0.48
+  cellSettleDuration: 0.14
+  itemStartScale: 0.2
+  itemPeakScale: 1.08
+  itemDelay: 0.13
+  itemRiseDuration: 0.42
+  itemSettleDuration: 0.16
+  waveStagger: 0.08
+  waveJitter: 0.01
 --- !u!1001 &1070834259
 PrefabInstance:
   m_ObjectHideFlags: 0

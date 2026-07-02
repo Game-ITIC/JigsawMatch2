@@ -18,6 +18,8 @@ public class Line : MonoBehaviour
     [SerializeField, Range(0.25f, 1.25f)] private float widthMultiplier = 0.72f;
     [SerializeField, Range(0, 8)] private int roundedCorners = 4;
     [SerializeField, Range(0, 8)] private int roundedCaps = 4;
+    [SerializeField, Range(0f, 0.4f)] private float chainWidthBoost = 0.2f;
+    [SerializeField, Range(0f, 15f)] private float breathingSpeed = 7f;
     #endregion
 
     #region Private Fields
@@ -52,6 +54,17 @@ public class Line : MonoBehaviour
     public void SetVertexCount(int count)
     {
         int requiredSegmentCount = Mathf.Max(0, count - 1);
+        float excitement = Mathf.InverseLerp(2f, 10f, count);
+        float breathing = Mathf.Sin(Time.unscaledTime * breathingSpeed) * 0.035f;
+        float activeWidth = widthMultiplier * (1f + excitement * chainWidthBoost + breathing);
+        Color startTint = Color.Lerp(
+            new Color(1f, 1f, 1f, 0.82f),
+            new Color(1f, 0.86f, 1f, 1f),
+            excitement);
+        Color endTint = Color.Lerp(
+            new Color(0.88f, 1f, 1f, 0.9f),
+            new Color(1f, 0.96f, 0.72f, 1f),
+            excitement);
 
         // Ensure we have enough line renderers
         while (lines.Count < requiredSegmentCount)
@@ -64,6 +77,9 @@ public class Line : MonoBehaviour
             if (i < requiredSegmentCount)
             {
                 lines[i].enabled = true;
+                lines[i].widthMultiplier = activeWidth;
+                lines[i].startColor = startTint;
+                lines[i].endColor = endTint;
                 SetSortingLayer(lines[i]);
             }
             else

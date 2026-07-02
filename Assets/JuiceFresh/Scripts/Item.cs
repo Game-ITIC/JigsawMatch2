@@ -451,9 +451,11 @@ public class Item : MonoBehaviour
         {
             anim.SetTrigger("appear");
             SoundBase.Instance.PlaySound(SoundBase.Instance.appearStipedColorBomb);
-            xScale /= 2f;
-            yScale /= 2f;
-            transform.localScale /= 1.5f;
+
+            // Keep the same root scale as every other board item. Shrinking xScale/yScale
+            // here permanently leaked into the idle loop and left the bonus item tiny.
+            xScale = transform.localScale.x;
+            yScale = transform.localScale.y;
         }
     }
 
