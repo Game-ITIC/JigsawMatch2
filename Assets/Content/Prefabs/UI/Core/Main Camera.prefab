@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 775001234567890123}
   - component: {fileID: 775001234567890124}
   - component: {fileID: 775001234567890125}
+  - component: {fileID: 775001234567890126}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -271,10 +272,6 @@ MonoBehaviour:
   bombTargetObject: {fileID: 0}
   gameCamera: {fileID: 856183521863649967}
   line: {fileID: 0}
-  gridPerimeterLinePrefab: {fileID: 8540580235284219234, guid: 28b48aaeeb7e6674591ec1e38c6e1ade, type: 3}
-  gridPerimeterLineZOffset: -0.2
-  gridOutlineDrawDuration: 0.72
-  gridOutlineLoopDelay: 0.08
   gridOutlineGenerator: {fileID: 775001234567890125}
   squareSprite: {fileID: 21300000, guid: 8d6dfee8217441946b4f9a8a0617806f, type: 3}
   squareSprite1: {fileID: 21300000, guid: f8037e2d044c3af4b82ee2cc57325685, type: 3}
@@ -666,3 +663,19 @@ MonoBehaviour:
   outline3: {fileID: 21300000, guid: d93fc221c44f6ca4a84c51271a3ae82b, type: 3}
   outline4: {fileID: 21300000, guid: 6169ba38906e574478b0f6ba689dbc0a, type: 3}
   outline5: {fileID: 21300000, guid: 0514fb4acf57bff4caeae307547697bd, type: 3}
+--- !u!114 &775001234567890126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7491772303093536022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71385d079e939f046a7c59993a607346, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  gridPerimeterLinePrefab: {fileID: 8540580235284219234, guid: 28b48aaeeb7e6674591ec1e38c6e1ade, type: 3}
+  gridPerimeterLineZOffset: -0.2
+  gridOutlineDrawDuration: 0.72
+  gridOutlineLoopDelay: 0.08
