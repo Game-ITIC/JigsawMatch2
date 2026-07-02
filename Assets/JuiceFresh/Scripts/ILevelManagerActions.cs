@@ -9,6 +9,7 @@ namespace JuiceFresh
         // Methods needed by the states
         void GenerateLevel();
         void GenerateOutline();
+        void ClearOutline();
         void GenerateNewItems(bool falling);
         Square GetSquare(int col, int row, bool safe = false);
         IEnumerator InitBombs();

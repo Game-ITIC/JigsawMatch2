@@ -53,6 +53,8 @@ public class Item : MonoBehaviour
     private GameObject _light;
     private bool extraChecked;
     private int COLOR;
+    private const float DefaultBoardItemScale = 0.9f;
+    private const float MinimumValidBoardItemScale = 0.5f;
     #endregion
 
     #region Properties
@@ -125,8 +127,7 @@ public class Item : MonoBehaviour
             InitializeWithNextType();
         }
         
-        xScale = transform.localScale.x;
-        yScale = transform.localScale.y;
+        EnsureValidBoardScale();
         
         if (currentType == ItemsTypes.INGREDIENT)
         {
@@ -416,10 +417,16 @@ public class Item : MonoBehaviour
 
     IEnumerator ChangeTypeCor()
     {
+        // A special item is created from an item that has just finished selection,
+        // destruction and combo feedback. Any interrupted scale animation must not
+        // become the new permanent scale of the booster.
+        EnsureValidBoardScale();
         ApplyVisualEffect();
         
         while (!appeared)
             yield return new WaitForFixedUpdate();
+
+        EnsureValidBoardScale();
 
         if (nextType == ItemsTypes.NONE)
             yield break;
@@ -452,11 +459,22 @@ public class Item : MonoBehaviour
             anim.SetTrigger("appear");
             SoundBase.Instance.PlaySound(SoundBase.Instance.appearStipedColorBomb);
 
-            // Keep the same root scale as every other board item. Shrinking xScale/yScale
-            // here permanently leaked into the idle loop and left the bonus item tiny.
-            xScale = transform.localScale.x;
-            yScale = transform.localScale.y;
+            EnsureValidBoardScale();
         }
+    }
+
+    private void EnsureValidBoardScale()
+    {
+        Vector3 scale = transform.localScale;
+        if (Mathf.Abs(scale.x) < MinimumValidBoardItemScale ||
+            Mathf.Abs(scale.y) < MinimumValidBoardItemScale)
+        {
+            scale = new Vector3(DefaultBoardItemScale, DefaultBoardItemScale, 1f);
+            transform.localScale = scale;
+        }
+
+        xScale = scale.x;
+        yScale = scale.y;
     }
 
     private void SetSpriteForType()
