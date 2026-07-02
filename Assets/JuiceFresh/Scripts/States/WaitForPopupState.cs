@@ -34,7 +34,6 @@ namespace JuiceFresh.States
         private void InitLevel()
         {
             _levelManagerActions.GenerateLevel();
-            _levelManagerActions.GenerateOutline();
             _levelManagerActions.GenerateNewItems(false);
             levelManager.nextExtraItems = 0;
             levelManager.bombTimers.Clear();
@@ -53,12 +52,17 @@ namespace JuiceFresh.States
             if(animation == null)
             {
                 levelManager.GameField.localPosition = levelManager.GameFieldTargetLocalPosition;
+                _levelManagerActions.GenerateOutline();
                 levelManager.gameStatus = GameState.PrepareBoosts;
                 return;
             }
 
             animation.Play(levelManager.GameFieldTargetLocalPosition,
-                () => levelManager.gameStatus = GameState.PrepareBoosts);
+                () =>
+                {
+                    _levelManagerActions.GenerateOutline();
+                    levelManager.gameStatus = GameState.PrepareBoosts;
+                });
         }
 
         private void RestartTimer()
@@ -176,13 +180,27 @@ namespace JuiceFresh.States
             if (leftSquare == null || rightSquare == null)
                 return;
             
-            float width = rightSquare.transform.position.x - leftSquare.transform.position.x;
-        
-            // Calculate the required orthographic size based on the aspect ratio
-            float h = width * Screen.height / Screen.width / 2 + 1.5f;
-        
+            float leftX = leftSquare.transform.position.x;
+            float rightX = rightSquare.transform.position.x;
+
+            // Include half-cell padding so edge cells are not clipped.
+            float cellWidth = Mathf.Max(0.001f, levelManager.squareWidth);
+            float gridWorldWidth = Mathf.Abs(rightX - leftX) + cellWidth;
+
+            // Use safe area dimensions so phones with gesture/notch areas keep comfortable margins.
+            Rect safe = Screen.safeArea;
+            float safeWidth = Mathf.Max(1f, safe.width);
+            float safeHeight = Mathf.Max(1f, safe.height);
+            float safeAspect = safeHeight / safeWidth;
+
+            // Extra breathing room for swipes (in world units).
+            float swipePadding = Mathf.Max(1.25f, cellWidth * 0.85f);
+
+            // Required orthographic size to fit the board width inside the safe area.
+            float requiredOrtho = (gridWorldWidth * safeAspect) * 0.5f + swipePadding;
+
             // Set the camera size, clamped between the default and calculated values
-            levelManager.GetComponent<Camera>().orthographicSize = Mathf.Clamp(h, defaultScale, h);
+            levelManager.GetComponent<Camera>().orthographicSize = Mathf.Max(defaultScale, requiredOrtho);
         }
     }
 }

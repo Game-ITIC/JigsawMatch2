@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Interfaces;
@@ -22,6 +23,8 @@ public class MenuView : MonoBehaviour, IPreload
     [SerializeField] private Button starsCountButton;
     [SerializeField] private Button diamondCountButton;
     [SerializeField] private GameObject dailyAndTasksPanel;
+    [SerializeField] private GameObject dailyContentPanel;
+    [SerializeField] private GameObject tasksContentPanel;
     [SerializeField] private GameObject dailyRewardsPanel;
     [SerializeField] private GameObject shopPanel;
     [SerializeField] private bool animatePanelTransitions = true;
@@ -50,6 +53,12 @@ public class MenuView : MonoBehaviour, IPreload
     private bool _hudBound;
     private string _lastLifeStatusText;
 
+    private enum DailyAndTasksTab
+    {
+        Daily,
+        Tasks
+    }
+
     public Button StartGame => startGame;
     public Button DailyButton => dailyButton;
     public Button DailyRewardsButton => dailyButton != null && dailyButton != taskButton ? dailyButton : null;
@@ -77,8 +86,11 @@ public class MenuView : MonoBehaviour, IPreload
 
     private void ResolveReferences()
     {
-        taskButton = taskButton != null ? taskButton : FindButton("Task Button 01");
-        taskButton = taskButton != null ? taskButton : dailyButton;
+        taskButton = taskButton != null ? taskButton : FindButton("Task Button 01", "TaskButton");
+
+        dailyButton = dailyButton != null && dailyButton != taskButton
+            ? dailyButton
+            : FindButton("Daily Button", "Task Button 02", "DailyButton");
 
         shopButton = shopButton != null ? shopButton : FindButton("ShopButton", "Shop Button");
         shopButton = shopButton != null ? shopButton : inAppButton;
@@ -94,6 +106,12 @@ public class MenuView : MonoBehaviour, IPreload
         dailyAndTasksPanel = dailyAndTasksPanel != null
             ? dailyAndTasksPanel
             : FindSceneObject("Daily And Tasks Panel");
+        dailyContentPanel = dailyContentPanel != null
+            ? dailyContentPanel
+            : FindSceneObject("Daily Content Panel");
+        tasksContentPanel = tasksContentPanel != null
+            ? tasksContentPanel
+            : FindSceneObject("Tasks Content Panel");
         dailyRewardsPanel = dailyRewardsPanel != null
             ? dailyRewardsPanel
             : FindSceneObject("DailyRewardsPanel", "Daily Rewards Panel");
@@ -108,9 +126,13 @@ public class MenuView : MonoBehaviour, IPreload
 
         if(dailyPanel != null)
         {
-            WireButtons(FindButtons(taskButton, dailyButton, "Task Button 01", "Daily Button", "DailyButton"), ToggleDailyAndTasksPanel);
+            WireButtons(FindButtons(dailyButton, "Daily Button", "Task Button 02", "DailyButton"), OpenDailyContentPanel);
+            WireButtons(FindButtons(taskButton, "Task Button 01", "TaskButton"), OpenTasksContentPanel);
+            WireButtons(FindButtons("Daily Tab Button"), () => OpenDailyAndTasksPanel(DailyAndTasksTab.Daily));
+            WireButtons(FindButtons("Tasks Tab Button"), () => OpenDailyAndTasksPanel(DailyAndTasksTab.Tasks));
             WireCloseButtons(dailyPanel, CloseDailyAndTasksPanel);
             HidePanelImmediate(dailyPanel);
+            ShowDailyAndTasksTab(DailyAndTasksTab.Daily);
         }
 
         if(shopPanel != null)
@@ -165,13 +187,16 @@ public class MenuView : MonoBehaviour, IPreload
         if(_healthSystem != null && (_lifeCountTexts.Count > 0 || _lifeStatusTexts.Count > 0))
         {
             _healthSystem.CurrentLives.Subscribe(_ => UpdateLifeTexts()).AddTo(_disposable);
-            // Observable.EveryUpdate(UnityFrameProvider.EarlyUpdate)
-            //     .Subscribe(_ =>
-            //                {
-            //                    _healthSystem.UpdateRegeneration();
-            //                    SetLifeStatusTexts();
-            //                })
-            //     .AddTo(_disposable);
+
+            // "TimeLives" is based on remaining time until next life.
+            // It changes every second, even when CurrentLives doesn't change.
+            Observable.Interval(TimeSpan.FromSeconds(1))
+                .Subscribe(_ =>
+                           {
+                               _healthSystem.UpdateRegeneration();
+                               SetLifeStatusTexts();
+                           })
+                .AddTo(_disposable);
         }
 
         UpdateHudValues();
@@ -210,8 +235,50 @@ public class MenuView : MonoBehaviour, IPreload
             return;
         }
 
+        OpenDailyAndTasksPanel(DailyAndTasksTab.Daily);
+    }
+
+    public void OpenDailyContentPanel()
+    {
+        OpenDailyAndTasksPanel(DailyAndTasksTab.Daily);
+    }
+
+    public void OpenTasksContentPanel()
+    {
+        OpenDailyAndTasksPanel(DailyAndTasksTab.Tasks);
+    }
+
+    private void OpenDailyAndTasksPanel(DailyAndTasksTab tab)
+    {
+        var dailyPanel = GetDailyPanel();
+
+        if(dailyPanel == null)
+        {
+            return;
+        }
+
         CloseShopPanel();
+        ShowDailyAndTasksTab(tab);
+
+        if(dailyPanel.activeSelf)
+        {
+            return;
+        }
+
         ShowPanel(dailyPanel);
+    }
+
+    private void ShowDailyAndTasksTab(DailyAndTasksTab tab)
+    {
+        if(dailyContentPanel != null)
+        {
+            dailyContentPanel.SetActive(tab == DailyAndTasksTab.Daily);
+        }
+
+        if(tasksContentPanel != null)
+        {
+            tasksContentPanel.SetActive(tab == DailyAndTasksTab.Tasks);
+        }
     }
 
     public void OpenShopPanel()
@@ -552,7 +619,7 @@ public class MenuView : MonoBehaviour, IPreload
     }
 
     private static void AddUnique<T>(List<T> items, T item)
-        where T : Object
+        where T : UnityEngine.Object
     {
         if(item != null && !items.Contains(item))
         {

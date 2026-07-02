@@ -85,21 +85,21 @@ namespace JuiceFresh.States
             gameCamera.orthographicSize = 10.25f;
 
             // Adjust camera orthographic size based on aspect ratio
-            if (aspect == 1.6f)
+            if (Mathf.Abs(aspect - 1.6f) < 0.02f)
                 gameCamera.orthographicSize = 12.2f; //16:10
-            else if (aspect == 1.78f)
+            else if (Mathf.Abs(aspect - 1.78f) < 0.02f)
                 gameCamera.orthographicSize = 13.6f; //16:9
-            else if (aspect == 1.5f)
+            else if (Mathf.Abs(aspect - 1.5f) < 0.02f)
                 gameCamera.orthographicSize = 11.2f; //3:2
-            else if (aspect == 1.33f)
+            else if (Mathf.Abs(aspect - 1.33f) < 0.02f)
                 gameCamera.orthographicSize = 10.25f; //4:3
-            else if (aspect == 1.67f)
+            else if (Mathf.Abs(aspect - 1.67f) < 0.02f)
                 gameCamera.orthographicSize = 12.5f; //5:3
-            else if (aspect == 2.06f)
+            else if (Mathf.Abs(aspect - 2.06f) < 0.02f)
                 gameCamera.orthographicSize = 15.75f; //2960:1440 S8
-            else if (aspect == 2.17f)
+            else if (Mathf.Abs(aspect - 2.17f) < 0.03f)
                 gameCamera.orthographicSize = 16.5f;
-            else if (aspect == 2.16f)
+            else if (Mathf.Abs(aspect - 2.16f) < 0.03f)
                 gameCamera.orthographicSize = 16.5f; //iphone x
 
             gameCamera.GetComponent<MapCamera>().SetPosition(new Vector2(0, gameCamera.transform.position.y));
@@ -108,11 +108,11 @@ namespace JuiceFresh.States
         private void SetGameCamera(float aspect)
         {
             Camera gameCamera = levelManager.gameCamera;
-            if (aspect == 2.06f)
+            if (Mathf.Abs(aspect - 2.06f) < 0.02f)
                 gameCamera.orthographicSize = 11.5f; //2960:1440 S8
-            else if (aspect == 2.17f)
+            else if (Mathf.Abs(aspect - 2.17f) < 0.03f)
                 gameCamera.orthographicSize = 12.26f; //iphone x
-            else if (aspect == 2.16f)
+            else if (Mathf.Abs(aspect - 2.16f) < 0.03f)
                 gameCamera.orthographicSize = 12.26f; //iphone x
 
             GameObject.Find("CanvasGlobal").GetComponent<GraphicRaycaster>().enabled = false;
@@ -128,10 +128,15 @@ namespace JuiceFresh.States
                 panelTransform = canvas.transform.Find("Panel");
             }
 
-            if (aspect == 2.17f && panelTransform != null &&
+            if (Mathf.Abs(aspect - 2.17f) < 0.03f && panelTransform != null &&
                 panelTransform.TryGetComponent(out RectTransform panel))
             {
-                panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, 935) + Vector2.down * 100;
+                // This offset is intended for tall mobile screens (e.g. iPhone X-like aspect ratios).
+                // Applying it on desktop can push the whole HUD (including TopBarPanel) out of place.
+                if (Application.isMobilePlatform)
+                {
+                    panel.anchoredPosition = new Vector2(panel.anchoredPosition.x, 935) + Vector2.down * 100;
+                }
             }
         }
 
