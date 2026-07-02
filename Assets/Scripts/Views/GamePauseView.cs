@@ -17,6 +17,9 @@ namespace Views
         {
             gameObject.SetActive(false);
         }
-        public void Show() {}
+        public void Show()
+        {
+            gameObject.SetActive(true);
+        }
     }
 }

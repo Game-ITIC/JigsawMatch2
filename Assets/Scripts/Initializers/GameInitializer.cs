@@ -38,6 +38,7 @@ namespace Initializers
         private readonly BoostShopView _boostShopView;
         private readonly GameConfig _gameConfig;
         private readonly CoinModel _coinModel;
+        private Button _pauseButton;
 
         private CompositeDisposable _disposable = new();
 
@@ -78,6 +79,8 @@ namespace Initializers
 
         public void Initialize()
         {
+            EnsurePauseButtonBound();
+
             _gameCompleteView.Home.onClick.RemoveAllListeners();
             _gameCompleteView.Home.onClick.AddListener(() =>
                                                        {
@@ -219,6 +222,46 @@ namespace Initializers
             _sceneLoader.LoadMenuAsync().Forget();
         }
 
+        private void EnsurePauseButtonBound()
+        {
+            if(_pauseButton != null)
+            {
+                return;
+            }
+
+            Transform pauseTransform = null;
+            if(_levelManager.Level != null)
+            {
+                pauseTransform = _levelManager.Level.transform.Find("Canvas/Panel/TopBarPanel/Pause");
+            }
+
+            GameObject pauseObject = pauseTransform != null ? pauseTransform.gameObject : GameObject.Find("Pause");
+            if(pauseObject == null || !pauseObject.TryGetComponent(out Button pauseButton))
+            {
+                return;
+            }
+
+            _pauseButton = pauseButton;
+            _pauseButton.onClick.RemoveAllListeners();
+            _pauseButton.onClick.AddListener(PauseGame);
+        }
+
+        private void PauseGame()
+        {
+            if(_levelManager.gameStatus != GameState.Playing)
+            {
+                return;
+            }
+
+            if(SoundBase.Instance != null && SoundBase.Instance.click != null)
+            {
+                SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            }
+
+            _gamePauseView.Show();
+            _levelManager.gameStatus = GameState.Pause;
+        }
+
         public async UniTask StartAsync(CancellationToken cancellation = new CancellationToken())
         {
             _gameEvents.OnGameLost += ShowInterstitial;
@@ -249,11 +292,17 @@ namespace Initializers
             _gameEvents.OnGameWon -= ShowInterstitial;
             _gameEvents.OnEnterGame -= GameStart;
 
+            if(_pauseButton != null)
+            {
+                _pauseButton.onClick.RemoveListener(PauseGame);
+            }
+
             _disposable.Dispose();
         }
 
         public void Tick()
         {
+            EnsurePauseButtonBound();
             _levelManager.InvokeUpdate();
         }
     }
