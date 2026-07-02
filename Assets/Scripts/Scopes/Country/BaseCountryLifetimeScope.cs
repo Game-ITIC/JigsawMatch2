@@ -1,6 +1,10 @@
 using System;
 using Configs;
 using Initializers;
+using Meta.Quests.Configs;
+using Meta.Quests.Interfaces;
+using Meta.Quests.Providers;
+using Meta.Quests.Services;
 using Models;
 using Monobehaviours.Buildings;
 using Presenters;
@@ -93,6 +97,10 @@ namespace Scopes.Country
         [SerializeField] private RewardPopup rewardPopup;
         [SerializeField] private BuildingAnimationSettingsProvider settingsProvider;
 
+        [Title("Daily Quests")]
+        [SerializeField] private DailyQuestSettings dailyQuestSettings;
+        [SerializeField] private DailyQuestProvider dailyQuestProvider;
+
         protected override void Configure(IContainerBuilder builder)
         {
             RegisterComponentIfPresent(builder, menuView);
@@ -104,8 +112,10 @@ namespace Scopes.Country
             RegisterComponentIfPresent(builder, lifePopup);
             RegisterComponentIfPresent(builder, rewardPopup);
             RegisterComponentIfPresent(builder, settingsProvider);
+            RegisterComponentIfPresent(builder, dailyQuestProvider);
 
             RegisterInstanceIfPresent(builder, countryConfig);
+            RegisterInstanceIfPresent(builder, dailyQuestSettings);
             RegisterInstanceIfPresent(builder, regionConfig);
 
             if(coinTextView != null)
@@ -143,6 +153,12 @@ namespace Scopes.Country
                     .WithParameter(menuView.DailyRewardsButton);
             }
 
+            if(menuView != null)
+            {
+                builder.Register<DailyCardsPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>();
+            }
+
             if(lifeTextView != null)
             {
                 builder.Register<LifePresenter>(Lifetime.Scoped)
@@ -159,6 +175,19 @@ namespace Scopes.Country
             if(menuNavigationProvider != null)
             {
                 builder.Register<MenuTabs>(Lifetime.Singleton);
+            }
+
+            if(dailyQuestSettings != null && dailyQuestProvider != null)
+            {
+                builder.Register<RewardService>(Lifetime.Singleton);
+
+                builder.Register<IDailyQuestService, DailyQuestService>(Lifetime.Singleton);
+                builder.Register<IQuestProgressTracker, DailyQuestService>(Lifetime.Singleton);
+                builder.Register<IQuestDataStorage, PlayerPrefsQuestStorage>(Lifetime.Singleton);
+                builder.Register<IQuestGenerator, QuestGenerator>(Lifetime.Singleton);
+
+                builder.Register<DailyQuestPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>();
             }
 
             ConfigureCountry(builder);

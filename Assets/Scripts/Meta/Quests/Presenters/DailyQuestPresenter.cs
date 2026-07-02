@@ -38,6 +38,7 @@ namespace Presenters
 
         public void Initialize()
         {
+            _questProvider.ResolveReferences();
             SubscribeToServiceEvents();
 
             _questService.Initialize();
