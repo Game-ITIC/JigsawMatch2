@@ -98,7 +98,7 @@ namespace Initializers
                                                                _coinModel.Increase(_gameConfig.CoinRewardForLevelPass);
                                                            }
 
-                                                           _sceneLoader.LoadLastSceneAsync().Forget();
+                                                           _sceneLoader.LoadMenuAsync().Forget();
                                                        });
 
             _gameCompleteView.Next.onClick.RemoveAllListeners();
@@ -172,7 +172,7 @@ namespace Initializers
                                                         });
 
             _gamePauseView.Home.onClick.RemoveAllListeners();
-            _gamePauseView.Home.onClick.AddListener(BackToBack);
+            _gamePauseView.Home.onClick.AddListener(ReturnToMainMenu);
 
             _gamePauseView.ContinueButton.onClick.RemoveAllListeners();
             _gamePauseView.ContinueButton.onClick.AddListener(() =>
@@ -209,10 +209,10 @@ namespace Initializers
             _sceneLoader.LoadGameAsync().Forget();
         }
 
-        public void BackToBack()
+        public void ReturnToMainMenu()
         {
             Time.timeScale = 1f;
-            _sceneLoader.LoadLastSceneAsync().Forget();
+            _sceneLoader.LoadMenuAsync().Forget();
         }
 
         public void ReturnToMainMenuAfterLose()
