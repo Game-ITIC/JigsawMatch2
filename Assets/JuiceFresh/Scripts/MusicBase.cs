@@ -12,12 +12,15 @@ public class MusicBase : MonoBehaviour {
     // Use this for initialization
     void Awake()
     {
-        if (transform.parent == null)
+        if (Instance != null && Instance != this)
         {
-            transform.parent = Camera.main.transform;
-            transform.localPosition = Vector3.zero;
+            Destroy(gameObject);
+            return;
         }
 
+        // Persistent objects must be roots; keeping this under the scene camera
+        // makes Unity reject DontDestroyOnLoad.
+        transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
         Instance = this;
     }
