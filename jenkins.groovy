@@ -122,6 +122,7 @@ pipeline {
                         xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
                         "$UNITY_PATH/Unity" \
                           -quit -batchmode -nographics \
+                          -buildTarget Android \
                           -projectPath "$TMP_BUILD_DIR" \
                           -executeMethod Editor.BuildScript.BuildAndroid \
                           -job-worker-count 2 \
@@ -225,6 +226,7 @@ pipeline {
                         xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
                         "$UNITY_PATH/Unity" \
                           -quit -batchmode -nographics \
+                          -buildTarget Android \
                           -projectPath "$TMP_BUILD_DIR" \
                           -executeMethod Editor.BuildScript.BuildAndroid \
                           -job-worker-count 2 \
