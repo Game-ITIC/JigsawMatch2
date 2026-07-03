@@ -44,10 +44,14 @@ public class SoundBase : MonoBehaviour {
 
     // Use this for initialization
     void Awake() {
-        if (transform.parent == null) {
-            transform.parent = Camera.main.transform;
-            transform.localPosition = Vector3.zero;
+        if (Instance != null && Instance != this) {
+            Destroy(gameObject);
+            return;
         }
+
+        // DontDestroyOnLoad only accepts root GameObjects. Audio does not need
+        // to live under the scene camera, so detach instances placed as children.
+        transform.SetParent(null);
         audioSource = GetComponent<AudioSource>();
         DontDestroyOnLoad(gameObject);
         Instance = this;
@@ -71,7 +75,7 @@ public class SoundBase : MonoBehaviour {
 
     IEnumerator WaitForCompleteSound(AudioClip clip) {
         yield return new WaitForSeconds(0.2f);
-        clipsPlaying.Remove(clipsPlaying.Find(x => clip));
+        clipsPlaying.Remove(clip);
     }
 
 
