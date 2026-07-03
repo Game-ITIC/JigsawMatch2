@@ -9,6 +9,7 @@ public class Flower : MonoBehaviour
 {
     [SerializeField] private float speedInGame = 15f;
     [SerializeField] private float speedInTheEnd = 50f;
+    private const int MaxRetargetAttempts = 5;
     
     #region Private Fields
     private Item targetItem;
@@ -25,138 +26,145 @@ public class Flower : MonoBehaviour
     
     void Start() 
     {
-        // Ensure the particle system is stopped on initialization
         particleSystem.Stop();
     }
 
     void Update() 
     {
-        // Keep the flower rotating and at proper depth
+        if (!spriteRenderer.enabled)
+            return;
+
         transform.Rotate(Vector3.back * Time.deltaTime * 1000);
         transform.position = new Vector3(transform.position.x, transform.position.y, -15f);
     }
     #endregion
 
     #region Public Methods
-    /// <summary>
-    /// Starts the flower animation flying from a given position
-    /// </summary>
-    /// <param name="startPosition">Starting position for the flower</param>
-    /// <param name="directFly">If true, flies directly and faster</param>
     public void StartFly(Vector3 startPosition, bool directFly = false) 
     {
-        spriteRenderer.enabled = true;
+        StopAllCoroutines();
         StartCoroutine(FlyCor(startPosition, directFly));
     }
     #endregion
 
     #region Private Methods
-    /// <summary>
-    /// Coroutine to handle the flying animation
-    /// </summary>
     private IEnumerator FlyCor(Vector3 startPosition, bool directFly = false) 
     {
-        Vector3 targetPosition = Vector3.zero;
-        
-        yield return new WaitForFixedUpdate();
+        spriteRenderer.enabled = true;
+        bool appliedEffect = false;
 
-        // Set initial position
-        transform.position = startPosition;
-        
-        // Wait until we're not drag-blocked
-        while (LevelManager.THIS.DragBlocked) 
+        try
         {
-            yield return new WaitForEndOfFrame();
-        }
-        
-        // Find a random target item
-        FindTargetItem();
-        
-        if (targetItem == null) 
-        {
-            CleanupFlower();
-            yield break;
-        }
-        
-        // Store the target position and item
-        targetPosition = targetItem.transform.position;
-        Item trackedItem = targetItem;
-        
-        // Set the target item to change to a special item
-        trackedItem.nextType = (ItemsTypes)Random.Range(1, 3);
-        
-        // Calculate movement parameters
-        float startTime = Time.time;
-        float distance = Vector3.Distance(startPosition, targetPosition);
-        float fracJourney = 0;
-        var speed = directFly ? speedInTheEnd : speedInGame;
-        
-        
-        // Start particle effect
-        particleSystem.Play();
+            yield return new WaitForFixedUpdate();
+            transform.position = startPosition;
 
-        // Animate the flower flying to the target
-        while (fracJourney < 1) 
-        {
-            // If the target item changed state, retarget
-            if (trackedItem.awaken && trackedItem.gameObject != null) 
+            float dragWaitDeadline = Time.time + 10f;
+            while (LevelManager.THIS.DragBlocked)
             {
-                trackedItem.nextType = ItemsTypes.NONE;
-                StartFly(transform.position, directFly);
+                if (Time.time >= dragWaitDeadline)
+                    break;
+
+                yield return new WaitForEndOfFrame();
+            }
+
+            Vector3 flightStart = startPosition;
+            int retargetAttempts = 0;
+
+            while (true)
+            {
+                FindTargetItem();
+
+                if (targetItem == null)
+                    yield break;
+
+                Item trackedItem = targetItem;
+                trackedItem.nextType = (ItemsTypes)Random.Range(1, 3);
+                Vector3 targetPosition = trackedItem.transform.position;
+
+                float startTime = Time.time;
+                float distance = Vector3.Distance(flightStart, targetPosition);
+                float speed = directFly ? speedInTheEnd : speedInGame;
+
+                if (distance < 0.01f)
+                {
+                    ApplyFlowerEffect(trackedItem);
+                    appliedEffect = true;
+                    yield break;
+                }
+
+                if (!particleSystem.isPlaying)
+                    particleSystem.Play();
+
+                float fracJourney = 0;
+                bool needsRetarget = false;
+
+                while (fracJourney < 1)
+                {
+                    if (trackedItem == null || trackedItem.gameObject == null)
+                        yield break;
+
+                    if (!directFly && trackedItem.awaken)
+                    {
+                        trackedItem.nextType = ItemsTypes.NONE;
+                        flightStart = transform.position;
+                        needsRetarget = true;
+                        break;
+                    }
+
+                    float distCovered = (Time.time - startTime) * speed;
+                    fracJourney = distCovered / distance;
+
+                    if (float.IsNaN(fracJourney) || float.IsInfinity(fracJourney))
+                        fracJourney = 1f;
+
+                    transform.position = Vector3.Lerp(flightStart, targetPosition, fracJourney);
+                    yield return new WaitForFixedUpdate();
+                }
+
+                if (needsRetarget)
+                {
+                    retargetAttempts++;
+                    if (retargetAttempts >= MaxRetargetAttempts)
+                        yield break;
+
+                    continue;
+                }
+
+                particleSystem.gravityModifier = 0;
+                ApplyFlowerEffect(trackedItem);
+                appliedEffect = true;
                 yield break;
             }
-            
-            // Calculate movement
-            float distCovered = (Time.time - startTime) * speed;
-            fracJourney = distCovered / distance;
-            
-            // Handle edge case for NaN
-            if (float.IsNaN(fracJourney))
-                fracJourney = 0;
-                
-            // Move the flower
-            transform.position = Vector3.Lerp(startPosition, targetPosition, fracJourney);
-            yield return new WaitForFixedUpdate();
         }
+        finally
+        {
+            CleanupFlower();
 
-        // Complete the animation
-        particleSystem.gravityModifier = 0;
-        AnimationComplete();
+            if (appliedEffect)
+                LevelManager.THIS.DragBlocked = false;
+        }
     }
 
-    /// <summary>
-    /// Finds a random target item for the flower to fly to
-    /// </summary>
     private void FindTargetItem()
     {
+        targetItem = null;
         List<Item> items = LevelManager.THIS.GetRandomItems(1);
-        foreach (Item item in items) 
+        foreach (Item item in items)
         {
             targetItem = item;
         }
     }
 
-    /// <summary>
-    /// Cleans up the flower when animation is complete or canceled
-    /// </summary>
     private void CleanupFlower()
     {
         particleSystem.Stop();
         spriteRenderer.enabled = false;
     }
 
-    /// <summary>
-    /// Completes the animation and applies the effect to the target item
-    /// </summary>
-    private void AnimationComplete() 
+    private void ApplyFlowerEffect(Item item)
     {
-        CleanupFlower();
-        
-        // Change the target item's type
-        targetItem.ChangeType();
-        
-        // Unblock dragging
-        LevelManager.THIS.DragBlocked = false;
+        if (item != null)
+            item.ChangeType();
     }
     #endregion
 }

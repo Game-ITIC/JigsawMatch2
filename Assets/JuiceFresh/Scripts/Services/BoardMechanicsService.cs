@@ -17,7 +17,7 @@ namespace JuiceFresh.Scripts
             this.levelManager = levelManager;
         }
 
-        public async UniTask ProcessBoardAfterMatches(CancellationToken cancellationToken = default)
+        public async UniTask ProcessBoardAfterMatches(CancellationToken cancellationToken = default, bool freezeAnimations = true)
         {
             var previous = _activeBoardProcess;
             var completion = new UniTaskCompletionSource();
@@ -27,7 +27,7 @@ namespace JuiceFresh.Scripts
 
             try
             {
-                await ProcessBoardAfterMatchesAsync(cancellationToken);
+                await ProcessBoardAfterMatchesAsync(cancellationToken, freezeAnimations);
                 completion.TrySetResult();
             }
             catch (System.Exception ex)
@@ -37,20 +37,58 @@ namespace JuiceFresh.Scripts
             }
         }
 
-        async UniTask ProcessBoardAfterMatchesAsync(CancellationToken cancellationToken)
+        public async UniTask SettleBoardGravityOnly(CancellationToken cancellationToken = default)
+        {
+            await _activeBoardProcess;
+
+            int safetyIterations = 30;
+            bool nearEmptySquareDetected;
+
+            do
+            {
+                ProcessFallingItems();
+                await UniTask.Delay(100, cancellationToken: cancellationToken);
+
+                for (int col = 0; col < levelManager.maxCols; col++)
+                {
+                    for (int row = levelManager.maxRows - 1; row >= 0; row--)
+                    {
+                        Square square = levelManager.GetSquare(col, row);
+                        if (square != null && !square.IsNone() && square.item != null)
+                            square.item.StartFalling();
+                    }
+                }
+
+                levelManager.GenerateNewItems();
+                await UniTask.Delay(100, cancellationToken: cancellationToken);
+
+                while (!IsAllItemsFallDown())
+                    await UniTask.Delay(50, cancellationToken: cancellationToken);
+
+                nearEmptySquareDetected = FindEmptySquares();
+
+                while (!IsAllItemsFallDown())
+                    await UniTask.Delay(50, cancellationToken: cancellationToken);
+
+                safetyIterations--;
+            }
+            while (nearEmptySquareDetected && safetyIterations > 0);
+        }
+
+        async UniTask ProcessBoardAfterMatchesAsync(CancellationToken cancellationToken, bool freezeAnimations)
         {
             bool throwflower = false;
             levelManager.extraCageAddItem = 0;
             bool nearEmptySquareDetected = false;
             int combo = 0;
 
-            // Freeze animations of items
             List<Item> items = levelManager.GetItems();
-            foreach (Item item in items)
+            if (freezeAnimations)
             {
-                if (item != null)
+                foreach (Item item in items)
                 {
-                    item.StopVisualAnimations();
+                    if (item != null)
+                        item.StopVisualAnimations();
                 }
             }
 
@@ -211,6 +249,9 @@ namespace JuiceFresh.Scripts
             // Check win/lose condition
             if (levelManager.gameStatus == GameState.Playing && !levelManager.ingredientFly)
                 levelManager.CheckWinLose();
+
+            if (levelManager.gameStatus == GameState.PreWinAnimations)
+                levelManager.ResumeBoardAmbientAnimations();
 
             // Show achievement text based on combo
             ShowComboText(combo);
@@ -499,9 +540,6 @@ namespace JuiceFresh.Scripts
 
         private bool IsAllItemsFallDown()
         {
-            if (levelManager.gameStatus == GameState.PreWinAnimations)
-                return true;
-
             GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
             foreach (GameObject item in items)
             {
