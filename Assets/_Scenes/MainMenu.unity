@@ -463,10 +463,50 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1625503490}
     m_Modifications:
+    - target: {fileID: 1539896085514264765, guid: 808c49bc4982c2d4f8e04d416d848a33,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1539896085514264765, guid: 808c49bc4982c2d4f8e04d416d848a33,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1539896085514264765, guid: 808c49bc4982c2d4f8e04d416d848a33,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1539896085514264765, guid: 808c49bc4982c2d4f8e04d416d848a33,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3418159437368649748, guid: 808c49bc4982c2d4f8e04d416d848a33,
         type: 3}
       propertyPath: m_Name
       value: HUD Side Bar
+      objectReference: {fileID: 0}
+    - target: {fileID: 4736471002101811702, guid: 808c49bc4982c2d4f8e04d416d848a33,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4736471002101811702, guid: 808c49bc4982c2d4f8e04d416d848a33,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4736471002101811702, guid: 808c49bc4982c2d4f8e04d416d848a33,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4736471002101811702, guid: 808c49bc4982c2d4f8e04d416d848a33,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7057153817460903937, guid: 808c49bc4982c2d4f8e04d416d848a33,
         type: 3}
@@ -568,6 +608,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7724405910449868846, guid: 808c49bc4982c2d4f8e04d416d848a33,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7724405910449868846, guid: 808c49bc4982c2d4f8e04d416d848a33,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7724405910449868846, guid: 808c49bc4982c2d4f8e04d416d848a33,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7724405910449868846, guid: 808c49bc4982c2d4f8e04d416d848a33,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8536815467560463690, guid: 808c49bc4982c2d4f8e04d416d848a33,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -654,10 +719,10 @@ MonoBehaviour:
   m_BackgroundTexture: {fileID: 2800000, guid: 27f4815d87843814b93fd628205c6639, type: 3}
   m_Font: {fileID: 12800000, guid: 90bd06f3c14f8e64fb392e249991c1c3, type: 3}
   m_LevelPlayLogo: {fileID: 2800000, guid: 8404ba1de38df57488c5daf62be56dc4, type: 3}
-  m_BannerCoordinates: {x: 316, y: 2676.125}
+  m_BannerCoordinates: {x: 184, y: 2634.875}
   Position: 7
   m_AdSize: 0
-  m_BannerSize: {x: 652, y: 101.875}
+  m_BannerSize: {x: 916, y: 143.125}
 --- !u!4 &971101996
 Transform:
   m_ObjectHideFlags: 0
