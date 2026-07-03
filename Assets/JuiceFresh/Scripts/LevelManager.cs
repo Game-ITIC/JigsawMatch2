@@ -241,6 +241,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     // Level data from the file
     SquareBlocks[] levelSquaresFile = new SquareBlocks[81];
 
+    internal SquareBlocks[] LevelSquaresFile => levelSquaresFile;
+
     // Array of highlighted items
     public List<Item> highlightedItems;
 
@@ -315,6 +317,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     // Cage HP
     private int cageHP;
 
+    internal int CageHp => cageHP;
+
     // Deprecated
     private int linePoint;
 
@@ -387,6 +391,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     private BoardMechanicsService _boardMechanicsService;
     private ScoreTrackerService _scoreTrackerService;
     private BoardQueryService _boardQueryService;
+    private BoardFactoryService _boardFactoryService;
+    private WinLoseEvaluator _winLoseEvaluator;
 
     public BoardMechanicsService BoardMechanics
     {
@@ -632,6 +638,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         _boardMechanicsService = new BoardMechanicsService(this);
         _scoreTrackerService = new ScoreTrackerService(this);
         _boardQueryService = new BoardQueryService(this);
+        _boardFactoryService = new BoardFactoryService(this);
+        _winLoseEvaluator = new WinLoseEvaluator(this);
 
         ingrCountTarget = new int[NumIngredients]; // Necessary amount of collectable items
 
@@ -878,181 +886,12 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     public void GenerateLevel()
     {
-        bool chessColor = false;
-        float sqWidth = 1.6f;
-        float halfSquare = sqWidth / 2;
-        Vector3 fieldPos = new Vector3(-maxCols * sqWidth / 2 + halfSquare, maxRows / 1.4f, -10);
-
-        for (int row = 0; row < maxRows; row++)
-        {
-            if(maxCols % 2 == 0)
-                chessColor = !chessColor;
-
-            for (int col = 0; col < maxCols; col++)
-            {
-                CreateSquare(col, row, chessColor);
-                chessColor = !chessColor;
-            }
-        }
-
-        float yOffset = 0;
-        if(target == Target.COLLECT)
-            yOffset = 0.3f;
-        GameFieldTargetLocalPosition = new Vector3(fieldPos.x, fieldPos.y + yOffset, GameField.localPosition.z);
-
-    }
-
-    void CreateSquare(int col, int row, bool chessColor = false)
-    {
-        GameObject square = null;
-        square = Instantiate(squarePrefab,
-                             firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight),
-                             Quaternion.identity) as GameObject;
-
-        if(chessColor)
-        {
-            square.GetComponent<SpriteRenderer>().sprite = squareSprite1;
-        }
-
-        square.transform.SetParent(GameField);
-        square.transform.localPosition = firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight);
-        squaresArray[row * maxCols + col] = square.GetComponent<Square>();
-        square.GetComponent<Square>().row = row;
-        square.GetComponent<Square>().col = col;
-        square.GetComponent<Square>().type = SquareTypes.EMPTY;
-
-        if(levelSquaresFile[row * maxCols + col].block == SquareTypes.EMPTY)
-        {
-            CreateObstacles(col, row, square, SquareTypes.NONE);
-        }
-        else if(levelSquaresFile[row * maxCols + col].block == SquareTypes.NONE)
-        {
-            square.GetComponent<SpriteRenderer>().enabled = false;
-            square.GetComponent<Square>().type = SquareTypes.NONE;
-        }
-        else if(levelSquaresFile[row * maxCols + col].block == SquareTypes.BLOCK)
-        {
-            GameObject block = Instantiate(blockPrefab,
-                                           firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight),
-                                           Quaternion.identity) as GameObject;
-            block.transform.SetParent(square.transform);
-            block.transform.localPosition = new Vector3(0, 0, -0.01f);
-            square.GetComponent<Square>().block.Add(block);
-            square.GetComponent<Square>().type = SquareTypes.BLOCK;
-            block.GetComponent<Square>().type = SquareTypes.BLOCK;
-
-            CreateObstacles(col, row, square, SquareTypes.NONE);
-        }
-        else if(levelSquaresFile[row * maxCols + col].block == SquareTypes.DOUBLEBLOCK)
-        {
-            GameObject block = Instantiate(blockPrefab,
-                                           firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight),
-                                           Quaternion.identity) as GameObject;
-            block.transform.SetParent(square.transform);
-            block.transform.localPosition = new Vector3(0, 0, -0.01f);
-            square.GetComponent<Square>().block.Add(block);
-            square.GetComponent<Square>().type = SquareTypes.BLOCK;
-            block.GetComponent<Square>().type = SquareTypes.BLOCK;
-
-            block = Instantiate(blockPrefab,
-                                firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight),
-                                Quaternion.identity) as GameObject;
-            block.transform.SetParent(square.transform);
-            block.transform.localPosition = new Vector3(0, 0, -0.01f);
-            square.GetComponent<Square>().block.Add(block);
-            square.GetComponent<Square>().type = SquareTypes.BLOCK;
-            block.GetComponent<Square>().type = SquareTypes.BLOCK;
-
-            block.GetComponent<SpriteRenderer>().sprite = doubleBlock;
-            block.GetComponent<SpriteRenderer>().sortingOrder = 1;
-
-            CreateObstacles(col, row, square, SquareTypes.NONE);
-        }
+        GameFieldTargetLocalPosition = _boardFactoryService.GenerateLevel();
     }
 
     public void CreateObstacles(int col, int row, GameObject square, SquareTypes type)
     {
-        if((levelSquaresFile[row * maxCols + col].obstacle == SquareTypes.WIREBLOCK && type == SquareTypes.NONE) ||
-           type == SquareTypes.WIREBLOCK)
-        {
-            GameObject block = Instantiate(wireBlockPrefab,
-                                           firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight),
-                                           Quaternion.identity) as GameObject;
-            block.transform.SetParent(square.transform);
-            block.transform.localPosition = new Vector3(0, 0, -0.5f);
-            square.GetComponent<Square>().block.Add(block);
-            square.GetComponent<Square>().type = SquareTypes.WIREBLOCK;
-            block.GetComponent<SpriteRenderer>().sortingOrder = 3;
-            block.GetComponent<Square>().type = SquareTypes.WIREBLOCK;
-            square.GetComponent<Square>().SetCage(cageHP);
-        }
-        else if((levelSquaresFile[row * maxCols + col].obstacle == SquareTypes.SOLIDBLOCK &&
-                 type == SquareTypes.NONE) ||
-                type == SquareTypes.SOLIDBLOCK)
-        {
-            GameObject block = Instantiate(solidBlockPrefab,
-                                           firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight),
-                                           Quaternion.identity) as GameObject;
-            block.transform.SetParent(square.transform);
-            block.transform.localPosition = new Vector3(0, 0, -0.5f);
-            square.GetComponent<Square>().block.Add(block);
-            block.GetComponent<SpriteRenderer>().sortingOrder = 3;
-            square.GetComponent<Square>().type = SquareTypes.SOLIDBLOCK;
-            block.GetComponent<Square>().type = SquareTypes.SOLIDBLOCK;
-        }
-        else if((levelSquaresFile[row * maxCols + col].obstacle == SquareTypes.DOUBLESOLIDBLOCK &&
-                 type == SquareTypes.NONE) ||
-                type == SquareTypes.DOUBLESOLIDBLOCK)
-        {
-            GameObject block = Instantiate(solidBlockPrefab,
-                                           firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight),
-                                           Quaternion.identity) as GameObject;
-            block.transform.SetParent(square.transform);
-            block.transform.localPosition = new Vector3(0, 0, -0.5f);
-            square.GetComponent<Square>().block.Add(block);
-            block.GetComponent<SpriteRenderer>().sortingOrder = 3;
-            square.GetComponent<Square>().type = SquareTypes.SOLIDBLOCK;
-            block.GetComponent<Square>().type = SquareTypes.SOLIDBLOCK;
-
-            block = Instantiate(solidBlockPrefab,
-                                firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight),
-                                Quaternion.identity) as GameObject;
-            block.transform.SetParent(square.transform);
-            block.transform.localPosition = new Vector3(0, 0, -0.5f);
-            square.GetComponent<Square>().block.Add(block);
-            block.GetComponent<SpriteRenderer>().sprite = doubleSolidBlock;
-            block.GetComponent<SpriteRenderer>().sortingOrder = 4;
-            square.GetComponent<Square>().type = SquareTypes.SOLIDBLOCK;
-            block.GetComponent<Square>().type = SquareTypes.SOLIDBLOCK;
-        }
-        else if((levelSquaresFile[row * maxCols + col].obstacle == SquareTypes.UNDESTROYABLE &&
-                 type == SquareTypes.NONE) ||
-                type == SquareTypes.UNDESTROYABLE)
-        {
-            GameObject block = Instantiate(undesroyableBlockPrefab,
-                                           firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight),
-                                           Quaternion.identity) as GameObject;
-            block.transform.SetParent(square.transform);
-            block.transform.localPosition = new Vector3(0, 0, -0.5f);
-            square.GetComponent<Square>().block.Add(block);
-            square.GetComponent<Square>().type = SquareTypes.UNDESTROYABLE;
-            block.GetComponent<Square>().type = SquareTypes.UNDESTROYABLE;
-        }
-        else if((levelSquaresFile[row * maxCols + col].obstacle == SquareTypes.THRIVING && type == SquareTypes.NONE) ||
-                type == SquareTypes.THRIVING)
-        {
-            GameObject block = Instantiate(thrivingBlockPrefab,
-                                           firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight),
-                                           Quaternion.identity) as GameObject;
-            block.transform.SetParent(square.transform);
-            block.transform.localPosition = new Vector3(0, 0, -0.5f);
-            block.GetComponent<SpriteRenderer>().sortingOrder = 3;
-            if(square.GetComponent<Square>().item != null)
-                Destroy(square.GetComponent<Square>().item.gameObject);
-            square.GetComponent<Square>().block.Add(block);
-            square.GetComponent<Square>().type = SquareTypes.THRIVING;
-            block.GetComponent<Square>().type = SquareTypes.THRIVING;
-        }
+        _boardFactoryService.CreateObstacles(col, row, square, type);
     }
 
     public void GenerateOutline()
@@ -1480,72 +1319,27 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         _collectedTargetFlyController.TryFly(_item);
     }
 
-    public int GetRestIngredients()
-    {
-        int count = 0;
-
-        for (int i = 0; i < ingrTarget.Count; i++)
-        {
-            count += LevelManager.THIS.ingrTarget[i].count;
-        }
-
-        return count;
-    }
+    public int GetRestIngredients() => _winLoseEvaluator.GetRestIngredients();
 
     public void CheckWinLose()
     {
         if(gameStatus != GameState.Playing)
-        {
             return;
-        }
 
         // A goal reached on the last move is still a win, so evaluate it before the limit.
-        if(IsObjectiveCompleted())
+        switch (_winLoseEvaluator.Evaluate())
         {
-            gameStatus = GameState.PreWinAnimations;
-            return;
-        }
-
-        if(Limit <= 0)
-        {
-            Limit = 0;
-            gameStatus = GameState.GameOver;
+            case WinLoseEvaluation.Win:
+                gameStatus = GameState.PreWinAnimations;
+                break;
+            case WinLoseEvaluation.Lose:
+                Limit = 0;
+                gameStatus = GameState.GameOver;
+                break;
         }
     }
 
-    private bool IsObjectiveCompleted()
-    {
-        if(target == Target.SCORE)
-        {
-            return Score >= GetScoresOfTargetStars();
-        }
-
-        // Non-score objectives also require at least one earned star.
-        if(Score < star1)
-        {
-            return false;
-        }
-
-        return target switch
-        {
-            Target.BLOCKS => TargetBlocks <= 0,
-            Target.CAGES => TargetCages <= 0,
-            Target.BOMBS => TargetBombs >= bombsCollect,
-            Target.COLLECT or Target.ITEMS => GetRestIngredients() <= 0,
-            _ => false
-        };
-    }
-
-    public int GetScoresOfTargetStars()
-    {
-        return RequiredStars switch
-        {
-            1 => star1,
-            2 => star2,
-            3 => star3,
-            _ => star1
-        };
-    }
+    public int GetScoresOfTargetStars() => _winLoseEvaluator.GetScoresOfTargetStars();
 
     #endregion
 
