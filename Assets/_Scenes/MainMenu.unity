@@ -843,6 +843,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c18135454642aea33a22aaec7df6a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1474065118 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7128242191680937886, guid: 102d4ceced9d34c4a8de912ec2125993,
+    type: 3}
+  m_PrefabInstance: {fileID: 4438547015914482907}
+  m_PrefabAsset: {fileID: 0}
+--- !u!111 &1474065120
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474065118}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: -623603649343465320, guid: 2abe69486dca2704dac119f2cbf3da14,
+    type: 3}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &1625503486
 GameObject:
   m_ObjectHideFlags: 0
@@ -2500,6 +2523,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Korea Environment
       objectReference: {fileID: 0}
+    - target: {fileID: 6225021925073061284, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7496815627590055673, guid: 102d4ceced9d34c4a8de912ec2125993,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2553,7 +2581,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7128242191680937886, guid: 102d4ceced9d34c4a8de912ec2125993,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1474065120}
   m_SourcePrefab: {fileID: 100100000, guid: 102d4ceced9d34c4a8de912ec2125993, type: 3}
 --- !u!1001 &4689547212664277405
 PrefabInstance:
