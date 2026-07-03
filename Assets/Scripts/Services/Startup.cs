@@ -38,7 +38,8 @@ namespace Itic.Services
         private async UniTask InitializePlugins()
         {
             DOTween.Init();
-            DOTween.SetTweensCapacity(84, 42);
+            // A full board reveal creates roughly 280 concurrent tweens.
+            DOTween.SetTweensCapacity(512, 128);
             await UniTask.CompletedTask;
         }
         
