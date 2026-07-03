@@ -4,6 +4,7 @@ using JuiceFresh;
 using Lofelt.NiceVibrations;
 using MoreMountains.Feedbacks;
 using MoreMountains.Tools;
+using UI;
 using UnityEngine;
 
 /// <summary>
@@ -17,7 +18,12 @@ public sealed class GameFeelManager : MonoBehaviour
 
     [SerializeField] private Camera targetCamera;
     [SerializeField] private Transform boardRoot;
+    [SerializeField] private GameFieldTweenAnimation fieldTweenAnimation;
     [SerializeField] private bool persistAcrossScenes;
+
+    [Header("Feel Preset")]
+    [SerializeField] private GameFeelPresetType feelPreset = GameFeelPresetType.CozyJar;
+    [SerializeField, HideInInspector] private GameFeelPresetType lastFeelPreset = (GameFeelPresetType)(-1);
 
     [SerializeField] private bool enableHaptics = true;
     [SerializeField] private bool enableCameraShake = true;
@@ -38,6 +44,18 @@ public sealed class GameFeelManager : MonoBehaviour
     [SerializeField, Range(0f, 0.6f)] private float selectionGlowAlpha = 0.26f;
     [SerializeField, Range(1f, 1.5f)] private float selectionGlowScale = 1.12f;
     [SerializeField, Range(0f, 0.1f)] private float selectionGlowBreathing = 0.035f;
+    [SerializeField] private Color selectionGlowColorStart = new Color(0.86f, 0.96f, 1f, 0.26f);
+    [SerializeField] private Color selectionGlowColorEnd = new Color(1f, 0.88f, 0.55f, 0.34f);
+    [SerializeField, Range(0.5f, 2.5f)] private float motionDurationScale = 1f;
+    [SerializeField, Range(0.3f, 2f)] private float itemPulseDurationScale = 1f;
+    [SerializeField, Range(1f, 20f)] private float cameraShakeFrequency = 10f;
+    [SerializeField, Range(1f, 2.5f)] private float glowReleasePopScale = 1.48f;
+    [SerializeField, Range(1f, 10f)] private float selectionGlowWaveSpeed = 5.5f;
+    [SerializeField, Range(0f, 2f)] private float matchResponseMultiplier = 1f;
+    [SerializeField, Range(4, 20)] private int comboTriggerAt = 6;
+    [SerializeField] private bool enableSelectionGlow = true;
+    [SerializeField] private bool enableBoardPulseOnMatch = true;
+    [SerializeField] private BoardMotionStyle boardMotionStyle = BoardMotionStyle.Flutter;
 
     private MMF_Player _matchPlayer;
     private MMF_Player _comboPlayer;
@@ -48,8 +66,9 @@ public sealed class GameFeelManager : MonoBehaviour
     private readonly List<GameObject> _releasedGlowObjects = new List<GameObject>();
     private Coroutine _boardMotionCoroutine;
     private Coroutine _boardPulseCoroutine;
-    private Vector3 _boardRestPosition;
-    private Vector3 _boardRestScale;
+    private Vector3 _boardCanonicalLocalPosition;
+    private Vector3 _boardCanonicalLocalScale;
+    private bool _boardCanonicalCaptured;
 
     public static void EnsureInitialized(Camera gameCamera, Transform board = null)
     {
@@ -92,12 +111,96 @@ public sealed class GameFeelManager : MonoBehaviour
             BindBoard(boardRoot);
         }
 
+        ApplyFeelPresetIfNeeded(force: true);
         EnsureFeelInfrastructure();
         BuildFeedbackPlayers();
     }
 
+    private void OnValidate()
+    {
+        ApplyFeelPresetIfNeeded(force: false);
+    }
+
+    public GameFeelPresetType ActivePreset => feelPreset;
+
+    public void SetFeelPreset(GameFeelPresetType preset)
+    {
+        feelPreset = preset;
+        ApplyFeelPresetIfNeeded(force: true);
+
+        if(Application.isPlaying)
+        {
+            BuildFeedbackPlayers();
+        }
+    }
+
+    private void ApplyFeelPresetIfNeeded(bool force)
+    {
+        if(feelPreset == GameFeelPresetType.Custom)
+        {
+            lastFeelPreset = feelPreset;
+            return;
+        }
+
+        if(!force && feelPreset == lastFeelPreset)
+        {
+            return;
+        }
+
+        lastFeelPreset = feelPreset;
+        ApplyFeelPreset(GameFeelPresetLibrary.Get(feelPreset));
+    }
+
+    private void ApplyFeelPreset(GameFeelPresetData preset)
+    {
+        enableHaptics = preset.enableHaptics;
+        enableCameraShake = preset.enableCameraShake;
+        enableBoardShake = preset.enableBoardShake;
+        enableFreezeFrames = preset.enableFreezeFrames;
+        enableItemPunch = preset.enableItemPunch;
+        globalIntensity = preset.globalIntensity;
+        matchShakeStrength = preset.matchShakeStrength;
+        boardShakeStrength = preset.boardShakeStrength;
+        comboShakeStrength = preset.comboShakeStrength;
+        winShakeStrength = preset.winShakeStrength;
+        itemPulseStrength = preset.itemPulseStrength;
+        boardPulseStrength = preset.boardPulseStrength;
+        selectionGlowAlpha = preset.selectionGlowAlpha;
+        selectionGlowScale = preset.selectionGlowScale;
+        selectionGlowBreathing = preset.selectionGlowBreathing;
+        selectionGlowColorStart = preset.glowColorStart;
+        selectionGlowColorEnd = preset.glowColorEnd;
+        motionDurationScale = preset.motionDurationScale;
+        itemPulseDurationScale = preset.itemPulseDurationScale;
+        cameraShakeFrequency = preset.cameraShakeFrequency;
+        glowReleasePopScale = preset.glowReleasePopScale;
+        selectionGlowWaveSpeed = preset.selectionGlowWaveSpeed;
+        matchResponseMultiplier = preset.matchResponseMultiplier;
+        comboTriggerAt = preset.comboTriggerAt;
+        enableSelectionGlow = preset.enableSelectionGlow;
+        enableBoardPulseOnMatch = preset.enableBoardPulseOnMatch;
+        boardMotionStyle = preset.boardMotionStyle;
+
+        ResolveFieldTweenAnimation();
+        fieldTweenAnimation?.ApplyFeelPreset(preset);
+    }
+
+    private void ResolveFieldTweenAnimation()
+    {
+        if(fieldTweenAnimation != null)
+        {
+            return;
+        }
+
+        if(boardRoot != null)
+        {
+            fieldTweenAnimation = boardRoot.GetComponent<GameFieldTweenAnimation>();
+        }
+    }
+
     private void OnDestroy()
     {
+        DestroyFeedbackPlayers();
         RestoreAnimatedTransforms();
 
         if(Instance == this)
@@ -127,14 +230,92 @@ public sealed class GameFeelManager : MonoBehaviour
 
         RestoreBoardTransform();
         boardRoot = board;
+        ResolveFieldTweenAnimation();
+
+        if(feelPreset != GameFeelPresetType.Custom && GameFeelPresetLibrary.TryGet(feelPreset, out GameFeelPresetData preset))
+        {
+            fieldTweenAnimation?.ApplyFeelPreset(preset);
+        }
+
+        CaptureBoardCanonicalTransform();
+    }
+
+    /// <summary>
+    /// Re-capture the board's resting transform after intro tweens or layout changes.
+    /// </summary>
+    public void RefreshBoardCanonicalTransform()
+    {
+        StopBoardAnimations();
+        CaptureBoardCanonicalTransform();
+    }
+
+    private void CaptureBoardCanonicalTransform()
+    {
+        if(boardRoot == null)
+        {
+            _boardCanonicalCaptured = false;
+            return;
+        }
+
+        _boardCanonicalLocalPosition = boardRoot.localPosition;
+        _boardCanonicalLocalScale = boardRoot.localScale;
+        _boardCanonicalCaptured = true;
+    }
+
+    private void StopBoardAnimations()
+    {
+        StopBoardMotion();
+        StopBoardPulse();
+    }
+
+    private void StopBoardMotion()
+    {
+        if(_boardMotionCoroutine != null)
+        {
+            StopCoroutine(_boardMotionCoroutine);
+            _boardMotionCoroutine = null;
+        }
+
+        if(boardRoot != null && _boardCanonicalCaptured)
+        {
+            boardRoot.localPosition = _boardCanonicalLocalPosition;
+        }
+    }
+
+    private void StopBoardPulse()
+    {
+        if(_boardPulseCoroutine != null)
+        {
+            StopCoroutine(_boardPulseCoroutine);
+            _boardPulseCoroutine = null;
+        }
+
+        if(boardRoot != null && _boardCanonicalCaptured)
+        {
+            boardRoot.localScale = _boardCanonicalLocalScale;
+        }
+    }
+
+    private static bool UsesScaleMotion(BoardMotionStyle style)
+    {
+        return style == BoardMotionStyle.ElasticBounce;
     }
 
     public void OnItemSelected(Transform item, int chainCount)
     {
-        if(enableItemPunch && item != null)
+        if(item == null)
+        {
+            return;
+        }
+
+        if(enableItemPunch)
         {
             float pulse = itemPulseStrength * globalIntensity + Mathf.Min(chainCount - 1, 9) * 0.005f;
             PlayItemPulse(item, pulse);
+        }
+
+        if(enableSelectionGlow)
+        {
             AddSelectionGlow(item, chainCount);
         }
 
@@ -176,11 +357,19 @@ public sealed class GameFeelManager : MonoBehaviour
         CompleteAllItemPulses();
         ReleaseAllSelectionGlows(true);
         float normalized = Mathf.Clamp01((matchedCount - 3f) / 7f);
+        float response = matchResponseMultiplier;
+        bool scaleMotion = UsesScaleMotion(boardMotionStyle);
 
-        TriggerBoardFlutter(
+        TriggerBoardMotion(
             0.2f + normalized * 0.08f,
-            boardShakeStrength * globalIntensity * (0.45f + normalized * 0.35f));
-        TriggerBoardPulse(0.24f, boardPulseStrength * globalIntensity * (0.75f + normalized * 0.5f));
+            boardShakeStrength * globalIntensity * (0.45f + normalized * 0.35f) * response);
+
+        if(enableBoardPulseOnMatch && !scaleMotion)
+        {
+            TryTriggerBoardPulse(
+                0.24f,
+                boardPulseStrength * globalIntensity * (0.75f + normalized * 0.5f) * response);
+        }
 
         if(enableCameraShake)
         {
@@ -194,15 +383,18 @@ public sealed class GameFeelManager : MonoBehaviour
 
     public void OnCombo(int combo)
     {
-        if(combo < 6)
+        if(combo < comboTriggerAt)
         {
             return;
         }
 
-        float normalized = Mathf.Clamp01((combo - 6f) / 8f);
+        float normalized = Mathf.Clamp01((combo - comboTriggerAt) / 8f);
 
-        TriggerBoardFlutter(0.26f + normalized * 0.08f, boardShakeStrength * globalIntensity * 0.7f);
-        TriggerBoardPulse(0.28f, boardPulseStrength * globalIntensity * (1f + normalized * 0.45f));
+        TriggerBoardMotion(0.26f + normalized * 0.08f, boardShakeStrength * globalIntensity * 0.7f);
+        if(enableBoardPulseOnMatch)
+        {
+            TryTriggerBoardPulse(0.28f, boardPulseStrength * globalIntensity * (1f + normalized * 0.45f));
+        }
         if(enableCameraShake)
         {
             _comboPlayer?.PlayFeedbacks(Vector3.zero, 0.5f + normalized * 0.25f);
@@ -218,8 +410,8 @@ public sealed class GameFeelManager : MonoBehaviour
 
     public void OnBoostExplosion(Vector3 position)
     {
-        TriggerBoardFlutter(0.32f, boardShakeStrength * globalIntensity * 1.15f);
-        TriggerBoardPulse(0.3f, boardPulseStrength * globalIntensity * 1.35f);
+        TriggerBoardMotion(0.32f, boardShakeStrength * globalIntensity * 1.15f);
+        TryTriggerBoardPulse(0.3f, boardPulseStrength * globalIntensity * 1.35f);
         if(enableCameraShake)
         {
             _comboPlayer?.PlayFeedbacks(position, 0.9f);
@@ -237,21 +429,21 @@ public sealed class GameFeelManager : MonoBehaviour
     {
         CompleteAllItemPulses();
         ReleaseAllSelectionGlows(false);
-        TriggerBoardFlutter(0.16f, boardShakeStrength * globalIntensity * 0.32f);
+        TriggerBoardMotion(0.16f, boardShakeStrength * globalIntensity * 0.32f);
         PlayHaptic(HapticPatterns.PresetType.Selection);
     }
 
     public void OnPreWin()
     {
-        TriggerBoardFlutter(0.3f, boardShakeStrength * globalIntensity * 0.55f);
-        TriggerBoardPulse(0.34f, boardPulseStrength * globalIntensity * 1.1f);
+        TriggerBoardMotion(0.3f, boardShakeStrength * globalIntensity * 0.55f);
+        TryTriggerBoardPulse(0.34f, boardPulseStrength * globalIntensity * 1.1f);
         PlayHaptic(HapticPatterns.PresetType.SoftImpact);
     }
 
     public void OnWin()
     {
-        TriggerBoardFlutter(0.42f, boardShakeStrength * globalIntensity * 0.8f);
-        TriggerBoardPulse(0.45f, boardPulseStrength * globalIntensity * 1.4f);
+        TriggerBoardMotion(0.42f, boardShakeStrength * globalIntensity * 0.8f);
+        TryTriggerBoardPulse(0.45f, boardPulseStrength * globalIntensity * 1.4f);
         if(enableCameraShake)
         {
             _winPlayer?.PlayFeedbacks(Vector3.zero, 0.8f);
@@ -261,7 +453,7 @@ public sealed class GameFeelManager : MonoBehaviour
 
     public void OnLose()
     {
-        TriggerBoardFlutter(0.34f, boardShakeStrength * globalIntensity * 0.45f);
+        TriggerBoardMotion(0.34f, boardShakeStrength * globalIntensity * 0.45f);
         PlayHaptic(HapticPatterns.PresetType.Warning);
     }
 
@@ -304,21 +496,50 @@ public sealed class GameFeelManager : MonoBehaviour
 
     private void BuildFeedbackPlayers()
     {
-        _matchPlayer = CreatePlayer("Feel_Match");
-        ConfigureCameraShake(_matchPlayer, 0.2f, matchShakeStrength * globalIntensity, 12f);
+        if(!Application.isPlaying)
+        {
+            return;
+        }
 
-        _comboPlayer = CreatePlayer("Feel_Combo");
-        ConfigureCameraShake(_comboPlayer, 0.26f, comboShakeStrength * globalIntensity, 10f);
+        DestroyFeedbackPlayers();
 
-        _winPlayer = CreatePlayer("Feel_Win");
-        ConfigureCameraShake(_winPlayer, 0.38f, winShakeStrength * globalIntensity, 8f);
+        _matchPlayer = CreateShakePlayer("Feel_Match", 0.2f, matchShakeStrength * globalIntensity, cameraShakeFrequency);
+        _comboPlayer = CreateShakePlayer("Feel_Combo", 0.26f, comboShakeStrength * globalIntensity, cameraShakeFrequency * 0.85f);
+        _winPlayer = CreateShakePlayer("Feel_Win", 0.38f, winShakeStrength * globalIntensity, cameraShakeFrequency * 0.7f);
     }
 
-    private MMF_Player CreatePlayer(string playerName)
+    private void DestroyFeedbackPlayers()
+    {
+        DestroyPlayer(ref _matchPlayer);
+        DestroyPlayer(ref _comboPlayer);
+        DestroyPlayer(ref _winPlayer);
+    }
+
+    private void DestroyPlayer(ref MMF_Player player)
+    {
+        if(player == null)
+        {
+            return;
+        }
+
+        if(Application.isPlaying)
+        {
+            Destroy(player.gameObject);
+        }
+        else
+        {
+            DestroyImmediate(player.gameObject);
+        }
+
+        player = null;
+    }
+
+    private MMF_Player CreateShakePlayer(string playerName, float duration, float amplitude, float frequency)
     {
         GameObject playerObject = new GameObject(playerName);
         playerObject.transform.SetParent(transform);
         MMF_Player player = playerObject.AddComponent<MMF_Player>();
+        ConfigureCameraShake(player, duration, amplitude, frequency);
         player.Initialization();
         return player;
     }
@@ -329,21 +550,44 @@ public sealed class GameFeelManager : MonoBehaviour
         shake.CameraShakeProperties = new MMCameraShakeProperties(duration, amplitude, frequency);
     }
 
-    private void TriggerBoardFlutter(float duration, float magnitude)
+    private void TriggerBoardMotion(float duration, float magnitude)
     {
-        if(!enableBoardShake || boardRoot == null || magnitude <= 0f)
+        if(!enableBoardShake || boardRoot == null || magnitude <= 0f || boardMotionStyle == BoardMotionStyle.None)
         {
             return;
         }
 
-        if(_boardMotionCoroutine != null)
+        duration *= motionDurationScale;
+        StopBoardMotion();
+
+        if(UsesScaleMotion(boardMotionStyle))
         {
-            StopCoroutine(_boardMotionCoroutine);
-            boardRoot.localPosition = _boardRestPosition;
+            StopBoardPulse();
         }
 
-        _boardRestPosition = boardRoot.localPosition;
-        _boardMotionCoroutine = StartCoroutine(BoardFlutterCoroutine(duration, magnitude));
+        switch(boardMotionStyle)
+        {
+            case BoardMotionStyle.VerticalFloat:
+                _boardMotionCoroutine = StartCoroutine(BoardVerticalFloatCoroutine(duration, magnitude));
+                break;
+            case BoardMotionStyle.GentleSway:
+                _boardMotionCoroutine = StartCoroutine(BoardGentleSwayCoroutine(duration, magnitude));
+                break;
+            case BoardMotionStyle.ElasticBounce:
+                _boardMotionCoroutine = StartCoroutine(BoardElasticBounceCoroutine(duration, magnitude));
+                break;
+            case BoardMotionStyle.SoftSink:
+                _boardMotionCoroutine = StartCoroutine(BoardSoftSinkCoroutine(duration, magnitude));
+                break;
+            default:
+                _boardMotionCoroutine = StartCoroutine(BoardFlutterCoroutine(duration, magnitude));
+                break;
+        }
+    }
+
+    private void TriggerBoardFlutter(float duration, float magnitude)
+    {
+        TriggerBoardMotion(duration, magnitude);
     }
 
     private IEnumerator BoardFlutterCoroutine(float duration, float magnitude)
@@ -362,16 +606,134 @@ public sealed class GameFeelManager : MonoBehaviour
             float envelope = Mathf.Sin(t * Mathf.PI);
             float x = Mathf.Sin(t * Mathf.PI * 3f) * magnitude * envelope;
             float y = Mathf.Sin(t * Mathf.PI * 2f) * magnitude * 0.22f * envelope;
-            boardRoot.localPosition = _boardRestPosition + new Vector3(x, y, 0f);
+            boardRoot.localPosition = _boardCanonicalLocalPosition + new Vector3(x, y, 0f);
             yield return null;
         }
 
         if(boardRoot != null)
         {
-            boardRoot.localPosition = _boardRestPosition;
+            boardRoot.localPosition = _boardCanonicalLocalPosition;
         }
 
         _boardMotionCoroutine = null;
+    }
+
+    private IEnumerator BoardVerticalFloatCoroutine(float duration, float magnitude)
+    {
+        float elapsed = 0f;
+
+        while(elapsed < duration)
+        {
+            if(boardRoot == null)
+            {
+                yield break;
+            }
+
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float envelope = Mathf.Sin(t * Mathf.PI);
+            float y = Mathf.Sin(t * Mathf.PI * 1.5f) * magnitude * 1.8f * envelope;
+            boardRoot.localPosition = _boardCanonicalLocalPosition + new Vector3(0f, y, 0f);
+            yield return null;
+        }
+
+        if(boardRoot != null)
+        {
+            boardRoot.localPosition = _boardCanonicalLocalPosition;
+        }
+
+        _boardMotionCoroutine = null;
+    }
+
+    private IEnumerator BoardGentleSwayCoroutine(float duration, float magnitude)
+    {
+        float elapsed = 0f;
+
+        while(elapsed < duration)
+        {
+            if(boardRoot == null)
+            {
+                yield break;
+            }
+
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float envelope = Mathf.Sin(t * Mathf.PI);
+            float x = Mathf.Sin(t * Mathf.PI * 1.2f) * magnitude * 2.4f * envelope;
+            float y = Mathf.Sin(t * Mathf.PI * 0.8f) * magnitude * 0.15f * envelope;
+            boardRoot.localPosition = _boardCanonicalLocalPosition + new Vector3(x, y, 0f);
+            yield return null;
+        }
+
+        if(boardRoot != null)
+        {
+            boardRoot.localPosition = _boardCanonicalLocalPosition;
+        }
+
+        _boardMotionCoroutine = null;
+    }
+
+    private IEnumerator BoardElasticBounceCoroutine(float duration, float magnitude)
+    {
+        float elapsed = 0f;
+
+        while(elapsed < duration)
+        {
+            if(boardRoot == null)
+            {
+                yield break;
+            }
+
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float bounce = Mathf.Sin(t * Mathf.PI * 2.2f) * Mathf.Exp(-t * 3.5f);
+            boardRoot.localScale = _boardCanonicalLocalScale * (1f + bounce * magnitude * 2.8f);
+            yield return null;
+        }
+
+        if(boardRoot != null)
+        {
+            boardRoot.localScale = _boardCanonicalLocalScale;
+        }
+
+        _boardMotionCoroutine = null;
+    }
+
+    private IEnumerator BoardSoftSinkCoroutine(float duration, float magnitude)
+    {
+        float elapsed = 0f;
+
+        while(elapsed < duration)
+        {
+            if(boardRoot == null)
+            {
+                yield break;
+            }
+
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float sink = Mathf.Sin(t * Mathf.PI);
+            float y = -sink * magnitude * 1.6f;
+            boardRoot.localPosition = _boardCanonicalLocalPosition + new Vector3(0f, y, 0f);
+            yield return null;
+        }
+
+        if(boardRoot != null)
+        {
+            boardRoot.localPosition = _boardCanonicalLocalPosition;
+        }
+
+        _boardMotionCoroutine = null;
+    }
+
+    private void TryTriggerBoardPulse(float duration, float strength)
+    {
+        if(UsesScaleMotion(boardMotionStyle))
+        {
+            return;
+        }
+
+        TriggerBoardPulse(duration, strength);
     }
 
     private void TriggerBoardPulse(float duration, float strength)
@@ -381,13 +743,8 @@ public sealed class GameFeelManager : MonoBehaviour
             return;
         }
 
-        if(_boardPulseCoroutine != null)
-        {
-            StopCoroutine(_boardPulseCoroutine);
-            boardRoot.localScale = _boardRestScale;
-        }
-
-        _boardRestScale = boardRoot.localScale;
+        duration *= motionDurationScale;
+        StopBoardPulse();
         _boardPulseCoroutine = StartCoroutine(BoardPulseCoroutine(duration, strength));
     }
 
@@ -405,13 +762,13 @@ public sealed class GameFeelManager : MonoBehaviour
             elapsed += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
             float pulse = Mathf.Sin(t * Mathf.PI) * strength;
-            boardRoot.localScale = _boardRestScale * (1f + pulse);
+            boardRoot.localScale = _boardCanonicalLocalScale * (1f + pulse);
             yield return null;
         }
 
         if(boardRoot != null)
         {
-            boardRoot.localScale = _boardRestScale;
+            boardRoot.localScale = _boardCanonicalLocalScale;
         }
 
         _boardPulseCoroutine = null;
@@ -455,10 +812,11 @@ public sealed class GameFeelManager : MonoBehaviour
         aura.flipY = source.flipY;
 
         float chainEnergy = Mathf.InverseLerp(1f, 10f, chainCount);
-        Color glowColor = Color.Lerp(
-            new Color(0.86f, 0.96f, 1f, selectionGlowAlpha),
-            new Color(1f, 0.88f, 0.55f, selectionGlowAlpha + 0.08f),
-            chainEnergy);
+        Color glowStart = selectionGlowColorStart;
+        glowStart.a = selectionGlowAlpha;
+        Color glowEnd = selectionGlowColorEnd;
+        glowEnd.a = selectionGlowAlpha + 0.08f;
+        Color glowColor = Color.Lerp(glowStart, glowEnd, chainEnergy);
         aura.color = glowColor;
 
         SelectionGlowState state = new SelectionGlowState(
@@ -479,7 +837,7 @@ public sealed class GameFeelManager : MonoBehaviour
         while(state.Target != null && state.Source != null && state.AuraObject != null)
         {
             elapsed += Time.unscaledDeltaTime;
-            float wave = Mathf.Sin(elapsed * 5.5f) * 0.5f + 0.5f;
+            float wave = Mathf.Sin(elapsed * selectionGlowWaveSpeed) * 0.5f + 0.5f;
             float scale = selectionGlowScale + wave * selectionGlowBreathing;
             state.AuraObject.transform.localScale = state.RestScale * scale;
             state.Aura.sprite = state.Source.sprite;
@@ -545,10 +903,10 @@ public sealed class GameFeelManager : MonoBehaviour
         _releasedGlowObjects.Add(state.AuraObject);
 
         Vector3 startScale = state.AuraObject.transform.localScale;
-        Vector3 endScale = startScale * (successfulRelease ? 1.48f : 0.82f);
+        Vector3 endScale = startScale * (successfulRelease ? glowReleasePopScale : 0.82f);
         Vector3 startPosition = state.AuraObject.transform.position;
         float startAlpha = state.Aura.color.a;
-        float duration = successfulRelease ? 0.3f : 0.18f;
+        float duration = (successfulRelease ? 0.3f : 0.18f) * motionDurationScale;
         float elapsed = 0f;
 
         while(elapsed < duration && state.AuraObject != null)
@@ -627,7 +985,7 @@ public sealed class GameFeelManager : MonoBehaviour
             yield break;
         }
 
-        const float duration = 0.2f;
+        float duration = 0.2f * motionDurationScale * itemPulseDurationScale;
         float elapsed = 0f;
 
         while(elapsed < duration)
@@ -704,24 +1062,7 @@ public sealed class GameFeelManager : MonoBehaviour
 
     private void RestoreBoardTransform()
     {
-        if(boardRoot == null)
-        {
-            return;
-        }
-
-        if(_boardMotionCoroutine != null)
-        {
-            StopCoroutine(_boardMotionCoroutine);
-            _boardMotionCoroutine = null;
-            boardRoot.localPosition = _boardRestPosition;
-        }
-
-        if(_boardPulseCoroutine != null)
-        {
-            StopCoroutine(_boardPulseCoroutine);
-            _boardPulseCoroutine = null;
-            boardRoot.localScale = _boardRestScale;
-        }
+        StopBoardAnimations();
     }
 
     private void OnDisable()

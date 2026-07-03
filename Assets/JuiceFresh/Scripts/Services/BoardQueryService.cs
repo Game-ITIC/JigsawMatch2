@@ -90,6 +90,11 @@ namespace JuiceFresh.Scripts
                 }
             }
 
+            if (list.Count == 0)
+                return list2;
+
+            count = Mathf.Min(count, list.Count);
+
             while (list2.Count < count)
             {
                 Item newItem = list[Random.Range(0, list.Count)];

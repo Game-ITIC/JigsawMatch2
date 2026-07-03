@@ -52,6 +52,7 @@ namespace JuiceFresh.States
             if(animation == null)
             {
                 levelManager.GameField.localPosition = levelManager.GameFieldTargetLocalPosition;
+                GameFeelManager.Instance?.RefreshBoardCanonicalTransform();
                 _levelManagerActions.GenerateOutline();
                 levelManager.gameStatus = GameState.PrepareBoosts;
                 return;
@@ -60,6 +61,7 @@ namespace JuiceFresh.States
             animation.Play(levelManager.GameFieldTargetLocalPosition,
                 () =>
                 {
+                    GameFeelManager.Instance?.RefreshBoardCanonicalTransform();
                     _levelManagerActions.GenerateOutline();
                     levelManager.gameStatus = GameState.PrepareBoosts;
                 });

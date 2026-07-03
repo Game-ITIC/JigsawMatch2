@@ -114,6 +114,40 @@ public sealed class LevelEffectsController : MonoBehaviour
         return false;
     }
 
+    public void ForceCleanupAllFlowers()
+    {
+        if(flowerPool == null)
+        {
+            return;
+        }
+
+        foreach(GameObject flower in flowerPool)
+        {
+            if(flower == null)
+            {
+                continue;
+            }
+
+            Flower flowerComponent = flower.GetComponent<Flower>();
+            if(flowerComponent != null)
+            {
+                flowerComponent.StopAllCoroutines();
+
+                SpriteRenderer renderer = flower.GetComponent<SpriteRenderer>();
+                if(renderer != null)
+                {
+                    renderer.enabled = false;
+                }
+
+                ParticleSystem particles = flower.GetComponent<ParticleSystem>();
+                if(particles != null)
+                {
+                    particles.Stop();
+                }
+            }
+        }
+    }
+
     private void OnDisable()
     {
         StopAllCoroutines();

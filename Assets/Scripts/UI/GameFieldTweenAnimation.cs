@@ -29,6 +29,8 @@ namespace UI
         [Header("Wave")]
         [SerializeField, Min(0f)] private float waveStagger = 0.08f;
         [SerializeField, Range(0f, 0.05f)] private float waveJitter = 0.01f;
+        [SerializeField, Min(0f)] private float maxRevealSpread = 1f;
+        [SerializeField] private BoardRevealPattern revealPattern = BoardRevealPattern.CenterOut;
 
         [Header("Ease")]
         [SerializeField] private Ease riseEase = Ease.OutCubic;
@@ -40,6 +42,25 @@ namespace UI
         private void OnDisable()
         {
             KillTween();
+        }
+
+        public void ApplyFeelPreset(GameFeelPresetData preset)
+        {
+            cellStartScale = preset.cellStartScale;
+            cellPeakScale = preset.cellPeakScale;
+            cellRiseDuration = preset.cellRiseDuration;
+            cellSettleDuration = preset.cellSettleDuration;
+            itemStartScale = preset.itemStartScale;
+            itemPeakScale = preset.itemPeakScale;
+            itemDelay = preset.itemDelay;
+            itemRiseDuration = preset.itemRiseDuration;
+            itemSettleDuration = preset.itemSettleDuration;
+            waveStagger = preset.waveStagger;
+            waveJitter = preset.waveJitter;
+            maxRevealSpread = preset.maxRevealSpread;
+            revealPattern = preset.revealPattern;
+            riseEase = preset.riseEase;
+            settleEase = preset.settleEase;
         }
 
         public void Play(Vector3 targetLocalPosition, Action onComplete)
@@ -152,6 +173,7 @@ namespace UI
             float centerCol = (levelManager.maxCols - 1) * 0.5f;
             float centerRow = (levelManager.maxRows - 1) * 0.5f;
             Vector2 gridCenter = new Vector2(centerCol, centerRow);
+            float maxDistance = 0f;
 
             for(int i = 0; i < squares.Length; i++)
             {
@@ -159,7 +181,40 @@ namespace UI
                 if(square == null || square.IsNone())
                     continue;
 
-                float waveDelay = Vector2.Distance(new Vector2(square.col, square.row), gridCenter) * waveStagger;
+                float distance = Vector2.Distance(new Vector2(square.col, square.row), gridCenter);
+                if(distance > maxDistance)
+                {
+                    maxDistance = distance;
+                }
+            }
+
+            if(maxDistance < 0.001f)
+            {
+                maxDistance = 1f;
+            }
+
+            float spread = maxRevealSpread > 0f ? maxRevealSpread : 1f;
+
+            for(int i = 0; i < squares.Length; i++)
+            {
+                Square square = squares[i];
+                if(square == null || square.IsNone())
+                    continue;
+
+                Vector2 cell = new Vector2(square.col, square.row);
+                float distance = Vector2.Distance(cell, gridCenter);
+                float waveDelay = CalculateRevealDelay(
+                    revealPattern,
+                    cell,
+                    gridCenter,
+                    distance,
+                    maxDistance,
+                    square.row,
+                    square.col,
+                    levelManager.maxRows,
+                    levelManager.maxCols,
+                    waveStagger,
+                    spread);
                 SpriteRenderer squareRenderer = square.GetComponent<SpriteRenderer>();
                 float squareTargetAlpha = squareRenderer != null ? squareRenderer.color.a : 1f;
 
@@ -188,6 +243,39 @@ namespace UI
                     itemRenderer,
                     itemTargetAlpha,
                     waveDelay));
+            }
+        }
+
+        private static float CalculateRevealDelay(
+            BoardRevealPattern pattern,
+            Vector2 cell,
+            Vector2 gridCenter,
+            float distanceFromCenter,
+            float maxDistance,
+            int row,
+            int col,
+            int maxRows,
+            int maxCols,
+            float stagger,
+            float spread)
+        {
+            switch(pattern)
+            {
+                case BoardRevealPattern.AllAtOnce:
+                    return 0f;
+                case BoardRevealPattern.EdgeIn:
+                    return (maxDistance - distanceFromCenter) * stagger * spread;
+                case BoardRevealPattern.TopToBottom:
+                    return row * stagger * spread;
+                case BoardRevealPattern.LeftToRight:
+                    return col * stagger * spread;
+                case BoardRevealPattern.Diagonal:
+                    return (col + row) * stagger * spread;
+                case BoardRevealPattern.RandomPop:
+                    return UnityEngine.Random.Range(0f, Mathf.Max(stagger, maxDistance * stagger) * spread);
+                case BoardRevealPattern.CenterOut:
+                default:
+                    return distanceFromCenter * stagger * spread;
             }
         }
 
