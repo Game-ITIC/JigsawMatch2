@@ -21,6 +21,8 @@ public class IronSourceManager : MonoBehaviour
     private bool _bannerLoaded = false;
     private bool _interstitialLoaded = false;
     private bool _rewardedLoaded = false;
+    private bool _initializationRequested;
+    private bool _initializationEventsSubscribed;
 
     private IronSourceConfigSO _config;
     private AdEventModel _adEventModel;
@@ -54,10 +56,26 @@ public class IronSourceManager : MonoBehaviour
 
     public void InitializeLevelPlay()
     {
+        if(_isInitialized || _initializationRequested)
+        {
+            return;
+        }
+
+        if(_config == null || string.IsNullOrWhiteSpace(_config.AppKey))
+        {
+            Debug.LogError($"{nameof(IronSourceManager)} cannot initialize: LevelPlay config is not injected or AppKey is empty.", this);
+            return;
+        }
+
+        _initializationRequested = true;
         LevelPlay.ValidateIntegration();
 
-        LevelPlay.OnInitSuccess += LevelPlayOnInitSuccess;
-        LevelPlay.OnInitFailed += LevelPlayOnInitFailed;
+        if(!_initializationEventsSubscribed)
+        {
+            LevelPlay.OnInitSuccess += LevelPlayOnInitSuccess;
+            LevelPlay.OnInitFailed += LevelPlayOnInitFailed;
+            _initializationEventsSubscribed = true;
+        }
 
         LevelPlay.Init(_config.AppKey, null, new[]
         {
@@ -69,6 +87,7 @@ public class IronSourceManager : MonoBehaviour
 
     private void LevelPlayOnInitSuccess(LevelPlayConfiguration obj)
     {
+        _initializationRequested = false;
         _retryAttempts = 0;
         _isInitialized = true;
 
@@ -79,9 +98,12 @@ public class IronSourceManager : MonoBehaviour
 
     private void LevelPlayOnInitFailed(LevelPlayInitError obj)
     {
+        _initializationRequested = false;
+
         if (_retryAttempts < MaxRetryAttempts)
         {
             _retryAttempts++;
+            CancelInvoke(nameof(InitializeLevelPlay));
             Invoke(nameof(InitializeLevelPlay), RetryDelay);
         }
     }
@@ -345,8 +367,20 @@ public class IronSourceManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        LevelPlay.OnInitSuccess -= LevelPlayOnInitSuccess;
-        LevelPlay.OnInitFailed -= LevelPlayOnInitFailed;
+        if(Instance != this)
+        {
+            return;
+        }
+
+        Instance = null;
+        CancelInvoke();
+
+        if(_initializationEventsSubscribed)
+        {
+            LevelPlay.OnInitSuccess -= LevelPlayOnInitSuccess;
+            LevelPlay.OnInitFailed -= LevelPlayOnInitFailed;
+            _initializationEventsSubscribed = false;
+        }
 
         DestroyBannerAd();
         DestroyInterstitial();
