@@ -50,7 +50,7 @@ namespace JuiceFresh.Scripts
             {
                 if (item != null)
                 {
-                    item.anim.StopPlayback();
+                    item.StopVisualAnimations();
                 }
             }
 
@@ -252,7 +252,7 @@ namespace JuiceFresh.Scripts
             {
                 if (item != null)
                 {
-                    item.anim.StopPlayback();
+                    item.StopVisualAnimations();
                 }
             }
 

@@ -163,7 +163,7 @@ public sealed class LevelEffectsController : MonoBehaviour
         {
             yield return new WaitForSeconds(0.01f);
             item.SetColor(color);
-            item.anim.SetTrigger("appear");
+            item.PlayAppearAnimation();
         }
     }
 

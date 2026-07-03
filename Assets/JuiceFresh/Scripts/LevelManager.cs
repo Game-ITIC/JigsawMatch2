@@ -424,8 +424,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
                 foreach (Item item in items)
                 {
-                    // if (item != null)
-                    //    item.anim.SetBool("stop", true);
+                    // Items own and stop their visual tweens explicitly.
                 }
             }
             else

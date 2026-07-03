@@ -47,10 +47,9 @@ public class Item : MonoBehaviour
 
     #region Private Fields
     private Sprite[] ingredientItems;
-    private float xScale;
-    private float yScale;
     private TMP_Text timerText;
     private GameObject _light;
+    private ItemTweenAnimator _animation;
     private bool extraChecked;
     private int COLOR;
     private const float DefaultBoardItemScale = 0.9f;
@@ -90,7 +89,6 @@ public class Item : MonoBehaviour
         set { COLOR = value; }
     }
     
-    [field: SerializeField]public Animator anim { get; set; }
     public bool destroying { get; set; }
     public bool appeared { get; set; }
     public bool animationFinished { get; set; }
@@ -101,6 +99,11 @@ public class Item : MonoBehaviour
     #endregion
 
     #region Unity Lifecycle
+    void Awake()
+    {
+        _animation = new ItemTweenAnimator(gameObject, sprRenderer.transform);
+    }
+
     void Start()
     {
         InitializeItem();
@@ -111,6 +114,11 @@ public class Item : MonoBehaviour
         COLORView = color;
         CheckDebugTypeChange();
         UpdateBombTimer();
+    }
+
+    void OnDestroy()
+    {
+        _animation?.Dispose();
     }
     #endregion
 
@@ -294,7 +302,7 @@ public class Item : MonoBehaviour
     public void AwakeItem()
     {
         awaken = true;
-        anim.SetTrigger("Idle");
+        _animation.PlaySelected();
 
         if (currentType != ItemsTypes.BOMB)
             sprRenderer.sprite = itemsAnimation[color];
@@ -305,10 +313,9 @@ public class Item : MonoBehaviour
     public void SleepItem()
     {
         awaken = false;
-        if (!anim)
-            return;
-        
-        anim.SetTrigger("IdleStop");
+        bool hasAmbientAnimation = appeared && currentType != ItemsTypes.BOMB;
+        bool strongAmbientAnimation = currentType == ItemsTypes.PACKAGE;
+        _animation.PlayNeutral(hasAmbientAnimation, strongAmbientAnimation);
 
         if (currentType != ItemsTypes.BOMB)
             sprRenderer.sprite = items[color];
@@ -320,49 +327,8 @@ public class Item : MonoBehaviour
     public void SetAppeared()
     {
         appeared = true;
-        if (nextType != ItemsTypes.BOMB)
-            StartIdleAnim();
-        if (currentType == ItemsTypes.PACKAGE)
-            anim.SetBool("package_idle", true);
-    }
-
-    public void StartIdleAnim()
-    {
-        StartCoroutine(AnimIdleStart());
-    }
-
-    IEnumerator AnimIdleStart()
-    {
-        float xScaleDest1 = xScale - 0.05f;
-        float xScaleDest2 = xScale;
-        float speed = UnityEngine.Random.Range(0.02f, 0.07f);
-
-        bool trigger = false;
-        while (true)
-        {
-            if (!trigger)
-            {
-                if (xScale > xScaleDest1)
-                {
-                    xScale -= Time.deltaTime * speed;
-                    yScale += Time.deltaTime * speed;
-                }
-                else
-                    trigger = true;
-            }
-            else
-            {
-                if (xScale < xScaleDest2)
-                {
-                    xScale += Time.deltaTime * speed;
-                    yScale -= Time.deltaTime * speed;
-                }
-                else
-                    trigger = false;
-            }
-            transform.localScale = new Vector3(xScale, yScale, 1);
-            yield return new WaitForFixedUpdate();
-        }
+        ItemsTypes animatedType = nextType != ItemsTypes.NONE ? nextType : currentType;
+        _animation.PlayAmbient(animatedType == ItemsTypes.PACKAGE || animatedType == ItemsTypes.BOMB);
     }
     #endregion
 
@@ -420,6 +386,10 @@ public class Item : MonoBehaviour
         // A special item is created from an item that has just finished selection,
         // destruction and combo feedback. Any interrupted scale animation must not
         // become the new permanent scale of the booster.
+        if(nextType == ItemsTypes.NONE)
+            yield break;
+
+        appeared = false;
         EnsureValidBoardScale();
         ApplyVisualEffect();
         
@@ -443,12 +413,10 @@ public class Item : MonoBehaviour
         if (nextType == ItemsTypes.HORIZONTAL_STRIPPED || nextType == ItemsTypes.VERTICAL_STRIPPED)
         {
             StripeEffect(nextType);
-            anim.SetTrigger("appear");
             SoundBase.Instance.PlaySound(SoundBase.Instance.appearStipedColorBomb);
         }
         else if (nextType == ItemsTypes.PACKAGE || nextType == ItemsTypes.CHOCOBOMB)
         {
-            anim.SetTrigger("appear");
             SoundBase.Instance.PlaySound(SoundBase.Instance.appearStipedColorBomb);
             
             if (nextType == ItemsTypes.CHOCOBOMB)
@@ -456,11 +424,12 @@ public class Item : MonoBehaviour
         }
         else if (nextType == ItemsTypes.BOMB)
         {
-            anim.SetTrigger("appear");
             SoundBase.Instance.PlaySound(SoundBase.Instance.appearStipedColorBomb);
 
             EnsureValidBoardScale();
         }
+
+        _animation.PlayAppear(SetAppeared);
     }
 
     private void EnsureValidBoardScale()
@@ -473,8 +442,6 @@ public class Item : MonoBehaviour
             transform.localScale = scale;
         }
 
-        xScale = scale.x;
-        yScale = scale.y;
     }
 
     private void SetSpriteForType()
@@ -510,7 +477,7 @@ public class Item : MonoBehaviour
 
     void SetupBomb()
     {
-        anim.SetBool("package_idle", true);
+        _animation.PlayAmbient(strong: true);
 
         GameObject t = Instantiate(timerTextPrefab) as GameObject;
         t.transform.SetParent(transform);
@@ -607,7 +574,7 @@ public class Item : MonoBehaviour
         
         if (distance > 0.5f && animate)
         {
-            anim.SetTrigger("stop");
+            _animation.PlayLanding();
             SoundBase.Instance.PlaySound(SoundBase.Instance.drop[UnityEngine.Random.Range(0, SoundBase.Instance.drop.Length)]);
         }
         
@@ -681,7 +648,8 @@ public class Item : MonoBehaviour
         if (this == null)
             return;
             
-        StopCoroutine(AnimIdleStart());
+        _animation.StopAll(resetVisual: true);
+        animationFinished = false;
         destroying = true;
         square.item = null;
 
@@ -726,16 +694,10 @@ public class Item : MonoBehaviour
 
     IEnumerator DestroyCor(bool showScore = false, string anim_name = "", bool explEffect = false, bool directly = false)
     {
-        anim.SetTrigger("IdleStop");
+        _animation.PlayNeutral(ambient: false);
 
-        // Handle special item types
-        if (currentType == ItemsTypes.HORIZONTAL_STRIPPED || currentType == ItemsTypes.VERTICAL_STRIPPED)
+        if (currentType == ItemsTypes.PACKAGE)
         {
-            PlayDestroyAnimation("destroy");
-        }
-        else if (currentType == ItemsTypes.PACKAGE)
-        {
-            PlayDestroyAnimation("destroy");
             yield return new WaitForSeconds(0.1f);
 
             GameObject partcl = Instantiate(Resources.Load("Prefabs/Effects/Firework"), transform.position, Quaternion.identity) as GameObject;
@@ -755,7 +717,7 @@ public class Item : MonoBehaviour
                 }
             }
 
-            PlayDestroyAnimation("destroy");
+            PlayDestroyAnimation();
             CreateDestructionEffect();
         }
 
@@ -767,7 +729,8 @@ public class Item : MonoBehaviour
 
         LevelManager.THIS.CheckCollectedTarget(gameObject);
 
-        while (!animationFinished && currentType == ItemsTypes.NONE)
+        bool hasDestroyAnimation = currentType != ItemsTypes.INGREDIENT && currentType != ItemsTypes.CHOCOBOMB;
+        while (hasDestroyAnimation && !animationFinished)
             yield return new WaitForFixedUpdate();
 
         square.DestroyBlock();
@@ -955,22 +918,30 @@ public class Item : MonoBehaviour
         }
     }
 
-    void PlayDestroyAnimation(string anim_name)
+    void PlayDestroyAnimation()
     {
-        anim.SetTrigger(anim_name);
+        _animation.PlayDestroy(SetAnimationDestroyingFinished);
     }
 
     public void SmoothDestroy()
     {
-        StartCoroutine(SmoothDestroyCor());
+        square.item = null;
+        _animation.PlayDisappear(() => Destroy(gameObject));
     }
 
-    IEnumerator SmoothDestroyCor()
+    public void PlayHintAnimation()
     {
-        square.item = null;
-        anim.SetTrigger("disAppear");
-        yield return new WaitForSeconds(1);
-        Destroy(gameObject);
+        _animation.PlayHint();
+    }
+
+    public void PlayAppearAnimation()
+    {
+        _animation.PlayAppear(completed: null);
+    }
+
+    public void StopVisualAnimations()
+    {
+        _animation.StopAll(resetVisual: true);
     }
     #endregion
 

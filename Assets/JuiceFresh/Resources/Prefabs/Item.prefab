@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 490504}
   - component: {fileID: 11490506}
   - component: {fileID: 6190506}
-  - component: {fileID: 9544942}
   m_Layer: 8
   m_Name: Item
   m_TagString: Item
@@ -89,7 +88,6 @@ MonoBehaviour:
   wickBurningPrefab: {fileID: 179724, guid: b4fa6e352fc8349bc9270d0b6189a1f9, type: 3}
   debugType: 0
   COLORView: 0
-  <anim>k__BackingField: {fileID: 9544942}
 --- !u!61 &6190506
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -135,27 +133,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 1.5}
   m_EdgeRadius: 0
---- !u!95 &9544942
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 190504}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: fa899764163cc4c4dba4d39b913015da, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &190506
 GameObject:
   m_ObjectHideFlags: 0
