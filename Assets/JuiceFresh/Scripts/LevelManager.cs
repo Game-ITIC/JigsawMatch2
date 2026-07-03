@@ -393,6 +393,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     private BoardQueryService _boardQueryService;
     private BoardFactoryService _boardFactoryService;
     private WinLoseEvaluator _winLoseEvaluator;
+    private CollectableTargetUIBuilder _collectableTargetUIBuilder;
 
     public BoardMechanicsService BoardMechanics
     {
@@ -640,6 +641,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         _boardQueryService = new BoardQueryService(this);
         _boardFactoryService = new BoardFactoryService(this);
         _winLoseEvaluator = new WinLoseEvaluator(this);
+        _collectableTargetUIBuilder = new CollectableTargetUIBuilder(this);
 
         ingrCountTarget = new int[NumIngredients]; // Necessary amount of collectable items
 
@@ -1152,161 +1154,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     public void CreateCollectableTarget(GameObject parentTransform, Target tar, bool ForDialog = true)
     {
-        tar = target;
-        GameObject ingrPrefab = Resources.Load("Prefabs/CollectGUIObj") as GameObject;
-
-        parentTransform.SetActive(true);
-        RectTransform containerRect = parentTransform.GetComponent<RectTransform>();
-        int Sprites_Length = (Resources.Load("Prefabs/Item") as GameObject).GetComponent<Item>().items.Length;
-        Sprite[] spr = new Sprite[Sprites_Length];
-
-        for (int i = 0; i < Sprites_Length; i++)
-        {
-            spr[i] = (Resources.Load("Prefabs/Item") as GameObject).GetComponent<Item>().items[i];
-        }
-
-        int num = NumIngredients;
-        List<object> collectionItems = new List<object>();
-
-        if(tar == Target.ITEMS)
-        {
-            for (int i = 0; i < num; i++)
-            {
-                collectionItems.Add(collectItems[i]);
-            }
-
-            Sprite[] sprOld = spr;
-            int ii = 0;
-
-            for (int i = 0; i < collectItems.Length; i++)
-            {
-                if(collectItems[i] != CollectItems.None)
-                {
-                    spr[ii] = sprOld[(int)collectItems[i] - 1];
-                    ii++;
-                }
-            }
-        }
-        else if(tar == Target.COLLECT)
-        {
-            spr = ingrediendSprites;
-            for (int i = 0; i < num; i++)
-                collectionItems.Add(ingrTarget[i]);
-        }
-        else if(tar == Target.BLOCKS)
-        {
-            num = 1;
-            spr = new Sprite[]
-            {
-                blockPrefab.GetComponent<SpriteRenderer>().sprite
-            };
-            for (int i = 0; i < num; i++)
-                collectionItems.Add(Ingredients.Ingredient1);
-            ingrTarget.Add(new CollectedIngredients());
-
-            ingrTarget[0].count = TargetBlocks;
-        }
-        else if(tar == Target.CAGES)
-        {
-            num = 1;
-            spr = new Sprite[]
-            {
-                wireBlockPrefab.GetComponent<SpriteRenderer>().sprite
-            };
-            for (int i = 0; i < num; i++)
-                collectionItems.Add(Ingredients.Ingredient1);
-            ingrTarget.Add(new CollectedIngredients());
-
-            ingrTarget[0].count = TargetCages;
-        }
-        else if(tar == Target.BOMBS)
-        {
-            num = 1;
-            spr = new Sprite[]
-            {
-                ingrPrefab.GetComponent<TargetGUI>().bomb
-            };
-            for (int i = 0; i < num; i++)
-                collectionItems.Add(Ingredients.Ingredient1);
-            ingrTarget.Add(new CollectedIngredients());
-            ingrTarget[0].count = 1;
-        }
-        else if(tar == Target.SCORE)
-        {
-            num = 1;
-            spr = new Sprite[]
-            {
-                ingrPrefab.GetComponent<TargetGUI>().star
-            };
-            for (int i = 0; i < num; i++)
-                collectionItems.Add(Ingredients.Ingredient1);
-            ingrTarget.Add(new CollectedIngredients());
-
-            ingrTarget[0].count = 1;
-        }
-
-        int f = 0;
-
-        for (int i = 0; i < num; i++)
-        {
-            if(collectionItems[i] != (object)0 && ingrTarget[i].count > 0)
-            {
-                f++;
-            }
-        }
-
-        float offset = 100;
-        if(ForDialog)
-            offset = 200;
-
-        containerRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,
-                                                (f - 1) * offset +
-                                                ingrPrefab.transform.GetComponent<RectTransform>().rect.width / 2 * f -
-                                                ingrPrefab.transform.GetComponent<RectTransform>().rect.width / 2 * (f - 2));
-
-        int j = 0;
-
-        for (int i = 0; i < num; i++)
-        {
-            if(collectionItems[i] != (object)0 && ingrTarget[i].count > 0)
-            {
-                GameObject ingr = Instantiate(ingrPrefab) as GameObject;
-                ingr.name = "Ingr" + i;
-                ingr.GetComponent<TargetGUI>().SetBack(ForDialog);
-                listIngredientsGUIObjects.Add(ingr);
-                if(tar != Target.COLLECT)
-                    ingr.transform.Find("Image").GetComponent<Image>().sprite = spr[j];
-                ingr.transform.Find("CountIngr").GetComponent<Counter_>().ingrTrackNumber = i;
-                ingr.transform.Find("CountIngr").GetComponent<Counter_>().totalCount = ingrTarget[i].count;
-                ingr.transform.Find("CountIngrForMenu").GetComponent<Counter_>().totalCount = ingrTarget[i].count;
-                if(tar == Target.SCORE)
-                    ingr.transform.Find("CountIngrForMenu").GetComponent<Counter_>().totalCount =
-                        (int)LevelManager.THIS.starsTargetCount;
-                else if(tar == Target.BLOCKS)
-                    ingr.transform.Find("CountIngr").name = "TargetBlocks";
-                else if(tar == Target.CAGES)
-                    ingr.transform.Find("CountIngr").name = "TargetCages";
-                else if(tar == Target.BOMBS)
-                    ingr.transform.Find("CountIngr").name = "TargetBombs";
-
-                if(tar == Target.COLLECT)
-                {
-                    ingr.GetComponent<TargetGUI>().SetSprite(ingrTarget[i].sprite);
-                }
-
-                ingr.transform.SetParent(parentTransform.transform);
-                ingr.transform.localScale = Vector3.one;
-                int heightPos = 0;
-
-                ingr.transform.GetComponent<RectTransform>().anchoredPosition = new Vector3(
-                    j * offset -
-                    containerRect.rect.width / 2 +
-                    ingr.transform.GetComponent<RectTransform>().rect.width / 2,
-                    heightPos,
-                    0);
-                j++;
-            }
-        }
+        _collectableTargetUIBuilder.Build(parentTransform, tar, ForDialog);
     }
 
     public void CheckCollectedTarget(GameObject _item)
