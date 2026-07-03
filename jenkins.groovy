@@ -115,9 +115,10 @@ pipeline {
                         rm -rf "$TMP_BUILD_DIR/Assets/Plugins/PlaceHolderVFX/JMO Assets/Cartoon FX Remaster/Demo Assets"
                         rm -rf "$TMP_BUILD_DIR/Assets/Plugins/Sirenix/Odin Inspector/Modules/Unity.Mathematics"
 
-                        mkdir -p "$REPO_DIR/JenkinsLogs" "$REPO_DIR/Builds/AndroidAPK" "$REPO_DIR/Signing"
+                        mkdir -p "$REPO_DIR/JenkinsLogs" "$REPO_DIR/Builds/AndroidAPK" "$REPO_DIR/Signing" "$TMP_BUILD_DIR/JenkinsLogs"
 
                         echo "Starting Unity build..."
+                        set +e
                         xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
                         "$UNITY_PATH/Unity" \
                           -quit -batchmode -nographics \
@@ -125,7 +126,16 @@ pipeline {
                           -executeMethod Editor.BuildScript.BuildAndroid \
                           -job-worker-count 2 \
                           -buildType APK \
-                          -logFile "$REPO_DIR/JenkinsLogs/unity_android_apk.log"
+                          -logFile "$TMP_BUILD_DIR/JenkinsLogs/unity_android_apk.log"
+                        UNITY_EXIT=$?
+                        set -e
+
+                        cp "$TMP_BUILD_DIR/JenkinsLogs/unity_android_apk.log" "$REPO_DIR/JenkinsLogs/unity_android_apk.log" || true
+                        cp "$TMP_BUILD_DIR/Library/LastBuild.buildreport" "$REPO_DIR/JenkinsLogs/LastBuild_APK.buildreport" || true
+
+                        if [ "$UNITY_EXIT" -ne 0 ]; then
+                          exit "$UNITY_EXIT"
+                        fi
 
                         echo "Retrieving APK..."
                         mkdir -p "$REPO_DIR/Builds/AndroidAPK"
@@ -208,9 +218,10 @@ pipeline {
                         rm -rf "$TMP_BUILD_DIR/Assets/Plugins/PlaceHolderVFX/JMO Assets/Cartoon FX Remaster/Demo Assets"
                         rm -rf "$TMP_BUILD_DIR/Assets/Plugins/Sirenix/Odin Inspector/Modules/Unity.Mathematics"
 
-                        mkdir -p "$REPO_DIR/JenkinsLogs" "$REPO_DIR/Builds/AndroidAAB" "$REPO_DIR/Signing"
+                        mkdir -p "$REPO_DIR/JenkinsLogs" "$REPO_DIR/Builds/AndroidAAB" "$REPO_DIR/Signing" "$TMP_BUILD_DIR/JenkinsLogs"
 
                         echo "Starting Unity build..."
+                        set +e
                         xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
                         "$UNITY_PATH/Unity" \
                           -quit -batchmode -nographics \
@@ -218,7 +229,16 @@ pipeline {
                           -executeMethod Editor.BuildScript.BuildAndroid \
                           -job-worker-count 2 \
                           -buildType AAB \
-                          -logFile "$REPO_DIR/JenkinsLogs/unity_android_aab.log"
+                          -logFile "$TMP_BUILD_DIR/JenkinsLogs/unity_android_aab.log"
+                        UNITY_EXIT=$?
+                        set -e
+
+                        cp "$TMP_BUILD_DIR/JenkinsLogs/unity_android_aab.log" "$REPO_DIR/JenkinsLogs/unity_android_aab.log" || true
+                        cp "$TMP_BUILD_DIR/Library/LastBuild.buildreport" "$REPO_DIR/JenkinsLogs/LastBuild_AAB.buildreport" || true
+
+                        if [ "$UNITY_EXIT" -ne 0 ]; then
+                          exit "$UNITY_EXIT"
+                        fi
 
                         echo "Retrieving AAB..."
                         mkdir -p "$REPO_DIR/Builds/AndroidAAB"
