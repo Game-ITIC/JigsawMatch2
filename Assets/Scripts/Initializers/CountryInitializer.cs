@@ -259,7 +259,6 @@ namespace Initializers
             }
             else
             {
-                Debug.LogWarning("No regions available");
                 return;
             }
             
