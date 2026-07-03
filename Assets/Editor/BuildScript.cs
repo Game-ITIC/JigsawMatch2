@@ -72,8 +72,8 @@ namespace Editor
         {
             string keystoreFile = Environment.GetEnvironmentVariable("ITIC_GAMES_KEYSTORE_FILE");
             string keystorePass = Environment.GetEnvironmentVariable("ITIC_GAMES_KEYSTORE_PASS");
-            string aliasName = Environment.GetEnvironmentVariable("ITIC_GAMES_KEYSTORE_ALIAS_NAME");
-            string aliasPass = Environment.GetEnvironmentVariable("ITIC_GAMES_KEYSTORE_ALIAS_PASS");
+            string aliasName = Environment.GetEnvironmentVariable("ITIC_GAMES_ALIAS");
+            string aliasPass = Environment.GetEnvironmentVariable("ITIC_GAMES_ALIAS_PAS");
 
             Debug.Log($"[DEBUG] Keystore Path: {keystoreFile}");
             Debug.Log($"[DEBUG] Alias Name Length: {aliasName.Length}");
@@ -92,13 +92,13 @@ namespace Editor
 
             if (string.IsNullOrWhiteSpace(aliasName))
             {
-                FailFast("ITIC_GAMES_KEYSTORE_ALIAS_NAME is missing.");
+                FailFast("ITIC_GAMES_ALIAS is missing.");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(aliasPass))
             {
-                FailFast("ITIC_GAMES_KEYSTORE_ALIAS_PASS is missing.");
+                FailFast("ITIC_GAMES_ALIAS_PAS is missing.");
                 return;
             }
 
@@ -109,7 +109,7 @@ namespace Editor
             {
                 Debug.LogError(
                     "BuildAndroid: Missing signing variables. " +
-                    "Expected ITIC_GAMES_KEYSTORE_FILE, ITIC_GAMES_KEYSTORE_PASS, ITIC_GAMES_KEYSTORE_ALIAS_NAME, ITIC_GAMES_KEYSTORE_ALIAS_PASS."
+                    "Expected ITIC_GAMES_KEYSTORE_FILE, ITIC_GAMES_KEYSTORE_PASS, ITIC_GAMES_ALIAS, ITIC_GAMES_ALIAS_PAS."
                 );
                 EditorApplication.Exit(2);
                 return;
@@ -138,7 +138,7 @@ namespace Editor
         private static void ApplyVersionCodeFromEnvironment()
         {
             string versionCodeRaw =
-                Environment.GetEnvironmentVariable("BoyOta_BUILD_NUMBER") ??
+                Environment.GetEnvironmentVariable("Butterfly_Match_BUILD_NUMBER") ??
                 Environment.GetEnvironmentVariable("BUILD_NUMBER");
 
             if (string.IsNullOrWhiteSpace(versionCodeRaw))

@@ -1,4 +1,4 @@
-def PROJECT_NAME = 'Butterfly Match'
+def PROJECT_NAME = 'Butterfly_Match'
 def UNITY_VERSION = '6000.3.18f1'
 def UNITY_INSTALLATION = "/var/lib/jenkins/Unity/Hub/Editor/${UNITY_VERSION}/Editor"
 
@@ -65,15 +65,15 @@ pipeline {
         stage('Build Android APK') {
             when {
                 expression {
-                    params.BUILD_ANDROID_APK || env.BUILD_BRANCH.contains('Develop')
+                    params.BUILD_ANDROID_APK || env.BUILD_BRANCH.contains('develop')
                 }
             }
             steps {
                 withCredentials([
                     file(credentialsId: 'ITIC_GAMES.keystore', variable: 'JENKINS_KEYSTORE_FILE'),
                     string(credentialsId: 'ITIC_GAMES_KEYSTORE_PASS', variable: 'JENKINS_KEYSTORE_PASS'),
-                    string(credentialsId: 'ITIC_GAMES_KEYSTORE_ALIAS_NAME', variable: 'JENKINS_ALIAS_NAME'),
-                    string(credentialsId: 'ITIC_GAMES_KEYSTORE_ALIAS_PASS', variable: 'JENKINS_ALIAS_PASS')
+                    string(credentialsId: 'ITIC_GAMES_ALIAS', variable: 'JENKINS_ALIAS_NAME'),
+                    string(credentialsId: 'ITIC_GAMES_ALIAS_PAS', variable: 'JENKINS_ALIAS_PASS')
                 ]) {
                     sh '''
                         set -e
@@ -83,7 +83,7 @@ pipeline {
                         # filesystems. We build in a /tmp sandbox to bypass this native crash.
                         # =========================================================================
                         
-                        TMP_BUILD_DIR="/tmp/boyota_build_${BUILD_NUMBER}_APK"
+                        TMP_BUILD_DIR="/tmp/butterfly_match_build_${BUILD_NUMBER}_APK"
                         rm -rf "$TMP_BUILD_DIR"
                         mkdir -p "$TMP_BUILD_DIR"
 
@@ -96,9 +96,9 @@ pipeline {
 
                         export ITIC_GAMES_KEYSTORE_FILE="$TMP_BUILD_DIR/Signing/android.keystore"
                         export ITIC_GAMES_KEYSTORE_PASS="$JENKINS_KEYSTORE_PASS"
-                        export ITIC_GAMES_KEYSTORE_ALIAS_NAME="$JENKINS_ALIAS_NAME"
-                        export ITIC_GAMES_KEYSTORE_ALIAS_PASS="$JENKINS_ALIAS_PASS"
-                        export BoyOta_BUILD_NUMBER="$BUILD_NUMBER"
+                        export ITIC_GAMES_ALIAS="$JENKINS_ALIAS_NAME"
+                        export ITIC_GAMES_ALIAS_PAS="$JENKINS_ALIAS_PASS"
+                        export Butterfly_Match_BUILD_NUMBER="$BUILD_NUMBER"
                         export GRADLE_USER_HOME=/var/lib/jenkins/.gradle
                         
                         export UNITY_BURST_DISABLE_COMPILATION=1
@@ -135,7 +135,7 @@ pipeline {
         stage('Deploy Android APK to Nexus') {
             when {
                 expression {
-                    params.DEPLOY_ANDROID_APK || env.BUILD_BRANCH.contains('Develop')
+                    params.DEPLOY_ANDROID_APK || env.BUILD_BRANCH.contains('develop')
                 }
             }
             steps {
@@ -159,20 +159,20 @@ pipeline {
         stage('Build Android AAB') {
             when {
                 expression {
-                    params.BUILD_ANDROID_AAB || env.BUILD_BRANCH.contains('Main')
+                    params.BUILD_ANDROID_AAB || env.BUILD_BRANCH.contains('main')
                 }
             }
             steps {
                 withCredentials([
                     file(credentialsId: 'ITIC_GAMES.keystore', variable: 'JENKINS_KEYSTORE_FILE'),
                     string(credentialsId: 'ITIC_GAMES_KEYSTORE_PASS', variable: 'JENKINS_KEYSTORE_PASS'),
-                    string(credentialsId: 'ITIC_GAMES_KEYSTORE_ALIAS_NAME', variable: 'JENKINS_ALIAS_NAME'),
-                    string(credentialsId: 'ITIC_GAMES_KEYSTORE_ALIAS_PASS', variable: 'JENKINS_ALIAS_PASS')
+                    string(credentialsId: 'ITIC_GAMES_ALIAS', variable: 'JENKINS_ALIAS_NAME'),
+                    string(credentialsId: 'ITIC_GAMES_ALIAS_PAS', variable: 'JENKINS_ALIAS_PASS')
                 ]) {
                     sh '''
                         set -e
                         
-                        TMP_BUILD_DIR="/tmp/boyota_build_${BUILD_NUMBER}_AAB"
+                        TMP_BUILD_DIR="/tmp/butterfly_match_build_${BUILD_NUMBER}_AAB"
                         rm -rf "$TMP_BUILD_DIR"
                         mkdir -p "$TMP_BUILD_DIR"
 
@@ -185,9 +185,9 @@ pipeline {
 
                         export ITIC_GAMES_KEYSTORE_FILE="$TMP_BUILD_DIR/Signing/android.keystore"
                         export ITIC_GAMES_KEYSTORE_PASS="$JENKINS_KEYSTORE_PASS"
-                        export ITIC_GAMES_KEYSTORE_ALIAS_NAME="$JENKINS_ALIAS_NAME"
-                        export ITIC_GAMES_KEYSTORE_ALIAS_PASS="$JENKINS_ALIAS_PASS"
-                        export BoyOta_BUILD_NUMBER="$BUILD_NUMBER"
+                        export ITIC_GAMES_ALIAS="$JENKINS_ALIAS_NAME"
+                        export ITIC_GAMES_ALIAS_PAS="$JENKINS_ALIAS_PASS"
+                        export Butterfly_Match_BUILD_NUMBER="$BUILD_NUMBER"
                         export GRADLE_USER_HOME=/var/lib/jenkins/.gradle
                         
                         export UNITY_BURST_DISABLE_COMPILATION=1
@@ -224,7 +224,7 @@ pipeline {
         stage('Deploy Android AAB to Nexus') {
             when {
                 expression {
-                    params.DEPLOY_ANDROID_AAB || env.BUILD_BRANCH.contains('Main')
+                    params.DEPLOY_ANDROID_AAB || env.BUILD_BRANCH.contains('main')
                 }
             }
             steps {
@@ -263,7 +263,7 @@ pipeline {
                                   "🌿 *Branch:* ${env.BUILD_BRANCH ?: 'unknown'}"
 
                     // 1. Upload APK Directly into Telegram Chat
-                    if (params.BUILD_ANDROID_APK || (env.BUILD_BRANCH != null && env.BUILD_BRANCH.contains('Develop'))) {
+                    if (params.BUILD_ANDROID_APK || (env.BUILD_BRANCH != null && env.BUILD_BRANCH.contains('develop'))) {
                         def APK_PATH = sh(script: 'ls -1 src/Builds/AndroidAPK/*.apk 2>/dev/null | head -n 1', returnStdout: true).trim()
                         if (APK_PATH) {
                             sh """
@@ -278,7 +278,7 @@ pipeline {
                     }
 
                     // 2. Upload AAB Directly into Telegram Chat
-                    if (params.BUILD_ANDROID_AAB || (env.BUILD_BRANCH != null && env.BUILD_BRANCH.contains('Main'))) {
+                    if (params.BUILD_ANDROID_AAB || (env.BUILD_BRANCH != null && env.BUILD_BRANCH.contains('main'))) {
                         def AAB_PATH = sh(script: 'ls -1 src/Builds/AndroidAAB/*.aab 2>/dev/null | head -n 1', returnStdout: true).trim()
                         if (AAB_PATH) {
                             sh """
