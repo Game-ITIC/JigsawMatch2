@@ -77,12 +77,12 @@ pipeline {
                 ]) {
                     sh '''
                         set -e
-                        
+
                         # =========================================================================
-                        # WORKAROUND: Unity 2022.3 has a SIGFPE divide-by-zero bug on ZFS/Docker 
+                        # WORKAROUND: Unity 2022.3 has a SIGFPE divide-by-zero bug on ZFS/Docker
                         # filesystems. We build in a /tmp sandbox to bypass this native crash.
                         # =========================================================================
-                        
+
                         TMP_BUILD_DIR="/tmp/butterfly_match_build_${BUILD_NUMBER}_APK"
                         rm -rf "$TMP_BUILD_DIR"
                         mkdir -p "$TMP_BUILD_DIR"
@@ -100,7 +100,7 @@ pipeline {
                         export ITIC_GAMES_ALIAS_PAS="$JENKINS_ALIAS_PASS"
                         export Butterfly_Match_BUILD_NUMBER="$BUILD_NUMBER"
                         export GRADLE_USER_HOME=/var/lib/jenkins/.gradle
-                        
+
                         export UNITY_BURST_DISABLE_COMPILATION=1
 
                         # Amputate toxic demo folders
@@ -171,7 +171,7 @@ pipeline {
                 ]) {
                     sh '''
                         set -e
-                        
+
                         TMP_BUILD_DIR="/tmp/butterfly_match_build_${BUILD_NUMBER}_AAB"
                         rm -rf "$TMP_BUILD_DIR"
                         mkdir -p "$TMP_BUILD_DIR"
@@ -189,7 +189,7 @@ pipeline {
                         export ITIC_GAMES_ALIAS_PAS="$JENKINS_ALIAS_PASS"
                         export Butterfly_Match_BUILD_NUMBER="$BUILD_NUMBER"
                         export GRADLE_USER_HOME=/var/lib/jenkins/.gradle
-                        
+
                         export UNITY_BURST_DISABLE_COMPILATION=1
 
                         # Amputate toxic demo folders
@@ -257,7 +257,7 @@ pipeline {
                     def TELEGRAM_CHAT_ID = '-1002435889483'
                     def TELEGRAM_THREAD_ID = '1236'
 
-                    def CAPTION = '✅ *Yeah, boi: New Build Ready!*\n' +
+                    def CAPTION = '✅ *Are we still on this project?*\n' +
                                   "🎮 *Project:* ${PROJECT_NAME}\n" +
                                   "🔢 *Build Version:* #${env.BUILD_NUMBER}\n" +
                                   "🌿 *Branch:* ${env.BUILD_BRANCH ?: 'unknown'}"
