@@ -90,6 +90,8 @@ pipeline {
                         echo "Copying project to safe /tmp partition..."
                         rsync -a "$REPO_DIR/" "$TMP_BUILD_DIR/"
 
+                        mkdir -p "$TMP_BUILD_DIR/Signing"
+
                         # Setup Keystore
                         cp "$JENKINS_KEYSTORE_FILE" "$TMP_BUILD_DIR/Signing/android.keystore"
                         chmod 600 "$TMP_BUILD_DIR/Signing/android.keystore"
@@ -115,7 +117,7 @@ pipeline {
                           -quit -batchmode -nographics \
                           -projectPath "$TMP_BUILD_DIR" \
                           -executeMethod BuildScript.BuildAndroid \
-                          -worker-count 2 \
+                          -job-worker-count 2 \
                           -buildType APK \
                           -logFile "$REPO_DIR/JenkinsLogs/unity_android_apk.log"
 
@@ -179,6 +181,8 @@ pipeline {
                         echo "Copying project to safe /tmp partition..."
                         rsync -a "$REPO_DIR/" "$TMP_BUILD_DIR/"
 
+                        mkdir -p "$TMP_BUILD_DIR/Signing"
+
                         # Setup Keystore
                         cp "$JENKINS_KEYSTORE_FILE" "$TMP_BUILD_DIR/Signing/android.keystore"
                         chmod 600 "$TMP_BUILD_DIR/Signing/android.keystore"
@@ -204,7 +208,7 @@ pipeline {
                           -quit -batchmode -nographics \
                           -projectPath "$TMP_BUILD_DIR" \
                           -executeMethod BuildScript.BuildAndroid \
-                          -worker-count 2 \
+                          -job-worker-count 2 \
                           -buildType AAB \
                           -logFile "$REPO_DIR/JenkinsLogs/unity_android_aab.log"
 
