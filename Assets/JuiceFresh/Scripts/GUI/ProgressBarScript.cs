@@ -37,8 +37,7 @@ public class ProgressBarScript : MonoBehaviour
         _milestones.MilestoneRevealed += HandleMilestoneRevealed;
 
         _barTrack = transform.parent as RectTransform;
-        ResetBar();
-        PrepareStars();
+        ConfigureForLevel();
     }
 
     void OnDisable()
@@ -85,6 +84,12 @@ public class ProgressBarScript : MonoBehaviour
         _fillBar.SetNormalizedFill(0f, animated: false);
         SetDisplayedStars(0);
         _milestones?.ResetMilestones();
+    }
+
+    public void ConfigureForLevel()
+    {
+        ResetBar();
+        PrepareStars();
     }
 
     void HandleMilestoneRevealed(int milestoneIndex, UIFillMilestone _)

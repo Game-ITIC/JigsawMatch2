@@ -10,6 +10,7 @@ namespace JuiceFresh.Scripts
     public class BoardMechanicsService
     {
         private LevelManager levelManager;
+        private UniTask _activeBoardProcess = UniTask.CompletedTask;
 
         public BoardMechanicsService(LevelManager levelManager)
         {
@@ -17,6 +18,26 @@ namespace JuiceFresh.Scripts
         }
 
         public async UniTask ProcessBoardAfterMatches(CancellationToken cancellationToken = default)
+        {
+            var previous = _activeBoardProcess;
+            var completion = new UniTaskCompletionSource();
+
+            _activeBoardProcess = completion.Task;
+            await previous;
+
+            try
+            {
+                await ProcessBoardAfterMatchesAsync(cancellationToken);
+                completion.TrySetResult();
+            }
+            catch (System.Exception ex)
+            {
+                completion.TrySetException(ex);
+                throw;
+            }
+        }
+
+        async UniTask ProcessBoardAfterMatchesAsync(CancellationToken cancellationToken)
         {
             bool throwflower = false;
             levelManager.extraCageAddItem = 0;
@@ -68,9 +89,10 @@ namespace JuiceFresh.Scripts
                 }
 
                 // Process items to be destroyed
-                int destroyArrayCount = levelManager.destroyAnyway.Count;
+                List<Item> itemsToDestroy = new List<Item>(levelManager.destroyAnyway);
+                int destroyArrayCount = itemsToDestroy.Count;
                 int iCounter = 0;
-                foreach (Item item in levelManager.destroyAnyway)
+                foreach (Item item in itemsToDestroy)
                 {
                     iCounter++;
                     if (item.nextType == ItemsTypes.NONE)
@@ -269,9 +291,10 @@ namespace JuiceFresh.Scripts
                 }
 
                 // Process items to be destroyed
-                int destroyArrayCount = levelManager.destroyAnyway.Count;
+                List<Item> itemsToDestroy = new List<Item>(levelManager.destroyAnyway);
+                int destroyArrayCount = itemsToDestroy.Count;
                 int iCounter = 0;
-                foreach (Item item in levelManager.destroyAnyway)
+                foreach (Item item in itemsToDestroy)
                 {
                     iCounter++;
                     if (item.nextType == ItemsTypes.NONE)

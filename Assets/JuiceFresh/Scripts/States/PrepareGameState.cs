@@ -46,11 +46,6 @@ namespace JuiceFresh.States
             levelManager.moveID = 0;
             levelManager.selectedColor = -1;
 
-            if (ProgressBarScript.Instance)
-            {
-                ProgressBarScript.Instance.ResetBar();
-            }
-
             ResetUIElements();
 
             ResetTargetData();

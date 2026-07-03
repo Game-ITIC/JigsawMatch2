@@ -16,6 +16,14 @@ namespace JuiceFresh.Scripts
             LevelManager.Score += value;
             UpdateBar();
             CheckStars();
+
+            // Score objectives complete at the exact score change that reaches the target.
+            // Board settling remains responsible for checking every other objective.
+            if (_levelManager.target == Target.SCORE)
+            {
+                _levelManager.CheckWinLose();
+            }
+
             _levelManager.ScorePopupTweenSpawner?.Show(value, pos, color, _levelManager.scoresColors);
         }
 

@@ -63,7 +63,7 @@ public sealed class StarTargetCounter : MonoBehaviour
             return;
         }
 
-        int requiredStars = Mathf.Clamp((int)levelManager.starsTargetCount, 1, 3);
+        int requiredStars = levelManager.RequiredStars;
         int currentStars = Mathf.Min(displayedStars, requiredStars);
         _label.SetText("{0}/{1}", currentStars, requiredStars);
 
