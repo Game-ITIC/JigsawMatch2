@@ -492,7 +492,7 @@ public class TipsManager : MonoBehaviour
         foreach (Item item in itemsToHighlight)
         {
             if (item != null)
-                item.anim.SetTrigger("tip");
+                item.PlayHintAnimation();
         }
         
         // Start checking for the next set of matches

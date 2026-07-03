@@ -10,6 +10,10 @@ public class ItemAnimEvents : MonoBehaviour
 
     public void SetAnimationDestroyingFinished()
     {
-        item.SetAnimationDestroyingFinished();
+        if (item != null)
+        {
+            item.SetAnimationDestroyingFinished();
+            item = null;
+        }
     }
 }
