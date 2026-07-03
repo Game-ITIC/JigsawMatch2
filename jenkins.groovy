@@ -57,7 +57,11 @@ pipeline {
                         ])
                         env.BUILD_BRANCH = scmVars.GIT_BRANCH ?: 'unknown'
                     }
-                    sh 'git rev-parse --short HEAD'
+                    sh '''
+                        set -e
+                        mkdir -p JenkinsLogs Signing Builds/AndroidAPK Builds/AndroidAAB
+                        git rev-parse --short HEAD
+                    '''
                 }
             }
         }
@@ -110,6 +114,8 @@ pipeline {
                         rm -rf "$TMP_BUILD_DIR/Assets/Plugins/Feel/MMTools/Accessories/MMShaders"
                         rm -rf "$TMP_BUILD_DIR/Assets/Plugins/PlaceHolderVFX/JMO Assets/Cartoon FX Remaster/Demo Assets"
                         rm -rf "$TMP_BUILD_DIR/Assets/Plugins/Sirenix/Odin Inspector/Modules/Unity.Mathematics"
+
+                        mkdir -p "$REPO_DIR/JenkinsLogs" "$REPO_DIR/Builds/AndroidAPK" "$REPO_DIR/Signing"
 
                         echo "Starting Unity build..."
                         xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
@@ -201,6 +207,8 @@ pipeline {
                         rm -rf "$TMP_BUILD_DIR/Assets/Plugins/Feel/MMTools/Accessories/MMShaders"
                         rm -rf "$TMP_BUILD_DIR/Assets/Plugins/PlaceHolderVFX/JMO Assets/Cartoon FX Remaster/Demo Assets"
                         rm -rf "$TMP_BUILD_DIR/Assets/Plugins/Sirenix/Odin Inspector/Modules/Unity.Mathematics"
+
+                        mkdir -p "$REPO_DIR/JenkinsLogs" "$REPO_DIR/Builds/AndroidAAB" "$REPO_DIR/Signing"
 
                         echo "Starting Unity build..."
                         xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
@@ -307,10 +315,10 @@ pipeline {
                     def TELEGRAM_CHAT_ID = '-1002435889483'
                     def TELEGRAM_THREAD_ID = '1236'
 
-                    def MESSAGE = '❌ *Build Failed!*\n' +
-                                  "🎮 *Project:* ${PROJECT_NAME}\n" +
-                                  "🌿 *Branch:* ${env.BUILD_BRANCH ?: 'unknown'}\n" +
-                                  '⚠️ *Check Jenkins logs for details.*'
+                    def MESSAGE = 'Build Failed!\n' +
+                                  "Project: ${PROJECT_NAME}\n" +
+                                  "Branch: ${env.BUILD_BRANCH ?: 'unknown'}\n" +
+                                  'Check Jenkins logs for details.'
 
                     writeFile file: 'tg_fail_message.txt', text: MESSAGE
 
@@ -319,8 +327,7 @@ pipeline {
                         curl -s -X POST http://127.0.0.1:8082/bot${BOT_TOKEN}/sendMessage \
                         -d chat_id="${TELEGRAM_CHAT_ID}" \
                         -d message_thread_id="${TELEGRAM_THREAD_ID}" \
-                        --data-urlencode text@tg_fail_message.txt \
-                        -d parse_mode="Markdown"
+                        --data-urlencode text@tg_fail_message.txt
                     """
                 }
             }
