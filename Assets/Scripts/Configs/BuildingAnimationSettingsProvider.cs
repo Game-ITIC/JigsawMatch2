@@ -17,14 +17,9 @@ namespace Configs
         public bool CanLoadNextRegion()
         {
             var nextRegionIndex = currentRegionIndex + 1;
-
-            if(nextRegionIndex < 0 || nextRegionIndex >= buildingsAnimationConfigs.Count)
-            {
-                Debug.LogWarning($"No region is configured after index {currentRegionIndex}");
-                return false;
-            }
-
-            return true;
+            return buildingsAnimationConfigs != null
+                   && nextRegionIndex >= 0
+                   && nextRegionIndex < buildingsAnimationConfigs.Count;
         }
 
         public async UniTask Warmup()
