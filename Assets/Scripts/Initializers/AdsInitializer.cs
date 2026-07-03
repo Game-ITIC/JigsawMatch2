@@ -17,7 +17,6 @@ namespace Initializers
     public class AdsInitializer : IPreload
     {
         private readonly IronSourceInitializer _ironSourceInitializer;
-        private readonly IronSourceManager _ironSourceManager;
         private readonly InternetChecker _internetChecker;
         private readonly InternetState _internetState;
         private readonly ScreenService _screenService;
@@ -28,7 +27,6 @@ namespace Initializers
 
         public AdsInitializer(
             IronSourceInitializer ironSourceInitializer,
-            IronSourceManager ironSourceManager,
             InternetChecker internetChecker,
             SceneLoader sceneLoader,
             InternetState internetState,
@@ -36,7 +34,6 @@ namespace Initializers
         )
         {
             _ironSourceInitializer = ironSourceInitializer;
-            _ironSourceManager = ironSourceManager;
             _internetChecker = internetChecker;
             _internetState = internetState;
             _screenService = screenService;
@@ -56,16 +53,11 @@ namespace Initializers
 
                 if (hasInternetAccess)
                 {
-                    var isReady = await WaitForIronSourceWithTimeout();
+                    await WaitForIronSourceWithTimeout();
                     _screenService.SetLoadingProgress(0.26f);
 
                     await InitializeIAPWithTimeout();
                     _screenService.SetLoadingProgress(0.32f);
-
-                    if (isReady && _internetState.HasRemoveAds)
-                    {
-                        _ironSourceManager.InitializeLevelPlay();
-                    }
                 }
             }
             catch (Exception)

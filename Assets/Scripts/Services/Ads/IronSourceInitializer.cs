@@ -1,23 +1,44 @@
 ﻿using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using VContainer;
 
 public class IronSourceInitializer : MonoBehaviour
 {
     [SerializeField] private float maxWaitTime = 15f;
 
+    private IronSourceManager _ironSourceManager;
+
+    [Inject]
+    private void Construct(IronSourceManager ironSourceManager)
+    {
+        _ironSourceManager = ironSourceManager;
+    }
+
     public async UniTask<bool> WaitForIronSourceInit()
     {
-        IronSourceManager.Instance.InitializeLevelPlay();
+        if(_ironSourceManager == null)
+        {
+            Debug.LogError($"{nameof(IronSourceInitializer)} was not injected with {nameof(IronSourceManager)}.", this);
+            return false;
+        }
 
-        var checkAdsTask = UniTask.WaitUntil(() =>
-            IronSourceManager.Instance != null &&
-            IronSourceManager.Instance.AreAdsReady());
+        _ironSourceManager.InitializeLevelPlay();
 
-        var timeoutTask = UniTask.Delay(TimeSpan.FromSeconds(maxWaitTime));
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
+        timeout.CancelAfter(TimeSpan.FromSeconds(Mathf.Max(0.1f, maxWaitTime)));
 
-        int completedTaskIndex = await UniTask.WhenAny(checkAdsTask, timeoutTask);
-
-        return completedTaskIndex == 0;
+        try
+        {
+            await UniTask.WaitUntil(
+                () => _ironSourceManager != null && _ironSourceManager.AreAdsReady(),
+                cancellationToken: timeout.Token);
+            return true;
+        }
+        catch(OperationCanceledException)
+        {
+            return false;
+        }
     }
 }
