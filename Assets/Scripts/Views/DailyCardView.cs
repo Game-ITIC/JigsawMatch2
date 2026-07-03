@@ -30,7 +30,7 @@ namespace Views
         private void OnValidate()
         {
             ResolveReferences();
-        }
+        } 
 #endif
 
         public void Bind(int dayNumber, Sprite rewardSprite, int rewardValue)
