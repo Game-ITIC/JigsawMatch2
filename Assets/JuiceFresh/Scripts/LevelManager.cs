@@ -211,6 +211,8 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     // Get stars
     public CollectStars starsTargetCount;
 
+    public int RequiredStars => Mathf.Clamp((int)starsTargetCount, 1, 3);
+
     // Amount of blocks for collecting
     public int targetBlocks;
 
@@ -676,7 +678,6 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         passLevelCounter = 0;
 
         gameStatus = GameState.PrepareGame;
-        LoadLevel();
     }
 
     void InitializeCollectedTargetFlyController()
@@ -818,6 +819,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         currentLevel = LevelProgressionHelper.CalculateLevel(currentLevel);
         LoadDataFromLocal(currentLevel);
         NumIngredients = ingrTarget.Count;
+        ProgressBarScript.Instance?.ConfigureForLevel();
     }
 
     public void LoadDataFromLocal(int currentLevel)
@@ -1492,115 +1494,57 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
 
     public void CheckWinLose()
     {
+        if(gameStatus != GameState.Playing)
+        {
+            return;
+        }
+
+        // A goal reached on the last move is still a win, so evaluate it before the limit.
+        if(IsObjectiveCompleted())
+        {
+            gameStatus = GameState.PreWinAnimations;
+            return;
+        }
+
         if(Limit <= 0)
         {
-            bool lose = false;
             Limit = 0;
-
-            if(LevelManager.THIS.target == Target.BLOCKS && LevelManager.THIS.TargetBlocks > 0)
-            {
-                lose = true;
-            }
-            else if(LevelManager.THIS.target == Target.CAGES && LevelManager.THIS.TargetCages > 0)
-            {
-                lose = true;
-            }
-            else if(LevelManager.THIS.target == Target.COLLECT || LevelManager.THIS.target == Target.ITEMS)
-            {
-                if(GetRestIngredients() > 0)
-                {
-                    lose = true;
-                }
-            }
-            else if(LevelManager.THIS.target == Target.SCORE && LevelManager.Score < GetScoresOfTargetStars())
-            {
-                lose = true;
-            }
-
-            if(LevelManager.Score < LevelManager.THIS.star1 && LevelManager.THIS.target != Target.SCORE)
-            {
-                lose = true;
-            }
-
-            if(lose)
-                gameStatus = GameState.GameOver;
-            else if(LevelManager.Score >= LevelManager.THIS.star1 &&
-                    (LevelManager.THIS.target == Target.BOMBS) &&
-                    LevelManager.THIS.TargetBombs >= bombsCollect)
-            {
-                gameStatus = GameState.PreWinAnimations;
-            }
-            else if(LevelManager.Score >= LevelManager.THIS.star1 &&
-                    LevelManager.THIS.target == Target.BLOCKS &&
-                    LevelManager.THIS.TargetBlocks <= 0)
-            {
-                gameStatus = GameState.PreWinAnimations;
-            }
-            else if(LevelManager.Score >= LevelManager.THIS.star1 &&
-                    LevelManager.THIS.target == Target.CAGES &&
-                    LevelManager.THIS.TargetCages <= 0)
-            {
-                gameStatus = GameState.PreWinAnimations;
-            }
-            else if(LevelManager.Score >= LevelManager.THIS.star1 &&
-                    (LevelManager.THIS.target == Target.COLLECT || LevelManager.THIS.target == Target.ITEMS) &&
-                    GetRestIngredients() <= 0)
-            {
-                gameStatus = GameState.PreWinAnimations;
-            }
-            else if(LevelManager.THIS.target == Target.SCORE && LevelManager.Score >= GetScoresOfTargetStars())
-            {
-                gameStatus = GameState.PreWinAnimations;
-            }
+            gameStatus = GameState.GameOver;
         }
-        else
+    }
+
+    private bool IsObjectiveCompleted()
+    {
+        if(target == Target.SCORE)
         {
-            bool win = false;
-
-            if(LevelManager.THIS.target == Target.BLOCKS && LevelManager.THIS.TargetBlocks <= 0)
-            {
-                win = true;
-            }
-
-            if(LevelManager.THIS.target == Target.CAGES && LevelManager.THIS.TargetCages <= 0)
-            {
-                win = true;
-            }
-
-            if(LevelManager.THIS.target == Target.BOMBS && LevelManager.THIS.TargetBombs >= bombsCollect)
-            {
-                win = true;
-            }
-            else if(LevelManager.THIS.target == Target.COLLECT || LevelManager.THIS.target == Target.ITEMS)
-            {
-                win = true;
-
-                if(GetRestIngredients() > 0)
-                {
-                    win = false;
-                }
-            }
-
-            if(LevelManager.THIS.target == Target.SCORE && LevelManager.Score >= GetScoresOfTargetStars())
-            {
-                win = true;
-            }
-
-            if(LevelManager.Score < LevelManager.THIS.star1 && LevelManager.THIS.target != Target.SCORE)
-            {
-                win = false;
-            }
-
-            if(win)
-                gameStatus = GameState.PreWinAnimations;
+            return Score >= GetScoresOfTargetStars();
         }
+
+        // Non-score objectives also require at least one earned star.
+        if(Score < star1)
+        {
+            return false;
+        }
+
+        return target switch
+        {
+            Target.BLOCKS => TargetBlocks <= 0,
+            Target.CAGES => TargetCages <= 0,
+            Target.BOMBS => TargetBombs >= bombsCollect,
+            Target.COLLECT or Target.ITEMS => GetRestIngredients() <= 0,
+            _ => false
+        };
     }
 
     public int GetScoresOfTargetStars()
     {
-        return (int)this.GetType()
-            .GetField("star" + (int)starsTargetCount)
-            .GetValue(this); // Get value of appropriate field (star1, star2 or star3)
+        return RequiredStars switch
+        {
+            1 => star1,
+            2 => star2,
+            3 => star3,
+            _ => star1
+        };
     }
 
     #endregion
