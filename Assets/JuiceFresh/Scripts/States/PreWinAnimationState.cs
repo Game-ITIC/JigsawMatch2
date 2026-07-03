@@ -10,6 +10,8 @@ using UI;
 public class PreWinAnimationsState : GameStateBase
 {
     private Coroutine animationCoroutine;
+    private Transform preCompleteBannerTransform;
+    private Transform limitTransform;
 
     public PreWinAnimationsState(LevelManager levelManager) : base(levelManager)
     {
@@ -17,16 +19,13 @@ public class PreWinAnimationsState : GameStateBase
 
     public override void EnterState()
     {
-        // Stop the game music
         MusicBase.Instance.GetComponent<AudioSource>().Stop();
-
-        // Start the pre-win animations
+        levelManager.ResumeBoardAmbientAnimations();
         animationCoroutine = levelManager.StartCoroutine(PreWinAnimationsCor());
     }
 
     public override void UpdateState()
     {
-        // No specific update logic for pre-win animations state
     }
 
     public override void ExitState()
@@ -40,99 +39,85 @@ public class PreWinAnimationsState : GameStateBase
 
    private IEnumerator PreWinAnimationsCor()
     {
-        // Log for debugging
-        Debug.Log("Starting PreWinAnimationsCor");
-
-        // Add life if configured to not lose life every game
-        // if (!InitScript.Instance.losingLifeEveryGame)
-        //     InitScript.Instance.AddLife(1);
-
-        // Play completion sound
         SoundBase.Instance.PlaySound(SoundBase.Instance.complete[1]);
         GameFeelManager.Instance?.OnPreWin();
-        
-        // Find and show pre-complete banner
-        GameObject preCompleteBanner = GameObject.Find("Level/Canvas").transform.Find("PreCompleteBanner").gameObject;
-        preCompleteBanner.SetActive(true);
-        Debug.Log("Pre-complete banner activated");
 
-        UIPreCompleteBannerTweenAnimation bannerAnimation = preCompleteBanner.GetComponent<UIPreCompleteBannerTweenAnimation>();
-        if(bannerAnimation != null)
+        if (preCompleteBannerTransform == null)
+            preCompleteBannerTransform = GameObject.Find("Level/Canvas")?.transform.Find("PreCompleteBanner");
+
+        if (preCompleteBannerTransform != null)
         {
-            yield return bannerAnimation.WaitForCompletion();
+            preCompleteBannerTransform.gameObject.SetActive(true);
+            UIPreCompleteBannerTweenAnimation bannerAnimation = preCompleteBannerTransform.GetComponent<UIPreCompleteBannerTweenAnimation>();
+            if (bannerAnimation != null)
+                yield return bannerAnimation.WaitForCompletion();
+            else
+            {
+                yield return new WaitForSeconds(3f);
+                preCompleteBannerTransform.gameObject.SetActive(false);
+            }
         }
-        else
-        {
-            yield return new WaitForSeconds(3f);
-            preCompleteBanner.SetActive(false);
-        }
-        
-        // Get position for flower animations
-        Vector3 limitPos = GameObject.Find("Limit").transform.position;
-        Debug.Log("Limit position: " + limitPos);
+
+        if (limitTransform == null)
+            limitTransform = GameObject.Find("Limit")?.transform;
+
+        Vector3 limitPos = limitTransform != null ? limitTransform.position : Vector3.zero;
 
         yield return new WaitForSeconds(1);
-        
-        // Play map music
+
         PlayMapMusic();
 
-        // Determine flower count based on level type
+        yield return levelManager.SettleBoardBeforePreWin().ToCoroutine();
+
         int countFlowers = levelManager.limitType == LIMIT.MOVES ? Mathf.Clamp(levelManager.Limit, 0, 8) : 3;
-        List<Item> items = levelManager.GetRandomItems(levelManager.limitType == LIMIT.MOVES ? Mathf.Clamp(levelManager.Limit, 0, 8) : 3);
-        Debug.Log("Flower count: " + countFlowers);
-        
-        // Create flower animations
+
         for (int i = 1; i <= countFlowers; i++)
         {
-            Debug.Log("Creating flower " + i);
             if (levelManager.limitType == LIMIT.MOVES)
                 levelManager.Limit--;
-                
+
             GameObject flowerParticle = levelManager.GetFlowerFromPool();
-        
+
             if (flowerParticle != null)
             {
                 flowerParticle.GetComponent<SpriteRenderer>().sortingLayerName = "UI";
                 flowerParticle.GetComponent<Flower>().StartFly(limitPos, true);
-                Debug.Log("Flower started flying");
-            }
-            else
-            {
-                Debug.LogError("Failed to get flower from pool");
             }
 
             yield return new WaitForSeconds(0.5f);
         }
-        
-        // Set limit to 0 after animations
+
         levelManager.Limit = 0;
 
-        // Wait for all flowers to finish flying
-        Debug.Log("Waiting for flowers to complete flight");
+        float flowerWaitDeadline = Time.time + 15f;
         while (levelManager.CheckFlowerStillFly())
         {
-            Debug.Log("Flowers still flying...");
-            yield return new WaitForSeconds(0.3f);
+            if (Time.time >= flowerWaitDeadline)
+            {
+                levelManager.ForceCleanupFlowers();
+                break;
+            }
+
+            yield return new WaitForSeconds(0.1f);
         }
-        Debug.Log("All flowers completed flight");
 
         yield return ClearRemainingExtraItems();
+        levelManager.ResumeBoardAmbientAnimations();
 
         yield return new WaitForSeconds(1f);
-        
-        while (levelManager.DragBlocked)
-            yield return new WaitForSeconds(0.2f);
 
-        // Save level progress and stars
+        float dragWaitDeadline = Time.time + 5f;
+        while (levelManager.DragBlocked && Time.time < dragWaitDeadline)
+            yield return new WaitForSeconds(0.1f);
+
+        if (levelManager.DragBlocked)
+            levelManager.DragBlocked = false;
+
         SaveLevelProgress();
-        Debug.Log("Level progress saved");
 
-        // Show map temporarily to update it
         levelManager.LevelsMap.SetActive(false);
         levelManager.LevelsMap.SetActive(true);
 
-        // Transition to Win state
-        Debug.Log("Transitioning to Win state");
         levelManager.gameStatus = GameState.Win;
     }
 
@@ -144,27 +129,19 @@ public class PreWinAnimationsState : GameStateBase
             levelManager.DragBlocked = true;
 
             foreach (Item item in extraItems)
-            {
                 item.DestroyItem(false, "", false, true);
-            }
 
             yield return new WaitForSeconds(0.1f);
-            yield return levelManager.ProcessMatchesAndFalling().ToCoroutine();
+            yield return levelManager.ProcessMatchesAndFalling(freezeAnimations: false).ToCoroutine();
 
             float timeout = Time.time + 10f;
             while (levelManager.DragBlocked && Time.time < timeout)
-            {
                 yield return new WaitForFixedUpdate();
-            }
 
             if (Time.time >= timeout)
-            {
-                Debug.LogWarning("PreWinAnimations: DragBlocked stuck - forcing to false");
                 levelManager.DragBlocked = false;
-            }
         }
     }
-
 
     private void PlayMapMusic()
     {
@@ -174,25 +151,15 @@ public class PreWinAnimationsState : GameStateBase
         audioSource.Play();
     }
 
-
     private void SaveLevelProgress()
     {
-        // Save stars if current stars are better than saved stars
         int currentLevel = levelManager.currentLevel;
         int stars = levelManager.stars;
 
-        Debug.Log($"Current level: {currentLevel}, Stars: {stars}");
-
         if (PlayerPrefs.GetInt(string.Format("Level.{0:000}.StarsCount", currentLevel), 0) < stars)
-        {
             PlayerPrefs.SetInt(string.Format("Level.{0:000}.StarsCount", currentLevel), stars);
-            Debug.Log($"Stars saved: {stars} for level {currentLevel}");
-        }
 
-        // Save high score if current score is better
         if (LevelManager.Score > PlayerPrefs.GetInt("Score" + currentLevel))
-        {
             PlayerPrefs.SetInt("Score" + currentLevel, LevelManager.Score);
-        }
     }
 }

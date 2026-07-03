@@ -1000,10 +1000,24 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
         LevelManager.THIS.FindMatches();
     }
 
-    public async UniTask ProcessMatchesAndFalling()
+    public async UniTask ProcessMatchesAndFalling(bool freezeAnimations = true)
     {
-        // var routine = StartCoroutine(_boardMechanicsService.ProcessBoardAfterMatches());
-        await _boardMechanicsService.ProcessBoardAfterMatches(CancellationToken.None);
+        await _boardMechanicsService.ProcessBoardAfterMatches(CancellationToken.None, freezeAnimations);
+    }
+
+    public async UniTask SettleBoardBeforePreWin()
+    {
+        await _boardMechanicsService.SettleBoardGravityOnly();
+        ResumeBoardAmbientAnimations();
+    }
+
+    public void ResumeBoardAmbientAnimations()
+    {
+        foreach (Item item in GetItems())
+        {
+            if (item != null && !item.destroying)
+                item.SleepItem();
+        }
     }
 
     void DestroyGatheredExtraItems(Item item)
@@ -1125,6 +1139,11 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     public bool CheckFlowerStillFly()
     {
         return LevelEffectsController != null && LevelEffectsController.HasFlyingFlowers();
+    }
+
+    public void ForceCleanupFlowers()
+    {
+        LevelEffectsController?.ForceCleanupAllFlowers();
     }
 
     #endregion
