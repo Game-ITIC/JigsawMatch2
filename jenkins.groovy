@@ -116,7 +116,7 @@ pipeline {
                         "$UNITY_PATH/Unity" \
                           -quit -batchmode -nographics \
                           -projectPath "$TMP_BUILD_DIR" \
-                          -executeMethod BuildScript.BuildAndroid \
+                          -executeMethod Editor.BuildScript.BuildAndroid \
                           -job-worker-count 2 \
                           -buildType APK \
                           -logFile "$REPO_DIR/JenkinsLogs/unity_android_apk.log"
@@ -207,7 +207,7 @@ pipeline {
                         "$UNITY_PATH/Unity" \
                           -quit -batchmode -nographics \
                           -projectPath "$TMP_BUILD_DIR" \
-                          -executeMethod BuildScript.BuildAndroid \
+                          -executeMethod Editor.BuildScript.BuildAndroid \
                           -job-worker-count 2 \
                           -buildType AAB \
                           -logFile "$REPO_DIR/JenkinsLogs/unity_android_aab.log"
