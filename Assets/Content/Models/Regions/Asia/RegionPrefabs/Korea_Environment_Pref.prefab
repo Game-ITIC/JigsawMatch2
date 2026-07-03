@@ -1221,13 +1221,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7496815627590055673}
+  - component: {fileID: 2597834849366096396}
   m_Layer: 0
   m_Name: Korea_Environment_Pref
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7496815627590055673
 Transform:
   m_ObjectHideFlags: 0
@@ -1249,7 +1250,6 @@ Transform:
   - {fileID: 6257452374126404831}
   - {fileID: 9082034763397382335}
   - {fileID: 3765347811959443956}
-  - {fileID: 7605319653344745096}
   - {fileID: 62250753277112979}
   - {fileID: 1628092023428823794}
   - {fileID: 4283188701186415977}
@@ -1258,6 +1258,29 @@ Transform:
   - {fileID: 9113939529758421667}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -188.77, z: 0}
+--- !u!114 &2597834849366096396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6225021925073061284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2654948292e4c9eb569cde5fc0e2319, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Configs.BuildingsAnimationConfig
+  animator: {fileID: 8577972153195739583}
+  animationClip: {fileID: 7400000, guid: 60f66f70cea894a4dbd5e3d8b646bf7d, type: 2}
+  data:
+  - startFrame: 1
+    endFrame: 30
+  - startFrame: 50
+    endFrame: 100
+  - startFrame: 130
+    endFrame: 180
+  - startFrame: 200
+    endFrame: 220
 --- !u!1 &6259541838597172688
 GameObject:
   m_ObjectHideFlags: 0
@@ -1301,8 +1324,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3765347811959443956}
+  - component: {fileID: 8577972153195739583}
+  - component: {fileID: 7081721468544862905}
   m_Layer: 0
-  m_Name: Pagoda
+  m_Name: Korean_building
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1326,6 +1351,44 @@ Transform:
   - {fileID: 4140560915596697654}
   m_Father: {fileID: 7496815627590055673}
   m_LocalEulerAnglesHint: {x: 1.3, y: -247.96, z: 0}
+--- !u!95 &8577972153195739583
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6594810576683587560}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7d31dc55afe0c084dbe1f31fb7b2c846, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!111 &7081721468544862905
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6594810576683587560}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: 60f66f70cea894a4dbd5e3d8b646bf7d, type: 2}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &7066506027215611618
 GameObject:
   m_ObjectHideFlags: 0
@@ -1750,37 +1813,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7496815627590055673}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &9138464974285548555
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7605319653344745096}
-  m_Layer: 0
-  m_Name: Korean_building
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7605319653344745096
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9138464974285548555}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.8972584, z: 0, w: 0.44150594}
-  m_LocalPosition: {x: 678, y: 209, z: -686}
-  m_LocalScale: {x: 1.5, y: 1.25, z: 1.5}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 7496815627590055673}
-  m_LocalEulerAnglesHint: {x: 0, y: 127.6, z: 0}
 --- !u!1001 &398793101989782249
 PrefabInstance:
   m_ObjectHideFlags: 0
