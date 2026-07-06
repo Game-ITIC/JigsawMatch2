@@ -238,7 +238,8 @@ MonoBehaviour:
   m_text: OK
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e0bab4cd34bdc6479c151d6695f9548, type: 2}
-  m_sharedMaterial: {fileID: 6134174294357665652, guid: 2e0bab4cd34bdc6479c151d6695f9548, type: 2}
+  m_sharedMaterial: {fileID: 6134174294357665652, guid: 2e0bab4cd34bdc6479c151d6695f9548,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -471,7 +472,8 @@ MonoBehaviour:
   m_text: 'Gives you the 5 extra moves '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e0bab4cd34bdc6479c151d6695f9548, type: 2}
-  m_sharedMaterial: {fileID: 6134174294357665652, guid: 2e0bab4cd34bdc6479c151d6695f9548, type: 2}
+  m_sharedMaterial: {fileID: 6134174294357665652, guid: 2e0bab4cd34bdc6479c151d6695f9548,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -655,6 +657,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3242c818749d4e61b7e531204d8c96d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   playOnEnable: 1
   useUnscaledTime: 1
   rotationDelta: {x: 0, y: 0, z: -360}
@@ -679,7 +683,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4095444078723328629
 RectTransform:
   m_ObjectHideFlags: 0
