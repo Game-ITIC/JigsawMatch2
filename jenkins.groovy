@@ -122,6 +122,7 @@ pipeline {
                         xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
                         "$UNITY_PATH/Unity" \
                           -quit -batchmode -nographics \
+                          -buildTarget Android \
                           -projectPath "$TMP_BUILD_DIR" \
                           -executeMethod Editor.BuildScript.BuildAndroid \
                           -job-worker-count 2 \
@@ -130,6 +131,7 @@ pipeline {
                         UNITY_EXIT=$?
                         set -e
 
+                        mkdir -p "$REPO_DIR/JenkinsLogs"
                         cp "$TMP_BUILD_DIR/JenkinsLogs/unity_android_apk.log" "$REPO_DIR/JenkinsLogs/unity_android_apk.log" || true
                         cp "$TMP_BUILD_DIR/Library/LastBuild.buildreport" "$REPO_DIR/JenkinsLogs/LastBuild_APK.buildreport" || true
 
@@ -225,6 +227,7 @@ pipeline {
                         xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
                         "$UNITY_PATH/Unity" \
                           -quit -batchmode -nographics \
+                          -buildTarget Android \
                           -projectPath "$TMP_BUILD_DIR" \
                           -executeMethod Editor.BuildScript.BuildAndroid \
                           -job-worker-count 2 \
@@ -233,6 +236,7 @@ pipeline {
                         UNITY_EXIT=$?
                         set -e
 
+                        mkdir -p "$REPO_DIR/JenkinsLogs"
                         cp "$TMP_BUILD_DIR/JenkinsLogs/unity_android_aab.log" "$REPO_DIR/JenkinsLogs/unity_android_aab.log" || true
                         cp "$TMP_BUILD_DIR/Library/LastBuild.buildreport" "$REPO_DIR/JenkinsLogs/LastBuild_AAB.buildreport" || true
 
@@ -281,6 +285,7 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: 'src/JenkinsLogs/*.log', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'src/JenkinsLogs/*.buildreport', allowEmptyArchive: true
             archiveArtifacts artifacts: 'src/Builds/**', allowEmptyArchive: true
         }
         success {
@@ -288,24 +293,55 @@ pipeline {
                 script {
                     def TELEGRAM_CHAT_ID = '-1002435889483'
                     def TELEGRAM_THREAD_ID = '1236'
+                    def completedAt = new Date().format('yyyy-MM-dd HH:mm:ss z', TimeZone.getTimeZone('Asia/Tashkent'))
+                    def commitShort = sh(script: 'git -C src rev-parse --short HEAD', returnStdout: true).trim()
+                    def buildUrl = env.BUILD_URL ?: ''
+                    def htmlEscape = { value ->
+                        return (value ?: '')
+                            .replace('&', '&amp;')
+                            .replace('<', '&lt;')
+                            .replace('>', '&gt;')
+                    }
 
-                    def CAPTION = '✅ *Are we still on this project?*\n' +
-                                  "🎮 *Project:* ${PROJECT_NAME}\n" +
-                                  "🔢 *Build Version:* #${env.BUILD_NUMBER}\n" +
-                                  "🌿 *Branch:* ${env.BUILD_BRANCH ?: 'unknown'}"
+                    def writeSuccessCaption = { artifactPath, artifactType ->
+                        def artifactName = sh(script: "basename '${artifactPath}'", returnStdout: true).trim()
+                        def artifactSize = sh(script: "du -h '${artifactPath}' | awk '{print \$1}'", returnStdout: true).trim()
+                        def caption =
+                            "<b>Butterfly Match Android ${htmlEscape(artifactType)} build succeeded</b>\n" +
+                            "<pre>" +
+                            "Project: ${htmlEscape(PROJECT_NAME)}\n" +
+                            "Job: ${htmlEscape(env.JOB_NAME ?: 'Butterfly Match')}\n" +
+                            "Build: #${htmlEscape(env.BUILD_NUMBER)}\n" +
+                            "Branch: ${htmlEscape(env.BUILD_BRANCH ?: 'unknown')}\n" +
+                            "Commit: ${htmlEscape(commitShort)}\n" +
+                            "Unity: ${htmlEscape(UNITY_VERSION)}\n" +
+                            "Artifact: ${htmlEscape(artifactName)}\n" +
+                            "Size: ${htmlEscape(artifactSize)}\n" +
+                            "Completed: ${htmlEscape(completedAt)}" +
+                            "</pre>"
+
+                        if (buildUrl) {
+                            caption += "\n<a href=\"${htmlEscape(buildUrl)}\">Open Jenkins build</a>"
+                        }
+
+                        writeFile file: 'tg_success_caption.html', text: caption
+                    }
 
                     // 1. Upload APK Directly into Telegram Chat
                     if (params.BUILD_ANDROID_APK || (env.BUILD_BRANCH != null && env.BUILD_BRANCH.contains('develop'))) {
                         def APK_PATH = sh(script: 'ls -1 src/Builds/AndroidAPK/*.apk 2>/dev/null | head -n 1', returnStdout: true).trim()
                         if (APK_PATH) {
-                            sh """
-                                curl -s -X POST http://127.0.0.1:8082/bot${BOT_TOKEN}/sendDocument \
-                                -F chat_id="${TELEGRAM_CHAT_ID}" \
-                                -F message_thread_id="${TELEGRAM_THREAD_ID}" \
-                                -F document=@"${APK_PATH}" \
-                                -F caption="${CAPTION}" \
-                                -F parse_mode="Markdown"
-                            """
+                            writeSuccessCaption(APK_PATH, 'APK')
+                            withEnv(["TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}", "TELEGRAM_THREAD_ID=${TELEGRAM_THREAD_ID}", "ARTIFACT_PATH=${APK_PATH}"]) {
+                                sh '''
+                                    curl -s -X POST "http://127.0.0.1:8082/bot${BOT_TOKEN}/sendDocument" \
+                                      -F chat_id="${TELEGRAM_CHAT_ID}" \
+                                      -F message_thread_id="${TELEGRAM_THREAD_ID}" \
+                                      -F document=@"${ARTIFACT_PATH}" \
+                                      -F caption="<tg_success_caption.html" \
+                                      -F parse_mode="HTML"
+                                '''
+                            }
                         }
                     }
 
@@ -313,14 +349,17 @@ pipeline {
                     if (params.BUILD_ANDROID_AAB || (env.BUILD_BRANCH != null && env.BUILD_BRANCH.contains('main'))) {
                         def AAB_PATH = sh(script: 'ls -1 src/Builds/AndroidAAB/*.aab 2>/dev/null | head -n 1', returnStdout: true).trim()
                         if (AAB_PATH) {
-                            sh """
-                                curl -s -X POST http://127.0.0.1:8082/bot${BOT_TOKEN}/sendDocument \
-                                -F chat_id="${TELEGRAM_CHAT_ID}" \
-                                -F message_thread_id="${TELEGRAM_THREAD_ID}" \
-                                -F document=@"${AAB_PATH}" \
-                                -F caption="${CAPTION}" \
-                                -F parse_mode="Markdown"
-                            """
+                            writeSuccessCaption(AAB_PATH, 'AAB')
+                            withEnv(["TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}", "TELEGRAM_THREAD_ID=${TELEGRAM_THREAD_ID}", "ARTIFACT_PATH=${AAB_PATH}"]) {
+                                sh '''
+                                    curl -s -X POST "http://127.0.0.1:8082/bot${BOT_TOKEN}/sendDocument" \
+                                      -F chat_id="${TELEGRAM_CHAT_ID}" \
+                                      -F message_thread_id="${TELEGRAM_THREAD_ID}" \
+                                      -F document=@"${ARTIFACT_PATH}" \
+                                      -F caption="<tg_success_caption.html" \
+                                      -F parse_mode="HTML"
+                                '''
+                            }
                         }
                     }
                 }
