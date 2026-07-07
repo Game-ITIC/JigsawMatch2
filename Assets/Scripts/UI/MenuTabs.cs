@@ -27,7 +27,7 @@ namespace UI
 
         public async UniTask Warmup()
         {
-            if (!CanWarmup())
+            if(!CanWarmup())
             {
                 await UniTask.Yield();
                 return;
@@ -67,10 +67,10 @@ namespace UI
 
         private bool CanWarmup()
         {
-            return _menuNavigationProvider != null
-                   && _menuNavigationProvider.SceneCanvas != null
-                   && _menuNavigationProvider.NavigationButtons != null
-                   && _menuNavigationProvider.NavigationButtons.Length > 0;
+            return _menuNavigationProvider != null &&
+                   _menuNavigationProvider.SceneCanvas != null &&
+                   _menuNavigationProvider.NavigationButtons != null &&
+                   _menuNavigationProvider.NavigationButtons.Length > 0;
         }
 
         private async UniTask SwitchPanel(NavigationPanels navigationPanel)
@@ -155,11 +155,11 @@ namespace UI
 
         private static RectTransform FindChildRectTransform(Transform parent, params string[] names)
         {
-            for(var i = 0; i < parent.childCount; i++)
+            for (var i = 0; i < parent.childCount; i++)
             {
                 var child = parent.GetChild(i);
 
-                for(var nameIndex = 0; nameIndex < names.Length; nameIndex++)
+                for (var nameIndex = 0; nameIndex < names.Length; nameIndex++)
                 {
                     if(string.Equals(child.name, names[nameIndex], System.StringComparison.OrdinalIgnoreCase))
                     {
@@ -181,6 +181,7 @@ namespace UI
         private float GetPanelWidth()
         {
             var scaler = _menuNavigationProvider.SceneCanvas.GetComponent<CanvasScaler>();
+
             if(scaler != null && scaler.referenceResolution.x > 0)
             {
                 return scaler.referenceResolution.x;
@@ -195,6 +196,7 @@ namespace UI
             for (int i = 0; i < _menuNavigationProvider.NavigationButtons.Length; i++)
             {
                 var button = _menuNavigationProvider.NavigationButtons[i];
+
                 if(button == null)
                 {
                     continue;
@@ -217,6 +219,7 @@ namespace UI
             for (int i = 0; i < _menuNavigationProvider.NavigationButtons.Length; i++)
             {
                 var button = _menuNavigationProvider.NavigationButtons[i];
+
                 if(button == null)
                 {
                     continue;
