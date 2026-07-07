@@ -326,6 +326,8 @@ public class MenuView : MonoBehaviour, IPreload
 
     private void ShowPanel(GameObject panel)
     {
+        ActivateParents(panel);
+
         CurvedUIPanelAnimator.Show(
             panel,
             animatePanelTransitions ? panelOpenDuration : 0f,
@@ -347,6 +349,27 @@ public class MenuView : MonoBehaviour, IPreload
     private static void HidePanelImmediate(GameObject panel)
     {
         CurvedUIPanelAnimator.HideImmediate(panel);
+    }
+
+    private static void ActivateParents(GameObject panel)
+    {
+        if(panel == null)
+        {
+            return;
+        }
+
+        var parent = panel.transform.parent;
+        if(parent == null)
+        {
+            return;
+        }
+
+        ActivateParents(parent.gameObject);
+
+        if(!parent.gameObject.activeSelf)
+        {
+            parent.gameObject.SetActive(true);
+        }
     }
 
     private static void WireButtons(List<Button> buttons, UnityAction action)
