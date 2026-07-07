@@ -1,3 +1,4 @@
+using System;
 using UI;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,5 +15,7 @@ namespace Providers
         [field: SerializeField] public AnimationCurve PanelSlideCurve { get; private set; } = CurvedUIPanelAnimator.CreateDefaultCloseCurve();
         [field: SerializeField] public AnimationCurve ButtonScaleCurve { get; private set; } = CurvedUIPanelAnimator.CreateDefaultOpenCurve();
         [field: SerializeField] public AnimationCurve ButtonFadeCurve { get; private set; } = CurvedUIPanelAnimator.CreateDefaultFadeCurve();
+
+        
     }
 }

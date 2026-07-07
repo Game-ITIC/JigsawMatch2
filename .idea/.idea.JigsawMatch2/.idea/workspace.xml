@@ -11,8 +11,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c8bc5122-cbac-4efe-813b-118ec8437e54" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/Settings/Rendering/UniversalRenderPipelineGlobalSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Settings/Rendering/UniversalRenderPipelineGlobalSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jenkins.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/jenkins.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.JigsawMatch2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JigsawMatch2/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Gley/DailyRewards/Scripts/Internal/CalendarManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Gley/DailyRewards/Scripts/Internal/CalendarManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Presenters/DailyCardsPresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Presenters/DailyCardsPresenter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Providers/MenuNavigationProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Providers/MenuNavigationProvider.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,7 +22,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="146" />
+    <option name="cachedIndexableFilesCount" value="148" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -116,7 +118,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "cidr.known.project.marker": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "fix/DailyRewards",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -197,6 +199,8 @@
       <workItem from="1777105699462" duration="786000" />
       <workItem from="1782116501747" duration="2249000" />
       <workItem from="1783086575563" duration="2255000" />
+      <workItem from="1783348029876" duration="1222000" />
+      <workItem from="1783422120880" duration="2890000" />
     </task>
     <servers />
   </component>
