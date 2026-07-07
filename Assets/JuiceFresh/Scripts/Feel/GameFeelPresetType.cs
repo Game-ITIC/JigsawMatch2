@@ -1,8 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Ten soft gameplay-feel profiles tuned for a gentle, cozy jar-matching experience.
-/// Pick one in the Inspector dropdown on <see cref="GameFeelManager"/>.
+/// Gameplay-feel recipes. Grid intro has its own independent preset.
 /// </summary>
 public enum GameFeelPresetType
 {
@@ -12,10 +11,10 @@ public enum GameFeelPresetType
     [InspectorName("01 · Пуховое облако")]
     CottonCloud,
 
-    [InspectorName("02 · Лепесток")]
+    [InspectorName("02 · Лепестковый дрейф")]
     PetalDrift,
 
-    [InspectorName("03 · Мёдовое тепло")]
+    [InspectorName("03 · Медовое тепло")]
     HoneyWarmth,
 
     [InspectorName("04 · Шёлковое касание")]

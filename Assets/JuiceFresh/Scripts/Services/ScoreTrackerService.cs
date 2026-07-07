@@ -17,13 +17,8 @@ namespace JuiceFresh.Scripts
             UpdateBar();
             CheckStars();
 
-            // Score objectives complete at the exact score change that reaches the target.
-            // Board settling remains responsible for checking every other objective.
-            if (_levelManager.target == Target.SCORE)
-            {
-                _levelManager.CheckWinLose();
-            }
-
+            // BoardMechanicsService checks win/lose after destruction and falling finish.
+            // Switching to PreWin here would leave the completion flow waiting on an active board process.
             _levelManager.ScorePopupTweenSpawner?.Show(value, pos, color, _levelManager.scoresColors);
         }
 

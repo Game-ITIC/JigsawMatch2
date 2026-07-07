@@ -1,8 +1,8 @@
-using DG.Tweening;
 using UnityEngine;
 
 /// <summary>
-/// Ten clearly distinct gentle feel profiles for jar-matching gameplay.
+/// Curated gameplay-feel recipes. A preset changes behavior and timing language,
+/// not only the strength of the same animation.
 /// </summary>
 public static class GameFeelPresetLibrary
 {
@@ -41,519 +41,304 @@ public static class GameFeelPresetLibrary
         switch(preset)
         {
             case GameFeelPresetType.Custom:
-                return "Ручная настройка всех параметров.";
+                return "Ручная настройка. Появление грида настраивается отдельно на GameFieldTweenAnimation.";
             case GameFeelPresetType.CottonCloud:
-                return "Статичный кокон: без тряски, без вибрации, поле появляется разом, едва заметное свечение.";
+                return "Почти невесомый режим: предметы чуть всплывают, аура спокойно растворяется, доска неподвижна.";
             case GameFeelPresetType.PetalDrift:
-                return "Волна с краёв к центру, розовое дыхание свечения, медленное покачивание поля.";
+                return "Лепестковый дрейф: предмет приподнимается, аура медленно вращается и улетает вверх, цепочка нарастает волной.";
             case GameFeelPresetType.HoneyWarmth:
-                return "Золотое сияние, вертикальное «парение» поля, заметный пульс при совпадении.";
+                return "Тёплый ритм: мягкий pop, сердцебиение ауры и золотой bloom на ключевых шагах цепочки.";
             case GameFeelPresetType.SilkTouch:
-                return "Почти без картинки — упор на тактильную отдачу и быстрый отклик.";
+                return "Точный тактильный щелчок: быстрый tap, короткое схлопывание ауры и акцент на каждом третьем выборе.";
             case GameFeelPresetType.BubbleSoft:
-                return "Упругие отскоки, OutElastic, тряска камеры, игривый «плюх» баночек.";
+                return "Пузырьковая упругость: squash & stretch предметов, elastic-отскок доски и заметный bloom.";
             case GameFeelPresetType.LavenderMist:
-                return "Сонный темп ×2: лавандовое свечение, волна из центра, парящее поле.";
+                return "Медленный туман: плавное всплытие, дышащая аура и тихое исчезновение без частых акцентов.";
             case GameFeelPresetType.Marshmallow:
-                return "Большой зефирный squash & stretch баночек, упругий отскок доски.";
+                return "Тяжёлый мягкий зефир: выраженный squash & stretch, двойной ритм цепочки и пружинящая доска.";
             case GameFeelPresetType.MorningDew:
-                return "Быстрый каскад сверху вниз, короткие анимации, свежий зелёный оттенок.";
+                return "Сухой быстрый отклик: crisp tap, короткий snap ауры и ритм по тройкам без лишней инерции.";
             case GameFeelPresetType.RoseBlush:
-                return "Только розовое свечение — без движения поля, яркая аура при выборе.";
+                return "Розовый характер: лёгкий wobble каждого предмета, пульсирующее свечение и крупный цветочный bloom.";
             case GameFeelPresetType.CozyJar:
-                return "Диагональная волна, мягкий flutter, сбалансированный уютный профиль.";
+                return "Сбалансированный фирменный вариант: soft pop, дыхание ауры, milestone-ритм и мягкий flutter доски.";
             default:
                 return string.Empty;
         }
     }
 
-    private static GameFeelPresetData CottonCloud()
+    private static GameFeelPresetData BaseRecipe(
+        BoardMotionStyle boardMotion,
+        ItemMotionStyle itemMotion,
+        SelectionAuraStyle auraStyle,
+        GlowReleaseStyle releaseStyle,
+        ChainRhythmStyle rhythm,
+        Color glowStart,
+        Color glowEnd)
     {
         return new GameFeelPresetData
         {
-            enableHaptics = false,
+            enableHaptics = true,
             enableCameraShake = false,
-            enableBoardShake = false,
+            enableBoardShake = boardMotion != BoardMotionStyle.None,
             enableFreezeFrames = false,
-            enableItemPunch = false,
+            enableItemPunch = itemMotion != ItemMotionStyle.None,
             enableSelectionGlow = true,
-            enableBoardPulseOnMatch = false,
-            boardMotionStyle = BoardMotionStyle.None,
-            revealPattern = BoardRevealPattern.AllAtOnce,
-            globalIntensity = 0.3f,
-            matchShakeStrength = 0f,
-            boardShakeStrength = 0f,
-            comboShakeStrength = 0f,
-            winShakeStrength = 0.03f,
-            itemPulseStrength = 0f,
-            boardPulseStrength = 0f,
-            matchResponseMultiplier = 0f,
-            selectionGlowAlpha = 0.14f,
-            selectionGlowScale = 1.04f,
-            selectionGlowBreathing = 0.01f,
-            selectionGlowWaveSpeed = 2.8f,
-            glowReleasePopScale = 1.12f,
-            glowColorStart = new Color(0.97f, 0.98f, 1f, 0.14f),
-            glowColorEnd = new Color(0.95f, 0.97f, 1f, 0.16f),
-            motionDurationScale = 1.6f,
-            itemPulseDurationScale = 1.4f,
-            cameraShakeFrequency = 6f,
-            comboTriggerAt = 99,
-            cellStartScale = 0.85f,
-            cellPeakScale = 1f,
-            cellRiseDuration = 0.95f,
-            cellSettleDuration = 0.35f,
-            itemStartScale = 0.7f,
-            itemPeakScale = 1f,
-            itemDelay = 0.08f,
-            itemRiseDuration = 0.85f,
-            itemSettleDuration = 0.3f,
-            waveStagger = 0f,
-            waveJitter = 0f,
-            maxRevealSpread = 0f,
-            riseEase = Ease.InOutSine,
-            settleEase = Ease.InOutSine,
+            enableBoardPulseOnMatch = true,
+            boardMotionStyle = boardMotion,
+            itemMotionStyle = itemMotion,
+            selectionAuraStyle = auraStyle,
+            glowReleaseStyle = releaseStyle,
+            chainRhythmStyle = rhythm,
+            globalIntensity = 0.8f,
+            matchShakeStrength = 0.025f,
+            boardShakeStrength = 0.045f,
+            comboShakeStrength = 0.06f,
+            winShakeStrength = 0.1f,
+            itemPulseStrength = 0.09f,
+            boardPulseStrength = 0.028f,
+            matchResponseMultiplier = 1f,
+            selectionGlowAlpha = glowStart.a,
+            selectionGlowScale = 1.12f,
+            selectionGlowBreathing = 0.035f,
+            selectionGlowWaveSpeed = 5f,
+            glowReleasePopScale = 1.48f,
+            glowColorStart = glowStart,
+            glowColorEnd = glowEnd,
+            motionDurationScale = 1f,
+            itemPulseDurationScale = 1f,
+            cameraShakeFrequency = 10f,
+            comboTriggerAt = 6,
         };
+    }
+
+    private static GameFeelPresetData CottonCloud()
+    {
+        GameFeelPresetData p = BaseRecipe(
+            BoardMotionStyle.None,
+            ItemMotionStyle.FloatUp,
+            SelectionAuraStyle.Still,
+            GlowReleaseStyle.Fade,
+            ChainRhythmStyle.Quiet,
+            new Color(0.94f, 0.98f, 1f, 0.12f),
+            new Color(1f, 1f, 1f, 0.15f));
+        p.enableHaptics = false;
+        p.enableBoardPulseOnMatch = false;
+        p.globalIntensity = 0.45f;
+        p.itemPulseStrength = 0.045f;
+        p.selectionGlowScale = 1.04f;
+        p.selectionGlowBreathing = 0f;
+        p.motionDurationScale = 1.45f;
+        p.itemPulseDurationScale = 1.35f;
+        p.matchResponseMultiplier = 0f;
+        p.comboTriggerAt = 99;
+        return p;
     }
 
     private static GameFeelPresetData PetalDrift()
     {
-        return new GameFeelPresetData
-        {
-            enableHaptics = true,
-            enableCameraShake = false,
-            enableBoardShake = true,
-            enableFreezeFrames = false,
-            enableItemPunch = true,
-            enableSelectionGlow = true,
-            enableBoardPulseOnMatch = true,
-            boardMotionStyle = BoardMotionStyle.GentleSway,
-            revealPattern = BoardRevealPattern.EdgeIn,
-            globalIntensity = 0.5f,
-            matchShakeStrength = 0.01f,
-            boardShakeStrength = 0.04f,
-            comboShakeStrength = 0.02f,
-            winShakeStrength = 0.05f,
-            itemPulseStrength = 0.04f,
-            boardPulseStrength = 0.012f,
-            matchResponseMultiplier = 0.35f,
-            selectionGlowAlpha = 0.32f,
-            selectionGlowScale = 1.14f,
-            selectionGlowBreathing = 0.05f,
-            selectionGlowWaveSpeed = 3.2f,
-            glowReleasePopScale = 1.55f,
-            glowColorStart = new Color(1f, 0.82f, 0.9f, 0.32f),
-            glowColorEnd = new Color(1f, 0.65f, 0.78f, 0.38f),
-            motionDurationScale = 1.7f,
-            itemPulseDurationScale = 1.5f,
-            cameraShakeFrequency = 5f,
-            comboTriggerAt = 8,
-            cellStartScale = 0.08f,
-            cellPeakScale = 1.02f,
-            cellRiseDuration = 0.88f,
-            cellSettleDuration = 0.32f,
-            itemStartScale = 0.05f,
-            itemPeakScale = 1.03f,
-            itemDelay = 0.28f,
-            itemRiseDuration = 0.78f,
-            itemSettleDuration = 0.3f,
-            waveStagger = 0.18f,
-            waveJitter = 0.002f,
-            maxRevealSpread = 1.4f,
-            riseEase = Ease.OutSine,
-            settleEase = Ease.InOutSine,
-        };
+        GameFeelPresetData p = BaseRecipe(
+            BoardMotionStyle.GentleSway,
+            ItemMotionStyle.FloatUp,
+            SelectionAuraStyle.SlowSpin,
+            GlowReleaseStyle.FloatAway,
+            ChainRhythmStyle.Rising,
+            new Color(1f, 0.76f, 0.86f, 0.24f),
+            new Color(1f, 0.55f, 0.72f, 0.34f));
+        p.enableHaptics = false;
+        p.globalIntensity = 0.66f;
+        p.boardShakeStrength = 0.034f;
+        p.itemPulseStrength = 0.065f;
+        p.boardPulseStrength = 0.018f;
+        p.selectionGlowBreathing = 0.02f;
+        p.selectionGlowWaveSpeed = 2.2f;
+        p.motionDurationScale = 1.55f;
+        p.itemPulseDurationScale = 1.35f;
+        p.comboTriggerAt = 8;
+        return p;
     }
 
     private static GameFeelPresetData HoneyWarmth()
     {
-        return new GameFeelPresetData
-        {
-            enableHaptics = true,
-            enableCameraShake = false,
-            enableBoardShake = true,
-            enableFreezeFrames = false,
-            enableItemPunch = true,
-            enableSelectionGlow = true,
-            enableBoardPulseOnMatch = true,
-            boardMotionStyle = BoardMotionStyle.VerticalFloat,
-            revealPattern = BoardRevealPattern.CenterOut,
-            globalIntensity = 0.75f,
-            matchShakeStrength = 0.015f,
-            boardShakeStrength = 0.05f,
-            comboShakeStrength = 0.035f,
-            winShakeStrength = 0.1f,
-            itemPulseStrength = 0.09f,
-            boardPulseStrength = 0.045f,
-            matchResponseMultiplier = 1.2f,
-            selectionGlowAlpha = 0.42f,
-            selectionGlowScale = 1.16f,
-            selectionGlowBreathing = 0.045f,
-            selectionGlowWaveSpeed = 4.5f,
-            glowReleasePopScale = 1.42f,
-            glowColorStart = new Color(1f, 0.88f, 0.55f, 0.4f),
-            glowColorEnd = new Color(1f, 0.68f, 0.2f, 0.45f),
-            motionDurationScale = 1.25f,
-            itemPulseDurationScale = 1.1f,
-            cameraShakeFrequency = 7f,
-            comboTriggerAt = 6,
-            cellStartScale = 0.35f,
-            cellPeakScale = 1.05f,
-            cellRiseDuration = 0.58f,
-            cellSettleDuration = 0.2f,
-            itemStartScale = 0.2f,
-            itemPeakScale = 1.08f,
-            itemDelay = 0.16f,
-            itemRiseDuration = 0.5f,
-            itemSettleDuration = 0.2f,
-            waveStagger = 0.1f,
-            waveJitter = 0.005f,
-            maxRevealSpread = 1f,
-            riseEase = Ease.OutCubic,
-            settleEase = Ease.InOutSine,
-        };
+        GameFeelPresetData p = BaseRecipe(
+            BoardMotionStyle.VerticalFloat,
+            ItemMotionStyle.SoftPop,
+            SelectionAuraStyle.Heartbeat,
+            GlowReleaseStyle.Bloom,
+            ChainRhythmStyle.Milestones,
+            new Color(1f, 0.82f, 0.34f, 0.28f),
+            new Color(1f, 0.55f, 0.12f, 0.38f));
+        p.globalIntensity = 0.82f;
+        p.boardShakeStrength = 0.042f;
+        p.itemPulseStrength = 0.095f;
+        p.boardPulseStrength = 0.038f;
+        p.selectionGlowScale = 1.14f;
+        p.selectionGlowBreathing = 0.045f;
+        p.glowReleasePopScale = 1.58f;
+        p.motionDurationScale = 1.15f;
+        return p;
     }
 
     private static GameFeelPresetData SilkTouch()
     {
-        return new GameFeelPresetData
-        {
-            enableHaptics = true,
-            enableCameraShake = false,
-            enableBoardShake = false,
-            enableFreezeFrames = false,
-            enableItemPunch = true,
-            enableSelectionGlow = false,
-            enableBoardPulseOnMatch = false,
-            boardMotionStyle = BoardMotionStyle.None,
-            revealPattern = BoardRevealPattern.LeftToRight,
-            globalIntensity = 0.35f,
-            matchShakeStrength = 0f,
-            boardShakeStrength = 0f,
-            comboShakeStrength = 0f,
-            winShakeStrength = 0.02f,
-            itemPulseStrength = 0.025f,
-            boardPulseStrength = 0f,
-            matchResponseMultiplier = 0f,
-            selectionGlowAlpha = 0f,
-            selectionGlowScale = 1f,
-            selectionGlowBreathing = 0f,
-            selectionGlowWaveSpeed = 5f,
-            glowReleasePopScale = 1f,
-            glowColorStart = Color.clear,
-            glowColorEnd = Color.clear,
-            motionDurationScale = 0.75f,
-            itemPulseDurationScale = 0.55f,
-            cameraShakeFrequency = 14f,
-            comboTriggerAt = 99,
-            cellStartScale = 0.55f,
-            cellPeakScale = 1.01f,
-            cellRiseDuration = 0.28f,
-            cellSettleDuration = 0.08f,
-            itemStartScale = 0.5f,
-            itemPeakScale = 1.02f,
-            itemDelay = 0.04f,
-            itemRiseDuration = 0.24f,
-            itemSettleDuration = 0.08f,
-            waveStagger = 0.035f,
-            waveJitter = 0f,
-            maxRevealSpread = 0.6f,
-            riseEase = Ease.Linear,
-            settleEase = Ease.OutSine,
-        };
+        GameFeelPresetData p = BaseRecipe(
+            BoardMotionStyle.SoftSink,
+            ItemMotionStyle.CrispTap,
+            SelectionAuraStyle.Still,
+            GlowReleaseStyle.Snap,
+            ChainRhythmStyle.EveryThird,
+            new Color(0.72f, 0.92f, 1f, 0.16f),
+            new Color(0.48f, 0.78f, 1f, 0.22f));
+        p.enableSelectionGlow = true;
+        p.globalIntensity = 0.72f;
+        p.boardShakeStrength = 0.022f;
+        p.itemPulseStrength = 0.07f;
+        p.boardPulseStrength = 0.012f;
+        p.selectionGlowScale = 1.05f;
+        p.selectionGlowBreathing = 0f;
+        p.motionDurationScale = 0.55f;
+        p.itemPulseDurationScale = 0.5f;
+        p.comboTriggerAt = 9;
+        return p;
     }
 
     private static GameFeelPresetData BubbleSoft()
     {
-        return new GameFeelPresetData
-        {
-            enableHaptics = true,
-            enableCameraShake = true,
-            enableBoardShake = true,
-            enableFreezeFrames = false,
-            enableItemPunch = true,
-            enableSelectionGlow = true,
-            enableBoardPulseOnMatch = true,
-            boardMotionStyle = BoardMotionStyle.ElasticBounce,
-            revealPattern = BoardRevealPattern.RandomPop,
-            globalIntensity = 0.95f,
-            matchShakeStrength = 0.09f,
-            boardShakeStrength = 0.07f,
-            comboShakeStrength = 0.12f,
-            winShakeStrength = 0.18f,
-            itemPulseStrength = 0.15f,
-            boardPulseStrength = 0.055f,
-            matchResponseMultiplier = 1.5f,
-            selectionGlowAlpha = 0.28f,
-            selectionGlowScale = 1.18f,
-            selectionGlowBreathing = 0.06f,
-            selectionGlowWaveSpeed = 6.5f,
-            glowReleasePopScale = 1.75f,
-            glowColorStart = new Color(0.7f, 0.92f, 1f, 0.28f),
-            glowColorEnd = new Color(0.55f, 0.85f, 1f, 0.34f),
-            motionDurationScale = 0.82f,
-            itemPulseDurationScale = 0.7f,
-            cameraShakeFrequency = 16f,
-            comboTriggerAt = 5,
-            cellStartScale = 0.05f,
-            cellPeakScale = 1.12f,
-            cellRiseDuration = 0.38f,
-            cellSettleDuration = 0.28f,
-            itemStartScale = 0.02f,
-            itemPeakScale = 1.2f,
-            itemDelay = 0.06f,
-            itemRiseDuration = 0.34f,
-            itemSettleDuration = 0.26f,
-            waveStagger = 0.06f,
-            waveJitter = 0.025f,
-            maxRevealSpread = 0.55f,
-            riseEase = Ease.OutElastic,
-            settleEase = Ease.InOutSine,
-        };
+        GameFeelPresetData p = BaseRecipe(
+            BoardMotionStyle.ElasticBounce,
+            ItemMotionStyle.SquashStretch,
+            SelectionAuraStyle.Breathe,
+            GlowReleaseStyle.Bloom,
+            ChainRhythmStyle.EveryThird,
+            new Color(0.48f, 0.92f, 1f, 0.3f),
+            new Color(0.62f, 0.5f, 1f, 0.4f));
+        p.enableCameraShake = true;
+        p.globalIntensity = 1.05f;
+        p.matchShakeStrength = 0.045f;
+        p.boardShakeStrength = 0.075f;
+        p.comboShakeStrength = 0.09f;
+        p.itemPulseStrength = 0.16f;
+        p.boardPulseStrength = 0f;
+        p.selectionGlowScale = 1.18f;
+        p.selectionGlowBreathing = 0.06f;
+        p.glowReleasePopScale = 1.72f;
+        p.cameraShakeFrequency = 12f;
+        p.comboTriggerAt = 6;
+        return p;
     }
 
     private static GameFeelPresetData LavenderMist()
     {
-        return new GameFeelPresetData
-        {
-            enableHaptics = false,
-            enableCameraShake = false,
-            enableBoardShake = true,
-            enableFreezeFrames = false,
-            enableItemPunch = true,
-            enableSelectionGlow = true,
-            enableBoardPulseOnMatch = true,
-            boardMotionStyle = BoardMotionStyle.VerticalFloat,
-            revealPattern = BoardRevealPattern.CenterOut,
-            globalIntensity = 0.55f,
-            matchShakeStrength = 0.008f,
-            boardShakeStrength = 0.025f,
-            comboShakeStrength = 0.02f,
-            winShakeStrength = 0.06f,
-            itemPulseStrength = 0.05f,
-            boardPulseStrength = 0.018f,
-            matchResponseMultiplier = 0.6f,
-            selectionGlowAlpha = 0.36f,
-            selectionGlowScale = 1.1f,
-            selectionGlowBreathing = 0.03f,
-            selectionGlowWaveSpeed = 2.2f,
-            glowReleasePopScale = 1.35f,
-            glowColorStart = new Color(0.82f, 0.72f, 1f, 0.36f),
-            glowColorEnd = new Color(0.68f, 0.55f, 0.95f, 0.4f),
-            motionDurationScale = 2.1f,
-            itemPulseDurationScale = 1.8f,
-            cameraShakeFrequency = 4f,
-            comboTriggerAt = 10,
-            cellStartScale = 0.12f,
-            cellPeakScale = 1.02f,
-            cellRiseDuration = 1.15f,
-            cellSettleDuration = 0.42f,
-            itemStartScale = 0.08f,
-            itemPeakScale = 1.04f,
-            itemDelay = 0.35f,
-            itemRiseDuration = 1.05f,
-            itemSettleDuration = 0.4f,
-            waveStagger = 0.22f,
-            waveJitter = 0.003f,
-            maxRevealSpread = 1.8f,
-            riseEase = Ease.InOutSine,
-            settleEase = Ease.InOutSine,
-        };
+        GameFeelPresetData p = BaseRecipe(
+            BoardMotionStyle.VerticalFloat,
+            ItemMotionStyle.FloatUp,
+            SelectionAuraStyle.Breathe,
+            GlowReleaseStyle.FloatAway,
+            ChainRhythmStyle.Quiet,
+            new Color(0.78f, 0.66f, 1f, 0.32f),
+            new Color(0.58f, 0.42f, 0.92f, 0.4f));
+        p.enableHaptics = false;
+        p.globalIntensity = 0.56f;
+        p.boardShakeStrength = 0.02f;
+        p.itemPulseStrength = 0.045f;
+        p.boardPulseStrength = 0.014f;
+        p.selectionGlowScale = 1.09f;
+        p.selectionGlowWaveSpeed = 1.8f;
+        p.motionDurationScale = 2f;
+        p.itemPulseDurationScale = 1.85f;
+        p.matchResponseMultiplier = 0.55f;
+        p.comboTriggerAt = 10;
+        return p;
     }
 
     private static GameFeelPresetData Marshmallow()
     {
-        return new GameFeelPresetData
-        {
-            enableHaptics = true,
-            enableCameraShake = false,
-            enableBoardShake = true,
-            enableFreezeFrames = false,
-            enableItemPunch = true,
-            enableSelectionGlow = true,
-            enableBoardPulseOnMatch = true,
-            boardMotionStyle = BoardMotionStyle.ElasticBounce,
-            revealPattern = BoardRevealPattern.Diagonal,
-            globalIntensity = 0.88f,
-            matchShakeStrength = 0.02f,
-            boardShakeStrength = 0.055f,
-            comboShakeStrength = 0.06f,
-            winShakeStrength = 0.12f,
-            itemPulseStrength = 0.18f,
-            boardPulseStrength = 0.065f,
-            matchResponseMultiplier = 1.35f,
-            selectionGlowAlpha = 0.26f,
-            selectionGlowScale = 1.2f,
-            selectionGlowBreathing = 0.055f,
-            selectionGlowWaveSpeed = 5.8f,
-            glowReleasePopScale = 1.65f,
-            glowColorStart = new Color(1f, 0.94f, 0.98f, 0.26f),
-            glowColorEnd = new Color(1f, 0.78f, 0.88f, 0.32f),
-            motionDurationScale = 0.95f,
-            itemPulseDurationScale = 0.85f,
-            cameraShakeFrequency = 9f,
-            comboTriggerAt = 6,
-            cellStartScale = 0.04f,
-            cellPeakScale = 1.1f,
-            cellRiseDuration = 0.46f,
-            cellSettleDuration = 0.32f,
-            itemStartScale = 0.02f,
-            itemPeakScale = 1.16f,
-            itemDelay = 0.1f,
-            itemRiseDuration = 0.42f,
-            itemSettleDuration = 0.3f,
-            waveStagger = 0.09f,
-            waveJitter = 0.008f,
-            maxRevealSpread = 1.1f,
-            riseEase = Ease.OutBack,
-            settleEase = Ease.InOutSine,
-        };
+        GameFeelPresetData p = BaseRecipe(
+            BoardMotionStyle.ElasticBounce,
+            ItemMotionStyle.SquashStretch,
+            SelectionAuraStyle.Heartbeat,
+            GlowReleaseStyle.Bloom,
+            ChainRhythmStyle.Rising,
+            new Color(1f, 0.92f, 0.97f, 0.28f),
+            new Color(1f, 0.65f, 0.82f, 0.38f));
+        p.globalIntensity = 0.95f;
+        p.boardShakeStrength = 0.06f;
+        p.itemPulseStrength = 0.19f;
+        p.boardPulseStrength = 0f;
+        p.selectionGlowScale = 1.2f;
+        p.selectionGlowBreathing = 0.065f;
+        p.glowReleasePopScale = 1.82f;
+        p.matchResponseMultiplier = 1.35f;
+        p.itemPulseDurationScale = 1.2f;
+        p.comboTriggerAt = 5;
+        return p;
     }
 
     private static GameFeelPresetData MorningDew()
     {
-        return new GameFeelPresetData
-        {
-            enableHaptics = true,
-            enableCameraShake = false,
-            enableBoardShake = true,
-            enableFreezeFrames = false,
-            enableItemPunch = true,
-            enableSelectionGlow = true,
-            enableBoardPulseOnMatch = true,
-            boardMotionStyle = BoardMotionStyle.SoftSink,
-            revealPattern = BoardRevealPattern.TopToBottom,
-            globalIntensity = 0.65f,
-            matchShakeStrength = 0.012f,
-            boardShakeStrength = 0.03f,
-            comboShakeStrength = 0.025f,
-            winShakeStrength = 0.07f,
-            itemPulseStrength = 0.035f,
-            boardPulseStrength = 0.015f,
-            matchResponseMultiplier = 0.5f,
-            selectionGlowAlpha = 0.2f,
-            selectionGlowScale = 1.07f,
-            selectionGlowBreathing = 0.025f,
-            selectionGlowWaveSpeed = 7f,
-            glowReleasePopScale = 1.25f,
-            glowColorStart = new Color(0.75f, 0.98f, 0.88f, 0.2f),
-            glowColorEnd = new Color(0.55f, 0.9f, 0.75f, 0.24f),
-            motionDurationScale = 0.55f,
-            itemPulseDurationScale = 0.5f,
-            cameraShakeFrequency = 12f,
-            comboTriggerAt = 7,
-            cellStartScale = 0.5f,
-            cellPeakScale = 1.03f,
-            cellRiseDuration = 0.22f,
-            cellSettleDuration = 0.08f,
-            itemStartScale = 0.4f,
-            itemPeakScale = 1.04f,
-            itemDelay = 0.03f,
-            itemRiseDuration = 0.2f,
-            itemSettleDuration = 0.07f,
-            waveStagger = 0.045f,
-            waveJitter = 0.002f,
-            maxRevealSpread = 0.7f,
-            riseEase = Ease.OutQuad,
-            settleEase = Ease.OutSine,
-        };
+        GameFeelPresetData p = BaseRecipe(
+            BoardMotionStyle.SoftSink,
+            ItemMotionStyle.CrispTap,
+            SelectionAuraStyle.Still,
+            GlowReleaseStyle.Snap,
+            ChainRhythmStyle.EveryThird,
+            new Color(0.52f, 1f, 0.78f, 0.18f),
+            new Color(0.22f, 0.85f, 0.55f, 0.24f));
+        p.globalIntensity = 0.7f;
+        p.boardShakeStrength = 0.028f;
+        p.itemPulseStrength = 0.055f;
+        p.boardPulseStrength = 0.012f;
+        p.selectionGlowScale = 1.06f;
+        p.selectionGlowBreathing = 0f;
+        p.motionDurationScale = 0.48f;
+        p.itemPulseDurationScale = 0.42f;
+        p.comboTriggerAt = 6;
+        return p;
     }
 
     private static GameFeelPresetData RoseBlush()
     {
-        return new GameFeelPresetData
-        {
-            enableHaptics = true,
-            enableCameraShake = false,
-            enableBoardShake = false,
-            enableFreezeFrames = false,
-            enableItemPunch = false,
-            enableSelectionGlow = true,
-            enableBoardPulseOnMatch = false,
-            boardMotionStyle = BoardMotionStyle.None,
-            revealPattern = BoardRevealPattern.CenterOut,
-            globalIntensity = 0.7f,
-            matchShakeStrength = 0f,
-            boardShakeStrength = 0f,
-            comboShakeStrength = 0f,
-            winShakeStrength = 0.04f,
-            itemPulseStrength = 0f,
-            boardPulseStrength = 0f,
-            matchResponseMultiplier = 0f,
-            selectionGlowAlpha = 0.52f,
-            selectionGlowScale = 1.22f,
-            selectionGlowBreathing = 0.065f,
-            selectionGlowWaveSpeed = 4f,
-            glowReleasePopScale = 1.85f,
-            glowColorStart = new Color(1f, 0.75f, 0.85f, 0.52f),
-            glowColorEnd = new Color(1f, 0.5f, 0.68f, 0.58f),
-            motionDurationScale = 1.3f,
-            itemPulseDurationScale = 1.2f,
-            cameraShakeFrequency = 6f,
-            comboTriggerAt = 99,
-            cellStartScale = 0.4f,
-            cellPeakScale = 1.02f,
-            cellRiseDuration = 0.65f,
-            cellSettleDuration = 0.22f,
-            itemStartScale = 0.35f,
-            itemPeakScale = 1.03f,
-            itemDelay = 0.12f,
-            itemRiseDuration = 0.55f,
-            itemSettleDuration = 0.2f,
-            waveStagger = 0.13f,
-            waveJitter = 0.004f,
-            maxRevealSpread = 1.2f,
-            riseEase = Ease.OutSine,
-            settleEase = Ease.InOutSine,
-        };
+        GameFeelPresetData p = BaseRecipe(
+            BoardMotionStyle.None,
+            ItemMotionStyle.Wobble,
+            SelectionAuraStyle.Heartbeat,
+            GlowReleaseStyle.Bloom,
+            ChainRhythmStyle.Milestones,
+            new Color(1f, 0.62f, 0.78f, 0.46f),
+            new Color(1f, 0.3f, 0.58f, 0.58f));
+        p.enableHaptics = false;
+        p.enableBoardPulseOnMatch = false;
+        p.globalIntensity = 0.8f;
+        p.itemPulseStrength = 0.08f;
+        p.selectionGlowScale = 1.22f;
+        p.selectionGlowBreathing = 0.075f;
+        p.glowReleasePopScale = 1.95f;
+        p.motionDurationScale = 1.2f;
+        p.itemPulseDurationScale = 1.25f;
+        p.matchResponseMultiplier = 0f;
+        p.comboTriggerAt = 99;
+        return p;
     }
 
     private static GameFeelPresetData CozyJar()
     {
-        return new GameFeelPresetData
-        {
-            enableHaptics = true,
-            enableCameraShake = false,
-            enableBoardShake = true,
-            enableFreezeFrames = false,
-            enableItemPunch = true,
-            enableSelectionGlow = true,
-            enableBoardPulseOnMatch = true,
-            boardMotionStyle = BoardMotionStyle.Flutter,
-            revealPattern = BoardRevealPattern.Diagonal,
-            globalIntensity = 0.62f,
-            matchShakeStrength = 0.022f,
-            boardShakeStrength = 0.038f,
-            comboShakeStrength = 0.048f,
-            winShakeStrength = 0.09f,
-            itemPulseStrength = 0.07f,
-            boardPulseStrength = 0.028f,
-            matchResponseMultiplier = 0.85f,
-            selectionGlowAlpha = 0.28f,
-            selectionGlowScale = 1.11f,
-            selectionGlowBreathing = 0.032f,
-            selectionGlowWaveSpeed = 5.2f,
-            glowReleasePopScale = 1.45f,
-            glowColorStart = new Color(0.88f, 0.95f, 1f, 0.28f),
-            glowColorEnd = new Color(1f, 0.86f, 0.62f, 0.32f),
-            motionDurationScale = 1.1f,
-            itemPulseDurationScale = 1f,
-            cameraShakeFrequency = 10f,
-            comboTriggerAt = 6,
-            cellStartScale = 0.28f,
-            cellPeakScale = 1.05f,
-            cellRiseDuration = 0.52f,
-            cellSettleDuration = 0.16f,
-            itemStartScale = 0.16f,
-            itemPeakScale = 1.07f,
-            itemDelay = 0.12f,
-            itemRiseDuration = 0.44f,
-            itemSettleDuration = 0.15f,
-            waveStagger = 0.08f,
-            waveJitter = 0.006f,
-            maxRevealSpread = 1f,
-            riseEase = Ease.OutCubic,
-            settleEase = Ease.InOutSine,
-        };
+        GameFeelPresetData p = BaseRecipe(
+            BoardMotionStyle.Flutter,
+            ItemMotionStyle.SoftPop,
+            SelectionAuraStyle.Breathe,
+            GlowReleaseStyle.Bloom,
+            ChainRhythmStyle.Milestones,
+            new Color(0.82f, 0.94f, 1f, 0.26f),
+            new Color(1f, 0.78f, 0.46f, 0.34f));
+        p.globalIntensity = 0.78f;
+        p.boardShakeStrength = 0.038f;
+        p.itemPulseStrength = 0.085f;
+        p.boardPulseStrength = 0.026f;
+        p.selectionGlowScale = 1.11f;
+        p.selectionGlowBreathing = 0.032f;
+        p.glowReleasePopScale = 1.5f;
+        p.motionDurationScale = 1.05f;
+        p.itemPulseDurationScale = 0.95f;
+        return p;
     }
 }

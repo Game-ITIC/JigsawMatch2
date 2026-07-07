@@ -4,6 +4,26 @@ using DG.Tweening;
 using JuiceFresh;
 using UnityEngine;
 
+public enum BoardRevealPattern
+{
+    CenterOut,
+    EdgeIn,
+    TopToBottom,
+    LeftToRight,
+    Diagonal,
+    RandomPop,
+    AllAtOnce,
+}
+
+public enum GameFieldIntroPreset
+{
+    Custom,
+    SoftBloom,
+    CenterRipple,
+    FallingRows,
+    PlayfulScatter,
+}
+
 namespace UI
 {
     [DisallowMultipleComponent]
@@ -12,6 +32,10 @@ namespace UI
         private const float DefaultItemScale = 0.9f;
 
         [SerializeField] private bool useUnscaledTime;
+
+        [Header("Grid Appearance (independent from Game Feel)")]
+        [SerializeField] private GameFieldIntroPreset introPreset = GameFieldIntroPreset.SoftBloom;
+        [SerializeField, HideInInspector] private GameFieldIntroPreset lastIntroPreset = (GameFieldIntroPreset)(-1);
 
         [Header("Cell Bloom")]
         [SerializeField, Range(0.05f, 0.8f)] private float cellStartScale = 0.32f;
@@ -39,28 +63,96 @@ namespace UI
         private Sequence sequence;
         private readonly List<CellRevealGroup> revealGroups = new List<CellRevealGroup>();
 
+        private void OnValidate()
+        {
+            ApplyIntroPresetIfNeeded();
+        }
+
         private void OnDisable()
         {
             KillTween();
         }
 
-        public void ApplyFeelPreset(GameFeelPresetData preset)
+        public void SetIntroPreset(GameFieldIntroPreset preset)
         {
-            cellStartScale = preset.cellStartScale;
-            cellPeakScale = preset.cellPeakScale;
-            cellRiseDuration = preset.cellRiseDuration;
-            cellSettleDuration = preset.cellSettleDuration;
-            itemStartScale = preset.itemStartScale;
-            itemPeakScale = preset.itemPeakScale;
-            itemDelay = preset.itemDelay;
-            itemRiseDuration = preset.itemRiseDuration;
-            itemSettleDuration = preset.itemSettleDuration;
-            waveStagger = preset.waveStagger;
-            waveJitter = preset.waveJitter;
-            maxRevealSpread = preset.maxRevealSpread;
-            revealPattern = preset.revealPattern;
-            riseEase = preset.riseEase;
-            settleEase = preset.settleEase;
+            introPreset = preset;
+            lastIntroPreset = (GameFieldIntroPreset)(-1);
+            ApplyIntroPresetIfNeeded();
+        }
+
+        private void ApplyIntroPresetIfNeeded()
+        {
+            if(introPreset == GameFieldIntroPreset.Custom || introPreset == lastIntroPreset)
+                return;
+
+            lastIntroPreset = introPreset;
+
+            switch(introPreset)
+            {
+                case GameFieldIntroPreset.CenterRipple:
+                    ApplyIntroSettings(
+                        0.08f, 1.08f, 0.34f, 0.18f,
+                        0.04f, 1.12f, 0.1f, 0.3f, 0.16f,
+                        0.075f, 0.004f, 1.15f,
+                        BoardRevealPattern.CenterOut, Ease.OutBack, Ease.InOutSine);
+                    break;
+                case GameFieldIntroPreset.FallingRows:
+                    ApplyIntroSettings(
+                        0.55f, 1.02f, 0.24f, 0.08f,
+                        0.42f, 1.04f, 0.025f, 0.2f, 0.07f,
+                        0.045f, 0.002f, 0.75f,
+                        BoardRevealPattern.TopToBottom, Ease.OutQuad, Ease.OutSine);
+                    break;
+                case GameFieldIntroPreset.PlayfulScatter:
+                    ApplyIntroSettings(
+                        0.04f, 1.1f, 0.4f, 0.24f,
+                        0.02f, 1.16f, 0.08f, 0.36f, 0.22f,
+                        0.065f, 0.025f, 0.8f,
+                        BoardRevealPattern.RandomPop, Ease.OutElastic, Ease.InOutSine);
+                    break;
+                case GameFieldIntroPreset.SoftBloom:
+                default:
+                    ApplyIntroSettings(
+                        0.32f, 1.045f, 0.48f, 0.14f,
+                        0.2f, 1.08f, 0.13f, 0.42f, 0.16f,
+                        0.08f, 0.006f, 1f,
+                        BoardRevealPattern.CenterOut, Ease.OutCubic, Ease.InOutSine);
+                    break;
+            }
+        }
+
+        private void ApplyIntroSettings(
+            float newCellStartScale,
+            float newCellPeakScale,
+            float newCellRiseDuration,
+            float newCellSettleDuration,
+            float newItemStartScale,
+            float newItemPeakScale,
+            float newItemDelay,
+            float newItemRiseDuration,
+            float newItemSettleDuration,
+            float newWaveStagger,
+            float newWaveJitter,
+            float newMaxRevealSpread,
+            BoardRevealPattern newRevealPattern,
+            Ease newRiseEase,
+            Ease newSettleEase)
+        {
+            cellStartScale = newCellStartScale;
+            cellPeakScale = newCellPeakScale;
+            cellRiseDuration = newCellRiseDuration;
+            cellSettleDuration = newCellSettleDuration;
+            itemStartScale = newItemStartScale;
+            itemPeakScale = newItemPeakScale;
+            itemDelay = newItemDelay;
+            itemRiseDuration = newItemRiseDuration;
+            itemSettleDuration = newItemSettleDuration;
+            waveStagger = newWaveStagger;
+            waveJitter = newWaveJitter;
+            maxRevealSpread = newMaxRevealSpread;
+            revealPattern = newRevealPattern;
+            riseEase = newRiseEase;
+            settleEase = newSettleEase;
         }
 
         public void Play(Vector3 targetLocalPosition, Action onComplete)

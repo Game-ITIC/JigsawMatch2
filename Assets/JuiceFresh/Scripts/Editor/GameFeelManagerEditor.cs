@@ -10,49 +10,51 @@ public sealed class GameFeelManagerEditor : UnityEditor.Editor
         serializedObject.Update();
 
         SerializedProperty feelPreset = serializedObject.FindProperty("feelPreset");
-        EditorGUILayout.PropertyField(feelPreset, new GUIContent("Пресет Feel"));
+        EditorGUILayout.PropertyField(feelPreset, new GUIContent("Feel-пресет"));
 
         GameFeelPresetType preset = (GameFeelPresetType)feelPreset.enumValueIndex;
         string description = GameFeelPresetLibrary.GetDescription(preset);
         if(!string.IsNullOrEmpty(description))
-        {
             EditorGUILayout.HelpBox(description, MessageType.Info);
-        }
 
         if(preset != GameFeelPresetType.Custom && GameFeelPresetLibrary.TryGet(preset, out GameFeelPresetData data))
         {
-            EditorGUILayout.LabelField("Отличия", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Поведенческая подпись", EditorStyles.boldLabel);
             EditorGUILayout.LabelField(
-                $"Появление поля: {data.revealPattern}  ·  Движение доски: {data.boardMotionStyle}",
+                $"Item: {data.itemMotionStyle}  ·  Board: {data.boardMotionStyle}",
                 EditorStyles.wordWrappedMiniLabel);
             EditorGUILayout.LabelField(
-                $"Свечение: {(data.enableSelectionGlow ? "да" : "нет")}  ·  "
-                + $"Вибрация: {(data.enableHaptics ? "да" : "нет")}  ·  "
-                + $"Камера: {(data.enableCameraShake ? "да" : "нет")}",
+                $"Aura: {data.selectionAuraStyle} → {data.glowReleaseStyle}  ·  Rhythm: {data.chainRhythmStyle}",
                 EditorStyles.wordWrappedMiniLabel);
+            EditorGUILayout.HelpBox(
+                "Появление грида настраивается отдельно на GameFieldTweenAnimation.",
+                MessageType.None);
         }
 
-        if(preset != GameFeelPresetType.Custom
-           && GUILayout.Button("Применить пресет сейчас"))
+        if(preset != GameFeelPresetType.Custom && GUILayout.Button("Применить feel-пресет сейчас"))
         {
             serializedObject.ApplyModifiedProperties();
             GameFeelManager manager = (GameFeelManager)target;
             manager.SetFeelPreset(preset);
             EditorUtility.SetDirty(manager);
-
-            SerializedProperty fieldTween = serializedObject.FindProperty("fieldTweenAnimation");
-            if(fieldTween?.objectReferenceValue is Component tweenComponent)
-            {
-                EditorUtility.SetDirty(tweenComponent);
-            }
         }
 
         EditorGUILayout.Space(6f);
-        DrawPropertiesExcluding(
-            serializedObject,
-            "m_Script",
-            "feelPreset",
-            "lastFeelPreset");
+        if(preset == GameFeelPresetType.Custom)
+        {
+            DrawPropertiesExcluding(
+                serializedObject,
+                "m_Script",
+                "feelPreset",
+                "lastFeelPreset");
+        }
+        else
+        {
+            EditorGUILayout.LabelField("Scene bindings", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("targetCamera"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("boardRoot"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("persistAcrossScenes"));
+        }
 
         serializedObject.ApplyModifiedProperties();
     }

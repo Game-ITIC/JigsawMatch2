@@ -4,7 +4,6 @@ using JuiceFresh;
 using Lofelt.NiceVibrations;
 using MoreMountains.Feedbacks;
 using MoreMountains.Tools;
-using UI;
 using UnityEngine;
 
 /// <summary>
@@ -18,7 +17,6 @@ public sealed class GameFeelManager : MonoBehaviour
 
     [SerializeField] private Camera targetCamera;
     [SerializeField] private Transform boardRoot;
-    [SerializeField] private GameFieldTweenAnimation fieldTweenAnimation;
     [SerializeField] private bool persistAcrossScenes;
 
     [Header("Feel Preset")]
@@ -56,6 +54,12 @@ public sealed class GameFeelManager : MonoBehaviour
     [SerializeField] private bool enableSelectionGlow = true;
     [SerializeField] private bool enableBoardPulseOnMatch = true;
     [SerializeField] private BoardMotionStyle boardMotionStyle = BoardMotionStyle.Flutter;
+
+    [Header("Behavior Signature")]
+    [SerializeField] private ItemMotionStyle itemMotionStyle = ItemMotionStyle.SoftPop;
+    [SerializeField] private SelectionAuraStyle selectionAuraStyle = SelectionAuraStyle.Breathe;
+    [SerializeField] private GlowReleaseStyle glowReleaseStyle = GlowReleaseStyle.Bloom;
+    [SerializeField] private ChainRhythmStyle chainRhythmStyle = ChainRhythmStyle.Milestones;
 
     private MMF_Player _matchPlayer;
     private MMF_Player _comboPlayer;
@@ -180,22 +184,10 @@ public sealed class GameFeelManager : MonoBehaviour
         enableSelectionGlow = preset.enableSelectionGlow;
         enableBoardPulseOnMatch = preset.enableBoardPulseOnMatch;
         boardMotionStyle = preset.boardMotionStyle;
-
-        ResolveFieldTweenAnimation();
-        fieldTweenAnimation?.ApplyFeelPreset(preset);
-    }
-
-    private void ResolveFieldTweenAnimation()
-    {
-        if(fieldTweenAnimation != null)
-        {
-            return;
-        }
-
-        if(boardRoot != null)
-        {
-            fieldTweenAnimation = boardRoot.GetComponent<GameFieldTweenAnimation>();
-        }
+        itemMotionStyle = preset.itemMotionStyle;
+        selectionAuraStyle = preset.selectionAuraStyle;
+        glowReleaseStyle = preset.glowReleaseStyle;
+        chainRhythmStyle = preset.chainRhythmStyle;
     }
 
     private void OnDestroy()
@@ -230,12 +222,6 @@ public sealed class GameFeelManager : MonoBehaviour
 
         RestoreBoardTransform();
         boardRoot = board;
-        ResolveFieldTweenAnimation();
-
-        if(feelPreset != GameFeelPresetType.Custom && GameFeelPresetLibrary.TryGet(feelPreset, out GameFeelPresetData preset))
-        {
-            fieldTweenAnimation?.ApplyFeelPreset(preset);
-        }
 
         CaptureBoardCanonicalTransform();
     }
@@ -308,9 +294,9 @@ public sealed class GameFeelManager : MonoBehaviour
             return;
         }
 
-        if(enableItemPunch)
+        if(enableItemPunch && itemMotionStyle != ItemMotionStyle.None)
         {
-            float pulse = itemPulseStrength * globalIntensity + Mathf.Min(chainCount - 1, 9) * 0.005f;
+            float pulse = CalculateSelectionPulse(chainCount);
             PlayItemPulse(item, pulse);
         }
 
@@ -319,7 +305,7 @@ public sealed class GameFeelManager : MonoBehaviour
             AddSelectionGlow(item, chainCount);
         }
 
-        bool milestone = chainCount == 3 || chainCount == 5 || chainCount == 8;
+        bool milestone = ShouldCelebrateChainStep(chainCount);
         if(milestone)
         {
             float milestoneStrength = boardPulseStrength * globalIntensity * (0.45f + chainCount * 0.035f);
@@ -338,13 +324,47 @@ public sealed class GameFeelManager : MonoBehaviour
     {
         RemoveSelectionGlow(removedItem, false);
 
-        if(enableItemPunch && remainingItem != null)
+        if(enableItemPunch && itemMotionStyle != ItemMotionStyle.None && remainingItem != null)
         {
             float pulse = itemPulseStrength * globalIntensity * (0.48f + Mathf.Min(chainCount, 8) * 0.015f);
             PlayItemPulse(remainingItem, pulse);
         }
 
         PlayHaptic(HapticPatterns.PresetType.Selection);
+    }
+
+    private float CalculateSelectionPulse(int chainCount)
+    {
+        float chainEnergy = Mathf.InverseLerp(1f, 10f, chainCount);
+
+        switch(chainRhythmStyle)
+        {
+            case ChainRhythmStyle.Quiet:
+                return itemPulseStrength * globalIntensity * 0.65f;
+            case ChainRhythmStyle.EveryThird:
+                return itemPulseStrength * globalIntensity * (chainCount % 3 == 0 ? 1.45f : 0.82f);
+            case ChainRhythmStyle.Rising:
+                return itemPulseStrength * globalIntensity * Mathf.Lerp(0.7f, 1.65f, chainEnergy);
+            case ChainRhythmStyle.Milestones:
+            default:
+                return itemPulseStrength * globalIntensity * (1f + chainEnergy * 0.35f);
+        }
+    }
+
+    private bool ShouldCelebrateChainStep(int chainCount)
+    {
+        switch(chainRhythmStyle)
+        {
+            case ChainRhythmStyle.Quiet:
+                return false;
+            case ChainRhythmStyle.EveryThird:
+                return chainCount >= 3 && chainCount % 3 == 0;
+            case ChainRhythmStyle.Rising:
+                return chainCount >= 4 && chainCount % 2 == 0;
+            case ChainRhythmStyle.Milestones:
+            default:
+                return chainCount == 3 || chainCount == 5 || chainCount == 8;
+        }
     }
 
     public void OnItemDestroyed(Vector3 position)
@@ -825,6 +845,7 @@ public sealed class GameFeelManager : MonoBehaviour
             auraObject,
             aura,
             source.transform.localScale,
+            auraObject.transform.localRotation,
             glowColor);
         state.Coroutine = StartCoroutine(SelectionGlowCoroutine(state, chainCount));
         _selectionGlows[id] = state;
@@ -837,7 +858,29 @@ public sealed class GameFeelManager : MonoBehaviour
         while(state.Target != null && state.Source != null && state.AuraObject != null)
         {
             elapsed += Time.unscaledDeltaTime;
-            float wave = Mathf.Sin(elapsed * selectionGlowWaveSpeed) * 0.5f + 0.5f;
+            float phase = elapsed * selectionGlowWaveSpeed;
+            float wave;
+
+            switch(selectionAuraStyle)
+            {
+                case SelectionAuraStyle.Still:
+                    wave = 0.35f;
+                    break;
+                case SelectionAuraStyle.Heartbeat:
+                    float heartbeat = Mathf.Max(0f, Mathf.Sin(phase));
+                    wave = heartbeat * heartbeat * heartbeat;
+                    break;
+                case SelectionAuraStyle.SlowSpin:
+                    wave = Mathf.Sin(phase * 0.45f) * 0.5f + 0.5f;
+                    state.AuraObject.transform.localRotation = state.BaseRotation
+                        * Quaternion.Euler(0f, 0f, elapsed * 18f);
+                    break;
+                case SelectionAuraStyle.Breathe:
+                default:
+                    wave = Mathf.Sin(phase) * 0.5f + 0.5f;
+                    break;
+            }
+
             float scale = selectionGlowScale + wave * selectionGlowBreathing;
             state.AuraObject.transform.localScale = state.RestScale * scale;
             state.Aura.sprite = state.Source.sprite;
@@ -903,10 +946,44 @@ public sealed class GameFeelManager : MonoBehaviour
         _releasedGlowObjects.Add(state.AuraObject);
 
         Vector3 startScale = state.AuraObject.transform.localScale;
-        Vector3 endScale = startScale * (successfulRelease ? glowReleasePopScale : 0.82f);
+        Vector3 endScale = startScale;
         Vector3 startPosition = state.AuraObject.transform.position;
         float startAlpha = state.Aura.color.a;
-        float duration = (successfulRelease ? 0.3f : 0.18f) * motionDurationScale;
+        float verticalTravel = 0f;
+        float duration = 0.18f;
+
+        if(successfulRelease)
+        {
+            switch(glowReleaseStyle)
+            {
+                case GlowReleaseStyle.Fade:
+                    endScale = startScale * 0.96f;
+                    duration = 0.24f;
+                    break;
+                case GlowReleaseStyle.FloatAway:
+                    endScale = startScale * 1.08f;
+                    verticalTravel = 0.38f;
+                    duration = 0.42f;
+                    break;
+                case GlowReleaseStyle.Snap:
+                    endScale = startScale * 0.12f;
+                    verticalTravel = -0.06f;
+                    duration = 0.14f;
+                    break;
+                case GlowReleaseStyle.Bloom:
+                default:
+                    endScale = startScale * glowReleasePopScale;
+                    verticalTravel = 0.12f;
+                    duration = 0.3f;
+                    break;
+            }
+        }
+        else
+        {
+            endScale = startScale * 0.82f;
+        }
+
+        duration *= motionDurationScale;
         float elapsed = 0f;
 
         while(elapsed < duration && state.AuraObject != null)
@@ -915,7 +992,7 @@ public sealed class GameFeelManager : MonoBehaviour
             float t = Mathf.Clamp01(elapsed / duration);
             float eased = 1f - Mathf.Pow(1f - t, 3f);
             state.AuraObject.transform.localScale = Vector3.LerpUnclamped(startScale, endScale, eased);
-            state.AuraObject.transform.position = startPosition + Vector3.up * (0.12f * eased);
+            state.AuraObject.transform.position = startPosition + Vector3.up * (verticalTravel * eased);
 
             Color color = state.Aura.color;
             color.a = Mathf.Lerp(startAlpha, 0f, t * t);
@@ -952,11 +1029,15 @@ public sealed class GameFeelManager : MonoBehaviour
 
             if(activePulse.Target != null)
             {
-                activePulse.Target.localScale = activePulse.RestScale;
+                activePulse.Restore();
             }
         }
 
-        ItemPulseState pulse = new ItemPulseState(target, GetItemPulseRestScale(target));
+        ItemPulseState pulse = new ItemPulseState(
+            target,
+            GetItemPulseRestScale(target),
+            target.localPosition,
+            target.localRotation);
         pulse.Coroutine = StartCoroutine(ItemPulseCoroutine(id, pulse, pulseAmount));
         _itemPulses[id] = pulse;
     }
@@ -999,13 +1080,42 @@ public sealed class GameFeelManager : MonoBehaviour
             elapsed += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
             float envelope = Mathf.Sin(t * Mathf.PI);
-            pulse.Target.localScale = pulse.RestScale * (1f + pulseAmount * envelope);
+
+            switch(itemMotionStyle)
+            {
+                case ItemMotionStyle.CrispTap:
+                    float tap = t < 0.28f
+                        ? Mathf.SmoothStep(0f, 1f, t / 0.28f)
+                        : 1f - Mathf.SmoothStep(0f, 1f, (t - 0.28f) / 0.72f);
+                    pulse.Target.localScale = pulse.RestScale * (1f + pulseAmount * tap);
+                    break;
+                case ItemMotionStyle.SquashStretch:
+                    float bounce = Mathf.Sin(t * Mathf.PI * 2.5f) * Mathf.Exp(-t * 2.4f);
+                    pulse.Target.localScale = new Vector3(
+                        pulse.RestScale.x * (1f + pulseAmount * bounce),
+                        pulse.RestScale.y * (1f - pulseAmount * bounce * 0.62f),
+                        pulse.RestScale.z);
+                    break;
+                case ItemMotionStyle.FloatUp:
+                    pulse.Target.localScale = pulse.RestScale * (1f + pulseAmount * envelope * 0.45f);
+                    pulse.Target.localPosition = pulse.RestPosition + Vector3.up * (pulseAmount * envelope * 0.75f);
+                    break;
+                case ItemMotionStyle.Wobble:
+                    float wobble = Mathf.Sin(t * Mathf.PI * 4f) * envelope;
+                    pulse.Target.localScale = pulse.RestScale * (1f + pulseAmount * envelope * 0.35f);
+                    pulse.Target.localRotation = pulse.RestRotation * Quaternion.Euler(0f, 0f, wobble * pulseAmount * 55f);
+                    break;
+                case ItemMotionStyle.SoftPop:
+                default:
+                    pulse.Target.localScale = pulse.RestScale * (1f + pulseAmount * envelope);
+                    break;
+            }
             yield return null;
         }
 
         if(pulse.Target != null)
         {
-            pulse.Target.localScale = pulse.RestScale;
+            pulse.Restore();
         }
 
         _itemPulses.Remove(id);
@@ -1027,7 +1137,7 @@ public sealed class GameFeelManager : MonoBehaviour
 
             if(pulse.Target != null)
             {
-                pulse.Target.localScale = pulse.RestScale;
+                pulse.Restore();
             }
         }
 
@@ -1073,15 +1183,33 @@ public sealed class GameFeelManager : MonoBehaviour
 
     private sealed class ItemPulseState
     {
-        public ItemPulseState(Transform target, Vector3 restScale)
+        public ItemPulseState(
+            Transform target,
+            Vector3 restScale,
+            Vector3 restPosition,
+            Quaternion restRotation)
         {
             Target = target;
             RestScale = restScale;
+            RestPosition = restPosition;
+            RestRotation = restRotation;
         }
 
         public Transform Target { get; }
         public Vector3 RestScale { get; }
+        public Vector3 RestPosition { get; }
+        public Quaternion RestRotation { get; }
         public Coroutine Coroutine { get; set; }
+
+        public void Restore()
+        {
+            if(Target == null)
+                return;
+
+            Target.localScale = RestScale;
+            Target.localPosition = RestPosition;
+            Target.localRotation = RestRotation;
+        }
     }
 
     private sealed class SelectionGlowState
@@ -1092,6 +1220,7 @@ public sealed class GameFeelManager : MonoBehaviour
             GameObject auraObject,
             SpriteRenderer aura,
             Vector3 restScale,
+            Quaternion baseRotation,
             Color glowColor)
         {
             Target = target;
@@ -1099,6 +1228,7 @@ public sealed class GameFeelManager : MonoBehaviour
             AuraObject = auraObject;
             Aura = aura;
             RestScale = restScale;
+            BaseRotation = baseRotation;
             GlowColor = glowColor;
         }
 
@@ -1107,6 +1237,7 @@ public sealed class GameFeelManager : MonoBehaviour
         public GameObject AuraObject { get; }
         public SpriteRenderer Aura { get; }
         public Vector3 RestScale { get; }
+        public Quaternion BaseRotation { get; }
         public Color GlowColor { get; }
         public Coroutine Coroutine { get; set; }
     }

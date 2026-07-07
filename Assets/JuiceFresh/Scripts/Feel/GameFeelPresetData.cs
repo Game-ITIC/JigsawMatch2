@@ -1,4 +1,3 @@
-using DG.Tweening;
 using UnityEngine;
 
 public enum BoardMotionStyle
@@ -11,15 +10,38 @@ public enum BoardMotionStyle
     SoftSink,
 }
 
-public enum BoardRevealPattern
+public enum ItemMotionStyle
 {
-    CenterOut,
-    EdgeIn,
-    TopToBottom,
-    LeftToRight,
-    Diagonal,
-    RandomPop,
-    AllAtOnce,
+    None,
+    SoftPop,
+    CrispTap,
+    SquashStretch,
+    FloatUp,
+    Wobble,
+}
+
+public enum SelectionAuraStyle
+{
+    Still,
+    Breathe,
+    Heartbeat,
+    SlowSpin,
+}
+
+public enum GlowReleaseStyle
+{
+    Fade,
+    Bloom,
+    FloatAway,
+    Snap,
+}
+
+public enum ChainRhythmStyle
+{
+    Quiet,
+    Milestones,
+    EveryThird,
+    Rising,
 }
 
 /// <summary>
@@ -37,7 +59,10 @@ public struct GameFeelPresetData
     public bool enableBoardPulseOnMatch;
 
     public BoardMotionStyle boardMotionStyle;
-    public BoardRevealPattern revealPattern;
+    public ItemMotionStyle itemMotionStyle;
+    public SelectionAuraStyle selectionAuraStyle;
+    public GlowReleaseStyle glowReleaseStyle;
+    public ChainRhythmStyle chainRhythmStyle;
 
     public float globalIntensity;
     public float matchShakeStrength;
@@ -62,21 +87,4 @@ public struct GameFeelPresetData
     public float cameraShakeFrequency;
     public int comboTriggerAt;
 
-    public float cellStartScale;
-    public float cellPeakScale;
-    public float cellRiseDuration;
-    public float cellSettleDuration;
-
-    public float itemStartScale;
-    public float itemPeakScale;
-    public float itemDelay;
-    public float itemRiseDuration;
-    public float itemSettleDuration;
-
-    public float waveStagger;
-    public float waveJitter;
-    public float maxRevealSpread;
-
-    public Ease riseEase;
-    public Ease settleEase;
 }
