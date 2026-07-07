@@ -221,7 +221,9 @@ namespace Gley.DailyRewards.Internal
             TimeMethods.SaveDay(dailyRewardCurrentDay, savedDay);
             TimeMethods.SaveTime(dailyRewardSavedTime);
             savedTime = TimeMethods.LoadTime(dailyRewardSavedTime);
-            FindObjectsByType<CalendarPopup>(FindObjectsSortMode.None)[0].Refresh(savedDay, false);
+
+            var popupInstance = FindObjectsByType<CalendarPopup>(FindObjectsSortMode.None).FirstOrDefault();
+            popupInstance?.Refresh(savedDay, false);
         }
 
 

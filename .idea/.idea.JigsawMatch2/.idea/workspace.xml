@@ -12,8 +12,9 @@
   <component name="ChangeListManager">
     <list default="true" id="c8bc5122-cbac-4efe-813b-118ec8437e54" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.JigsawMatch2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JigsawMatch2/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/UI/MenuView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JuiceFresh/Scripts/UI/MenuView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/MenuTabs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/MenuTabs.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Gley/DailyRewards/Scripts/Internal/CalendarManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Gley/DailyRewards/Scripts/Internal/CalendarManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Presenters/DailyCardsPresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Presenters/DailyCardsPresenter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Providers/MenuNavigationProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Providers/MenuNavigationProvider.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -199,7 +200,7 @@
       <workItem from="1782116501747" duration="2249000" />
       <workItem from="1783086575563" duration="2255000" />
       <workItem from="1783348029876" duration="1222000" />
-      <workItem from="1783422120880" duration="2069000" />
+      <workItem from="1783422120880" duration="2890000" />
     </task>
     <servers />
   </component>
