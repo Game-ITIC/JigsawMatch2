@@ -260,7 +260,8 @@ public class MenuView : MonoBehaviour, IPreload
         CloseShopPanel();
         ShowDailyAndTasksTab(tab);
 
-        if(dailyPanel.activeSelf)
+        var canvasGroup = dailyPanel.GetComponent<CanvasGroup>();
+        if(dailyPanel.activeInHierarchy && canvasGroup != null && canvasGroup.alpha > 0.99f)
         {
             return;
         }
@@ -270,9 +271,11 @@ public class MenuView : MonoBehaviour, IPreload
 
     private void ShowDailyAndTasksTab(DailyAndTasksTab tab)
     {
-        if(dailyContentPanel != null)
+        var dailyPanel = dailyContentPanel != null ? dailyContentPanel : dailyRewardsPanel;
+
+        if(dailyPanel != null)
         {
-            dailyContentPanel.SetActive(tab == DailyAndTasksTab.Daily);
+            dailyPanel.SetActive(tab == DailyAndTasksTab.Daily);
         }
 
         if(tasksContentPanel != null)
@@ -299,10 +302,10 @@ public class MenuView : MonoBehaviour, IPreload
             HidePanel(dailyAndTasksPanel);
         }
 
-        if(dailyRewardsPanel != null)
-        {
-            HidePanel(dailyRewardsPanel);
-        }
+        // if(dailyRewardsPanel != null)
+        // {
+        //     HidePanel(dailyRewardsPanel);
+        // }
     }
 
     public void CloseShopPanel()
@@ -326,6 +329,9 @@ public class MenuView : MonoBehaviour, IPreload
 
     private void ShowPanel(GameObject panel)
     {
+        ActivateParents(panel);
+        BringToFront(panel);
+
         CurvedUIPanelAnimator.Show(
             panel,
             animatePanelTransitions ? panelOpenDuration : 0f,
@@ -347,6 +353,63 @@ public class MenuView : MonoBehaviour, IPreload
     private static void HidePanelImmediate(GameObject panel)
     {
         CurvedUIPanelAnimator.HideImmediate(panel);
+    }
+
+    private static void ActivateParents(GameObject panel)
+    {
+        if(panel == null)
+        {
+            return;
+        }
+
+        var parent = panel.transform.parent;
+        if(parent == null)
+        {
+            return;
+        }
+
+        ActivateParents(parent.gameObject);
+
+        if(!parent.gameObject.activeSelf)
+        {
+            parent.gameObject.SetActive(true);
+        }
+    }
+
+    private static void BringToFront(GameObject panel)
+    {
+        if(panel == null)
+        {
+            return;
+        }
+
+        var parent = panel.transform.parent;
+        if(parent != null)
+        {
+            parent.SetAsLastSibling();
+            KeepSiblingOnTop(parent, "HUD Side Bar");
+        }
+
+        panel.transform.SetAsLastSibling();
+    }
+
+    private static void KeepSiblingOnTop(Transform transform, string siblingName)
+    {
+        var root = transform.parent;
+        if(root == null)
+        {
+            return;
+        }
+
+        for(var i = 0; i < root.childCount; i++)
+        {
+            var sibling = root.GetChild(i);
+            if(string.Equals(sibling.name.Trim(), siblingName, System.StringComparison.OrdinalIgnoreCase))
+            {
+                sibling.SetAsLastSibling();
+                return;
+            }
+        }
     }
 
     private static void WireButtons(List<Button> buttons, UnityAction action)

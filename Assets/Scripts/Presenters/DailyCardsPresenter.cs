@@ -55,15 +55,6 @@ namespace Presenters
         {
             _cards.Clear();
 
-            var cardViews = Object.FindObjectsByType<DailyCardView>(FindObjectsInactive.Include, FindObjectsSortMode.None)
-                .OrderBy(card => card.transform.GetSiblingIndex())
-                .ToList();
-
-            if(cardViews.Count == 0)
-            {
-                return;
-            }
-
             _ = Calendar.GetRemainingTimeSpan();
 
             var settings = Resources.Load<DailyRewardsData>(Constants.DATA_NAME_RUNTIME);
@@ -72,6 +63,18 @@ namespace Presenters
                 Debug.LogWarning("Daily rewards data is missing. Configure Gley Daily Rewards.");
                 return;
             }
+
+            var cardViews = Object.FindObjectsByType<DailyCardView>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+                .OrderBy(card => card.transform.GetSiblingIndex())
+                .ToList();
+
+            if(cardViews.Count == 0)
+            {
+                Debug.LogWarning("Daily rewards UI is missing a DailyCardView template.");
+                return;
+            }
+
+            EnsureCardViews(cardViews, settings.allDays.Count);
 
             var daysToBind = Mathf.Min(cardViews.Count, settings.allDays.Count);
 
@@ -83,6 +86,43 @@ namespace Presenters
                 card.Bind(i + 1, day.dayTexture, day.rewardValue);
                 WireClaimButton(card);
                 _cards.Add(card);
+            }
+        }
+
+        private static void EnsureCardViews(List<DailyCardView> cardViews, int requiredCount)
+        {
+            if(cardViews.Count == 0 || requiredCount <= cardViews.Count)
+            {
+                return;
+            }
+
+            var template = cardViews[0];
+            var parent = template.transform.parent;
+            if(parent == null)
+            {
+                return;
+            }
+
+            HidePlaceholderChildren(parent);
+
+            for(var i = cardViews.Count; i < requiredCount; i++)
+            {
+                var card = Object.Instantiate(template, parent);
+                card.name = $"{template.name} Day {i + 1}";
+                card.transform.SetSiblingIndex(i);
+                cardViews.Add(card);
+            }
+        }
+
+        private static void HidePlaceholderChildren(Transform parent)
+        {
+            for(var i = 0; i < parent.childCount; i++)
+            {
+                var child = parent.GetChild(i);
+                if(child.GetComponent<DailyCardView>() == null)
+                {
+                    child.gameObject.SetActive(false);
+                }
             }
         }
 

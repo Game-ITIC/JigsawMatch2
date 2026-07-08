@@ -36,6 +36,7 @@ namespace Views
         public void Bind(int dayNumber, Sprite rewardSprite, int rewardValue)
         {
             ResolveReferences();
+            gameObject.SetActive(true);
 
             _dayNumber = dayNumber;
             _rewardSprite = rewardSprite;
