@@ -15,7 +15,7 @@ public class Line : MonoBehaviour
     #region Trace Style
     [Header("Butterfly Trace Style")]
     [SerializeField] private string resourcesMaterialPath = "ButterflyTrace";
-    [SerializeField, Range(0.25f, 1.25f)] private float widthMultiplier = 0.72f;
+    [SerializeField, Range(0.25f, 1.25f)] private float widthMultiplier = 1.05f;
     [SerializeField, Range(0, 8)] private int roundedCorners = 4;
     [SerializeField, Range(0, 8)] private int roundedCaps = 4;
     [SerializeField, Range(0f, 0.4f)] private float chainWidthBoost = 0.2f;
@@ -28,8 +28,7 @@ public class Line : MonoBehaviour
     private Vector3 end;
     private List<LineRenderer> lines = new List<LineRenderer>();
     private Vector3[] points = new Vector3[200]; // Cache for point positions
-    private Material runtimeMaterial;
-    private bool ownsRuntimeMaterial;
+    private Material lineMaterial;
     #endregion
 
     #region Unity Lifecycle
@@ -39,11 +38,6 @@ public class Line : MonoBehaviour
         InitializeLineRenderers();
     }
 
-    private void OnDestroy()
-    {
-        if (ownsRuntimeMaterial && runtimeMaterial != null)
-            Destroy(runtimeMaterial);
-    }
     #endregion
 
     #region Public Methods
@@ -128,40 +122,20 @@ public class Line : MonoBehaviour
     }
 
     /// <summary>
-    /// Loads the project trace material without requiring scene changes.
-    /// A runtime fallback keeps the effect working if the resource is moved.
+    /// Loads the project trace material without creating runtime material copies.
     /// </summary>
     private void InitializeMaterial()
     {
         if (material != null)
         {
-            runtimeMaterial = material;
+            lineMaterial = material;
             return;
         }
 
-        Material template = Resources.Load<Material>(resourcesMaterialPath);
-        if (template != null)
-        {
-            runtimeMaterial = new Material(template)
-            {
-                name = template.name + " (Runtime)"
-            };
-            ownsRuntimeMaterial = true;
-            return;
-        }
+        lineMaterial = Resources.Load<Material>(resourcesMaterialPath);
 
-        Shader traceShader = Shader.Find("JigsawMatch2/Butterfly Trace");
-        if (traceShader == null)
-        {
-            Debug.LogWarning("Butterfly Trace shader was not found. The original line material will be used.", this);
-            return;
-        }
-
-        runtimeMaterial = new Material(traceShader)
-        {
-            name = "ButterflyTrace (Runtime Fallback)"
-        };
-        ownsRuntimeMaterial = true;
+        if (lineMaterial == null)
+            Debug.LogWarning($"Line material '{resourcesMaterialPath}' was not found in Resources. Existing line renderer material will be used.", this);
     }
 
     /// <summary>
@@ -169,8 +143,8 @@ public class Line : MonoBehaviour
     /// </summary>
     private void ConfigureLineRenderer(LineRenderer lineRenderer)
     {
-        if (runtimeMaterial != null)
-            lineRenderer.sharedMaterial = runtimeMaterial;
+        if (lineMaterial != null)
+            lineRenderer.sharedMaterial = lineMaterial;
 
         lineRenderer.widthMultiplier = widthMultiplier;
         lineRenderer.numCornerVertices = roundedCorners;

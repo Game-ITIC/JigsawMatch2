@@ -12886,7 +12886,7 @@ MonoBehaviour:
   material: {fileID: 0}
   lineWidth: 0
   resourcesMaterialPath: ButterflyTrace
-  widthMultiplier: 0.72
+  widthMultiplier: 1.05
   roundedCorners: 4
   roundedCaps: 4
   chainWidthBoost: 0.2
