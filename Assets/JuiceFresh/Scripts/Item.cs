@@ -305,7 +305,7 @@ public class Item : MonoBehaviour
         _animation.PlaySelected();
 
         if (currentType != ItemsTypes.BOMB)
-            sprRenderer.sprite = itemsAnimation[color];
+            SetAwakeSprite();
         else if (currentType == ItemsTypes.BOMB)
             SetLight();
     }
@@ -318,10 +318,65 @@ public class Item : MonoBehaviour
         _animation.PlayNeutral(hasAmbientAnimation, strongAmbientAnimation);
 
         if (currentType != ItemsTypes.BOMB)
-            sprRenderer.sprite = items[color];
+            SetNeutralSprite();
             
         if (_light != null)
             _light.SetActive(false);
+    }
+
+    private void SetAwakeSprite()
+    {
+        switch (currentType)
+        {
+            case ItemsTypes.INGREDIENT:
+                SetIngredientSprite();
+                break;
+            case ItemsTypes.PACKAGE:
+                SetSpriteIfAvailable(packageItems, color);
+                break;
+            case ItemsTypes.CHOCOBOMB:
+                SetSpriteIfAvailable(ChocoBombItems, 0);
+                break;
+            default:
+                SetSpriteIfAvailable(itemsAnimation, color);
+                break;
+        }
+    }
+
+    private void SetNeutralSprite()
+    {
+        switch (currentType)
+        {
+            case ItemsTypes.INGREDIENT:
+                SetIngredientSprite();
+                break;
+            case ItemsTypes.PACKAGE:
+                SetSpriteIfAvailable(packageItems, color);
+                break;
+            case ItemsTypes.CHOCOBOMB:
+                SetSpriteIfAvailable(ChocoBombItems, 0);
+                break;
+            default:
+                SetSpriteIfAvailable(items, color);
+                break;
+        }
+    }
+
+    private void SetIngredientSprite()
+    {
+        int targetIndex = color - 1000;
+        if (LevelManager.THIS == null || targetIndex < 0 || targetIndex >= LevelManager.THIS.ingrTarget.Count)
+            return;
+
+        sprRenderer.sprite = LevelManager.THIS.ingrTarget[targetIndex].sprite;
+    }
+
+    private void SetSpriteIfAvailable(Sprite[] sprites, int spriteIndex)
+    {
+        if (sprRenderer == null || sprites == null || spriteIndex < 0 || spriteIndex >= sprites.Length)
+            return;
+
+        sprRenderer.sprite = sprites[spriteIndex];
     }
 
     public void SetAppeared()
