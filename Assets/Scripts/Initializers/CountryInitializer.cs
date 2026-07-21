@@ -23,6 +23,8 @@ namespace Initializers
 {
     public class CountryInitializer : IAsyncStartable, IDisposable
     {
+        private const string OneTimeProductBoughtPrefix = "in-app-one-time-bought-";
+
         private readonly MenuView _menuView;
         private readonly SceneLoader _sceneLoader;
         private readonly InAppView _inAppView;
@@ -146,7 +148,15 @@ namespace Initializers
             {
                 foreach (var inAppProduct in _inAppConfig.InAppProducts)
                 {
-                    var price = API.GetLocalizedPriceString(inAppProduct.product);
+                    if(IsOneTimeProductBought(inAppProduct))
+                    {
+                        continue;
+                    }
+
+                    var price = ResolvePriceLabel(inAppProduct);
+                    var rewardText = string.IsNullOrWhiteSpace(inAppProduct.rewardText)
+                        ? inAppProduct.amount.ToString()
+                        : inAppProduct.rewardText;
 
                     var parent = _inAppView.ButtonsParent;
 
@@ -154,10 +164,14 @@ namespace Initializers
                     product.Init(inAppProduct.productName,
                                  inAppProduct.icon,
                                  price,
-                                 inAppProduct.amount.ToString());
+                                 rewardText);
 
                     product.BuyButton.onClick.RemoveAllListeners();
-                    product.BuyButton.onClick.AddListener(() => { HandlePurchaseInApp(inAppProduct.product).Forget(); });
+                    product.BuyButton.onClick.AddListener(() =>
+                                                         {
+                                                             HandlePurchaseInApp(inAppProduct.product, product)
+                                                                 .Forget();
+                                                         });
                 }
             }
 
@@ -241,10 +255,10 @@ namespace Initializers
                 _lifePopup.BuyButton.onClick.RemoveAllListeners();
                 _lifePopup.BuyButton.onClick.AddListener(() =>
                                                          {
-                                                             if(_gemModel.Gems.Value >= 15)
+                                                             if(_gemModel.Gems.Value >= 200)
                                                              {
-                                                                 _healthSystem.AddLives(1);
-                                                                 _gemModel.Decrease(15);
+                                                                 _healthSystem.AddLives(5);
+                                                                 _gemModel.Decrease(200);
                                                                  _lifePopup.Hide();
                                                              }
                                                          });
@@ -311,7 +325,7 @@ namespace Initializers
             }
         }
 
-        private async UniTaskVoid HandlePurchaseInApp(ShopProductNames shopProduct)
+        private async UniTaskVoid HandlePurchaseInApp(ShopProductNames shopProduct, InAppProductView productView)
         {
             var isBought = await InAppPurchasingService.TryBuyConsumableAsync(shopProduct);
 
@@ -319,22 +333,71 @@ namespace Initializers
 
             var productConfig = _inAppConfig.InAppProducts.AsValueEnumerable().First(v => v.product == shopProduct);
 
-            //TODO POKAZAT CHTO ON GEY POLUCHIL BABKI SVOI
-            switch (shopProduct)
+            GrantProduct(productConfig);
+
+            if(productConfig.oneTimePurchase)
             {
-                case ShopProductNames.CoinsSmall:
-                    _coinModel.Increase(productConfig.amount);
-                    break;
-                case ShopProductNames.CoinsMedium:
-                    _coinModel.Increase(productConfig.amount);
-                    break;
-                case ShopProductNames.DiamondSmall:
-                    _gemModel.Increase(productConfig.amount);
-                    break;
-                case ShopProductNames.DiamondMedium:
-                    _gemModel.Increase(productConfig.amount);
-                    break;
+                PlayerPrefs.SetInt(GetOneTimeProductKey(productConfig.product), 1);
+                PlayerPrefs.Save();
+                productView.gameObject.SetActive(false);
             }
+        }
+
+        private string ResolvePriceLabel(InAppProduct productConfig)
+        {
+            if(!string.IsNullOrWhiteSpace(productConfig.priceLabel))
+            {
+                return productConfig.priceLabel;
+            }
+
+            var localizedPrice = API.GetLocalizedPriceString(productConfig.product);
+            return string.IsNullOrWhiteSpace(localizedPrice) || localizedPrice == "-"
+                ? string.Empty
+                : localizedPrice;
+        }
+
+        private void GrantProduct(InAppProduct productConfig)
+        {
+            if(productConfig.gems > 0)
+            {
+                _gemModel.Increase(productConfig.gems);
+            }
+
+            AddBooster(BoostType.Bomb, productConfig.bombs);
+            AddBooster(BoostType.Shovel, productConfig.butterflies);
+            AddBooster(BoostType.ExtraMoves, productConfig.extraMoves);
+
+            if(productConfig.lives > 0)
+            {
+                _healthSystem.AddLives(productConfig.lives);
+            }
+
+            if(productConfig.unlimitedLivesMinutes > 0)
+            {
+                _healthSystem.AddUnlimitedLives(TimeSpan.FromMinutes(productConfig.unlimitedLivesMinutes));
+            }
+        }
+
+        private void AddBooster(BoostType boostType, int amount)
+        {
+            if(amount <= 0)
+            {
+                return;
+            }
+
+            _boostersProvider.GetBoosterModel(boostType).Add(amount);
+            _boostersProvider.Save();
+        }
+
+        private static bool IsOneTimeProductBought(InAppProduct productConfig)
+        {
+            return productConfig.oneTimePurchase
+                   && PlayerPrefs.GetInt(GetOneTimeProductKey(productConfig.product), 0) == 1;
+        }
+
+        private static string GetOneTimeProductKey(ShopProductNames shopProduct)
+        {
+            return OneTimeProductBoughtPrefix + shopProduct;
         }
 
         public void Dispose()

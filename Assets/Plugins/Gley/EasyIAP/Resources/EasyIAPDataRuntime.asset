@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 826e3fbbfdb9d9843a24a6e897a3af45, type: 3}
   m_Name: EasyIAPDataRuntime
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   debug: 0
   useReceiptValidation: 0
   usePlaymaker: 0
@@ -25,60 +25,216 @@ MonoBehaviour:
   - productName: RemoveAds
     productType: 1
     idGooglePlay: remove_ads
-    idAmazon: 
-    idIOS: 
-    idMac: 
-    idWindows: 
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
     value: 0
     localizedPriceString: '-'
     price: 0
-    isoCurrencyCode: 
-    receipt: 
-  - productName: CoinsSmall
+    isoCurrencyCode:
+    receipt:
+  - productName: CrystalsStarter
     productType: 0
-    idGooglePlay: coins_small
-    idAmazon: 
-    idIOS: 
-    idMac: 
-    idWindows: 
-    value: 0
-    localizedPriceString: '-'
-    price: 0
-    isoCurrencyCode: 
-    receipt: 
-  - productName: CoinsMedium
+    idGooglePlay: crystals_starter
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 300
+    localizedPriceString: $0.99
+    price: 0.99
+    isoCurrencyCode:
+    receipt:
+  - productName: CrystalsSmall
     productType: 0
-    idGooglePlay: coins_medium
-    idAmazon: 
-    idIOS: 
-    idMac: 
-    idWindows: 
-    value: 0
-    localizedPriceString: '-'
-    price: 0
-    isoCurrencyCode: 
-    receipt: 
-  - productName: DiamondSmall
+    idGooglePlay: crystals_small
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 800
+    localizedPriceString: $2.99
+    price: 2.99
+    isoCurrencyCode:
+    receipt:
+  - productName: CrystalsMedium
     productType: 0
-    idGooglePlay: diamond_small
-    idAmazon: 
-    idIOS: 
-    idMac: 
-    idWindows: 
-    value: 0
-    localizedPriceString: '-'
-    price: 0
-    isoCurrencyCode: 
-    receipt: 
-  - productName: DiamondMedium
+    idGooglePlay: crystals_medium
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 1800
+    localizedPriceString: $4.99
+    price: 4.99
+    isoCurrencyCode:
+    receipt:
+  - productName: CrystalsBig
     productType: 0
-    idGooglePlay: diamond_medium
-    idAmazon: 
-    idIOS: 
-    idMac: 
-    idWindows: 
+    idGooglePlay: crystals_big
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 4000
+    localizedPriceString: $9.99
+    price: 9.99
+    isoCurrencyCode:
+    receipt:
+  - productName: CrystalsHuge
+    productType: 0
+    idGooglePlay: crystals_huge
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 9000
+    localizedPriceString: $19.99
+    price: 19.99
+    isoCurrencyCode:
+    receipt:
+  - productName: CrystalsRoyal
+    productType: 0
+    idGooglePlay: crystals_royal
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 20000
+    localizedPriceString: $49.99
+    price: 49.99
+    isoCurrencyCode:
+    receipt:
+  - productName: StarterBundle
+    productType: 0
+    idGooglePlay: starter_bundle
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 500
+    localizedPriceString: $1.99
+    price: 1.99
+    isoCurrencyCode:
+    receipt:
+  - productName: BeginnerBundle
+    productType: 0
+    idGooglePlay: beginner_bundle
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 1000
+    localizedPriceString: $4.99
+    price: 4.99
+    isoCurrencyCode:
+    receipt:
+  - productName: BuilderBundle
+    productType: 0
+    idGooglePlay: builder_bundle
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 1500
+    localizedPriceString: $5.99
+    price: 5.99
+    isoCurrencyCode:
+    receipt:
+  - productName: MasterBundle
+    productType: 0
+    idGooglePlay: master_bundle
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 3000
+    localizedPriceString: $9.99
+    price: 9.99
+    isoCurrencyCode:
+    receipt:
+  - productName: NeedMovesOffer
+    productType: 0
+    idGooglePlay: need_moves_offer
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 300
+    localizedPriceString: $0.99
+    price: 0.99
+    isoCurrencyCode:
+    receipt:
+  - productName: OutOfLivesOffer
+    productType: 0
+    idGooglePlay: out_of_lives_offer
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 500
+    localizedPriceString: $1.99
+    price: 1.99
+    isoCurrencyCode:
+    receipt:
+  - productName: HardLevelOffer
+    productType: 0
+    idGooglePlay: hard_level_offer
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 500
+    localizedPriceString: $2.99
+    price: 2.99
+    isoCurrencyCode:
+    receipt:
+  - productName: DailyGemsDiscount
+    productType: 0
+    idGooglePlay: daily_gems_discount
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 300
+    localizedPriceString: $0.69
+    price: 0.69
+    isoCurrencyCode:
+    receipt:
+  - productName: DailyBoostersOffer
+    productType: 0
+    idGooglePlay: daily_boosters_offer
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
     value: 0
-    localizedPriceString: '-'
-    price: 0
-    isoCurrencyCode: 
-    receipt: 
+    localizedPriceString: $1.99
+    price: 1.99
+    isoCurrencyCode:
+    receipt:
+  - productName: DailyUnlimitedLivesOffer
+    productType: 0
+    idGooglePlay: daily_unlimited_lives_offer
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 60
+    localizedPriceString: $0.99
+    price: 0.99
+    isoCurrencyCode:
+    receipt:
+  - productName: DailyMovesOffer
+    productType: 0
+    idGooglePlay: daily_moves_offer
+    idAmazon:
+    idIOS:
+    idMac:
+    idWindows:
+    value: 5
+    localizedPriceString: $2.99
+    price: 2.99
+    isoCurrencyCode:
+    receipt:

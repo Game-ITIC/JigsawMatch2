@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Gley.EasyIAP;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Views;
 
 namespace Configs
@@ -20,5 +19,14 @@ namespace Configs
         public string productName;
         public Sprite icon;
         public int amount;
+        public string priceLabel;
+        [TextArea] public string rewardText;
+        public int gems;
+        public int bombs;
+        public int butterflies;
+        public int extraMoves;
+        public int lives;
+        public int unlimitedLivesMinutes;
+        public bool oneTimePurchase;
     }
 }

@@ -16,11 +16,13 @@ namespace Systems
 
         private ReactiveProperty<int> _currentLives = new();
         private DateTime _lastSaveTime;
+        private DateTime _unlimitedLivesUntil = DateTime.MinValue;
         private bool _isRegenerating = false;
 
         public ReactiveProperty<int> CurrentLives => _currentLives;
         public int MaxLives => _maxLives;
-        public bool CanPlay => _currentLives.Value > 0;
+        public bool HasUnlimitedLives => DateTime.UtcNow < _unlimitedLivesUntil;
+        public bool CanPlay => HasUnlimitedLives || _currentLives.Value > 0;
         public TimeSpan TimeUntilNextLife
         {
             get
@@ -47,6 +49,11 @@ namespace Systems
 
         public bool TryUseLife()
         {
+            if(HasUnlimitedLives)
+            {
+                return true;
+            }
+
             if (_currentLives.Value <= 0)
             {
                 return false;
@@ -85,6 +92,19 @@ namespace Systems
         {
             _currentLives.Value = _maxLives;
             _isRegenerating = false;
+            SaveData();
+            UpdateUI();
+        }
+
+        public void AddUnlimitedLives(TimeSpan duration)
+        {
+            if(duration <= TimeSpan.Zero)
+            {
+                return;
+            }
+
+            var startTime = HasUnlimitedLives ? _unlimitedLivesUntil : DateTime.UtcNow;
+            _unlimitedLivesUntil = startTime.Add(duration);
             SaveData();
             UpdateUI();
         }
@@ -134,6 +154,11 @@ namespace Systems
 
         public string GetLifeStatusText()
         {
+            if(HasUnlimitedLives)
+            {
+                return "∞ " + FormatTime(_unlimitedLivesUntil - DateTime.UtcNow);
+            }
+
             return _currentLives.Value >= _maxLives
                 ? FullLivesText
                 : FormatTime(TimeUntilNextLife);
@@ -143,6 +168,7 @@ namespace Systems
         {
             PlayerPrefs.SetInt(PlayerPrefsKeys.Life, _currentLives.Value);
             PlayerPrefs.SetString(PlayerPrefsKeys.LifeLastSavedTime, _lastSaveTime.ToBinary().ToString());
+            PlayerPrefs.SetString(PlayerPrefsKeys.UnlimitedLivesUntil, _unlimitedLivesUntil.ToBinary().ToString());
             PlayerPrefs.Save();
         }
 
@@ -152,6 +178,19 @@ namespace Systems
             _currentLives.Value = Mathf.Clamp(_currentLives.Value, 0, _maxLives);
 
             string lastSaveTimeString = PlayerPrefs.GetString(PlayerPrefsKeys.LifeLastSavedTime, "");
+            string unlimitedLivesString = PlayerPrefs.GetString(PlayerPrefsKeys.UnlimitedLivesUntil, "");
+
+            if(!string.IsNullOrEmpty(unlimitedLivesString))
+            {
+                try
+                {
+                    _unlimitedLivesUntil = DateTime.FromBinary(Convert.ToInt64(unlimitedLivesString));
+                }
+                catch
+                {
+                    _unlimitedLivesUntil = DateTime.MinValue;
+                }
+            }
 
             if (string.IsNullOrEmpty(lastSaveTimeString))
             {

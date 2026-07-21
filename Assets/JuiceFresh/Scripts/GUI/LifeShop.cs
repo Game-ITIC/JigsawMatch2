@@ -4,7 +4,7 @@ using TMPro;
 
 public class LifeShop : MonoBehaviour
 {
-	public int CostIfRefill = 5;
+	public int CostIfRefill = 200;
 	// Use this for initialization
 	void OnEnable ()
 	{

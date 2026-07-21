@@ -103,6 +103,8 @@ namespace Scopes.Country
 
         protected override void Configure(IContainerBuilder builder)
         {
+            ResolveOptionalSceneReferences();
+
             RegisterComponentIfPresent(builder, menuView);
             RegisterComponentIfPresent(builder, buildingShopManager);
             RegisterComponentIfPresent(builder, inAppView);
@@ -191,6 +193,14 @@ namespace Scopes.Country
             }
 
             ConfigureCountry(builder);
+        }
+
+        private void ResolveOptionalSceneReferences()
+        {
+            if(inAppView == null)
+            {
+                inAppView = GetComponentInChildren<InAppView>(true);
+            }
         }
 
         private static void RegisterComponentIfPresent<T>(IContainerBuilder builder, T component)

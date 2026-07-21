@@ -448,14 +448,14 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   gemsProducts:
-  - count: 10
+  - count: 300
     price: 0.99
-  - count: 50
+  - count: 800
+    price: 2.99
+  - count: 1800
     price: 4.99
-  - count: 100
+  - count: 4000
     price: 9.99
-  - count: 150
-    price: 14.99
   bombTimers: 
   passLevelCounter: 0
   moveID: 0

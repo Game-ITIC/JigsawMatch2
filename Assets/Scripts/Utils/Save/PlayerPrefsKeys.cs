@@ -9,6 +9,7 @@ namespace Utils.Save
 
         public static readonly string Life = "butterfly-match-life";
         public static readonly string LifeLastSavedTime = "butterfly-match-life-last-saved-time";
+        public static readonly string UnlimitedLivesUntil = "butterfly-match-unlimited-lives-until";
 
         public static readonly string AsiaBuildings = "asia-buidlings";
         public static readonly string AsiaBuildingsAnimation = "asia-buildings-animation";
