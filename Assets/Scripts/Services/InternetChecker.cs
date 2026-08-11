@@ -17,7 +17,11 @@ namespace Services
 
         public async UniTask<bool> HasInternetAccess()
         {
-            if (!HasNetworkConnection()) return false;
+            if (!HasNetworkConnection())
+            {
+                Debug.LogWarning("[InternetChecker] No network reachability (internetReachability is NotReachable).");
+                return false;
+            }
 
             try
             {
@@ -29,11 +33,17 @@ namespace Services
                     .Timeout(TimeSpan.FromSeconds(_timeout));
 
                 await UniTask.SwitchToMainThread();
-                return request.result == UnityWebRequest.Result.Success;
+                var success = request.result == UnityWebRequest.Result.Success;
+                if (!success)
+                {
+                    Debug.LogWarning($"[InternetChecker] Head request to '{_testUrl}' failed: {request.error} (result: {request.result})");
+                }
+                return success;
             }
-            catch
+            catch (Exception ex)
             {
                 await UniTask.SwitchToMainThread();
+                Debug.LogWarning($"[InternetChecker] Failed to connect to '{_testUrl}' ({ex.GetType().Name}): {ex.Message}");
                 return false;
             }
         }

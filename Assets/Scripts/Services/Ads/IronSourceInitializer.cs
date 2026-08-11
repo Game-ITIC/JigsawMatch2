@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -26,6 +26,10 @@ public class IronSourceInitializer : MonoBehaviour
 
         _ironSourceManager.InitializeLevelPlay();
 
+#if UNITY_EDITOR
+        await UniTask.Yield();
+        return true;
+#else
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
         timeout.CancelAfter(TimeSpan.FromSeconds(Mathf.Max(0.1f, maxWaitTime)));
 
@@ -40,5 +44,6 @@ public class IronSourceInitializer : MonoBehaviour
         {
             return false;
         }
+#endif
     }
 }

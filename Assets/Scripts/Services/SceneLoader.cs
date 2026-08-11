@@ -1,10 +1,12 @@
-﻿using System;
+using System;
+using System.Diagnostics;
 using Cysharp.Threading.Tasks;
 using Data;
 using Itic.Services;
 using Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
 
 namespace Itic.Scopes
 {
@@ -77,9 +79,15 @@ namespace Itic.Scopes
 
         private async UniTask LoadSceneAsync(int index)
         {
+            var sw = Stopwatch.StartNew();
+            Debug.Log($"[SceneLoader] === STEP 3/3: Starting load scene by build index '{index}' ===");
+
             await EnsureLoadingScreenVisibleAsync();
 
-            var unloadSceneAsyncTask = SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+            var activeScene = SceneManager.GetActiveScene();
+            Debug.Log($"[SceneLoader] Unloading current scene '{activeScene.name}'...");
+            var unloadSw = Stopwatch.StartNew();
+            var unloadSceneAsyncTask = SceneManager.UnloadSceneAsync(activeScene);
 
             if (unloadSceneAsyncTask != null)
             {
@@ -89,7 +97,10 @@ namespace Itic.Scopes
                     await UniTask.Yield();
                 }
             }
+            Debug.Log($"[SceneLoader] Unload completed in {unloadSw.ElapsedMilliseconds} ms");
 
+            Debug.Log($"[SceneLoader] Loading scene index {index} (Additive)...");
+            var loadSw = Stopwatch.StartNew();
             var sceneLoadingOperation = SceneManager.LoadSceneAsync(index, LoadSceneMode.Additive);
 
             while (sceneLoadingOperation is { isDone: false })
@@ -99,35 +110,30 @@ namespace Itic.Scopes
             }
 
             var scene = SceneManager.GetSceneByBuildIndex(index);
-
             SceneManager.SetActiveScene(scene);
+            Debug.Log($"[SceneLoader] Scene '{scene.name}' loaded and activated in {loadSw.ElapsedMilliseconds} ms");
 
-            var rootGameObjects = scene.GetRootGameObjects();
-
-            foreach (var scope in rootGameObjects)
-            {
-                if (!scope.TryGetComponent(out ScopeInstaller installer))
-                {
-                    continue;
-                }
-
-                _screenService.SetLoadingProgress(0.92f);
-                await installer.InstallScopeAsync();
-                break;
-            }
+            await InstallSceneScopeAsync(scene);
 
             _screenService.SetLoadingProgress(LoadProgressEnd);
-            await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+            await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
 
             OnSceneLoaded?.Invoke();
             await _screenService.HideLoadingScreenAsync();
+            Debug.Log($"[SceneLoader] === STEP 3/3 Complete: Scene '{scene.name}' loaded in total {sw.ElapsedMilliseconds} ms ===");
         }
 
         private async UniTask LoadSceneAsync(string sceneName)
         {
+            var sw = Stopwatch.StartNew();
+            Debug.Log($"[SceneLoader] === STEP 3/3: Starting load scene '{sceneName}' ===");
+
             await EnsureLoadingScreenVisibleAsync();
 
-            var unloadSceneAsyncTask = SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+            var activeScene = SceneManager.GetActiveScene();
+            Debug.Log($"[SceneLoader] Unloading current scene '{activeScene.name}'...");
+            var unloadSw = Stopwatch.StartNew();
+            var unloadSceneAsyncTask = SceneManager.UnloadSceneAsync(activeScene);
 
             if (unloadSceneAsyncTask != null)
             {
@@ -137,7 +143,10 @@ namespace Itic.Scopes
                     await UniTask.Yield();
                 }
             }
+            Debug.Log($"[SceneLoader] Unload completed in {unloadSw.ElapsedMilliseconds} ms");
 
+            Debug.Log($"[SceneLoader] Loading scene '{sceneName}' (Additive)...");
+            var loadSw = Stopwatch.StartNew();
             var sceneLoadingOperation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
             while (sceneLoadingOperation is { isDone: false })
@@ -147,31 +156,54 @@ namespace Itic.Scopes
             }
 
             var scene = SceneManager.GetSceneByName(sceneName);
-
             SceneManager.SetActiveScene(scene);
+            Debug.Log($"[SceneLoader] Scene '{sceneName}' loaded and activated in {loadSw.ElapsedMilliseconds} ms");
 
-            var rootGameObjects = scene.GetRootGameObjects();
-
-            foreach (var scope in rootGameObjects)
-            {
-                if (!scope.TryGetComponent(out ScopeInstaller installer))
-                {
-                    continue;
-                }
-
-                _screenService.SetLoadingProgress(0.92f);
-                await installer.InstallScopeAsync();
-                break;
-            }
+            await InstallSceneScopeAsync(scene);
 
             _screenService.SetLoadingProgress(LoadProgressEnd);
-            await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+            await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
 
             OnSceneLoaded?.Invoke();
             await _screenService.HideLoadingScreenAsync();
+            Debug.Log($"[SceneLoader] === STEP 3/3 Complete: Scene '{sceneName}' loaded in total {sw.ElapsedMilliseconds} ms ===");
         }
 
-        async UniTask EnsureLoadingScreenVisibleAsync()
+        private async UniTask InstallSceneScopeAsync(Scene scene)
+        {
+            var sw = Stopwatch.StartNew();
+            Debug.Log($"[SceneLoader] Searching for ScopeInstaller in scene '{scene.name}'...");
+            var installer = FindComponentInScene<ScopeInstaller>(scene);
+
+            if (installer != null)
+            {
+                _screenService.SetLoadingProgress(0.92f);
+                Debug.Log($"[SceneLoader] ScopeInstaller found on GameObject '{installer.gameObject.name}'. Calling InstallScopeAsync()...");
+                await installer.InstallScopeAsync();
+                Debug.Log($"[SceneLoader] ScopeInstaller.InstallScopeAsync() completed in {sw.ElapsedMilliseconds} ms");
+            }
+            else
+            {
+                Debug.LogError($"[SceneLoader] CRITICAL: No ScopeInstaller found in scene '{scene.name}'! VContainer scope not built.");
+            }
+        }
+
+        private static T FindComponentInScene<T>(Scene scene) where T : Component
+        {
+            var rootGameObjects = scene.GetRootGameObjects();
+            foreach (var root in rootGameObjects)
+            {
+                var component = root.GetComponentInChildren<T>(true);
+                if (component != null)
+                {
+                    return component;
+                }
+            }
+
+            return null;
+        }
+
+        private async UniTask EnsureLoadingScreenVisibleAsync()
         {
             if (!_screenService.IsLoadingScreenVisible)
             {
@@ -180,12 +212,12 @@ namespace Itic.Scopes
             }
         }
 
-        static float MapUnloadProgress(float progress)
+        private static float MapUnloadProgress(float progress)
         {
             return LoadProgressStart + Mathf.Clamp01(progress) * 0.08f;
         }
 
-        static float MapLoadProgress(float progress)
+        private static float MapLoadProgress(float progress)
         {
             return LoadProgressStart + 0.08f + Mathf.Clamp01(progress) * (LoadProgressEnd - LoadProgressStart - 0.08f);
         }

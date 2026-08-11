@@ -93,133 +93,136 @@ namespace Initializers
 
         public async UniTask StartAsync(CancellationToken cancellation = new CancellationToken())
         {
-            if(_settingsProvider != null)
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            Debug.Log("[CountryInitializer] Starting CountryInitializer.StartAsync()...");
+
+            try
             {
-                await _settingsProvider.Warmup();
-            }
-
-            await _menuView.Warmup();
-
-            if(_inAppView != null)
-            {
-                await _inAppView.Warmup();
-            }
-
-            if(_menuTabs != null)
-            {
-                await _menuTabs.Warmup();
-            }
-
-            if(_menuView.StartGame != null)
-            {
-                _menuView.StartGame.onClick.RemoveAllListeners();
-                _menuView.StartGame.onClick.AddListener(StartGame);
-            }
-
-            InitializeLifePopup();
-
-            // _menuView.InAppButton.onClick.RemoveAllListeners();
-            // _menuView.InAppButton.onClick.AddListener(ShowInAppView);
-            // _menuView.MapButton.onClick.RemoveAllListeners();
-            // _menuView.MapButton.onClick.AddListener(BackToMap);
-            //
-            if(_menuView.BuildButton != null && _regionModel != null && _regionUpgradeService != null)
-            {
-                _menuView.BuildButton.onClick.RemoveAllListeners();
-                _menuView.BuildButton.onClick.AddListener(() => { Upgrade().Forget(); });
-            }
-
-            // _inAppView.NoAdsButton.onClick.RemoveAllListeners();
-            // _inAppView.NoAdsButton.onClick.AddListener(() =>
-            //     {
-            //         HandlePurchaseInApp(ShopProductNames.RemoveAds,
-            //             () =>
-            //             {
-            //                 _internetState.HasRemoveAds = true;
-            //                 _inAppView.NoAdsButton.gameObject.SetActive(false);
-            //             },
-            //             () => { }
-            //         ).Forget();
-            //     }
-            // );
-            // _inAppView.NoAdsButton.gameObject.SetActive(!_internetState.HasRemoveAds);
-
-            if(_inAppView != null && _inAppConfig != null && _inAppView.ButtonsParent != null)
-            {
-                foreach (var inAppProduct in _inAppConfig.InAppProducts)
+                if(_settingsProvider != null)
                 {
-                    if(IsOneTimeProductBought(inAppProduct))
-                    {
-                        continue;
-                    }
-
-                    var price = ResolvePriceLabel(inAppProduct);
-                    var rewardText = string.IsNullOrWhiteSpace(inAppProduct.rewardText)
-                        ? inAppProduct.amount.ToString()
-                        : inAppProduct.rewardText;
-
-                    var parent = _inAppView.ButtonsParent;
-
-                    var product = Object.Instantiate(_inAppConfig.ProductViewPrefab, parent);
-                    product.Init(inAppProduct.productName,
-                                 inAppProduct.icon,
-                                 price,
-                                 rewardText);
-
-                    product.BuyButton.onClick.RemoveAllListeners();
-                    product.BuyButton.onClick.AddListener(() =>
-                                                         {
-                                                             HandlePurchaseInApp(inAppProduct.product, product)
-                                                                 .Forget();
-                                                         });
+                    var stepSw = System.Diagnostics.Stopwatch.StartNew();
+                    await _settingsProvider.Warmup();
+                    Debug.Log($"[CountryInitializer] _settingsProvider.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
                 }
-            }
 
-            var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
-            if(_menuView.StartGameText != null)
-            {
-                _menuView.StartGameText.SetText("LEVEL " + nextLevel);
-            }
-
-            if(_regionConfig != null && _regionUIProvider != null && _regionModel != null)
-            {
-                foreach (var regionName in _regionConfig.Regions)
+                if(_menuView != null)
                 {
-                    var region = Object.Instantiate(_regionUIProvider.RegionUIViewPrefab,
-                                                    _regionUIProvider.RegionUIViewParent);
-                    region.SetName(regionName);
+                    var stepSw = System.Diagnostics.Stopwatch.StartNew();
+                    await _menuView.Warmup();
+                    Debug.Log($"[CountryInitializer] _menuView.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
+                }
 
-                    if(regionName != "Soon" && _regionModel._settingsProvider.ActiveRegion != null)
+                if(_inAppView != null)
+                {
+                    var stepSw = System.Diagnostics.Stopwatch.StartNew();
+                    await _inAppView.Warmup();
+                    Debug.Log($"[CountryInitializer] _inAppView.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
+                }
+
+                if(_menuTabs != null)
+                {
+                    var stepSw = System.Diagnostics.Stopwatch.StartNew();
+                    await _menuTabs.Warmup();
+                    Debug.Log($"[CountryInitializer] _menuTabs.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
+                }
+
+                if(_menuView != null && _menuView.StartGame != null)
+                {
+                    _menuView.StartGame.onClick.RemoveAllListeners();
+                    _menuView.StartGame.onClick.AddListener(StartGame);
+                }
+
+                InitializeLifePopup();
+
+                if(_menuView != null && _menuView.BuildButton != null && _regionModel != null && _regionUpgradeService != null)
+                {
+                    _menuView.BuildButton.onClick.RemoveAllListeners();
+                    _menuView.BuildButton.onClick.AddListener(() => { Upgrade().Forget(); });
+                }
+
+                if(_inAppView != null && _inAppConfig != null && _inAppView.ButtonsParent != null)
+                {
+                    foreach (var inAppProduct in _inAppConfig.InAppProducts)
                     {
-                        var max = _regionModel._settingsProvider.ActiveRegion.data.Count - 1;
-                        var current = _regionModel.CurrentLevelProgress;
+                        if(IsOneTimeProductBought(inAppProduct))
+                        {
+                            continue;
+                        }
 
-                        region.SetProgress(current, max);
-                        _regionModel.CurrentLevelProgressReactiveProperty.Subscribe(v =>
-                                                                                    {
-                                                                                        var max = _regionModel._settingsProvider.ActiveRegion.data.Count - 1;
-                                                                                        var current = _regionModel.CurrentLevelProgress;
+                        var price = ResolvePriceLabel(inAppProduct);
+                        var rewardText = string.IsNullOrWhiteSpace(inAppProduct.rewardText)
+                            ? inAppProduct.amount.ToString()
+                            : inAppProduct.rewardText;
 
-                                                                                        region.SetProgress(current, max);
-                                                                                    })
-                            .AddTo(region);
+                        var parent = _inAppView.ButtonsParent;
+
+                        var product = Object.Instantiate(_inAppConfig.ProductViewPrefab, parent);
+                        product.Init(inAppProduct.productName,
+                                     inAppProduct.icon,
+                                     price,
+                                     rewardText);
+
+                        product.BuyButton.onClick.RemoveAllListeners();
+                        product.BuyButton.onClick.AddListener(() =>
+                                                             {
+                                                                 HandlePurchaseInApp(inAppProduct.product, product)
+                                                                     .Forget();
+                                                             });
                     }
                 }
-            }
 
-            if(_regionUpgradeService != null
-               && _regionModel != null
-               && _regionModel._settingsProvider.ActiveRegion != null)
-            {
-                _regionUpgradeService.Initialize(_regionModel);
-                _regionUpgradeService.JumpToFrame(0);
-
-                if(_regionModel.CurrentLevelProgress != 0)
+                var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
+                if(_menuView != null && _menuView.StartGameText != null)
                 {
-                    int endFrame = _regionModel._settingsProvider.ActiveRegion.data[_regionModel.CurrentLevelProgress - 1]
-                        .endFrame;
-                    _regionUpgradeService.JumpToFrame(endFrame);
+                    _menuView.StartGameText.SetText("LEVEL " + nextLevel);
                 }
+
+                if(_regionConfig != null && _regionUIProvider != null && _regionModel != null)
+                {
+                    foreach (var regionName in _regionConfig.Regions)
+                    {
+                        var region = Object.Instantiate(_regionUIProvider.RegionUIViewPrefab,
+                                                        _regionUIProvider.RegionUIViewParent);
+                        region.SetName(regionName);
+
+                        if(regionName != "Soon" && _regionModel._settingsProvider.ActiveRegion != null)
+                        {
+                            var max = _regionModel._settingsProvider.ActiveRegion.data.Count - 1;
+                            var current = _regionModel.CurrentLevelProgress;
+
+                            region.SetProgress(current, max);
+                            _regionModel.CurrentLevelProgressReactiveProperty.Subscribe(v =>
+                                                                                        {
+                                                                                            var max = _regionModel._settingsProvider.ActiveRegion.data.Count - 1;
+                                                                                            var current = _regionModel.CurrentLevelProgress;
+
+                                                                                            region.SetProgress(current, max);
+                                                                                        })
+                                .AddTo(region);
+                        }
+                    }
+                }
+
+                if(_regionUpgradeService != null
+                   && _regionModel != null
+                   && _regionModel._settingsProvider.ActiveRegion != null)
+                {
+                    _regionUpgradeService.Initialize(_regionModel);
+                    _regionUpgradeService.JumpToFrame(0);
+
+                    if(_regionModel.CurrentLevelProgress != 0)
+                    {
+                        int endFrame = _regionModel._settingsProvider.ActiveRegion.data[_regionModel.CurrentLevelProgress - 1]
+                            .endFrame;
+                        _regionUpgradeService.JumpToFrame(endFrame);
+                    }
+                }
+
+                Debug.Log($"[CountryInitializer] Initialization complete in {sw.ElapsedMilliseconds} ms.");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[CountryInitializer] Critical error during StartAsync ({sw.ElapsedMilliseconds} ms): {ex}");
             }
         }
 

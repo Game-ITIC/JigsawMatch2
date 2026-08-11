@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Data;
@@ -11,6 +12,7 @@ using Services;
 using UnityEngine;
 using VContainer.Unity;
 using Views;
+using Debug = UnityEngine.Debug;
 
 namespace Initializers
 {
@@ -22,9 +24,15 @@ namespace Initializers
         private readonly InternetState _internetState;
         private readonly ScreenService _screenService;
 
-        private const int INTERNET_CHECK_TIMEOUT = 10000;
-        private const int IRONSOURCE_INIT_TIMEOUT = 15000;
-        private const int IAP_INIT_TIMEOUT = 10000;
+#if UNITY_EDITOR
+        private const int INTERNET_CHECK_TIMEOUT = 3000;
+        private const int IRONSOURCE_INIT_TIMEOUT = 3000;
+        private const int IAP_INIT_TIMEOUT = 3000;
+#else
+        private const int INTERNET_CHECK_TIMEOUT = 5000;
+        private const int IRONSOURCE_INIT_TIMEOUT = 8000;
+        private const int IAP_INIT_TIMEOUT = 6000;
+#endif
 
         public AdsInitializer(
             IronSourceInitializer ironSourceInitializer,
@@ -42,136 +50,156 @@ namespace Initializers
 
         public async UniTask Warmup()
         {
+            var sw = Stopwatch.StartNew();
+            Debug.Log("[AdsInitializer] Starting AdsInitializer.Warmup()...");
+
             await _screenService.ShowLoadingScreenAsync();
             _screenService.SetLoadingProgress(0f);
 
             try
             {
                 _screenService.SetLoadingProgress(0.08f);
+                var netSw = Stopwatch.StartNew();
                 var hasInternetAccess = await CheckInternetWithTimeout();
                 await UniTask.SwitchToMainThread();
                 _internetState.HasInternet = hasInternetAccess;
+                Debug.Log($"[AdsInitializer] Internet check finished in {netSw.ElapsedMilliseconds} ms. HasInternet: {hasInternetAccess}");
                 _screenService.SetLoadingProgress(0.18f);
 
                 if (hasInternetAccess)
                 {
-                    await WaitForIronSourceWithTimeout();
+                    var ironSw = Stopwatch.StartNew();
+                    var ironResult = await WaitForIronSourceWithTimeout();
                     await UniTask.SwitchToMainThread();
+                    Debug.Log($"[AdsInitializer] IronSource initialization finished in {ironSw.ElapsedMilliseconds} ms. Result: {ironResult}");
                     _screenService.SetLoadingProgress(0.26f);
 
+                    var iapSw = Stopwatch.StartNew();
                     await InitializeIAPWithTimeout();
                     await UniTask.SwitchToMainThread();
+                    Debug.Log($"[AdsInitializer] EasyIAP initialization finished in {iapSw.ElapsedMilliseconds} ms. HasRemoveAds: {_internetState.HasRemoveAds}");
                     _screenService.SetLoadingProgress(0.32f);
+                }
+                else
+                {
+                    Debug.LogWarning("[AdsInitializer] Skipping IronSource & EasyIAP init because no internet access was detected.");
                 }
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"[AdsInitializer] Warmup non-critical exception: {ex.Message}");
+                Debug.LogError($"[AdsInitializer] Warmup failed with exception ({sw.ElapsedMilliseconds} ms): {ex}");
                 _internetState.HasInternet = false;
                 _internetState.HasRemoveAds = false;
             }
 
             await UniTask.SwitchToMainThread();
             _screenService.SetLoadingProgress(0.35f);
+            Debug.Log($"[AdsInitializer] Warmup complete in {sw.ElapsedMilliseconds} ms.");
         }
 
         private async UniTask<bool> CheckInternetWithTimeout()
         {
+            var sw = Stopwatch.StartNew();
             try
             {
-                using (var cts = new CancellationTokenSource(INTERNET_CHECK_TIMEOUT))
-                {
-                    var result = await _internetChecker.HasInternetAccess().AttachExternalCancellation(cts.Token);
-                    await UniTask.SwitchToMainThread();
-                    return result;
-                }
+                using var cts = new CancellationTokenSource(INTERNET_CHECK_TIMEOUT);
+                var result = await _internetChecker.HasInternetAccess().AttachExternalCancellation(cts.Token);
+                await UniTask.SwitchToMainThread();
+                return result;
             }
             catch (OperationCanceledException)
             {
                 await UniTask.SwitchToMainThread();
+                Debug.LogWarning($"[AdsInitializer] CheckInternet timed out after {sw.ElapsedMilliseconds} ms (limit: {INTERNET_CHECK_TIMEOUT} ms).");
                 return false;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 await UniTask.SwitchToMainThread();
+                Debug.LogWarning($"[AdsInitializer] CheckInternet failed ({sw.ElapsedMilliseconds} ms): {ex.Message}");
                 return false;
             }
         }
 
         private async UniTask<bool> WaitForIronSourceWithTimeout()
         {
+            var sw = Stopwatch.StartNew();
             try
             {
-                using (var cts = new CancellationTokenSource(IRONSOURCE_INIT_TIMEOUT))
-                {
-                    var result = await _ironSourceInitializer.WaitForIronSourceInit().AttachExternalCancellation(cts.Token);
-                    await UniTask.SwitchToMainThread();
-                    return result;
-                }
+                using var cts = new CancellationTokenSource(IRONSOURCE_INIT_TIMEOUT);
+                var result = await _ironSourceInitializer.WaitForIronSourceInit().AttachExternalCancellation(cts.Token);
+                await UniTask.SwitchToMainThread();
+                return result;
             }
             catch (OperationCanceledException)
             {
                 await UniTask.SwitchToMainThread();
+                Debug.LogWarning($"[AdsInitializer] WaitForIronSource timed out after {sw.ElapsedMilliseconds} ms (limit: {IRONSOURCE_INIT_TIMEOUT} ms).");
                 return false;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 await UniTask.SwitchToMainThread();
+                Debug.LogError($"[AdsInitializer] WaitForIronSource failed ({sw.ElapsedMilliseconds} ms): {ex}");
                 return false;
             }
         }
 
         private async UniTask InitializeIAPWithTimeout()
         {
+            var sw = Stopwatch.StartNew();
             try
             {
-                using (var cts = new CancellationTokenSource(IAP_INIT_TIMEOUT))
+                using var cts = new CancellationTokenSource(IAP_INIT_TIMEOUT);
+                var completionSource = new UniTaskCompletionSource();
+
+                cts.Token.Register(() =>
                 {
-                    var completionSource = new UniTaskCompletionSource();
-
-                    cts.Token.Register(() =>
+                    if (!completionSource.Task.Status.IsCompleted())
                     {
-                        if (!completionSource.Task.Status.IsCompleted())
-                        {
-                            completionSource.TrySetCanceled();
-                        }
-                    });
+                        completionSource.TrySetCanceled();
+                    }
+                });
 
-                    API.Initialize((status, message) =>
+                API.Initialize((status, message) =>
+                {
+                    try
                     {
-                        try
+                        Debug.Log($"[AdsInitializer] EasyIAP callback: status={status}, message='{message}' (took {sw.ElapsedMilliseconds} ms)");
+                        if (status == IAPOperationStatus.Success)
                         {
-                            if (status == IAPOperationStatus.Success)
-                            {
-                                _internetState.HasRemoveAds = API.IsActive(ShopProductNames.RemoveAds);
-                            }
-                            else
-                            {
-                                _internetState.HasRemoveAds = false;
-                            }
+                            _internetState.HasRemoveAds = API.IsActive(ShopProductNames.RemoveAds);
                         }
-                        catch (Exception)
+                        else
                         {
+                            Debug.LogWarning($"[AdsInitializer] EasyIAP init non-success status: {status} ({message})");
                             _internetState.HasRemoveAds = false;
                         }
-                        finally
-                        {
-                            completionSource.TrySetResult();
-                        }
-                    });
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"[AdsInitializer] Error processing EasyIAP callback: {ex}");
+                        _internetState.HasRemoveAds = false;
+                    }
+                    finally
+                    {
+                        completionSource.TrySetResult();
+                    }
+                });
 
-                    await completionSource.Task;
-                    await UniTask.SwitchToMainThread();
-                }
+                await completionSource.Task;
+                await UniTask.SwitchToMainThread();
             }
             catch (OperationCanceledException)
             {
                 await UniTask.SwitchToMainThread();
+                Debug.LogWarning($"[AdsInitializer] InitializeIAP timed out after {sw.ElapsedMilliseconds} ms (limit: {IAP_INIT_TIMEOUT} ms). Continuing without IAP cache...");
                 _internetState.HasRemoveAds = false;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 await UniTask.SwitchToMainThread();
+                Debug.LogError($"[AdsInitializer] InitializeIAP failed ({sw.ElapsedMilliseconds} ms): {ex}");
                 _internetState.HasRemoveAds = false;
             }
         }
