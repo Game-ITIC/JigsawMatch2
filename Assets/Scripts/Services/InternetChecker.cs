@@ -28,10 +28,12 @@ namespace Services
                     .ToUniTask()
                     .Timeout(TimeSpan.FromSeconds(_timeout));
 
+                await UniTask.SwitchToMainThread();
                 return request.result == UnityWebRequest.Result.Success;
             }
             catch
             {
+                await UniTask.SwitchToMainThread();
                 return false;
             }
         }

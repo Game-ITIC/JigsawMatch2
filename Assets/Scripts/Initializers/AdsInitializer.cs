@@ -8,6 +8,7 @@ using Itic.Scopes;
 using Itic.Services;
 using JetBrains.Annotations;
 using Services;
+using UnityEngine;
 using VContainer.Unity;
 using Views;
 
@@ -48,24 +49,29 @@ namespace Initializers
             {
                 _screenService.SetLoadingProgress(0.08f);
                 var hasInternetAccess = await CheckInternetWithTimeout();
+                await UniTask.SwitchToMainThread();
                 _internetState.HasInternet = hasInternetAccess;
                 _screenService.SetLoadingProgress(0.18f);
 
                 if (hasInternetAccess)
                 {
                     await WaitForIronSourceWithTimeout();
+                    await UniTask.SwitchToMainThread();
                     _screenService.SetLoadingProgress(0.26f);
 
                     await InitializeIAPWithTimeout();
+                    await UniTask.SwitchToMainThread();
                     _screenService.SetLoadingProgress(0.32f);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Debug.LogWarning($"[AdsInitializer] Warmup non-critical exception: {ex.Message}");
                 _internetState.HasInternet = false;
                 _internetState.HasRemoveAds = false;
             }
 
+            await UniTask.SwitchToMainThread();
             _screenService.SetLoadingProgress(0.35f);
         }
 
@@ -75,15 +81,19 @@ namespace Initializers
             {
                 using (var cts = new CancellationTokenSource(INTERNET_CHECK_TIMEOUT))
                 {
-                    return await _internetChecker.HasInternetAccess().AttachExternalCancellation(cts.Token);
+                    var result = await _internetChecker.HasInternetAccess().AttachExternalCancellation(cts.Token);
+                    await UniTask.SwitchToMainThread();
+                    return result;
                 }
             }
             catch (OperationCanceledException)
             {
+                await UniTask.SwitchToMainThread();
                 return false;
             }
             catch (Exception)
             {
+                await UniTask.SwitchToMainThread();
                 return false;
             }
         }
@@ -94,15 +104,19 @@ namespace Initializers
             {
                 using (var cts = new CancellationTokenSource(IRONSOURCE_INIT_TIMEOUT))
                 {
-                    return await _ironSourceInitializer.WaitForIronSourceInit().AttachExternalCancellation(cts.Token);
+                    var result = await _ironSourceInitializer.WaitForIronSourceInit().AttachExternalCancellation(cts.Token);
+                    await UniTask.SwitchToMainThread();
+                    return result;
                 }
             }
             catch (OperationCanceledException)
             {
+                await UniTask.SwitchToMainThread();
                 return false;
             }
             catch (Exception)
             {
+                await UniTask.SwitchToMainThread();
                 return false;
             }
         }
@@ -147,14 +161,17 @@ namespace Initializers
                     });
 
                     await completionSource.Task;
+                    await UniTask.SwitchToMainThread();
                 }
             }
             catch (OperationCanceledException)
             {
+                await UniTask.SwitchToMainThread();
                 _internetState.HasRemoveAds = false;
             }
             catch (Exception)
             {
+                await UniTask.SwitchToMainThread();
                 _internetState.HasRemoveAds = false;
             }
         }

@@ -1,10 +1,12 @@
-﻿using System.Threading;
+using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Data;
 using Gley.EasyIAP;
 using Initializers;
 using Itic.Scopes;
 using Services;
+using UnityEngine;
 using VContainer.Unity;
 
 namespace Itic.Services
@@ -25,7 +27,16 @@ namespace Itic.Services
 
         public async UniTask StartAsync(CancellationToken cancellation)
         {
-            await _adsInitializer.Warmup();
+            try
+            {
+                await _adsInitializer.Warmup();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[ServicesStartup] AdsInitializer warmup warning: {e.Message}");
+            }
+
+            await UniTask.SwitchToMainThread();
             await _sceneLoader.LoadMenuAsync();
         }
     }

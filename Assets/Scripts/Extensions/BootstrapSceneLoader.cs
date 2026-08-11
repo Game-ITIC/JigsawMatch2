@@ -14,10 +14,36 @@ namespace Extensions
         private const string MainMenuSceneName = "MainMenu";
         private const string LegacyGameSceneName = "game";
         private const string RegionSceneName = "AsiaRegion";
+        private const string MenuItemPath = "Tools/Bootstrap/Enable Auto Bootstrap";
 
         static BootstrapSceneLoader()
         {
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        [MenuItem(MenuItemPath + " %t")]
+        private static void ToggleAutoBootstrap()
+        {
+            var enabled = !BootstrapPlayModeSettings.IsPlayFromBootstrapEnabled();
+            BootstrapPlayModeSettings.SetEnabled(enabled);
+            Menu.SetChecked(MenuItemPath, enabled);
+            ShowToggleNotification(enabled);
+        }
+
+        [MenuItem(MenuItemPath, true)]
+        private static bool ValidateToggle()
+        {
+            Menu.SetChecked(MenuItemPath, BootstrapPlayModeSettings.IsPlayFromBootstrapEnabled());
+            return true;
+        }
+
+        private static void ShowToggleNotification(bool enabled)
+        {
+            var status = enabled ? "enabled" : "disabled";
+            var message = $"Auto Bootstrap {status}";
+
+            EditorWindow.focusedWindow?.ShowNotification(new GUIContent(message));
+            Debug.Log(message);
         }
 
         private static void OnPlayModeStateChanged(PlayModeStateChange state)
@@ -26,11 +52,13 @@ namespace Extensions
             {
                 case PlayModeStateChange.ExitingEditMode:
                 {
-                    if(ShouldStartFromBootstrap(SceneManager.GetActiveScene().name))
+                    var activeScene = SceneManager.GetActiveScene().name;
+
+                    if (BootstrapPlayModeSettings.IsPlayFromBootstrapEnabled() && ShouldStartFromBootstrap(activeScene))
                     {
                         var bootstrapSceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(BootstrapScenePath);
 
-                        if(bootstrapSceneAsset != null)
+                        if (bootstrapSceneAsset != null)
                         {
                             EditorSceneManager.playModeStartScene = bootstrapSceneAsset;
                         }

@@ -1,0 +1,32 @@
+# Ignore heavy asset / vendor / demo directories
+Assets/Content/
+Assets/Plugins/
+Assets/GUI Kit - Yellow Kid/
+Assets/TextMesh Pro/
+Assets/Samples/
+Assets/_TerrainData/
+Assets/_Scenes/
+DisabledStandaloneAdMob/
+Library/
+Temp/
+Logs/
+UserSettings/
+*.meta
+*.unity
+*.prefab
+*.asset
+*.mat
+*.shader
+*.cginc
+*.hlsl
+*.tga
+*.psd
+*.wav
+*.mp3
+*.ogg
+*.fbx
+*.obj
+*.blend
+*.png
+*.jpg
+*.jpeg

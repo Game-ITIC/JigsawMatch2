@@ -1,15 +1,13 @@
-## graphify
+## graphify (Knowledge Graph Management & Usage)
 
-This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+This project has an active knowledge graph at `graphify-out/` representing the architecture and relationships of `Assets/Scripts/`.
 
-When the user types `/graphify`, invoke the `skill` tool with `skill: "graphify"` before doing anything else.
-
-Rules:
-- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
-- Dirty graphify-out/ files are expected after hooks or incremental updates; dirty graph files are not a reason to skip graphify. Only skip graphify if the task is about stale or incorrect graph output, or the user explicitly says not to use it.
-- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
-- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
-- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+The agent MUST actively maintain, consult, and update this knowledge graph throughout the project lifecycle:
+- **Mandatory Usage Before Changes / Research**: Always query the graph first (`graphify query "<question>"`, `graphify path "<A>" "<B>"`, `graphify explain "<concept>"`, or inspecting `graphify-out/graph.json`) before making assumptions about architecture, dependencies, state transitions, or god nodes.
+- **Mandatory Graph Maintenance & Updates**: After creating, modifying, refactoring, or deleting any scripts in `Assets/Scripts/`, ALWAYS run `graphify update Assets/Scripts` (or `graphify update .`) to keep the knowledge graph fresh for current and future agent sessions.
+- **Fast Navigation**: Use `graphify-out/graph.json`, `graphify-out/GRAPH_REPORT.md`, and `graphify-out/graph.html` for understanding communities, hubs (`IronSourceManager`, `CountryInitializer`, `BuildingShopManager`, etc.), and cross-system dependencies.
+- Dirty `graphify-out/` files are expected and normal after incremental updates; keep them in sync.
+- When the user types `/graphify`, invoke the `skill` tool with `skill: "graphify"` before doing anything else.
 
 ## Unity MCP
 
