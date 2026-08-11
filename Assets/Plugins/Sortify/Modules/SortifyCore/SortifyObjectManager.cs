@@ -151,24 +151,99 @@ namespace Sortify
             }
         }
 
+        private static readonly GUIContent _foldoutClosedIcon = EditorGUIUtility.IconContent("IN foldout");
+        private static readonly GUIContent _foldoutOpenedIcon = EditorGUIUtility.IconContent("IN foldout act");
+
         private static void DrawHeader(GameObject obj, Color? color, Rect selectionRect)
         {
-            if (obj != null)
+            if (obj == null)
+                return;
+
+            Rect headerRect = new Rect(selectionRect);
+            headerRect.xMin -= 28f;
+            headerRect.xMax += 20f;
+
+            Color objectColor = color ?? _backgroundColor;
+            EditorGUI.DrawRect(headerRect, objectColor);
+
+            bool hasChildren = obj.transform.childCount > 0;
+            bool isExpanded = false;
+
+            if (hasChildren)
             {
-                Color objectColor = color ?? _backgroundColor;
-                selectionRect.xMin -= 28f;
-                selectionRect.xMax += 20f;
-                EditorGUI.DrawRect(selectionRect, objectColor);
-
-                GUIStyle centerStyle = new GUIStyle(EditorStyles.label)
+                isExpanded = SortifyHierarchyHelper.IsExpanded(obj);
+                Rect foldoutRect = new Rect(headerRect.xMin + 6f, headerRect.y + (headerRect.height - 12f) / 2f, 12f, 12f);
+                GUIContent icon = isExpanded ? _foldoutOpenedIcon : _foldoutClosedIcon;
+                if (icon != null && icon.image != null)
                 {
-                    alignment = TextAnchor.MiddleCenter,
-                    padding = new RectOffset(0, 0, 0, 2),
-                    fontStyle = FontStyle.Bold,
-                    normal = { textColor = Color.white }
-                };
+                    Color prevColor = GUI.color;
+                    GUI.color = new Color(1f, 1f, 1f, 0.85f);
+                    GUI.DrawTexture(foldoutRect, icon.image, ScaleMode.ScaleToFit);
+                    GUI.color = prevColor;
+                }
+            }
 
-                EditorGUI.LabelField(selectionRect, obj.name, centerStyle);
+            GUIStyle centerStyle = new GUIStyle(EditorStyles.label)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                padding = new RectOffset(0, 0, 0, 2),
+                fontStyle = FontStyle.Bold,
+                normal = { textColor = Color.white }
+            };
+
+            EditorGUI.LabelField(headerRect, obj.name, centerStyle);
+
+            Event current = Event.current;
+            if (current != null && current.type == EventType.MouseDown && current.button == 0)
+            {
+                bool isPrefab = PrefabUtility.GetPrefabAssetType(obj) != PrefabAssetType.NotAPrefab;
+                float rightMargin = 4f + (isPrefab ? 10f : 0f) + 14f;
+                if (SortifyUserDataManager.GetUserSetting("ShowComponentIcons", true) && LoadShowComponents(obj, true))
+                {
+                    Component[] components = obj.GetComponents<Component>();
+                    rightMargin += components.Length * (14f + 4f);
+                }
+
+                float rightButtonsStartX = selectionRect.xMax - rightMargin;
+                Rect clickRect = new Rect(headerRect.xMin, headerRect.yMin, Mathf.Max(0, rightButtonsStartX - headerRect.xMin), headerRect.height);
+
+                if (clickRect.Contains(current.mousePosition))
+                {
+                    if (hasChildren)
+                    {
+                        bool recursive = current.alt;
+                        SortifyHierarchyHelper.ToggleExpanded(obj, recursive);
+                    }
+
+                    if (current.control || current.command)
+                    {
+                        var currentSelected = new List<GameObject>(Selection.gameObjects);
+                        if (currentSelected.Contains(obj))
+                            currentSelected.Remove(obj);
+                        else
+                            currentSelected.Add(obj);
+                        Selection.objects = currentSelected.ToArray();
+                    }
+                    else if (current.shift)
+                    {
+                        var currentSelected = new List<GameObject>(Selection.gameObjects);
+                        if (!currentSelected.Contains(obj))
+                            currentSelected.Add(obj);
+                        Selection.objects = currentSelected.ToArray();
+                    }
+                    else
+                    {
+                        Selection.activeGameObject = obj;
+                    }
+
+                    if (current.clickCount == 2 && SceneView.lastActiveSceneView != null)
+                    {
+                        SceneView.lastActiveSceneView.FrameSelected();
+                    }
+
+                    current.Use();
+                    EditorApplication.RepaintHierarchyWindow();
+                }
             }
         }
         #endregion
