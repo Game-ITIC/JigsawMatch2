@@ -12,7 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e5c0debd4dc43b18b003f6143ae72f7, type: 3}
   m_Name: InAppConfig
   m_EditorClassIdentifier: 
-  <ProductViewPrefab>k__BackingField: {fileID: 8265125675956515580, guid: 254392b870b4a1c49961fec9f5ab05b4,
+  <ProductViewPrefab>k__BackingField: {fileID: 922322034667700273, guid: bbcb6427797495247a954ca5941ee997,
+    type: 3}
+  ProductViewMediumPrefab: {fileID: -4850147976124601583, guid: 5aa3c8c000233f44faf53dba8cf3acfe,
+    type: 3}
+  ProductViewLargePrefab: {fileID: 4731670650653829450, guid: 243c40a5a7b787c4b9d021dd3038d45e,
     type: 3}
   <InAppProducts>k__BackingField:
   - product: 1

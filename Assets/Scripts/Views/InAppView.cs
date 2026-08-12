@@ -14,9 +14,6 @@ namespace Views
         private const string ShopCloseButtonName = "Close Button";
 
         [SerializeField] private Button closeButton;
-        [SerializeField] private Button noAdsButton;
-        [SerializeField] private Button gemsButton;
-        [SerializeField] private Button coinsButton;
         [SerializeField] private Transform buttonsParent;
         [SerializeField] private bool animatePanelTransitions = true;
         [SerializeField, Min(0f)] private float panelOpenDuration = 0.28f;
@@ -26,9 +23,6 @@ namespace Views
         [SerializeField] private AnimationCurve panelFadeCurve = CurvedUIPanelAnimator.CreateDefaultFadeCurve();
 
         public Transform ButtonsParent => buttonsParent;
-        public Button NoAdsButton => noAdsButton;
-        public Button GemsButton => gemsButton;
-        public Button CoinsButton => coinsButton;
 
         public void Show()
         {
@@ -214,16 +208,15 @@ namespace Views
             if(grid == null)
             {
                 grid = content.gameObject.AddComponent<GridLayoutGroup>();
+                grid.padding = new RectOffset(24, 24, 26, 120);
+                grid.cellSize = new Vector2(292f, 176f);
+                grid.spacing = new Vector2(18f, 18f);
+                grid.startCorner = GridLayoutGroup.Corner.UpperLeft;
+                grid.startAxis = GridLayoutGroup.Axis.Horizontal;
+                grid.childAlignment = TextAnchor.UpperCenter;
+                grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+                grid.constraintCount = 2;
             }
-
-            grid.padding = new RectOffset(24, 24, 26, 120);
-            grid.cellSize = new Vector2(292f, 176f);
-            grid.spacing = new Vector2(18f, 18f);
-            grid.startCorner = GridLayoutGroup.Corner.UpperLeft;
-            grid.startAxis = GridLayoutGroup.Axis.Horizontal;
-            grid.childAlignment = TextAnchor.UpperCenter;
-            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-            grid.constraintCount = 2;
         }
     }
 }

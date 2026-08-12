@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Gley.EasyIAP;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Views;
 
@@ -9,7 +10,9 @@ namespace Configs
     public class InAppConfig : ScriptableObject
     {
         [field: SerializeField] public InAppProductView ProductViewPrefab { get; private set; } 
-        [field: SerializeField] public List<InAppProduct> InAppProducts { get; private set; }
+        [SerializeField] public InAppProductView ProductViewMediumPrefab;
+        [SerializeField] public InAppProductView ProductViewLargePrefab;
+        [TableList] [field: SerializeField] public List<InAppProduct> InAppProducts { get; private set; }
     }
 
     [System.Serializable]
