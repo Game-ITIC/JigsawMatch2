@@ -144,30 +144,8 @@ namespace Initializers
                 {
                     foreach (var inAppProduct in _inAppConfig.InAppProducts)
                     {
-                        if(IsOneTimeProductBought(inAppProduct))
-                        {
-                            continue;
-                        }
-
-                        var price = ResolvePriceLabel(inAppProduct);
-                        var rewardText = string.IsNullOrWhiteSpace(inAppProduct.rewardText)
-                            ? inAppProduct.amount.ToString()
-                            : inAppProduct.rewardText;
-
                         var parent = _inAppView.ButtonsParent;
-
-                        var product = Object.Instantiate(_inAppConfig.ProductViewPrefab, parent);
-                        product.Init(inAppProduct.productName,
-                                     inAppProduct.icon,
-                                     price,
-                                     rewardText);
-
-                        product.BuyButton.onClick.RemoveAllListeners();
-                        product.BuyButton.onClick.AddListener(() =>
-                                                             {
-                                                                 HandlePurchaseInApp(inAppProduct.product, product)
-                                                                     .Forget();
-                                                             });
+                        Object.Instantiate(_inAppConfig.ProductViewPrefab, parent);
                     }
                 }
 

@@ -116,6 +116,14 @@ public class MenuView : MonoBehaviour, IPreload
             ? dailyRewardsPanel
             : FindSceneObject("DailyRewardsPanel", "Daily Rewards Panel");
         shopPanel = shopPanel != null ? shopPanel : FindSceneObject("Shop Panel", "Shop Content Panel");
+        if(shopPanel == null)
+        {
+            var inAppView = FindObjectOfType<InAppView>(true);
+            if(inAppView != null)
+            {
+                shopPanel = inAppView.gameObject;
+            }
+        }
 
         RefreshCounterTextCaches();
     }
@@ -330,7 +338,6 @@ public class MenuView : MonoBehaviour, IPreload
     private void ShowPanel(GameObject panel)
     {
         ActivateParents(panel);
-        BringToFront(panel);
 
         CurvedUIPanelAnimator.Show(
             panel,

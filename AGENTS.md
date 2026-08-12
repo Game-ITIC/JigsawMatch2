@@ -15,6 +15,8 @@ This is an old Unity project. For Unity-specific inspection, scene/prefab work, 
 
 Prefer Unity MCP over unrelated CLI tooling for Unity work. Do not assume `dotnet`, generated `.csproj` files, or other external build commands are reliable sources of truth for this project unless the user explicitly asks for them or Unity MCP is unavailable.
 
+- **Mandatory Asset Refresh**: After creating, modifying, refactoring, or deleting any assets, prefabs, ScriptableObjects, or C# scripts, ALWAYS trigger Unity MCP asset refresh (e.g. `AssetDatabase.Refresh()`) when Unity MCP is available to ensure Unity updates its asset database and recompiles script changes immediately.
+
 ## AI Agent Efficiency
 
 Use the smallest reliable context and tool set that can answer the task.
@@ -71,7 +73,7 @@ Validation:
 - Test on the relevant target when possible, especially Android for ads, IAP, notifications, Gradle, permissions, and performance.
 - For performance work, prefer Unity Profiler, Memory Profiler, Frame Debugger, Profile Analyzer, Project Auditor, and platform profilers over guesses.
 - For memory/GC work, check allocation patterns and object churn before adding pools or caches.
-- After edits, verify the changed path in Unity MCP/editor if possible and run `graphify update .` so future agents see the updated relationships.
+- After edits, run Unity MCP asset refresh, verify the changed path in Unity MCP/editor if possible, and run `graphify update .` so future agents see the updated relationships.
 
 Unity source guidance:
 - Unity optimization overview: https://docs.unity3d.com/Manual/analysis.html

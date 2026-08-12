@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Gley.EasyIAP;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Views;
 
 namespace Configs
@@ -9,10 +10,15 @@ namespace Configs
     [CreateAssetMenu(fileName = nameof(InAppConfig), menuName = nameof(Configs) + "/" + nameof(InAppConfig))]
     public class InAppConfig : ScriptableObject
     {
-        [field: SerializeField] public InAppProductView ProductViewPrefab { get; private set; } 
+        [FormerlySerializedAs("<ProductViewPrefab>k__BackingField")]
+        [SerializeField] public InAppProductView ProductViewPrefab;
         [SerializeField] public InAppProductView ProductViewMediumPrefab;
         [SerializeField] public InAppProductView ProductViewLargePrefab;
-        [TableList] [field: SerializeField] public List<InAppProduct> InAppProducts { get; private set; }
+        [SerializeField] public Transform HLGParentPrefab;
+
+        [TableList]
+        [FormerlySerializedAs("<InAppProducts>k__BackingField")]
+        public List<InAppProduct> InAppProducts;
     }
 
     [System.Serializable]
@@ -21,9 +27,7 @@ namespace Configs
         public ShopProductNames product;
         public string productName;
         public Sprite icon;
-        public int amount;
         public string priceLabel;
-        [TextArea] public string rewardText;
         public int gems;
         public int bombs;
         public int butterflies;
