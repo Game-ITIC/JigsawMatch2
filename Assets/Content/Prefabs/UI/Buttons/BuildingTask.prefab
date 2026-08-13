@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 7589685713400604545}
   - component: {fileID: 6984028178109180270}
   - component: {fileID: 8608313879964310301}
+  - component: {fileID: 8726704334151459198}
   m_Layer: 5
   m_Name: BuildingTask
   m_TagString: Untagged
@@ -217,6 +218,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1.77
+--- !u!114 &8726704334151459198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2666601025014371519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b8d3be51028074789ba43e80b74e14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TaskView
+  _icon: {fileID: 4825786224287688587}
+  _claimButtonIcon: {fileID: 7287240477549512648}
+  _claimButton: {fileID: 6627692154042440131}
+  _claimButtonText: {fileID: 361609245363629868}
+  _subtitleText: {fileID: 5828192517616347019}
+  _titleText: {fileID: 620037828365302499}
 --- !u!1 &3514571790884016326
 GameObject:
   m_ObjectHideFlags: 0
