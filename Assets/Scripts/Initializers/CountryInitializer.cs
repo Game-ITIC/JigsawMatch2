@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Configs;
 using Cysharp.Threading.Tasks;
@@ -142,11 +143,7 @@ namespace Initializers
 
                 if(_inAppView != null && _inAppConfig != null && _inAppView.ButtonsParent != null)
                 {
-                    foreach (var inAppProduct in _inAppConfig.InAppProducts)
-                    {
-                        var parent = _inAppView.ButtonsParent;
-                        Object.Instantiate(_inAppConfig.ProductViewPrefab, parent);
-                    }
+                    InitializeInAppProducts();
                 }
 
                 var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
@@ -379,6 +376,117 @@ namespace Initializers
         private static string GetOneTimeProductKey(ShopProductNames shopProduct)
         {
             return OneTimeProductBoughtPrefix + shopProduct;
+        }
+
+        private void InitializeInAppProducts()
+        {
+            if (_inAppConfig.InAppProducts == null || _inAppConfig.InAppProducts.Count == 0)
+            {
+                return;
+            }
+
+            var mainParent = _inAppView.ButtonsParent;
+
+            if (_inAppConfig.SmartFilling)
+            {
+                SpawnSmartInAppProducts(_inAppConfig, mainParent);
+            }
+            else
+            {
+                SpawnSequentialInAppProducts(_inAppConfig, mainParent);
+            }
+        }
+
+        private void SpawnSequentialInAppProducts(InAppConfig config, Transform mainParent)
+        {
+            Transform currentHlgRow = null;
+            int currentUnits = 0;
+
+            foreach (var inAppProduct in config.InAppProducts)
+            {
+                if (IsOneTimeProductBought(inAppProduct))
+                {
+                    continue;
+                }
+
+                int units = inAppProduct.columnWidth.GetUnits();
+
+                if (currentHlgRow == null || currentUnits + units > 3)
+                {
+                    currentHlgRow = CreateHlgRow(config, mainParent);
+                    currentUnits = 0;
+                }
+
+                SpawnAndInitProductView(config, currentHlgRow, inAppProduct);
+                currentUnits += units;
+            }
+        }
+
+        private void SpawnSmartInAppProducts(InAppConfig config, Transform mainParent)
+        {
+            var remaining = new List<InAppProduct>();
+            foreach (var product in config.InAppProducts)
+            {
+                if (!IsOneTimeProductBought(product))
+                {
+                    remaining.Add(product);
+                }
+            }
+
+            while (remaining.Count > 0)
+            {
+                Transform currentHlgRow = CreateHlgRow(config, mainParent);
+                int currentUnits = 0;
+
+                int i = 0;
+                while (i < remaining.Count)
+                {
+                    int units = remaining[i].columnWidth.GetUnits();
+                    if (currentUnits + units <= 3)
+                    {
+                        SpawnAndInitProductView(config, currentHlgRow, remaining[i]);
+                        currentUnits += units;
+                        remaining.RemoveAt(i);
+
+                        if (currentUnits >= 3)
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+            }
+        }
+
+        private Transform CreateHlgRow(InAppConfig config, Transform mainParent)
+        {
+            if (config.HLGParentPrefab != null)
+            {
+                return Object.Instantiate(config.HLGParentPrefab, mainParent, false);
+            }
+            return mainParent;
+        }
+
+        private void SpawnAndInitProductView(InAppConfig config, Transform hlgRow, InAppProduct inAppProduct)
+        {
+            var prefab = config.GetProductViewPrefab(inAppProduct.columnWidth);
+            if (prefab == null) return;
+
+            var product = Object.Instantiate(prefab, hlgRow, false);
+
+            var price = ResolvePriceLabel(inAppProduct);
+            var rewardText = inAppProduct.gems > 0 ? inAppProduct.gems.ToString() : string.Empty;
+
+            product.Init(inAppProduct.productName, inAppProduct.icon, price, rewardText);
+
+            if (product.BuyButton != null)
+            {
+                product.BuyButton.onClick.RemoveAllListeners();
+                product.BuyButton.onClick.AddListener(() => HandlePurchaseInApp(inAppProduct.product, product).Forget());
+            }
         }
 
         public void Dispose()
