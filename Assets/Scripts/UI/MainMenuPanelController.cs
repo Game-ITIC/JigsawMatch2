@@ -50,40 +50,19 @@ public class MainMenuPanelController : MonoBehaviour
 
     private void Awake()
     {
-        toggleDailyAction = ToggleDailyAndTasksPanel;
-        toggleShopAction = ToggleShopPanel;
-        openShopAction = OpenShopPanel;
-        closeDailyAction = CloseDailyAndTasksPanel;
-        closeShopAction = CloseShopPanel;
-
-        ResolveObjects();
-
-        if (hidePanelsOnStart)
-            CloseAllPanelsImmediate();
+        // Legacy MainMenuPanelController disabled in favor of modular Presenters.
     }
 
     private void OnEnable()
     {
-        refreshListenersUntil = Time.unscaledTime + 2f;
-        WireButtons();
     }
 
     private void Start()
     {
-        ResolveObjects();
-        WireButtons();
-
-        if (hidePanelsOnStart)
-            CloseAllPanelsImmediate();
     }
 
     private void LateUpdate()
     {
-        if (Time.unscaledTime > refreshListenersUntil)
-            return;
-
-        ResolveObjects();
-        WireButtons();
     }
 
     private void OnDisable()

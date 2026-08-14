@@ -13,6 +13,7 @@ using Services;
 using Sirenix.OdinInspector;
 using UI;
 using UnityEngine;
+using UnityEngine.UI;
 using VContainer;
 using VContainer.Unity;
 using Views;
@@ -106,6 +107,7 @@ namespace Scopes.Country
         {
             ResolveOptionalSceneReferences();
 
+            RegisterComponentIfPresent(builder, _mainMenuPanel);
             RegisterComponentIfPresent(builder, menuView);
             RegisterComponentIfPresent(builder, buildingShopManager);
             RegisterComponentIfPresent(builder, inAppView);
@@ -120,6 +122,74 @@ namespace Scopes.Country
             RegisterInstanceIfPresent(builder, countryConfig);
             RegisterInstanceIfPresent(builder, dailyQuestSettings);
             RegisterInstanceIfPresent(builder, regionConfig);
+
+            var settingsPanel = (_mainMenuPanel != null && _mainMenuPanel.SettingsPanel != null)
+                ? _mainMenuPanel.SettingsPanel
+                : FindObjectOfType<SettingsPanel>(true);
+
+            if(settingsPanel != null)
+            {
+                var settingsButton = (_mainMenuPanel != null && _mainMenuPanel.TopBarPanel != null)
+                    ? _mainMenuPanel.TopBarPanel.SettingsButton
+                    : null;
+
+                builder.Register<SettingsPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .WithParameter(settingsPanel)
+                    .WithParameter(settingsButton);
+            }
+
+            var taskPanel = (_mainMenuPanel != null && _mainMenuPanel.TaskPanel != null)
+                ? _mainMenuPanel.TaskPanel
+                : FindObjectOfType<TaskPanel>(true);
+
+            if(taskPanel != null)
+            {
+                var taskButton = (_mainMenuPanel != null && _mainMenuPanel.TopBarPanel != null)
+                    ? _mainMenuPanel.TopBarPanel.TaskButton
+                    : null;
+
+                builder.Register<TaskPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .WithParameter(taskPanel)
+                    .WithParameter(taskButton);
+            }
+
+            var effectiveInAppView = inAppView != null ? inAppView : (_mainMenuPanel != null ? _mainMenuPanel.ShopPanel : null);
+            if(effectiveInAppView != null)
+            {
+                Button navShopButton = null;
+                var otherNavButtons = new System.Collections.Generic.List<Button>();
+
+                if(_mainMenuPanel != null && _mainMenuPanel.MenuNavPanel != null)
+                {
+                    navShopButton = _mainMenuPanel.MenuNavPanel.ShopButton;
+                    if(_mainMenuPanel.MenuNavPanel.MenuButton != null) otherNavButtons.Add(_mainMenuPanel.MenuNavPanel.MenuButton);
+                    if(_mainMenuPanel.MenuNavPanel.IslandButton != null) otherNavButtons.Add(_mainMenuPanel.MenuNavPanel.IslandButton);
+                }
+
+                if(navShopButton == null && menuNavigationProvider != null && menuNavigationProvider.NavigationButtons != null)
+                {
+                    if(menuNavigationProvider.NavigationButtons.Length > 2)
+                    {
+                        navShopButton = menuNavigationProvider.NavigationButtons[2];
+                    }
+
+                    for(int i = 0; i < menuNavigationProvider.NavigationButtons.Length; i++)
+                    {
+                        if(i != 2 && menuNavigationProvider.NavigationButtons[i] != null)
+                        {
+                            otherNavButtons.Add(menuNavigationProvider.NavigationButtons[i]);
+                        }
+                    }
+                }
+
+                builder.Register<ShopPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .WithParameter(effectiveInAppView)
+                    .WithParameter(navShopButton)
+                    .WithParameter<System.Collections.Generic.IEnumerable<Button>>(otherNavButtons);
+            }
 
             if(coinTextView != null)
             {
@@ -198,7 +268,16 @@ namespace Scopes.Country
 
         private void ResolveOptionalSceneReferences()
         {
-            if(inAppView == null)
+            if(_mainMenuPanel == null)
+            {
+                _mainMenuPanel = FindObjectOfType<MainMenuPanel>(true);
+            }
+
+            if(inAppView == null && _mainMenuPanel != null && _mainMenuPanel.ShopPanel != null)
+            {
+                inAppView = _mainMenuPanel.ShopPanel;
+            }
+            else if(inAppView == null)
             {
                 inAppView = GetComponentInChildren<InAppView>(true);
             }

@@ -14,6 +14,7 @@ using Services.InApp;
 using Systems;
 using UI;
 using UnityEngine;
+using UnityEngine.UI;
 using VContainer;
 using VContainer.Unity;
 using Views;
@@ -48,6 +49,7 @@ namespace Initializers
         private readonly IronSourceManager _ironSourceManager;
         private readonly AdEventModel _adEventModel;
         private readonly RewardPopup _rewardPopup;
+        private readonly MainMenuPanel _mainMenuPanel;
 
         private CompositeDisposable _disposable = new();
         private BuildingAnimationSettingsProvider _settingsProvider;
@@ -90,6 +92,7 @@ namespace Initializers
             _lifePopup = resolver.ResolveOrDefault<LifePopup>();
             _rewardPopup = resolver.ResolveOrDefault<RewardPopup>();
             _settingsProvider = resolver.ResolveOrDefault<BuildingAnimationSettingsProvider>();
+            _mainMenuPanel = resolver.ResolveOrDefault<MainMenuPanel>();
         }
 
         public async UniTask StartAsync(CancellationToken cancellation = new CancellationToken())
@@ -127,18 +130,32 @@ namespace Initializers
                     Debug.Log($"[CountryInitializer] _menuTabs.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
                 }
 
-                if(_menuView != null && _menuView.StartGame != null)
+                var playButton = _mainMenuPanel?.MenuActionPanel?.PlayButton?.Button
+                                 ?? FindButtonInScene("PlayButton", "Play Button", "Play", "StartGame", "Start Game");
+                if(playButton != null)
                 {
-                    _menuView.StartGame.onClick.RemoveAllListeners();
-                    _menuView.StartGame.onClick.AddListener(StartGame);
+                    Debug.Log($"[CountryInitializer] Bound Play button: {playButton.gameObject.name}");
+                    playButton.onClick.RemoveAllListeners();
+                    playButton.onClick.AddListener(StartGame);
+                }
+                else
+                {
+                    Debug.LogWarning("[CountryInitializer] Play button could not be found!");
                 }
 
                 InitializeLifePopup();
 
-                if(_menuView != null && _menuView.BuildButton != null && _regionModel != null && _regionUpgradeService != null)
+                var buildButton = _mainMenuPanel?.MenuActionPanel?.BuildButton?.Button
+                                  ?? FindButtonInScene("BuildButton", "Build Button", "Build");
+                if(buildButton != null && _regionModel != null && _regionUpgradeService != null)
                 {
-                    _menuView.BuildButton.onClick.RemoveAllListeners();
-                    _menuView.BuildButton.onClick.AddListener(() => { Upgrade().Forget(); });
+                    Debug.Log($"[CountryInitializer] Bound Build button: {buildButton.gameObject.name}");
+                    buildButton.onClick.RemoveAllListeners();
+                    buildButton.onClick.AddListener(() => { Upgrade().Forget(); });
+                }
+                else if(buildButton == null)
+                {
+                    Debug.LogWarning("[CountryInitializer] Build button could not be found!");
                 }
 
                 if(_inAppView != null && _inAppConfig != null && _inAppView.ButtonsParent != null)
@@ -147,9 +164,15 @@ namespace Initializers
                 }
 
                 var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
-                if(_menuView != null && _menuView.StartGameText != null)
+                var playActionButton = _mainMenuPanel?.MenuActionPanel?.PlayButton;
+                if(playActionButton != null)
                 {
-                    _menuView.StartGameText.SetText("LEVEL " + nextLevel);
+                    playActionButton.SetLabel("LEVEL " + nextLevel);
+                }
+                else if(playButton != null)
+                {
+                    var tmp = playButton.GetComponentInChildren<TMPro.TMP_Text>(true);
+                    if(tmp != null) tmp.text = "LEVEL " + nextLevel;
                 }
 
                 if(_regionConfig != null && _regionUIProvider != null && _regionModel != null)
@@ -487,6 +510,32 @@ namespace Initializers
                 product.BuyButton.onClick.RemoveAllListeners();
                 product.BuyButton.onClick.AddListener(() => HandlePurchaseInApp(inAppProduct.product, product).Forget());
             }
+        }
+
+        private static Button FindButtonInScene(params string[] names)
+        {
+            for (var sceneIndex = 0; sceneIndex < UnityEngine.SceneManagement.SceneManager.sceneCount; sceneIndex++)
+            {
+                var scene = UnityEngine.SceneManagement.SceneManager.GetSceneAt(sceneIndex);
+                if (!scene.isLoaded) continue;
+
+                foreach (var root in scene.GetRootGameObjects())
+                {
+                    var buttons = root.GetComponentsInChildren<Button>(true);
+                    foreach (var button in buttons)
+                    {
+                        foreach (var name in names)
+                        {
+                            if (string.Equals(button.gameObject.name.Trim(), name.Trim(), System.StringComparison.OrdinalIgnoreCase))
+                            {
+                                return button;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         public void Dispose()

@@ -34,6 +34,7 @@
   <Project Path="Unity.Services.Core.csproj" />
   <Project Path="Unity.VisualScripting.Flow.csproj" />
   <Project Path="Unity.PerformanceTesting.csproj" />
+  <Project Path="Modules.CurrencySystem.csproj" />
   <Project Path="Unity.TestTools.CodeCoverage.Editor.OpenCover.Model.csproj" />
   <Project Path="UnityEditor.Purchasing.csproj" />
   <Project Path="Unity.Burst.Editor.csproj" />

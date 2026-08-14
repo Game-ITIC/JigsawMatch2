@@ -272,6 +272,7 @@ GameObject:
   - component: {fileID: 8536815467560463690}
   - component: {fileID: 755007742764023937}
   - component: {fileID: 6538267450468323716}
+  - component: {fileID: 1238491835143912644}
   m_Layer: 5
   m_Name: HUD Side Bar
   m_TagString: Untagged
@@ -381,6 +382,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OnlyOneEdgeModifier
   radius: 192
   side: 0
+--- !u!114 &1238491835143912644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3418159437368649748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deba8914098f32945a687d930423692a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  _islandButton: {fileID: 1165183986501101678}
+  _menuButton: {fileID: 8592344992427442391}
+  _shopButton: {fileID: 2824798973824522344}
 --- !u!1 &4402628837787892397
 GameObject:
   m_ObjectHideFlags: 0
