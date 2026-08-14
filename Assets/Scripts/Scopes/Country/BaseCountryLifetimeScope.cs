@@ -21,6 +21,7 @@ namespace Scopes.Country
 {
     public class BaseCountryLifetimeScope : LifetimeScope
     {
+        [SerializeField] private MainMenuPanel _mainMenuPanel;
         [Title("Core Components")]
         [BoxGroup("CountrySection")]
         [VerticalGroup("CountrySection/Row")]
