@@ -24,18 +24,17 @@ namespace Monobehaviours.Buildings
         [SerializeField] private Button closeButton;
         [SerializeField] private GameObject CompletePanel;
 
-        private Models.StarModel _starModel;
+        private Systems.CurrencySystem.Interfaces.ICurrencyService _currencyService;
         private CountryConfig _countryConfig;
 
         private List<string> _purchasedItemIds = new List<string>();
         private List<ShopItemView> _shopItemViews = new List<ShopItemView>();
         private CompositeDisposable disposable = new();
 
-        public void Initialize(Models.StarModel starModel, CountryConfig countryConfig)
+        public void Initialize(Systems.CurrencySystem.Interfaces.ICurrencyService currencyService, CountryConfig countryConfig)
         {
-            _starModel = starModel;
+            _currencyService = currencyService;
             _countryConfig = countryConfig;
-
 
             SetupCloseButton();
 
@@ -45,10 +44,14 @@ namespace Monobehaviours.Buildings
 
             CreateShopItemViews();
 
-            _starModel.Stars.Subscribe(UpdatePurchaseAvailability)
-                .AddTo(disposable);
+            var observable = _currencyService.GetCurrencyObservable(Systems.CurrencySystem.CurrencyType.Star);
+            if (observable != null)
+            {
+                observable.Subscribe(c => UpdatePurchaseAvailability((int)(c?.Value ?? 0)))
+                    .AddTo(disposable);
 
-            UpdatePurchaseAvailability(_starModel.Stars.Value);
+                UpdatePurchaseAvailability((int)(observable.Value?.Value ?? 0));
+            }
 
             bool allItemsWereAlreadyPurchased = PlayerPrefs.GetInt("AllItemsPurchased", 0) == 1;
             if (allItemsWereAlreadyPurchased)
@@ -156,9 +159,10 @@ namespace Monobehaviours.Buildings
             ShopItemView itemView = _shopItemViews.FirstOrDefault(view => view.ShopItem.itemId == itemId);
             if (itemView == null) return;
 
-            if (itemView.ShopItem.cost > _starModel.Stars.Value) return;
+            var starCount = (int)(_currencyService?.GetCurrency(Systems.CurrencySystem.CurrencyType.Star)?.Value ?? 0);
+            if (itemView.ShopItem.cost > starCount) return;
 
-            _starModel.Decrease(itemView.ShopItem.cost);
+            _currencyService?.SpendCurrency(Systems.CurrencySystem.CurrencyType.Star, itemView.ShopItem.cost);
             itemView.ShopItem.UnlockBuildings();
             itemView.ShopItem.SpawnBuildings();
 
@@ -193,7 +197,8 @@ namespace Monobehaviours.Buildings
 
                 CreateShopItemView(nextItem);
 
-                UpdatePurchaseAvailability(_starModel.Stars.Value);
+                var starCount = (int)(_currencyService?.GetCurrency(Systems.CurrencySystem.CurrencyType.Star)?.Value ?? 0);
+                UpdatePurchaseAvailability(starCount);
             }
         }
 

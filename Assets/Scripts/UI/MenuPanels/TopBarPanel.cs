@@ -6,6 +6,9 @@ public class TopBarPanel : MonoBehaviour
 {
     [SerializeField] private Button _settingsButton;
     [SerializeField] private Button _taskButton;
+    [SerializeField] private HealthBarView _healthBarView;
+    [SerializeField] private ResourceView _starView;
+    [SerializeField] private ResourceView _gemView;
 
     public Button SettingsButton
     {
@@ -24,6 +27,34 @@ public class TopBarPanel : MonoBehaviour
             if (_taskButton != null) return _taskButton;
             _taskButton = FindChildButton("TaskButton", "Task Button", "Tasks Button", "Task Button 01", "Daily Button", "DailyButton");
             return _taskButton;
+        }
+    }
+
+    public HealthBarView HealthBarView
+    {
+        get
+        {
+            if (_healthBarView != null) return _healthBarView;
+            _healthBarView = GetComponentInChildren<HealthBarView>(true);
+            return _healthBarView;
+        }
+    }
+
+    public ResourceView StarView
+    {
+        get
+        {
+            if (_starView != null) return _starView;
+            return _starView;
+        }
+    }
+
+    public ResourceView GemView
+    {
+        get
+        {
+            if (_gemView != null) return _gemView;
+            return _gemView;
         }
     }
 

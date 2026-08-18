@@ -37,7 +37,7 @@ namespace Initializers
         private readonly GameProvider _gameProvider;
         private readonly BoostShopView _boostShopView;
         private readonly GameConfig _gameConfig;
-        private readonly CoinModel _coinModel;
+        private readonly Systems.CurrencySystem.Interfaces.ICurrencyService _currencyService;
         private Button _pauseButton;
 
         private CompositeDisposable _disposable = new();
@@ -57,7 +57,7 @@ namespace Initializers
             GameProvider gameProvider,
             BoostShopView boostShopView,
             GameConfig gameConfig,
-            CoinModel coinModel
+            Systems.CurrencySystem.Interfaces.ICurrencyService currencyService
         )
         {
             // _ironSourceManager = ironSourceManager;
@@ -74,7 +74,7 @@ namespace Initializers
             _gameProvider = gameProvider;
             _boostShopView = boostShopView;
             _gameConfig = gameConfig;
-            _coinModel = coinModel;
+            _currencyService = currencyService;
         }
 
         public void Initialize()
@@ -91,11 +91,11 @@ namespace Initializers
 
                                                            if(LevelManager.THIS.stars >= 3)
                                                            {
-                                                               _coinModel.Increase(_gameConfig.CoinRewardForLevelPass + _gameConfig.CoinRewardFor3StarPass);
+                                                               _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Cash, _gameConfig.CoinRewardForLevelPass + _gameConfig.CoinRewardFor3StarPass);
                                                            }
                                                            else
                                                            {
-                                                               _coinModel.Increase(_gameConfig.CoinRewardForLevelPass);
+                                                               _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Cash, _gameConfig.CoinRewardForLevelPass);
                                                            }
 
                                                            _sceneLoader.LoadMenuAsync().Forget();
@@ -110,11 +110,11 @@ namespace Initializers
 
                                                            if(LevelManager.THIS.stars >= 3)
                                                            {
-                                                               _coinModel.Increase(_gameConfig.CoinRewardForLevelPass + _gameConfig.CoinRewardFor3StarPass);
+                                                               _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Cash, _gameConfig.CoinRewardForLevelPass + _gameConfig.CoinRewardFor3StarPass);
                                                            }
                                                            else
                                                            {
-                                                               _coinModel.Increase(_gameConfig.CoinRewardForLevelPass);
+                                                               _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Cash, _gameConfig.CoinRewardForLevelPass);
                                                            }
 
                                                            _sceneLoader.LoadGameAsync().Forget();
@@ -218,7 +218,7 @@ namespace Initializers
         public void ReturnToMainMenuAfterLose()
         {
             Time.timeScale = 1f;
-            _coinModel.Increase(_gameConfig.CoinRewardForLevelLose);
+            _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Cash, _gameConfig.CoinRewardForLevelLose);
             _sceneLoader.LoadMenuAsync().Forget();
         }
 

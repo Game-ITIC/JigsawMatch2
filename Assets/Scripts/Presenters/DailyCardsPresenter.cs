@@ -17,20 +17,17 @@ namespace Presenters
 {
     public class DailyCardsPresenter : IInitializable, IDisposable
     {
-        private readonly CoinModel _coinModel;
-        private readonly GemModel _gemModel;
+        private readonly Systems.CurrencySystem.Interfaces.ICurrencyService _currencyService;
         private readonly BoostersProvider _boostersProvider;
 
         private readonly List<DailyCardView> _cards = new();
         private readonly CompositeDisposable _disposables = new();
 
         public DailyCardsPresenter(
-            CoinModel coinModel,
-            GemModel gemModel,
+            Systems.CurrencySystem.Interfaces.ICurrencyService currencyService,
             BoostersProvider boostersProvider)
         {
-            _coinModel = coinModel;
-            _gemModel = gemModel;
+            _currencyService = currencyService;
             _boostersProvider = boostersProvider;
         }
 
@@ -173,13 +170,13 @@ namespace Presenters
             switch (day)
             {
                 case 1:
-                    _coinModel.Increase(value);
+                    _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Cash, value);
                     break;
                 case 2:
-                    _gemModel.Increase(value);
+                    _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Diamond, value);
                     break;
                 case 3:
-                    _coinModel.Increase(value);
+                    _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Cash, value);
                     break;
                 case 4:
                 {
@@ -198,10 +195,10 @@ namespace Presenters
                 }
                     break;
                 case 6:
-                    _coinModel.Increase(value);
+                    _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Cash, value);
                     break;
                 case 7:
-                    _gemModel.Increase(value);
+                    _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Diamond, value);
                     break;
             }
 

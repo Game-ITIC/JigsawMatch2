@@ -138,8 +138,10 @@ namespace JuiceFresh.States
                         costText.text = levelManager.FailedCost.ToString();
                     }
 
-                    // Enable/disable based on whether player has enough gems
-                    bool canAfford = levelManager.CoinModel.Coins.Value >= levelManager.FailedCost;
+                    // Enable/disable based on whether player has enough gems/coins
+                    bool canAfford = levelManager.CurrencyService != null
+                                     && levelManager.CurrencyService.GetCurrency(Systems.CurrencySystem.CurrencyType.Cash) != null
+                                     && levelManager.CurrencyService.GetCurrency(Systems.CurrencySystem.CurrencyType.Cash).Value >= levelManager.FailedCost;
                     continueButton.interactable = canAfford;
                 }
             }

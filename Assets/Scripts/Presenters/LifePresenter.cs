@@ -10,44 +10,78 @@ namespace Presenters
     public class LifePresenter : IInitializable, IDisposable
     {
         private readonly HealthSystem _healthSystem;
+        private readonly HealthBarView _healthBarView;
         private readonly TextView _textView;
         private readonly bool _showLifeCount;
 
         private CompositeDisposable _disposable = new();
-        private string _lastText;
+        private string _lastStatusText;
+
+        public LifePresenter(HealthSystem healthSystem, HealthBarView healthBarView)
+        {
+            _healthSystem = healthSystem;
+            _healthBarView = healthBarView;
+        }
 
         public LifePresenter(HealthSystem healthSystem, TextView textView)
         {
             _healthSystem = healthSystem;
             _textView = textView;
-            _showLifeCount = IsLifeCountText(textView.gameObject.name);
+            _showLifeCount = textView != null && IsLifeCountText(textView.gameObject.name);
         }
 
         public void Initialize()
         {
-            _healthSystem.CurrentLives.Subscribe(_ => UpdateLifeText()).AddTo(_disposable);
+            if (_healthBarView != null)
+            {
+                _healthSystem.CurrentLives
+                    .Subscribe(lives => _healthBarView.SetLives(lives))
+                    .AddTo(_disposable);
 
-            Observable.EveryUpdate(UnityFrameProvider.EarlyUpdate)
-                .Subscribe(_ =>
-                           {
-                               _healthSystem.UpdateRegeneration();
-                               UpdateLifeText();
-                           })
-                .AddTo(_disposable);
+                Observable.Interval(TimeSpan.FromSeconds(1))
+                    .Subscribe(_ =>
+                    {
+                        _healthSystem.UpdateRegeneration();
+                        UpdateHealthBarStatus();
+                    })
+                    .AddTo(_disposable);
+
+                // Initial values
+                _healthBarView.SetLives(_healthSystem.CurrentLives.Value);
+                UpdateHealthBarStatus();
+            }
+            else if (_textView != null)
+            {
+                _healthSystem.CurrentLives.Subscribe(_ => UpdateLegacyLifeText()).AddTo(_disposable);
+
+                Observable.EveryUpdate(UnityFrameProvider.EarlyUpdate)
+                    .Subscribe(_ =>
+                    {
+                        _healthSystem.UpdateRegeneration();
+                        UpdateLegacyLifeText();
+                    })
+                    .AddTo(_disposable);
+            }
         }
 
-        private void UpdateLifeText()
+        private void UpdateHealthBarStatus()
         {
+            if (_healthBarView == null) return;
+            var statusText = _healthSystem.GetLifeStatusText();
+            if (_lastStatusText == statusText) return;
+            _lastStatusText = statusText;
+            _healthBarView.SetReloadStatus(statusText);
+        }
+
+        private void UpdateLegacyLifeText()
+        {
+            if (_textView == null) return;
             var lifeText = _showLifeCount
                 ? _healthSystem.CurrentLives.Value.ToString()
                 : _healthSystem.GetLifeStatusText();
 
-            if (_lastText == lifeText)
-            {
-                return;
-            }
-
-            _lastText = lifeText;
+            if (_lastStatusText == lifeText) return;
+            _lastStatusText = lifeText;
             _textView.SetText(lifeText);
         }
 

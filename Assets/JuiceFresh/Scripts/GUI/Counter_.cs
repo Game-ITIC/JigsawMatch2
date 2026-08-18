@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using TMPro;
 
@@ -170,7 +170,7 @@ public class Counter_ : MonoBehaviour
 
         if (name == "Gems")
         {
-            DisplayText = "" + LevelManager.THIS.CoinModel.Coins.Value;
+            DisplayText = "" + (LevelManager.THIS.CurrencyService != null ? (int)(LevelManager.THIS.CurrencyService.GetCurrency(Systems.CurrencySystem.CurrencyType.Cash)?.Value ?? 0) : 0);
         }
         if (name == "Level")
         {

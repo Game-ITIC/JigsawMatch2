@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Configs
 {
-    public enum CurrencyType
+    public enum CurrencyIconType
     {
         Gems,
         Coins,
@@ -38,18 +38,18 @@ namespace Configs
         public Sprite ShovelIcon => _shovelIcon;
         public Sprite ExtraMovesIcon => _extraMovesIcon;
 
-        public Sprite GetIcon(CurrencyType type)
+        public Sprite GetIcon(CurrencyIconType type)
         {
             return type switch
             {
-                CurrencyType.Gems => _gemsIcon,
-                CurrencyType.Coins => _coinsIcon,
-                CurrencyType.Stars => _starsIcon,
-                CurrencyType.Lives => _livesIcon,
-                CurrencyType.UnlimitedLives => _unlimitedLivesIcon,
-                CurrencyType.Bomb => _bombIcon,
-                CurrencyType.Shovel => _shovelIcon,
-                CurrencyType.ExtraMoves => _extraMovesIcon,
+                CurrencyIconType.Gems => _gemsIcon,
+                CurrencyIconType.Coins => _coinsIcon,
+                CurrencyIconType.Stars => _starsIcon,
+                CurrencyIconType.Lives => _livesIcon,
+                CurrencyIconType.UnlimitedLives => _unlimitedLivesIcon,
+                CurrencyIconType.Bomb => _bombIcon,
+                CurrencyIconType.Shovel => _shovelIcon,
+                CurrencyIconType.ExtraMoves => _extraMovesIcon,
                 _ => null
             };
         }

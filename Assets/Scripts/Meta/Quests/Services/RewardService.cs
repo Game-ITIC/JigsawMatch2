@@ -7,18 +7,15 @@ namespace Meta.Quests.Services
 {
     public class RewardService
     {
-        private readonly CoinModel _coinModel;
-        private readonly GemModel _gemModel;
+        private readonly Systems.CurrencySystem.Interfaces.ICurrencyService _currencyService;
         private readonly BoostersProvider _boostersProvider;
 
         public RewardService(
-            CoinModel coinModel,
-            GemModel gemModel,
+            Systems.CurrencySystem.Interfaces.ICurrencyService currencyService,
             BoostersProvider boostersProvider
         )
         {
-            _coinModel = coinModel;
-            _gemModel = gemModel;
+            _currencyService = currencyService;
             _boostersProvider = boostersProvider;
         }
 
@@ -27,10 +24,10 @@ namespace Meta.Quests.Services
             switch (reward.type)
             {
                 case RewardType.Coins:
-                    _coinModel.Increase(reward.amount);
+                    _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Cash, reward.amount);
                     break;
                 case RewardType.Gems:
-                    _gemModel.Increase(reward.amount);
+                    _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Diamond, reward.amount);
                     break;
                 case RewardType.Boosters:
                     // _boostersProvider.BoostersModels

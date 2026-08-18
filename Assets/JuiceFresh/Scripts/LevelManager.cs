@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
@@ -490,8 +490,7 @@ public class LevelManager : MonoBehaviour, ILevelManagerActions
     }
 
     [Inject] public BoostersProvider BoostersProvider;
-    [Inject] public CoinModel CoinModel;
-    [Inject] public Models.StarModel StarModel;
+    [Inject] public Systems.CurrencySystem.Interfaces.ICurrencyService CurrencyService;
     [Inject] public GameEventDispatcher GameEventDispatcher;
     [Inject] public AdRewardService AdRewardService;
     [Inject] public Itic.Scopes.SceneLoader SceneLoader;

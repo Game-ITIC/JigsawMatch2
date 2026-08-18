@@ -7,6 +7,8 @@ using Models;
 using Providers;
 using Services;
 using Systems;
+using Systems.CurrencySystem;
+using Systems.CurrencySystem.Interfaces;
 using UnityEngine;
 using Utils.Debug;
 using VContainer;
@@ -46,10 +48,10 @@ namespace Scopes
             builder.Register<InternetChecker>(Lifetime.Singleton);
             builder.Register<InternetState>(Lifetime.Singleton);
             builder.Register<BoostersProvider>(Lifetime.Singleton);
-            builder.Register<CoinModel>(Lifetime.Singleton);
-            builder.Register<GemModel>(Lifetime.Singleton);
-            builder.Register<LifeModel>(Lifetime.Singleton);
-            builder.Register<Models.StarModel>(Lifetime.Singleton);
+
+            builder.RegisterInstance(CurrencyConfig.CreateRuntimeDefault());
+            builder.Register<PlayerPrefsCurrencySaveService>(Lifetime.Singleton).As<Systems.CurrencySystem.IPlayerSaveService>();
+            builder.Register<CurrencyService>(Lifetime.Singleton).As<ICurrencyService>().AsSelf();
             
             builder.Register<HealthSystem>(Lifetime.Singleton);
 

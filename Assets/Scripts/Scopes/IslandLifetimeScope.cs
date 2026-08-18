@@ -7,6 +7,8 @@ using Meta.Quests.Views;
 using Presenters;
 using Providers;
 using Sirenix.OdinInspector;
+using Systems.CurrencySystem;
+using Systems.CurrencySystem.Interfaces;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -53,17 +55,29 @@ namespace Scopes
 
             builder.Register<RewardService>(Lifetime.Singleton);
             
-            builder.Register<CoinPresenter>(Lifetime.Scoped)
-                .As<IInitializable>()
-                .WithParameter(coinTextView);
+            if(coinTextView != null)
+            {
+                builder.Register<CurrencyPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .WithParameter<ICurrencyView>(coinTextView)
+                    .WithParameter(CurrencyType.Cash);
+            }
 
-            builder.Register<StarPresenter>(Lifetime.Scoped)
-                .As<IInitializable>()
-                .WithParameter(starTextView);
+            if(starTextView != null)
+            {
+                builder.Register<CurrencyPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .WithParameter<ICurrencyView>(starTextView)
+                    .WithParameter(CurrencyType.Star);
+            }
 
-            builder.Register<GemPresenter>(Lifetime.Scoped)
-                .As<IInitializable>()
-                .WithParameter(gemTextView);
+            if(gemTextView != null)
+            {
+                builder.Register<CurrencyPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .WithParameter<ICurrencyView>(gemTextView)
+                    .WithParameter(CurrencyType.Diamond);
+            }
 
             if(enableLegacyDailyRewards && dailyButton != null)
             {

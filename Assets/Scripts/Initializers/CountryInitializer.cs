@@ -27,12 +27,9 @@ namespace Initializers
     {
         private const string OneTimeProductBoughtPrefix = "in-app-one-time-bought-";
 
-        private readonly MenuView _menuView;
         private readonly SceneLoader _sceneLoader;
         private readonly InAppView _inAppView;
-        private readonly CoinModel _coinModel;
-        private readonly GemModel _gemModel;
-        private readonly StarModel _starModel;
+        private readonly Systems.CurrencySystem.Interfaces.ICurrencyService _currencyService;
         private readonly InternetState _internetState;
         private readonly InAppConfig _inAppConfig;
         private readonly BoostersProvider _boostersProvider;
@@ -54,11 +51,9 @@ namespace Initializers
         private CompositeDisposable _disposable = new();
         private BuildingAnimationSettingsProvider _settingsProvider;
 
-        public CountryInitializer(MenuView menuView,
+        public CountryInitializer(
             SceneLoader sceneLoader,
-            CoinModel coinModel,
-            GemModel gemModel,
-            StarModel starModel,
+            Systems.CurrencySystem.Interfaces.ICurrencyService currencyService,
             InternetState internetState,
             InAppConfig inAppConfig,
             BoostersProvider boostersProvider,
@@ -69,11 +64,8 @@ namespace Initializers
             AdEventModel adEventModel,
             IObjectResolver resolver)
         {
-            _menuView = menuView;
             _sceneLoader = sceneLoader;
-            _coinModel = coinModel;
-            _gemModel = gemModel;
-            _starModel = starModel;
+            _currencyService = currencyService;
             _internetState = internetState;
             _inAppConfig = inAppConfig;
             _boostersProvider = boostersProvider;
@@ -109,18 +101,33 @@ namespace Initializers
                     Debug.Log($"[CountryInitializer] _settingsProvider.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
                 }
 
-                if(_menuView != null)
-                {
-                    var stepSw = System.Diagnostics.Stopwatch.StartNew();
-                    await _menuView.Warmup();
-                    Debug.Log($"[CountryInitializer] _menuView.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
-                }
-
                 if(_inAppView != null)
                 {
                     var stepSw = System.Diagnostics.Stopwatch.StartNew();
                     await _inAppView.Warmup();
                     Debug.Log($"[CountryInitializer] _inAppView.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
+                }
+
+                var topBar = _mainMenuPanel?.TopBarPanel;
+                if(topBar != null)
+                {
+                    if(topBar.HealthBarView?.AddMoreButton != null && _lifePopup != null)
+                    {
+                        topBar.HealthBarView.AddMoreButton.onClick.RemoveAllListeners();
+                        topBar.HealthBarView.AddMoreButton.onClick.AddListener(() => _lifePopup.Show());
+                    }
+
+                    if(topBar.StarView?.AddMoreButton != null && _inAppView != null)
+                    {
+                        topBar.StarView.AddMoreButton.onClick.RemoveAllListeners();
+                        topBar.StarView.AddMoreButton.onClick.AddListener(ShowInAppView);
+                    }
+
+                    if(topBar.GemView?.AddMoreButton != null && _inAppView != null)
+                    {
+                        topBar.GemView.AddMoreButton.onClick.RemoveAllListeners();
+                        topBar.GemView.AddMoreButton.onClick.AddListener(ShowInAppView);
+                    }
                 }
 
                 if(_menuTabs != null)
@@ -256,10 +263,11 @@ namespace Initializers
                 _lifePopup.BuyButton.onClick.RemoveAllListeners();
                 _lifePopup.BuyButton.onClick.AddListener(() =>
                                                          {
-                                                             if(_gemModel.Gems.Value >= 200)
+                                                             var diamonds = (int)(_currencyService?.GetCurrency(Systems.CurrencySystem.CurrencyType.Diamond)?.Value ?? 0);
+                                                             if(diamonds >= 200)
                                                              {
                                                                  _healthSystem.AddLives(5);
-                                                                 _gemModel.Decrease(200);
+                                                                 _currencyService?.SpendCurrency(Systems.CurrencySystem.CurrencyType.Diamond, 200);
                                                                  _lifePopup.Hide();
                                                              }
                                                          });
@@ -361,7 +369,7 @@ namespace Initializers
         {
             if(productConfig.gems > 0)
             {
-                _gemModel.Increase(productConfig.gems);
+                _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Diamond, productConfig.gems);
             }
 
             AddBooster(BoostType.Bomb, productConfig.bombs);

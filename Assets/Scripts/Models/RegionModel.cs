@@ -7,7 +7,7 @@ namespace Models
 {
     public class RegionModel
     {
-        private readonly StarModel _starModel;
+        private readonly Systems.CurrencySystem.Interfaces.ICurrencyService _currencyService;
         public readonly BuildingAnimationSettingsProvider _settingsProvider;
 
         public int CurrentLevelProgress
@@ -19,24 +19,26 @@ namespace Models
         public readonly ReactiveProperty<int> CurrentLevelProgressReactiveProperty = new();
 
         public RegionModel(
-            StarModel starModel,
+            Systems.CurrencySystem.Interfaces.ICurrencyService currencyService,
             BuildingAnimationSettingsProvider settingsProvider
         )
         {
-            _starModel = starModel;
+            _currencyService = currencyService;
             _settingsProvider = settingsProvider;
             Load();
         }
 
         public bool CanUpgrade()
         {
-            if(_starModel.Stars.CurrentValue >= 5 && _settingsProvider.ActiveRegion.data.Count > CurrentLevelProgress) return true;
+            var stars = _currencyService?.GetCurrency(Systems.CurrencySystem.CurrencyType.Star)?.Value ?? 0f;
+            if(stars >= 5 && _settingsProvider.ActiveRegion.data.Count > CurrentLevelProgress) return true;
             return false;
         }
 
         public bool CanLoadNewRegion()
         {
-            if(_starModel.Stars.CurrentValue >= 5 && CurrentLevelProgress >= _settingsProvider.ActiveRegion.data.Count)
+            var stars = _currencyService?.GetCurrency(Systems.CurrencySystem.CurrencyType.Star)?.Value ?? 0f;
+            if(stars >= 5 && CurrentLevelProgress >= _settingsProvider.ActiveRegion.data.Count)
             {
                 if(!_settingsProvider.CanLoadNextRegion()) return false;
                 _settingsProvider.LoadNextRegion();
@@ -50,7 +52,7 @@ namespace Models
         public void Upgrade()
         {
             CurrentLevelProgress++;
-            _starModel.Decrease(5);
+            _currencyService?.SpendCurrency(Systems.CurrencySystem.CurrencyType.Star, 5);
             Save();
         }
 

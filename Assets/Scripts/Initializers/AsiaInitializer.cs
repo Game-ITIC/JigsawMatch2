@@ -12,13 +12,11 @@ namespace Initializers
 {
     public class AsiaInitializer : IInitializable
     {
-        private readonly MenuView _menuView;
         private readonly MainMenuPanel _mainMenuPanel;
         private readonly SceneLoader _sceneLoader;
 
-        public AsiaInitializer(MenuView menuView, SceneLoader sceneLoader, IObjectResolver resolver)
+        public AsiaInitializer(SceneLoader sceneLoader, IObjectResolver resolver)
         {
-            _menuView = menuView;
             _sceneLoader = sceneLoader;
             _mainMenuPanel = resolver.ResolveOrDefault<MainMenuPanel>();
         }

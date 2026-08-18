@@ -31,10 +31,6 @@ namespace Scopes
             builder.Register<InternetChecker>(Lifetime.Singleton);
             builder.Register<SceneLoader>(Lifetime.Singleton).AsSelf();
 
-            builder.Register<CoinModel>(Lifetime.Singleton);
-            builder.Register<LifeModel>(Lifetime.Singleton);
-            builder.Register<Models.StarModel>(Lifetime.Singleton);
-
             // builder.RegisterEntryPoint<ProjectInitializer>();
         }
     }

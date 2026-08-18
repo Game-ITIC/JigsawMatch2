@@ -8,22 +8,22 @@ namespace Initializers
     public class BuildingShopInitializer : IInitializable
     {
         private readonly BuildingShopManager _buildingShopManager;
-        private readonly Models.StarModel _starModel;
+        private readonly Systems.CurrencySystem.Interfaces.ICurrencyService _currencyService;
         private readonly CountryConfig _countryConfig;
 
         public BuildingShopInitializer(
             BuildingShopManager buildingShopManager,
-            Models.StarModel starModel,
+            Systems.CurrencySystem.Interfaces.ICurrencyService currencyService,
             CountryConfig countryConfig)
         {
             _buildingShopManager = buildingShopManager;
-            _starModel = starModel;
+            _currencyService = currencyService;
             _countryConfig = countryConfig;
         }
 
         public void Initialize()
         {
-            _buildingShopManager.Initialize(_starModel, _countryConfig);
+            _buildingShopManager.Initialize(_currencyService, _countryConfig);
         }
     }
 }

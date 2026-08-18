@@ -2546,7 +2546,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1910930531}
-  - component: {fileID: 1910930534}
   - component: {fileID: 1910930533}
   - component: {fileID: 1910930532}
   - component: {fileID: 1910930535}
@@ -2702,13 +2701,7 @@ MonoBehaviour:
   - {fileID: 1959823092}
   _mainMenuPanel: {fileID: 1625503491}
   countryConfig: {fileID: 11400000, guid: 44a6920bb34179741b78d59ffdf34175, type: 2}
-  menuView: {fileID: 1910930534}
-  enableLegacyDailyRewards: 0
   buildingShopManager: {fileID: 0}
-  coinTextView: {fileID: 0}
-  starTextView: {fileID: 0}
-  gemTextView: {fileID: 0}
-  lifeTextView: {fileID: 0}
   inAppView: {fileID: 345404674}
   hideUnhideScript: {fileID: 0}
   regionUIProvider: {fileID: 0}
@@ -2719,20 +2712,6 @@ MonoBehaviour:
   settingsProvider: {fileID: 1910930535}
   dailyQuestSettings: {fileID: 11400000, guid: 8556116d70f511747b89ac05e3374a4d, type: 2}
   dailyQuestProvider: {fileID: 1910930536}
---- !u!114 &1910930534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1910930530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e251ea6585f9b241ba85dae3ce2b2e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buildingShopManager: {fileID: 0}
-  dailyButton: {fileID: 0}
 --- !u!114 &1910930535
 MonoBehaviour:
   m_ObjectHideFlags: 0

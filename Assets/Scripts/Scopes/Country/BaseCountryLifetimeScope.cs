@@ -11,6 +11,8 @@ using Presenters;
 using Providers;
 using Services;
 using Sirenix.OdinInspector;
+using Systems.CurrencySystem;
+using Systems.CurrencySystem.Interfaces;
 using UI;
 using UnityEngine;
 using UnityEngine.UI;
@@ -65,26 +67,8 @@ namespace Scopes.Country
 #endif
         }
 
-        [Tooltip("Main menu view controller")] [SerializeField]
-        private MenuView menuView;
-
-        [Tooltip("Enable old Gley DailyRewards Calendar on the assigned daily button.")]
-        [SerializeField] private bool enableLegacyDailyRewards;
-
         [Tooltip("Manager for the building shop system")] [SerializeField]
         private BuildingShopManager buildingShopManager;
-
-        [Space(10)] [Title("UI Components")] [LabelWidth(130)] [LabelText("Coins Display")] [Tooltip("Text view for displaying player's coins")] [SerializeField]
-        private TextView coinTextView;
-
-        [LabelText("Stars Display")] [Tooltip("Text view for displaying player's stars")] [SerializeField]
-        private TextView starTextView;
-
-        [LabelText("Gems Display")] [Tooltip("Text view for displaying player's gems")] [SerializeField]
-        private TextView gemTextView;
-
-        [LabelText("Lifes Display")] [Tooltip("Text view for displaying player's lifes")] [SerializeField]
-        private TextView lifeTextView;
 
         [SerializeField] private InAppView inAppView;
 
@@ -108,7 +92,6 @@ namespace Scopes.Country
             ResolveOptionalSceneReferences();
 
             RegisterComponentIfPresent(builder, _mainMenuPanel);
-            RegisterComponentIfPresent(builder, menuView);
             RegisterComponentIfPresent(builder, buildingShopManager);
             RegisterComponentIfPresent(builder, inAppView);
             RegisterComponentIfPresent(builder, hideUnhideScript);
@@ -123,15 +106,17 @@ namespace Scopes.Country
             RegisterInstanceIfPresent(builder, dailyQuestSettings);
             RegisterInstanceIfPresent(builder, regionConfig);
 
+            var topBarPanel = (_mainMenuPanel != null && _mainMenuPanel.TopBarPanel != null)
+                ? _mainMenuPanel.TopBarPanel
+                : FindObjectOfType<TopBarPanel>(true);
+
             var settingsPanel = (_mainMenuPanel != null && _mainMenuPanel.SettingsPanel != null)
                 ? _mainMenuPanel.SettingsPanel
                 : FindObjectOfType<SettingsPanel>(true);
 
             if(settingsPanel != null)
             {
-                var settingsButton = (_mainMenuPanel != null && _mainMenuPanel.TopBarPanel != null)
-                    ? _mainMenuPanel.TopBarPanel.SettingsButton
-                    : null;
+                var settingsButton = topBarPanel != null ? topBarPanel.SettingsButton : null;
 
                 builder.Register<SettingsPresenter>(Lifetime.Scoped)
                     .As<IInitializable>()
@@ -145,9 +130,7 @@ namespace Scopes.Country
 
             if(taskPanel != null)
             {
-                var taskButton = (_mainMenuPanel != null && _mainMenuPanel.TopBarPanel != null)
-                    ? _mainMenuPanel.TopBarPanel.TaskButton
-                    : null;
+                var taskButton = topBarPanel != null ? topBarPanel.TaskButton : null;
 
                 builder.Register<TaskPresenter>(Lifetime.Scoped)
                     .As<IInitializable>()
@@ -191,25 +174,30 @@ namespace Scopes.Country
                     .WithParameter<System.Collections.Generic.IEnumerable<Button>>(otherNavButtons);
             }
 
-            if(coinTextView != null)
+            if(topBarPanel != null)
             {
-                builder.Register<CoinPresenter>(Lifetime.Scoped)
-                    .As<IInitializable>()
-                    .WithParameter(coinTextView);
-            }
+                if(topBarPanel.StarView != null)
+                {
+                    builder.Register<CurrencyPresenter>(Lifetime.Scoped)
+                        .As<IInitializable>()
+                        .WithParameter<ICurrencyView>(topBarPanel.StarView)
+                        .WithParameter(CurrencyType.Star);
+                }
 
-            if(starTextView != null)
-            {
-                builder.Register<StarPresenter>(Lifetime.Scoped)
-                    .As<IInitializable>()
-                    .WithParameter(starTextView);
-            }
+                if(topBarPanel.GemView != null)
+                {
+                    builder.Register<CurrencyPresenter>(Lifetime.Scoped)
+                        .As<IInitializable>()
+                        .WithParameter<ICurrencyView>(topBarPanel.GemView)
+                        .WithParameter(CurrencyType.Diamond);
+                }
 
-            if(gemTextView != null)
-            {
-                builder.Register<GemPresenter>(Lifetime.Scoped)
-                    .As<IInitializable>()
-                    .WithParameter(gemTextView);
+                if(topBarPanel.HealthBarView != null)
+                {
+                    builder.Register<LifePresenter>(Lifetime.Scoped)
+                        .As<IInitializable>()
+                        .WithParameter(topBarPanel.HealthBarView);
+                }
             }
 
             if(buildingShopManager != null && countryConfig != null)
@@ -219,25 +207,8 @@ namespace Scopes.Country
                     .AsSelf();
             }
 
-            if(enableLegacyDailyRewards && menuView != null && menuView.DailyRewardsButton != null)
-            {
-                builder.Register<DailyRewardsPresenter>(Lifetime.Scoped)
-                    .As<IInitializable>()
-                    .WithParameter(menuView.DailyRewardsButton);
-            }
-
-            if(menuView != null)
-            {
-                builder.Register<DailyCardsPresenter>(Lifetime.Scoped)
-                    .As<IInitializable>();
-            }
-
-            if(lifeTextView != null)
-            {
-                builder.Register<LifePresenter>(Lifetime.Scoped)
-                    .As<IInitializable>()
-                    .WithParameter(lifeTextView);
-            }
+            builder.Register<DailyCardsPresenter>(Lifetime.Scoped)
+                .As<IInitializable>();
 
             if(settingsProvider != null)
             {
