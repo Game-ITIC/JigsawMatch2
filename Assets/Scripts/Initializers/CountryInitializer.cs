@@ -109,25 +109,11 @@ namespace Initializers
                 }
 
                 var topBar = _mainMenuPanel?.TopBarPanel;
-                if(topBar != null)
+                if(topBar != null && _inAppView != null)
                 {
-                    if(topBar.HealthBarView?.AddMoreButton != null && _lifePopup != null)
-                    {
-                        topBar.HealthBarView.AddMoreButton.onClick.RemoveAllListeners();
-                        topBar.HealthBarView.AddMoreButton.onClick.AddListener(() => _lifePopup.Show());
-                    }
-
-                    if(topBar.StarView?.AddMoreButton != null && _inAppView != null)
-                    {
-                        topBar.StarView.AddMoreButton.onClick.RemoveAllListeners();
-                        topBar.StarView.AddMoreButton.onClick.AddListener(ShowInAppView);
-                    }
-
-                    if(topBar.GemView?.AddMoreButton != null && _inAppView != null)
-                    {
-                        topBar.GemView.AddMoreButton.onClick.RemoveAllListeners();
-                        topBar.GemView.AddMoreButton.onClick.AddListener(ShowInAppView);
-                    }
+                    BindShopButtons(topBar.HealthBarView);
+                    BindShopButtons(topBar.StarView);
+                    BindShopButtons(topBar.GemView);
                 }
 
                 if(_menuTabs != null)
@@ -308,6 +294,21 @@ namespace Initializers
         private void ShowInAppView()
         {
             _inAppView?.Show();
+        }
+
+        private void BindShopButtons(Component view)
+        {
+            if(view == null || _inAppView == null) return;
+
+            var buttons = view.GetComponentsInChildren<Button>(true);
+            for(var i = 0; i < buttons.Length; i++)
+            {
+                var button = buttons[i];
+                if(button == null) continue;
+
+                button.onClick.RemoveAllListeners();
+                button.onClick.AddListener(ShowInAppView);
+            }
         }
 
         private void StartGame()

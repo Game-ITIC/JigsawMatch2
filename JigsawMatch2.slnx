@@ -53,6 +53,7 @@
   <Project Path="Assembly-CSharp-Editor-firstpass.csproj" />
   <Project Path="Unity.Services.Core.Configuration.Editor.csproj" />
   <Project Path="Unity.Services.Core.Configuration.csproj" />
+  <Project Path="Modules.ProvidersInjector.csproj" />
   <Project Path="Unity.Services.Core.Environments.Internal.csproj" />
   <Project Path="Unity.Notifications.Unified.csproj" />
   <Project Path="Lofelt.NiceVibrations.Editor.csproj" />

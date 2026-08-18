@@ -40,23 +40,9 @@ public class TopBarPanel : MonoBehaviour
         }
     }
 
-    public ResourceView StarView
-    {
-        get
-        {
-            if (_starView != null) return _starView;
-            return _starView;
-        }
-    }
+    public ResourceView StarView => _starView;
 
-    public ResourceView GemView
-    {
-        get
-        {
-            if (_gemView != null) return _gemView;
-            return _gemView;
-        }
-    }
+    public ResourceView GemView => _gemView;
 
     private Button FindChildButton(params string[] names)
     {
