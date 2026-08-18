@@ -1,20 +1,21 @@
 using System;
 using Configs;
+using Configs.Tasks;
 using Initializers;
-using Meta.Quests.Configs;
 using Meta.Quests.Interfaces;
-using Meta.Quests.Providers;
 using Meta.Quests.Services;
 using Models;
 using Monobehaviours.Buildings;
 using Presenters;
 using Providers;
 using Services;
+using Services.Tasks;
 using Sirenix.OdinInspector;
 using Systems.CurrencySystem;
 using Systems.CurrencySystem.Interfaces;
 using UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using VContainer;
 using VContainer.Unity;
@@ -41,36 +42,57 @@ namespace Scopes.Country
         private void CreateCountryConfig()
         {
 #if UNITY_EDITOR
-            // Create a new CountryConfig ScriptableObject
-            CountryConfig newConfig = ScriptableObject.CreateInstance<CountryConfig>();
-
-            // Create a save file dialog to let the user choose where to save
-            string path = UnityEditor.EditorUtility.SaveFilePanelInProject(
+            var newConfig = ScriptableObject.CreateInstance<CountryConfig>();
+            var path = UnityEditor.EditorUtility.SaveFilePanelInProject(
                 "Save Country Config",
                 "NewCountryConfig",
                 "asset",
                 "Please enter a file name to save the country configuration to");
 
-            if(!string.IsNullOrEmpty(path))
+            if (!string.IsNullOrEmpty(path))
             {
-                // Save the asset and refresh the AssetDatabase
                 UnityEditor.AssetDatabase.CreateAsset(newConfig, path);
                 UnityEditor.AssetDatabase.SaveAssets();
                 UnityEditor.AssetDatabase.Refresh();
-
-                // Assign the newly created config to our field
                 countryConfig = newConfig;
-
-                // Ping the new asset in the Project window
                 UnityEditor.EditorGUIUtility.PingObject(newConfig);
             }
 #endif
         }
 
-        [Tooltip("Manager for the building shop system")] [SerializeField]
+        [BoxGroup("CountrySection")]
+        [VerticalGroup("CountrySection/Row")]
+        [LabelWidth(130)]
+        [LabelText("Building Shop Manager")]
+        [Tooltip("Manager for building shop operations")]
+        [SerializeField]
         private BuildingShopManager buildingShopManager;
 
-        [SerializeField] private InAppView inAppView;
+        [VerticalGroup("CountrySection/Row")]
+        [ShowIf("@buildingShopManager == null")]
+        [Button("Find")]
+        [GUIColor(0.7f, 0.9f, 0.7f)]
+        private void FindBuildingShopManager()
+        {
+            buildingShopManager = FindObjectOfType<BuildingShopManager>(true);
+        }
+
+        [BoxGroup("CountrySection")]
+        [VerticalGroup("CountrySection/Row")]
+        [LabelWidth(130)]
+        [LabelText("InApp View")]
+        [Tooltip("View for InApp purchases")]
+        [SerializeField]
+        private InAppView inAppView;
+
+        [VerticalGroup("CountrySection/Row")]
+        [ShowIf("@inAppView == null")]
+        [Button("Find")]
+        [GUIColor(0.7f, 0.9f, 0.7f)]
+        private void FindInAppView()
+        {
+            inAppView = FindObjectOfType<InAppView>(true);
+        }
 
         [SerializeField] private HideUnhideScript hideUnhideScript;
 
@@ -83,9 +105,9 @@ namespace Scopes.Country
         [SerializeField] private RewardPopup rewardPopup;
         [SerializeField] private BuildingAnimationSettingsProvider settingsProvider;
 
-        [Title("Daily Quests")]
-        [SerializeField] private DailyQuestSettings dailyQuestSettings;
-        [SerializeField] private DailyQuestProvider dailyQuestProvider;
+        [Title("Tasks")]
+        [FormerlySerializedAs("dailyQuestSettings")]
+        [SerializeField] private TasksListSO tasksListSO;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -100,11 +122,12 @@ namespace Scopes.Country
             RegisterComponentIfPresent(builder, lifePopup);
             RegisterComponentIfPresent(builder, rewardPopup);
             RegisterComponentIfPresent(builder, settingsProvider);
-            RegisterComponentIfPresent(builder, dailyQuestProvider);
 
             RegisterInstanceIfPresent(builder, countryConfig);
-            RegisterInstanceIfPresent(builder, dailyQuestSettings);
             RegisterInstanceIfPresent(builder, regionConfig);
+            RegisterInstanceIfPresent(builder, tasksListSO);
+
+            builder.Register<ITaskService, TaskService>(Lifetime.Singleton);
 
             var topBarPanel = (_mainMenuPanel != null && _mainMenuPanel.TopBarPanel != null)
                 ? _mainMenuPanel.TopBarPanel
@@ -221,7 +244,7 @@ namespace Scopes.Country
                 builder.Register<MenuTabs>(Lifetime.Singleton);
             }
 
-            if(dailyQuestSettings != null && dailyQuestProvider != null)
+            if(tasksListSO != null)
             {
                 builder.Register<RewardService>(Lifetime.Singleton);
 
@@ -229,9 +252,6 @@ namespace Scopes.Country
                 builder.Register<IQuestProgressTracker, DailyQuestService>(Lifetime.Singleton);
                 builder.Register<IQuestDataStorage, PlayerPrefsQuestStorage>(Lifetime.Singleton);
                 builder.Register<IQuestGenerator, QuestGenerator>(Lifetime.Singleton);
-
-                builder.Register<DailyQuestPresenter>(Lifetime.Scoped)
-                    .As<IInitializable>();
             }
 
             ConfigureCountry(builder);
