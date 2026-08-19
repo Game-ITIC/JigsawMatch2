@@ -25,7 +25,7 @@ namespace Services
         {
             _regionModel = regionModel;
 
-            if (regionModel?._settingsProvider?.ActiveRegion == null)
+            if (regionModel?.RegionService?.ActiveRegion == null)
             {
                 Debug.LogWarning("[RegionUpgradeService] Cannot initialize: ActiveRegion is null!");
                 return;
@@ -36,7 +36,7 @@ namespace Services
                 playableGraph.Destroy();
             }
 
-            var activeRegion = regionModel._settingsProvider.ActiveRegion;
+            var activeRegion = regionModel.RegionService.ActiveRegion;
             animator = activeRegion.animator;
             if (animator == null)
             {

@@ -44,9 +44,9 @@ namespace Initializers
         private readonly AdEventModel _adEventModel;
         private readonly RewardPopup _rewardPopup;
         private readonly MainMenuPanel _mainMenuPanel;
+        private readonly RegionService _regionService;
 
         private CompositeDisposable _disposable = new();
-        private BuildingAnimationSettingsProvider _settingsProvider;
         private bool _isUpgrading;
 
         public CountryInitializer(
@@ -78,7 +78,7 @@ namespace Initializers
             _regionConfig = resolver.ResolveOrDefault<RegionConfig>();
             _lifePopup = resolver.ResolveOrDefault<LifePopup>();
             _rewardPopup = resolver.ResolveOrDefault<RewardPopup>();
-            _settingsProvider = resolver.ResolveOrDefault<BuildingAnimationSettingsProvider>();
+            _regionService = resolver.ResolveOrDefault<RegionService>();
             _mainMenuPanel = resolver.ResolveOrDefault<MainMenuPanel>();
         }
 
@@ -89,22 +89,22 @@ namespace Initializers
 
             try
             {
-                if(_settingsProvider != null)
+                if(_regionService != null)
                 {
                     var stepSw = System.Diagnostics.Stopwatch.StartNew();
-                    await _settingsProvider.Warmup();
-                    Debug.Log($"[CountryInitializer] _settingsProvider.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
+                    await _regionService.Warmup();
+                    Debug.Log($"[CountryInitializer] _regionService.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
 
-                    if(_regionUpgradeService != null && _regionModel != null && _regionModel._settingsProvider?.ActiveRegion != null)
+                    if(_regionUpgradeService != null && _regionModel != null && _regionModel.RegionService?.ActiveRegion != null)
                     {
                         _regionUpgradeService.Initialize(_regionModel);
                         _regionUpgradeService.JumpToFrame(0);
 
                         if(_regionModel.CurrentLevelProgress != 0
-                           && _regionModel._settingsProvider.ActiveRegion.data != null
-                           && _regionModel.CurrentLevelProgress <= _regionModel._settingsProvider.ActiveRegion.data.Count)
+                           && _regionModel.RegionService.ActiveRegion.data != null
+                           && _regionModel.CurrentLevelProgress <= _regionModel.RegionService.ActiveRegion.data.Count)
                         {
-                            int endFrame = _regionModel._settingsProvider.ActiveRegion.data[_regionModel.CurrentLevelProgress - 1]
+                            int endFrame = _regionModel.RegionService.ActiveRegion.data[_regionModel.CurrentLevelProgress - 1]
                                 .endFrame;
                             _regionUpgradeService.JumpToFrame(endFrame);
                         }
@@ -278,7 +278,7 @@ namespace Initializers
                 {
                     _regionModel.Upgrade();
 
-                    var activeData = _regionModel._settingsProvider?.ActiveRegion?.data;
+                    var activeData = _regionModel.RegionService?.ActiveRegion?.data;
                     if (activeData != null && _regionModel.CurrentLevelProgress > 0 && _regionModel.CurrentLevelProgress <= activeData.Count)
                     {
                         var currentStepData = activeData[_regionModel.CurrentLevelProgress - 1];

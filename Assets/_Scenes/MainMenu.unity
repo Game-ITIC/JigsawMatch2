@@ -1213,42 +1213,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 528195381}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &528195383 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1165183986501101678, guid: 808c49bc4982c2d4f8e04d416d848a33,
-    type: 3}
-  m_PrefabInstance: {fileID: 528195381}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &528195384 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2824798973824522344, guid: 808c49bc4982c2d4f8e04d416d848a33,
-    type: 3}
-  m_PrefabInstance: {fileID: 528195381}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &528195385 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8592344992427442391, guid: 808c49bc4982c2d4f8e04d416d848a33,
-    type: 3}
-  m_PrefabInstance: {fileID: 528195381}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &545087844 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7696161922316336150, guid: 574a87081c59d35419e2636c3780e827,
@@ -1666,6 +1630,8 @@ MonoBehaviour:
   _menuActionPanel: {fileID: 1816681598}
   _menuNavPanel: {fileID: 1615332249}
   _islandPanel: {fileID: 177965887751050708}
+  _lifePopup: {fileID: 1473984767}
+  _rewardPopup: {fileID: 1752658764}
 --- !u!1 &1634492164
 GameObject:
   m_ObjectHideFlags: 0
@@ -1922,8 +1888,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1910930531}
   - component: {fileID: 1910930533}
-  - component: {fileID: 1910930532}
-  - component: {fileID: 1910930535}
   m_Layer: 0
   m_Name: MenuLifetimeScope
   m_TagString: Untagged
@@ -1946,116 +1910,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 837898113}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1910930532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1910930530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a0a08b964fa452bbfebe50dd530bbed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <SceneCanvas>k__BackingField: {fileID: 1625503489}
-  <NavigationButtons>k__BackingField:
-  - {fileID: 528195383}
-  - {fileID: 528195385}
-  - {fileID: 528195384}
-  <PanelsParent>k__BackingField: {fileID: 46864529}
-  <PanelSlideDuration>k__BackingField: 0.3
-  <ButtonAnimationDuration>k__BackingField: 0.2
-  <PanelSlideCurve>k__BackingField:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.35
-      value: 0.72
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  <ButtonScaleCurve>k__BackingField:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.7
-      value: 1.06
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  <ButtonFadeCurve>k__BackingField:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &1910930533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2075,30 +1929,9 @@ MonoBehaviour:
   - {fileID: 1959823092}
   _mainMenuPanel: {fileID: 1625503491}
   countryConfig: {fileID: 11400000, guid: 44a6920bb34179741b78d59ffdf34175, type: 2}
-  buildingShopManager: {fileID: 0}
-  inAppView: {fileID: 345404674}
-  hideUnhideScript: {fileID: 0}
-  regionUIProvider: {fileID: 0}
-  regionConfig: {fileID: 11400000, guid: ecd52e9beba42cb4c9606de3292f48aa, type: 2}
-  menuNavigationProvider: {fileID: 1910930532}
-  lifePopup: {fileID: 1473984767}
-  rewardPopup: {fileID: 1752658764}
-  settingsProvider: {fileID: 1910930535}
-  tasksListSO: {fileID: 11400000, guid: 8556116d70f511747b89ac05e3374a4d, type: 2}
---- !u!114 &1910930535
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1910930530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ff1cc2edad546d2bbd3bea649be5eda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Configs.BuildingAnimationSettingsProvider
   regionConfig: {fileID: 11400000, guid: ecd52e9beba42cb4c9606de3292f48aa, type: 2}
   regionParent: {fileID: 282300645}
+  tasksListSO: {fileID: 11400000, guid: 8556116d70f511747b89ac05e3374a4d, type: 2}
 --- !u!1 &1953875757
 GameObject:
   m_ObjectHideFlags: 0

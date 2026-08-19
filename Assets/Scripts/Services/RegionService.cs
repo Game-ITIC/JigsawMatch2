@@ -1,70 +1,78 @@
+using System;
+using Configs;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Utils.Save;
+using Object = UnityEngine.Object;
 
-namespace Configs
+namespace Services
 {
-    public class BuildingAnimationSettingsProvider : MonoBehaviour
+    public class RegionService
     {
-        [SerializeField] private RegionConfig regionConfig;
-        [SerializeField] private Transform regionParent;
+        private readonly RegionConfig _regionConfig;
+        private readonly Transform _regionParent;
 
         private BuildingsAnimationConfig _activeRegion;
         private RegionData _activeRegionData;
+        private int _currentRegionIndex;
 
-        public RegionConfig RegionConfig => regionConfig;
+        public RegionConfig RegionConfig => _regionConfig;
         public RegionData ActiveRegionData => _activeRegionData;
         public BuildingsAnimationConfig ActiveRegion => _activeRegion;
-        public int CurrentRegionIndex => currentRegionIndex;
+        public int CurrentRegionIndex => _currentRegionIndex;
 
-        private int currentRegionIndex;
+        public RegionService(RegionConfig regionConfig, Transform regionParent)
+        {
+            _regionConfig = regionConfig;
+            _regionParent = regionParent;
+        }
 
         public bool CanLoadNextRegion()
         {
-            var nextRegionIndex = currentRegionIndex + 1;
-            return regionConfig != null && nextRegionIndex >= 0 && nextRegionIndex < regionConfig.Count;
+            var nextRegionIndex = _currentRegionIndex + 1;
+            return _regionConfig != null && nextRegionIndex >= 0 && nextRegionIndex < _regionConfig.Count;
         }
 
         public async UniTask Warmup()
         {
             Load();
-            LoadRegion(currentRegionIndex);
+            LoadRegion(_currentRegionIndex);
             await UniTask.Yield();
         }
 
         private void Load()
         {
-            currentRegionIndex = PlayerPrefs.GetInt(PlayerPrefsKeys.RegionIndex, 0);
+            _currentRegionIndex = PlayerPrefs.GetInt(PlayerPrefsKeys.RegionIndex, 0);
             var maxCount = GetTotalRegionsCount();
 
             if (maxCount <= 0)
             {
-                currentRegionIndex = -1;
+                _currentRegionIndex = -1;
                 return;
             }
 
-            if (currentRegionIndex < 0 || currentRegionIndex >= maxCount)
+            if (_currentRegionIndex < 0 || _currentRegionIndex >= maxCount)
             {
-                currentRegionIndex = 0;
+                _currentRegionIndex = 0;
                 Save();
             }
         }
 
         private int GetTotalRegionsCount()
         {
-            return regionConfig != null ? regionConfig.Count : 0;
+            return _regionConfig != null ? _regionConfig.Count : 0;
         }
 
         private void Save()
         {
-            PlayerPrefs.SetInt(PlayerPrefsKeys.RegionIndex, currentRegionIndex);
+            PlayerPrefs.SetInt(PlayerPrefsKeys.RegionIndex, _currentRegionIndex);
             PlayerPrefs.Save();
         }
 
         public void LoadNextRegion()
         {
-            currentRegionIndex++;
-            LoadRegion(currentRegionIndex);
+            _currentRegionIndex++;
+            LoadRegion(_currentRegionIndex);
             Save();
         }
 
@@ -72,33 +80,33 @@ namespace Configs
         {
             if (_activeRegion != null)
             {
-                Destroy(_activeRegion.gameObject);
+                Object.Destroy(_activeRegion.gameObject);
                 _activeRegion = null;
             }
 
             _activeRegionData = null;
 
-            if (regionConfig == null)
+            if (_regionConfig == null)
             {
-                Debug.LogError("[BuildingAnimationSettingsProvider] RegionConfig is not assigned!");
+                Debug.LogError("[RegionService] RegionConfig is not assigned!");
                 return;
             }
 
-            if (index < 0 || index >= regionConfig.Count)
+            if (index < 0 || index >= _regionConfig.Count)
             {
-                Debug.LogWarning($"[BuildingAnimationSettingsProvider] Invalid region index {index} (Total: {regionConfig.Count})");
+                Debug.LogWarning($"[RegionService] Invalid region index {index} (Total: {_regionConfig.Count})");
                 return;
             }
 
-            _activeRegionData = regionConfig.GetRegionByIndex(index);
+            _activeRegionData = _regionConfig.GetRegionByIndex(index);
 
             if (_activeRegionData == null || _activeRegionData.regionPrefab == null)
             {
-                Debug.LogWarning($"[BuildingAnimationSettingsProvider] Region data or regionPrefab is not assigned for index {index}");
+                Debug.LogWarning($"[RegionService] Region data or regionPrefab is not assigned for index {index}");
                 return;
             }
 
-            var instance = Instantiate(_activeRegionData.regionPrefab, regionParent);
+            var instance = Object.Instantiate(_activeRegionData.regionPrefab, _regionParent);
             instance.SetActive(true);
             _activeRegion = instance.GetComponent<BuildingsAnimationConfig>() ??
                             instance.GetComponentInChildren<BuildingsAnimationConfig>(true);

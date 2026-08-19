@@ -1,6 +1,7 @@
 using System;
 using Configs;
 using R3;
+using Services;
 using UnityEngine;
 using Utils.Save;
 
@@ -11,15 +12,17 @@ namespace Models
         public const int DefaultUpgradeCost = 5;
 
         private readonly Systems.CurrencySystem.Interfaces.ICurrencyService _currencyService;
-        public readonly BuildingAnimationSettingsProvider _settingsProvider;
+        private readonly RegionService _regionService;
+
+        public RegionService RegionService => _regionService;
 
         public int UpgradeCost
         {
             get
             {
-                if (_settingsProvider?.ActiveRegionData != null && _settingsProvider.ActiveRegionData.starCost > 0)
+                if (_regionService?.ActiveRegionData != null && _regionService.ActiveRegionData.starCost > 0)
                 {
-                    return _settingsProvider.ActiveRegionData.starCost;
+                    return _regionService.ActiveRegionData.starCost;
                 }
                 return DefaultUpgradeCost;
             }
@@ -31,9 +34,9 @@ namespace Models
         {
             get
             {
-                if (_settingsProvider?.ActiveRegion?.data != null)
+                if (_regionService?.ActiveRegion?.data != null)
                 {
-                    return _settingsProvider.ActiveRegion.data.Count;
+                    return _regionService.ActiveRegion.data.Count;
                 }
                 return 0;
             }
@@ -49,11 +52,11 @@ namespace Models
 
         public RegionModel(
             Systems.CurrencySystem.Interfaces.ICurrencyService currencyService,
-            BuildingAnimationSettingsProvider settingsProvider
+            RegionService regionService
         )
         {
             _currencyService = currencyService;
-            _settingsProvider = settingsProvider;
+            _regionService = regionService;
             Load();
         }
 
@@ -68,9 +71,9 @@ namespace Models
             var stars = _currencyService?.GetCurrency(Systems.CurrencySystem.CurrencyType.Star)?.Value ?? 0f;
             if (stars >= UpgradeCost && CurrentLevelProgress >= TotalSteps)
             {
-                if (!_settingsProvider.CanLoadNextRegion()) return false;
+                if (!_regionService.CanLoadNextRegion()) return false;
 
-                _settingsProvider.LoadNextRegion();
+                _regionService.LoadNextRegion();
                 CurrentLevelProgress = 0;
                 Save();
             }

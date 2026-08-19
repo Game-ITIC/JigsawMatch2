@@ -27,11 +27,11 @@ public static class MainMenuBuildAnimationSetupUtility
             return;
         }
 
-        var provider = menuLifetimeScope.GetComponent<BuildingAnimationSettingsProvider>();
+        var lifetimeScope = menuLifetimeScope.GetComponent<Scopes.Country.BaseCountryLifetimeScope>();
 
-        if(provider == null)
+        if(lifetimeScope == null)
         {
-            Debug.LogError($"{nameof(BuildingAnimationSettingsProvider)} was not found on {MenuLifetimeScopeName}.", menuLifetimeScope);
+            Debug.LogError($"BaseCountryLifetimeScope was not found on {MenuLifetimeScopeName}.", menuLifetimeScope);
             return;
         }
 
@@ -54,18 +54,24 @@ public static class MainMenuBuildAnimationSetupUtility
             }
         }
 
-        var serializedProvider = new SerializedObject(provider);
-        var regionConfigProperty = serializedProvider.FindProperty("regionConfig");
+        var serializedScope = new SerializedObject(lifetimeScope);
+        var regionConfigProperty = serializedScope.FindProperty("regionConfig");
         if (regionConfigProperty != null && regionConfig != null)
         {
             regionConfigProperty.objectReferenceValue = regionConfig;
         }
 
-        serializedProvider.ApplyModifiedProperties();
-        EditorUtility.SetDirty(provider);
-        EditorSceneManager.MarkSceneDirty(provider.gameObject.scene);
+        var regionParentProperty = serializedScope.FindProperty("regionParent");
+        if (regionParentProperty != null && world != null)
+        {
+            regionParentProperty.objectReferenceValue = world;
+        }
 
-        Debug.Log($"Configured MainMenu BuildingAnimationSettingsProvider with RegionConfig: {(regionConfig != null ? regionConfig.name : "null")}.", provider);
+        serializedScope.ApplyModifiedProperties();
+        EditorUtility.SetDirty(lifetimeScope);
+        EditorSceneManager.MarkSceneDirty(lifetimeScope.gameObject.scene);
+
+        Debug.Log($"Configured MainMenu BaseCountryLifetimeScope with RegionConfig: {(regionConfig != null ? regionConfig.name : "null")} and World parent.", lifetimeScope);
     }
 
     private static void RemoveLegacyAnimationComponents(GameObject root)

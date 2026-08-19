@@ -29,8 +29,7 @@ namespace Scopes.Country
 
         [SerializeField] private CountryConfig countryConfig;
         [SerializeField] private RegionConfig regionConfig;
-
-        [SerializeField] private BuildingAnimationSettingsProvider settingsProvider;
+        [SerializeField] private Transform regionParent;
 
         [Title("Tasks")]
         [FormerlySerializedAs("dailyQuestSettings")]
@@ -41,7 +40,6 @@ namespace Scopes.Country
             ResolveOptionalSceneReferences();
 
             RegisterComponentIfPresent(builder, _mainMenuPanel);
-            RegisterComponentIfPresent(builder, settingsProvider);
 
             var lifePopup = _mainMenuPanel != null ? _mainMenuPanel.LifePopup : null;
             RegisterComponentIfPresent(builder, lifePopup);
@@ -143,8 +141,12 @@ namespace Scopes.Country
             builder.Register<DailyCardsPresenter>(Lifetime.Scoped)
                 .As<IInitializable>();
 
-            if(settingsProvider != null)
+            if(regionConfig != null)
             {
+                builder.Register<RegionService>(Lifetime.Singleton)
+                    .WithParameter(regionConfig)
+                    .WithParameter(regionParent);
+
                 builder.Register<RegionModel>(Lifetime.Singleton);
                 builder.Register<RegionUpgradeService>(Lifetime.Singleton);
             }
@@ -167,6 +169,15 @@ namespace Scopes.Country
             if(_mainMenuPanel == null)
             {
                 _mainMenuPanel = FindObjectOfType<MainMenuPanel>(true);
+            }
+
+            if(regionParent == null)
+            {
+                var worldObj = transform.Find("World");
+                if(worldObj != null)
+                {
+                    regionParent = worldObj;
+                }
             }
         }
 
