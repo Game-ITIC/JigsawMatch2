@@ -11,10 +11,26 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c2bfd24b64144528882d9fc2d33731a, type: 3}
   m_Name: RegionConfig
-  m_EditorClassIdentifier: 
-  <Regions>k__BackingField:
-  - Japan
-  - Soon
-  - Soon
-  - Soon
-  - Soon
+  m_EditorClassIdentifier: Configs::RegionConfig
+  regions:
+  - regionName: Japan
+    regionIcon: {fileID: 4204830022199959180, guid: cdc5b5685b33f614b8c6b15b182d5677,
+      type: 3}
+    regionPrefab: {fileID: 6427668103141198496, guid: 82cb8a9ad40040a4f9d5d8cb1fbb2a57,
+      type: 3}
+    isComingSoon: 0
+    starCost: 5
+  - regionName: Chine
+    regionIcon: {fileID: 6070576942371131909, guid: cdc5b5685b33f614b8c6b15b182d5677,
+      type: 3}
+    regionPrefab: {fileID: 4196150323201231134, guid: 1d0ef5f9712463b458871d91a2a8ba06,
+      type: 3}
+    isComingSoon: 0
+    starCost: 10
+  - regionName: Korea
+    regionIcon: {fileID: -869753982007151114, guid: cdc5b5685b33f614b8c6b15b182d5677,
+      type: 3}
+    regionPrefab: {fileID: 6225021925073061284, guid: 102d4ceced9d34c4a8de912ec2125993,
+      type: 3}
+    isComingSoon: 0
+    starCost: 20

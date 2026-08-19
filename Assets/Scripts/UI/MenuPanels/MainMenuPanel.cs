@@ -1,3 +1,4 @@
+using UI;
 using UnityEngine;
 using Views;
 
@@ -9,6 +10,9 @@ public class MainMenuPanel : MonoBehaviour
     [SerializeField] private TopBarPanel _topBarPanel;
     [SerializeField] private MenuActionPanel _menuActionPanel;
     [SerializeField] private MenuNavPanel _menuNavPanel;
+    [SerializeField] private IslandPanel _islandPanel;
+    [SerializeField] private LifePopup _lifePopup;
+    [SerializeField] private RewardPopup _rewardPopup;
 
     public SettingsPanel SettingsPanel
     {
@@ -67,6 +71,26 @@ public class MainMenuPanel : MonoBehaviour
             if (_menuNavPanel != null) return _menuNavPanel;
             _menuNavPanel = GetComponentInChildren<MenuNavPanel>(true) ?? FindObjectOfType<MenuNavPanel>(true);
             return _menuNavPanel;
+        }
+    }
+
+    public LifePopup LifePopup
+    {
+        get
+        {
+            if (_lifePopup != null) return _lifePopup;
+            _lifePopup = GetComponentInChildren<LifePopup>(true);
+            return _lifePopup;
+        }
+    }
+
+    public RewardPopup RewardPopup
+    {
+        get
+        {
+            if (_rewardPopup != null) return _rewardPopup;
+            _rewardPopup = GetComponentInChildren<RewardPopup>(true);
+            return _rewardPopup;
         }
     }
 }

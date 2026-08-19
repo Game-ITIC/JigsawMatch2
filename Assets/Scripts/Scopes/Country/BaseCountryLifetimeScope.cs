@@ -26,83 +26,10 @@ namespace Scopes.Country
     public class BaseCountryLifetimeScope : LifetimeScope
     {
         [SerializeField] private MainMenuPanel _mainMenuPanel;
-        [Title("Core Components")]
-        [BoxGroup("CountrySection")]
-        [VerticalGroup("CountrySection/Row")]
-        [LabelWidth(130)]
-        [LabelText("Country Config")]
-        [Tooltip("Configuration settings for countries")]
-        [SerializeField]
-        private CountryConfig countryConfig;
 
-        [VerticalGroup("CountrySection/Row")]
-        [ShowIf("@countryConfig == null")]
-        [Button("Create")]
-        [GUIColor(0.7f, 0.9f, 0.7f)]
-        private void CreateCountryConfig()
-        {
-#if UNITY_EDITOR
-            var newConfig = ScriptableObject.CreateInstance<CountryConfig>();
-            var path = UnityEditor.EditorUtility.SaveFilePanelInProject(
-                "Save Country Config",
-                "NewCountryConfig",
-                "asset",
-                "Please enter a file name to save the country configuration to");
-
-            if (!string.IsNullOrEmpty(path))
-            {
-                UnityEditor.AssetDatabase.CreateAsset(newConfig, path);
-                UnityEditor.AssetDatabase.SaveAssets();
-                UnityEditor.AssetDatabase.Refresh();
-                countryConfig = newConfig;
-                UnityEditor.EditorGUIUtility.PingObject(newConfig);
-            }
-#endif
-        }
-
-        [BoxGroup("CountrySection")]
-        [VerticalGroup("CountrySection/Row")]
-        [LabelWidth(130)]
-        [LabelText("Building Shop Manager")]
-        [Tooltip("Manager for building shop operations")]
-        [SerializeField]
-        private BuildingShopManager buildingShopManager;
-
-        [VerticalGroup("CountrySection/Row")]
-        [ShowIf("@buildingShopManager == null")]
-        [Button("Find")]
-        [GUIColor(0.7f, 0.9f, 0.7f)]
-        private void FindBuildingShopManager()
-        {
-            buildingShopManager = FindObjectOfType<BuildingShopManager>(true);
-        }
-
-        [BoxGroup("CountrySection")]
-        [VerticalGroup("CountrySection/Row")]
-        [LabelWidth(130)]
-        [LabelText("InApp View")]
-        [Tooltip("View for InApp purchases")]
-        [SerializeField]
-        private InAppView inAppView;
-
-        [VerticalGroup("CountrySection/Row")]
-        [ShowIf("@inAppView == null")]
-        [Button("Find")]
-        [GUIColor(0.7f, 0.9f, 0.7f)]
-        private void FindInAppView()
-        {
-            inAppView = FindObjectOfType<InAppView>(true);
-        }
-
-        [SerializeField] private HideUnhideScript hideUnhideScript;
-
-        [SerializeField] private RegionUIProvider regionUIProvider;
+        [SerializeField] private CountryConfig countryConfig;
         [SerializeField] private RegionConfig regionConfig;
 
-        [SerializeField] private MenuNavigationProvider menuNavigationProvider;
-
-        [SerializeField] private LifePopup lifePopup;
-        [SerializeField] private RewardPopup rewardPopup;
         [SerializeField] private BuildingAnimationSettingsProvider settingsProvider;
 
         [Title("Tasks")]
@@ -114,14 +41,13 @@ namespace Scopes.Country
             ResolveOptionalSceneReferences();
 
             RegisterComponentIfPresent(builder, _mainMenuPanel);
-            RegisterComponentIfPresent(builder, buildingShopManager);
-            RegisterComponentIfPresent(builder, inAppView);
-            RegisterComponentIfPresent(builder, hideUnhideScript);
-            RegisterComponentIfPresent(builder, regionUIProvider);
-            RegisterComponentIfPresent(builder, menuNavigationProvider);
-            RegisterComponentIfPresent(builder, lifePopup);
-            RegisterComponentIfPresent(builder, rewardPopup);
             RegisterComponentIfPresent(builder, settingsProvider);
+
+            var lifePopup = _mainMenuPanel != null ? _mainMenuPanel.LifePopup : null;
+            RegisterComponentIfPresent(builder, lifePopup);
+
+            var rewardPopup = _mainMenuPanel != null ? _mainMenuPanel.RewardPopup : null;
+            RegisterComponentIfPresent(builder, rewardPopup);
 
             RegisterInstanceIfPresent(builder, countryConfig);
             RegisterInstanceIfPresent(builder, regionConfig);
@@ -161,38 +87,29 @@ namespace Scopes.Country
                     .WithParameter(taskButton);
             }
 
-            var effectiveInAppView = inAppView != null ? inAppView : (_mainMenuPanel != null ? _mainMenuPanel.ShopPanel : null);
-            if(effectiveInAppView != null)
+            var menuNavPanel = (_mainMenuPanel != null && _mainMenuPanel.MenuNavPanel != null)
+                ? _mainMenuPanel.MenuNavPanel
+                : FindObjectOfType<MenuNavPanel>(true);
+            RegisterComponentIfPresent(builder, menuNavPanel);
+
+            var shopPanel = _mainMenuPanel != null ? _mainMenuPanel.ShopPanel : null;
+            RegisterComponentIfPresent(builder, shopPanel);
+
+            if(shopPanel != null)
             {
                 Button navShopButton = null;
                 var otherNavButtons = new System.Collections.Generic.List<Button>();
 
-                if(_mainMenuPanel != null && _mainMenuPanel.MenuNavPanel != null)
+                if(menuNavPanel != null)
                 {
-                    navShopButton = _mainMenuPanel.MenuNavPanel.ShopButton;
-                    if(_mainMenuPanel.MenuNavPanel.MenuButton != null) otherNavButtons.Add(_mainMenuPanel.MenuNavPanel.MenuButton);
-                    if(_mainMenuPanel.MenuNavPanel.IslandButton != null) otherNavButtons.Add(_mainMenuPanel.MenuNavPanel.IslandButton);
-                }
-
-                if(navShopButton == null && menuNavigationProvider != null && menuNavigationProvider.NavigationButtons != null)
-                {
-                    if(menuNavigationProvider.NavigationButtons.Length > 2)
-                    {
-                        navShopButton = menuNavigationProvider.NavigationButtons[2];
-                    }
-
-                    for(int i = 0; i < menuNavigationProvider.NavigationButtons.Length; i++)
-                    {
-                        if(i != 2 && menuNavigationProvider.NavigationButtons[i] != null)
-                        {
-                            otherNavButtons.Add(menuNavigationProvider.NavigationButtons[i]);
-                        }
-                    }
+                    navShopButton = menuNavPanel.ShopButton;
+                    if(menuNavPanel.MenuButton != null) otherNavButtons.Add(menuNavPanel.MenuButton);
+                    if(menuNavPanel.IslandButton != null) otherNavButtons.Add(menuNavPanel.IslandButton);
                 }
 
                 builder.Register<ShopPresenter>(Lifetime.Scoped)
                     .As<IInitializable>()
-                    .WithParameter(effectiveInAppView)
+                    .WithParameter(shopPanel)
                     .WithParameter(navShopButton)
                     .WithParameter<System.Collections.Generic.IEnumerable<Button>>(otherNavButtons);
             }
@@ -223,13 +140,6 @@ namespace Scopes.Country
                 }
             }
 
-            if(buildingShopManager != null && countryConfig != null)
-            {
-                builder.Register<BuildingShopInitializer>(Lifetime.Scoped)
-                    .As<IInitializable>()
-                    .AsSelf();
-            }
-
             builder.Register<DailyCardsPresenter>(Lifetime.Scoped)
                 .As<IInitializable>();
 
@@ -237,11 +147,6 @@ namespace Scopes.Country
             {
                 builder.Register<RegionModel>(Lifetime.Singleton);
                 builder.Register<RegionUpgradeService>(Lifetime.Singleton);
-            }
-
-            if(menuNavigationProvider != null)
-            {
-                builder.Register<MenuTabs>(Lifetime.Singleton);
             }
 
             if(tasksListSO != null)
@@ -262,15 +167,6 @@ namespace Scopes.Country
             if(_mainMenuPanel == null)
             {
                 _mainMenuPanel = FindObjectOfType<MainMenuPanel>(true);
-            }
-
-            if(inAppView == null && _mainMenuPanel != null && _mainMenuPanel.ShopPanel != null)
-            {
-                inAppView = _mainMenuPanel.ShopPanel;
-            }
-            else if(inAppView == null)
-            {
-                inAppView = GetComponentInChildren<InAppView>(true);
             }
         }
 

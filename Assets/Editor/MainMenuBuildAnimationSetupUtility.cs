@@ -43,50 +43,29 @@ public static class MainMenuBuildAnimationSetupUtility
             return;
         }
 
-        var configs = new BuildingsAnimationConfig[RegionNames.Length];
-
-        for(var i = 0; i < RegionNames.Length; i++)
+        var regionConfig = AssetDatabase.LoadAssetAtPath<RegionConfig>("Assets/Content/Configs/RegionConfig.asset");
+        if (regionConfig == null)
         {
-            var region = world.Find(RegionNames[i]);
-
-            if(region == null)
+            var guids = AssetDatabase.FindAssets("t:RegionConfig");
+            if (guids.Length > 0)
             {
-                Debug.LogError($"{RegionNames[i]} was not found under {MenuLifetimeScopeName}/{WorldName}.", world);
-                return;
+                var path = AssetDatabase.GUIDToAssetPath(guids[0]);
+                regionConfig = AssetDatabase.LoadAssetAtPath<RegionConfig>(path);
             }
-
-            var config = region.GetComponent<BuildingsAnimationConfig>();
-
-            if(config == null)
-            {
-                Debug.LogError($"{RegionNames[i]} has no {nameof(BuildingsAnimationConfig)} component.", region);
-                return;
-            }
-
-            if(config.animator == null || config.animationClip == null || config.data == null || config.data.Count == 0)
-            {
-                Debug.LogWarning($"{RegionNames[i]} has an incomplete build animation config.", region);
-            }
-
-            RemoveLegacyAnimationComponents(region.gameObject);
-            configs[i] = config;
         }
 
         var serializedProvider = new SerializedObject(provider);
-        var configsProperty = serializedProvider.FindProperty("buildingsAnimationConfigs");
-
-        configsProperty.arraySize = configs.Length;
-
-        for(var i = 0; i < configs.Length; i++)
+        var regionConfigProperty = serializedProvider.FindProperty("regionConfig");
+        if (regionConfigProperty != null && regionConfig != null)
         {
-            configsProperty.GetArrayElementAtIndex(i).objectReferenceValue = configs[i];
+            regionConfigProperty.objectReferenceValue = regionConfig;
         }
 
         serializedProvider.ApplyModifiedProperties();
         EditorUtility.SetDirty(provider);
         EditorSceneManager.MarkSceneDirty(provider.gameObject.scene);
 
-        Debug.Log($"Configured MainMenu build animations: {string.Join(", ", RegionNames)}.", provider);
+        Debug.Log($"Configured MainMenu BuildingAnimationSettingsProvider with RegionConfig: {(regionConfig != null ? regionConfig.name : "null")}.", provider);
     }
 
     private static void RemoveLegacyAnimationComponents(GameObject root)

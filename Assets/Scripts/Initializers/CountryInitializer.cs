@@ -36,11 +36,8 @@ namespace Initializers
         private readonly LevelConfig _levelConfig;
         private readonly RegionModel _regionModel;
         private readonly RegionUpgradeService _regionUpgradeService;
-        private readonly HideUnhideScript _hideUnhideScript;
         private readonly HealthSystem _healthSystem;
-        private readonly RegionUIProvider _regionUIProvider;
         private readonly RegionConfig _regionConfig;
-        private readonly MenuTabs _menuTabs;
         private readonly LifePopup _lifePopup;
         private readonly AdRewardService _adRewardService;
         private readonly IronSourceManager _ironSourceManager;
@@ -50,6 +47,7 @@ namespace Initializers
 
         private CompositeDisposable _disposable = new();
         private BuildingAnimationSettingsProvider _settingsProvider;
+        private bool _isUpgrading;
 
         public CountryInitializer(
             SceneLoader sceneLoader,
@@ -77,10 +75,7 @@ namespace Initializers
             _inAppView = resolver.ResolveOrDefault<InAppView>();
             _regionModel = resolver.ResolveOrDefault<RegionModel>();
             _regionUpgradeService = resolver.ResolveOrDefault<RegionUpgradeService>();
-            _hideUnhideScript = resolver.ResolveOrDefault<HideUnhideScript>();
-            _regionUIProvider = resolver.ResolveOrDefault<RegionUIProvider>();
             _regionConfig = resolver.ResolveOrDefault<RegionConfig>();
-            _menuTabs = resolver.ResolveOrDefault<MenuTabs>();
             _lifePopup = resolver.ResolveOrDefault<LifePopup>();
             _rewardPopup = resolver.ResolveOrDefault<RewardPopup>();
             _settingsProvider = resolver.ResolveOrDefault<BuildingAnimationSettingsProvider>();
@@ -99,6 +94,21 @@ namespace Initializers
                     var stepSw = System.Diagnostics.Stopwatch.StartNew();
                     await _settingsProvider.Warmup();
                     Debug.Log($"[CountryInitializer] _settingsProvider.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
+
+                    if(_regionUpgradeService != null && _regionModel != null && _regionModel._settingsProvider?.ActiveRegion != null)
+                    {
+                        _regionUpgradeService.Initialize(_regionModel);
+                        _regionUpgradeService.JumpToFrame(0);
+
+                        if(_regionModel.CurrentLevelProgress != 0
+                           && _regionModel._settingsProvider.ActiveRegion.data != null
+                           && _regionModel.CurrentLevelProgress <= _regionModel._settingsProvider.ActiveRegion.data.Count)
+                        {
+                            int endFrame = _regionModel._settingsProvider.ActiveRegion.data[_regionModel.CurrentLevelProgress - 1]
+                                .endFrame;
+                            _regionUpgradeService.JumpToFrame(endFrame);
+                        }
+                    }
                 }
 
                 if(_inAppView != null)
@@ -114,13 +124,6 @@ namespace Initializers
                     BindShopButtons(topBar.HealthBarView);
                     BindShopButtons(topBar.StarView);
                     BindShopButtons(topBar.GemView);
-                }
-
-                if(_menuTabs != null)
-                {
-                    var stepSw = System.Diagnostics.Stopwatch.StartNew();
-                    await _menuTabs.Warmup();
-                    Debug.Log($"[CountryInitializer] _menuTabs.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
                 }
 
                 var playButton = _mainMenuPanel?.MenuActionPanel?.PlayButton?.Button
@@ -191,47 +194,6 @@ namespace Initializers
                     }
                 }
 
-                if(_regionConfig != null && _regionUIProvider != null && _regionModel != null)
-                {
-                    foreach (var regionName in _regionConfig.Regions)
-                    {
-                        var region = Object.Instantiate(_regionUIProvider.RegionUIViewPrefab,
-                                                        _regionUIProvider.RegionUIViewParent);
-                        region.SetName(regionName);
-
-                        if(regionName != "Soon" && _regionModel._settingsProvider.ActiveRegion != null)
-                        {
-                            var max = _regionModel._settingsProvider.ActiveRegion.data.Count - 1;
-                            var current = _regionModel.CurrentLevelProgress;
-
-                            region.SetProgress(current, max);
-                            _regionModel.CurrentLevelProgressReactiveProperty.Subscribe(v =>
-                                                                                        {
-                                                                                            var max = _regionModel._settingsProvider.ActiveRegion.data.Count - 1;
-                                                                                            var current = _regionModel.CurrentLevelProgress;
-
-                                                                                            region.SetProgress(current, max);
-                                                                                        })
-                                .AddTo(region);
-                        }
-                    }
-                }
-
-                if(_regionUpgradeService != null
-                   && _regionModel != null
-                   && _regionModel._settingsProvider.ActiveRegion != null)
-                {
-                    _regionUpgradeService.Initialize(_regionModel);
-                    _regionUpgradeService.JumpToFrame(0);
-
-                    if(_regionModel.CurrentLevelProgress != 0)
-                    {
-                        int endFrame = _regionModel._settingsProvider.ActiveRegion.data[_regionModel.CurrentLevelProgress - 1]
-                            .endFrame;
-                        _regionUpgradeService.JumpToFrame(endFrame);
-                    }
-                }
-
                 Debug.Log($"[CountryInitializer] Initialization complete in {sw.ElapsedMilliseconds} ms.");
             }
             catch (Exception ex)
@@ -285,27 +247,56 @@ namespace Initializers
 
         private async UniTask Upgrade()
         {
-            if(_regionModel.CanLoadNewRegion())
+            if (_isUpgrading)
             {
-                // _regionModel.LoadNewRegion();
-            }
-            else
-            {
+                Debug.Log("[CountryInitializer] Upgrade is already in progress, ignoring click.");
                 return;
             }
-            
-            if(_regionModel.CanUpgrade())
+
+            _isUpgrading = true;
+            try
             {
-                _regionModel.Upgrade();
+                if (_regionModel == null || _regionUpgradeService == null) return;
 
-                int endFrame = _regionModel._settingsProvider.ActiveRegion.data[_regionModel.CurrentLevelProgress - 1]
-                    .endFrame;
+                int prevProgress = _regionModel.CurrentLevelProgress;
+                int totalSteps = _regionModel.TotalSteps;
 
-                _hideUnhideScript?.OnEyeButtonClick();
+                if (_regionModel.CanLoadNewRegion())
+                {
+                    if (prevProgress >= totalSteps && totalSteps > 0)
+                    {
+                        _regionUpgradeService.Initialize(_regionModel);
+                        _regionUpgradeService.JumpToFrame(0);
+                    }
+                }
+                else
+                {
+                    return;
+                }
 
-                await _regionUpgradeService.PlayToFrame(endFrame);
+                if (_regionModel.CanUpgrade())
+                {
+                    _regionModel.Upgrade();
 
-                _hideUnhideScript?.OnEyeButtonClick();
+                    var activeData = _regionModel._settingsProvider?.ActiveRegion?.data;
+                    if (activeData != null && _regionModel.CurrentLevelProgress > 0 && _regionModel.CurrentLevelProgress <= activeData.Count)
+                    {
+                        var currentStepData = activeData[_regionModel.CurrentLevelProgress - 1];
+                        int startFrame = currentStepData.startFrame;
+                        int endFrame = currentStepData.endFrame;
+
+                        Debug.Log($"[CountryInitializer] 🏗️ Build triggered: Step {_regionModel.CurrentLevelProgress}/{_regionModel.TotalSteps} (Configured startFrame: {startFrame}, endFrame: {endFrame})");
+
+                        _regionUpgradeService.JumpToFrame(startFrame);
+                        await _regionUpgradeService.PlayToFrame(endFrame);
+
+                        Debug.Log($"[CountryInitializer] ✅ Build step {_regionModel.CurrentLevelProgress} completed.");
+                    }
+                }
+            }
+            finally
+            {
+                _isUpgrading = false;
             }
         }
 

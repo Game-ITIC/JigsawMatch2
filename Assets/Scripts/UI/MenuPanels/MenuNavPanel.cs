@@ -38,6 +38,8 @@ public class MenuNavPanel : MonoBehaviour
         }
     }
 
+    public Button[] NavigationButtons => new[] { IslandButton, MenuButton, ShopButton };
+
     private Button FindChildButton(params string[] names)
     {
         var buttons = GetComponentsInChildren<Button>(true);

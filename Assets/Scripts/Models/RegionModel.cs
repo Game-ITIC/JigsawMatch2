@@ -1,3 +1,4 @@
+using System;
 using Configs;
 using R3;
 using UnityEngine;
@@ -12,8 +13,31 @@ namespace Models
         private readonly Systems.CurrencySystem.Interfaces.ICurrencyService _currencyService;
         public readonly BuildingAnimationSettingsProvider _settingsProvider;
 
-        public int UpgradeCost => DefaultUpgradeCost;
-        public int RequiredStars => DefaultUpgradeCost;
+        public int UpgradeCost
+        {
+            get
+            {
+                if (_settingsProvider?.ActiveRegionData != null && _settingsProvider.ActiveRegionData.starCost > 0)
+                {
+                    return _settingsProvider.ActiveRegionData.starCost;
+                }
+                return DefaultUpgradeCost;
+            }
+        }
+
+        public int RequiredStars => UpgradeCost;
+
+        public int TotalSteps
+        {
+            get
+            {
+                if (_settingsProvider?.ActiveRegion?.data != null)
+                {
+                    return _settingsProvider.ActiveRegion.data.Count;
+                }
+                return 0;
+            }
+        }
 
         public int CurrentLevelProgress
         {
@@ -36,16 +60,16 @@ namespace Models
         public bool CanUpgrade()
         {
             var stars = _currencyService?.GetCurrency(Systems.CurrencySystem.CurrencyType.Star)?.Value ?? 0f;
-            if(stars >= UpgradeCost && _settingsProvider.ActiveRegion.data.Count > CurrentLevelProgress) return true;
-            return false;
+            return stars >= UpgradeCost && TotalSteps > CurrentLevelProgress;
         }
 
         public bool CanLoadNewRegion()
         {
             var stars = _currencyService?.GetCurrency(Systems.CurrencySystem.CurrencyType.Star)?.Value ?? 0f;
-            if(stars >= UpgradeCost && CurrentLevelProgress >= _settingsProvider.ActiveRegion.data.Count)
+            if (stars >= UpgradeCost && CurrentLevelProgress >= TotalSteps)
             {
-                if(!_settingsProvider.CanLoadNextRegion()) return false;
+                if (!_settingsProvider.CanLoadNextRegion()) return false;
+
                 _settingsProvider.LoadNextRegion();
                 CurrentLevelProgress = 0;
                 Save();
@@ -56,17 +80,18 @@ namespace Models
 
         public void Upgrade()
         {
+            var cost = UpgradeCost;
             CurrentLevelProgress++;
-            _currencyService?.SpendCurrency(Systems.CurrencySystem.CurrencyType.Star, UpgradeCost);
+            _currencyService?.SpendCurrency(Systems.CurrencySystem.CurrencyType.Star, cost);
             Save();
         }
 
-        void Load()
+        private void Load()
         {
             CurrentLevelProgress = PlayerPrefs.GetInt(PlayerPrefsKeys.AsiaBuildingsAnimation, 0);
         }
 
-        void Save()
+        private void Save()
         {
             PlayerPrefs.SetInt(PlayerPrefsKeys.AsiaBuildingsAnimation, CurrentLevelProgress);
             PlayerPrefs.Save();
