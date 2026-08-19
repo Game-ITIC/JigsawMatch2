@@ -807,6 +807,31 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 498956657132839633, guid: 49ac6d6556f69cc40a4e07a162a09edb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 498956657132839633, guid: 49ac6d6556f69cc40a4e07a162a09edb,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 498956657132839633, guid: 49ac6d6556f69cc40a4e07a162a09edb,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 498956657132839633, guid: 49ac6d6556f69cc40a4e07a162a09edb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 498956657132839633, guid: 49ac6d6556f69cc40a4e07a162a09edb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3329342928531897283, guid: 49ac6d6556f69cc40a4e07a162a09edb,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -961,6 +986,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Tasks Content Panel
+      objectReference: {fileID: 0}
+    - target: {fileID: 8236774357715151006, guid: 49ac6d6556f69cc40a4e07a162a09edb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8236774357715151006, guid: 49ac6d6556f69cc40a4e07a162a09edb,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8236774357715151006, guid: 49ac6d6556f69cc40a4e07a162a09edb,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8236774357715151006, guid: 49ac6d6556f69cc40a4e07a162a09edb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8236774357715151006, guid: 49ac6d6556f69cc40a4e07a162a09edb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8436872043829922346, guid: 49ac6d6556f69cc40a4e07a162a09edb,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
