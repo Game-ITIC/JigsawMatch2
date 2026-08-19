@@ -138,7 +138,8 @@ namespace Initializers
 
                 InitializeLifePopup();
 
-                var buildButton = _mainMenuPanel?.MenuActionPanel?.BuildButton?.Button
+                var buildActionButton = _mainMenuPanel?.MenuActionPanel?.BuildButton;
+                var buildButton = buildActionButton?.Button
                                   ?? FindButtonInScene("BuildButton", "Build Button", "Build");
                 if(buildButton != null && _regionModel != null && _regionUpgradeService != null)
                 {
@@ -166,6 +167,28 @@ namespace Initializers
                 {
                     var tmp = playButton.GetComponentInChildren<TMPro.TMP_Text>(true);
                     if(tmp != null) tmp.text = "LEVEL " + nextLevel;
+                }
+
+                var upgradeStars = _regionModel != null ? _regionModel.UpgradeCost : Models.RegionModel.DefaultUpgradeCost;
+                if(buildActionButton != null)
+                {
+                    buildActionButton.SetSubLabel(upgradeStars.ToString());
+                }
+                else if(buildButton != null)
+                {
+                    var actionButton = buildButton.GetComponent<MenuActionButton>() ?? buildButton.GetComponentInParent<MenuActionButton>();
+                    if(actionButton != null)
+                    {
+                        actionButton.SetSubLabel(upgradeStars.ToString());
+                    }
+                    else
+                    {
+                        var texts = buildButton.GetComponentsInChildren<TMPro.TMP_Text>(true);
+                        if(texts.Length > 1)
+                        {
+                            texts[1].text = upgradeStars.ToString();
+                        }
+                    }
                 }
 
                 if(_regionConfig != null && _regionUIProvider != null && _regionModel != null)

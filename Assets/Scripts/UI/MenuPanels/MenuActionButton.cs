@@ -28,7 +28,26 @@ public class MenuActionButton : MonoBehaviour
         }
     }
 
-    public TMP_Text SubLabel => _subLabel;
+    public TMP_Text SubLabel
+    {
+        get
+        {
+            if (_subLabel != null) return _subLabel;
+            var texts = GetComponentsInChildren<TMP_Text>(true);
+            if (texts != null && texts.Length > 1)
+            {
+                foreach (var text in texts)
+                {
+                    if (text != _label)
+                    {
+                        _subLabel = text;
+                        break;
+                    }
+                }
+            }
+            return _subLabel;
+        }
+    }
 
     public void SetLabel(string text)
     {
@@ -38,6 +57,7 @@ public class MenuActionButton : MonoBehaviour
 
     public void SetSubLabel(string text)
     {
-        if (_subLabel != null) _subLabel.text = text;
+        var subLabel = SubLabel;
+        if (subLabel != null) subLabel.text = text;
     }
 }
