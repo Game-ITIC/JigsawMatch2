@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Models;
 using R3;
 using TMPro;
@@ -12,18 +12,27 @@ namespace Views
     {
         [SerializeField] private TMP_Text currentCoinsText;
 
-        [Inject] public CoinModel CoinModel;
+        [Inject] public Systems.CurrencySystem.Interfaces.ICurrencyService CurrencyService;
 
         private CompositeDisposable _compositeDisposable = new();
         
         private void Start()
         {   
-            currentCoinsText.text = CoinModel.Coins.Value.ToString();
-            
-            CoinModel.Coins.Subscribe(v =>
+            if (CurrencyService != null)
             {
-                currentCoinsText.text = v.ToString();
-            }).AddTo(_compositeDisposable);
+                var observable = CurrencyService.GetCurrencyObservable(Systems.CurrencySystem.CurrencyType.Cash);
+                if (observable != null)
+                {
+                    currentCoinsText.text = ((int)observable.Value.Value).ToString();
+                    observable.Subscribe(v =>
+                    {
+                        if (v != null && currentCoinsText != null)
+                        {
+                            currentCoinsText.text = ((int)v.Value).ToString();
+                        }
+                    }).AddTo(_compositeDisposable);
+                }
+            }
         }
 
         public void Hide()

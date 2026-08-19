@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Meta.Quests.Configs;
+using Configs.Tasks;
 using Meta.Quests.Interfaces;
 using Meta.Quests.Models;
 using Random = UnityEngine.Random;
@@ -9,9 +9,9 @@ namespace Meta.Quests.Services
 {
     public class QuestGenerator : IQuestGenerator
     {
-        private readonly DailyQuestSettings _settings;
+        private readonly TasksListSO _settings;
 
-        public QuestGenerator(DailyQuestSettings settings)
+        public QuestGenerator(TasksListSO settings)
         {
             _settings = settings;
         }
@@ -19,13 +19,18 @@ namespace Meta.Quests.Services
         public List<DailyQuest> GenerateQuests(int count)
         {
             var quests = new List<DailyQuest>();
-            var availableTemplates = new List<QuestTemplate>(_settings.availableQuestTemplates);
+            if (!_settings || _settings.availableQuestTemplates == null) return quests;
 
-            for (int i = 0; i < count && availableTemplates.Count > 0; i++)
+            var availableTemplates = new List<TaskSO>(_settings.availableQuestTemplates);
+
+            for (var i = 0; i < count && availableTemplates.Count > 0; i++)
             {
                 var template = SelectWeightedRandom(availableTemplates);
-                var quest = GenerateQuestFromTemplate(template);
-                quests.Add(quest);
+                if (template)
+                {
+                    var quest = GenerateQuestFromTemplate(template);
+                    quests.Add(quest);
+                }
 
                 availableTemplates.Remove(template);
             }
@@ -33,55 +38,51 @@ namespace Meta.Quests.Services
             return quests;
         }
 
-        private QuestTemplate SelectWeightedRandom(List<QuestTemplate> templates)
+        private TaskSO SelectWeightedRandom(List<TaskSO> templates)
         {
-            float totalWeight = 0f;
+            var totalWeight = 0f;
             foreach (var template in templates)
-                totalWeight += template.selectionWeight;
+            {
+                if (template) totalWeight += template.selectionWeight;
+            }
 
-            float randomValue = UnityEngine.Random.Range(0f, 1f) * totalWeight;
-            float currentWeight = 0f;
+            var randomValue = Random.Range(0f, 1f) * totalWeight;
+            var currentWeight = 0f;
 
             foreach (var template in templates)
             {
+                if (!template) continue;
                 currentWeight += template.selectionWeight;
-                if (randomValue <= currentWeight)
-                    return template;
+                if (randomValue <= currentWeight) return template;
             }
 
-            return templates[templates.Count - 1];
+            return templates.Count > 0 ? templates[templates.Count - 1] : null;
         }
 
-        private DailyQuest GenerateQuestFromTemplate(QuestTemplate template)
+        private DailyQuest GenerateQuestFromTemplate(TaskSO template)
         {
             var quest = new DailyQuest
             {
                 id = Guid.NewGuid().ToString(),
                 type = template.questType,
-                targetAmount = UnityEngine.Random.Range(template.minAmount, template.maxAmount + 1),
+                targetAmount = Random.Range(template.amountRange.x, template.amountRange.y + 1),
                 currentProgress = 0,
-                isCompleted = false
+                isCompleted = false,
+                sprite = template.icon
             };
 
-            // Выбираем случайный целевой предмет
-            if (template.availableTargetIds.Count > 0)
-            {
+            if (template.availableTargetIds != null && template.availableTargetIds.Count > 0)
                 quest.targetItemId = template.availableTargetIds[Random.Range(0, template.availableTargetIds.Count)];
-            }
 
-            // Генерируем награду
             quest.reward = new QuestReward
             {
                 type = template.rewardType,
-                amount = Random.Range(template.minRewardAmount, template.maxRewardAmount + 1)
+                amount = Random.Range(template.rewardRange.x, template.rewardRange.y + 1)
             };
 
-            if (template.rewardType == RewardType.Boosters && template.possibleBoosterIds.Count > 0)
-            {
+            if (template.rewardType == RewardType.Boosters && template.possibleBoosterIds != null && template.possibleBoosterIds.Count > 0)
                 quest.reward.itemId = template.possibleBoosterIds[Random.Range(0, template.possibleBoosterIds.Count)];
-            }
 
-            // Ключ локализации
             quest.localizationKey = $"{template.localizationKeyPrefix}_{quest.targetItemId}";
 
             return quest;

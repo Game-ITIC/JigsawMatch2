@@ -36,6 +36,9 @@ namespace UI
                 return;
             }
 
+            ActivateParents(panel);
+            BringToFront(panel);
+
             var state = GetState(panel);
             var panelTransform = panel.transform;
 
@@ -108,6 +111,31 @@ namespace UI
             panel.SetActive(false);
         }
 
+        private static void ActivateParents(GameObject panel)
+        {
+            if(panel == null) return;
+            var parent = panel.transform.parent;
+            while(parent != null)
+            {
+                if(!parent.gameObject.activeSelf)
+                {
+                    parent.gameObject.SetActive(true);
+                }
+                parent = parent.parent;
+            }
+        }
+
+        private static void BringToFront(GameObject panel)
+        {
+            if(panel == null) return;
+            var parent = panel.transform.parent;
+            if(parent != null)
+            {
+                parent.SetAsLastSibling();
+            }
+            panel.transform.SetAsLastSibling();
+        }
+
         private static CurvedUIPanelAnimationState GetState(GameObject panel)
         {
             var state = panel.GetComponent<CurvedUIPanelAnimationState>();
@@ -126,5 +154,4 @@ namespace UI
             canvasGroup.DOKill();
         }
     }
-
 }

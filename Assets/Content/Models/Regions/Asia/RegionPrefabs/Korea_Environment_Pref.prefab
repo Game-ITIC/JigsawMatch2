@@ -1228,7 +1228,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7496815627590055673
 Transform:
   m_ObjectHideFlags: 0
@@ -1325,7 +1325,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3765347811959443956}
   - component: {fileID: 8577972153195739583}
-  - component: {fileID: 7081721468544862905}
   m_Layer: 0
   m_Name: Korean_building
   m_TagString: Untagged
@@ -1373,22 +1372,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!111 &7081721468544862905
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6594810576683587560}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: 60f66f70cea894a4dbd5e3d8b646bf7d, type: 2}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
 --- !u!1 &7066506027215611618
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4658163153104402580}
   - component: {fileID: 1593703456756754739}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: RegionImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 9080039588361763065}
   - component: {fileID: 5420431988696911409}
   m_Layer: 5
-  m_Name: Name (1)
+  m_Name: Text Percentage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,7 +111,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 43.6, y: 0}
-  m_SizeDelta: {x: 197.3, y: 50}
+  m_SizeDelta: {x: 205.46, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9080039588361763065
 CanvasRenderer:
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 50%
+  m_text: 100%
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e0bab4cd34bdc6479c151d6695f9548, type: 2}
   m_sharedMaterial: {fileID: 6134174294357665652, guid: 2e0bab4cd34bdc6479c151d6695f9548,
@@ -176,7 +176,7 @@ MonoBehaviour:
   m_fontSizeMin: 11.99
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -223,6 +223,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 221014829598731572}
+  - component: {fileID: 816906881124873405}
   m_Layer: 5
   m_Name: RegCard
   m_TagString: Untagged
@@ -253,6 +254,22 @@ RectTransform:
   m_AnchoredPosition: {x: -216, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &816906881124873405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4779427842209881548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca5b224e97203884286de43ff73c9397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  _regionNameText: {fileID: 4815351614576248797}
+  _progresPercentageText: {fileID: 5420431988696911409}
+  _progressImage: {fileID: 2294628815957260523}
+  _regionImage: {fileID: 1593703456756754739}
 --- !u!1 &5858294215686806562
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,7 +282,7 @@ GameObject:
   - component: {fileID: 4328118938070681426}
   - component: {fileID: 2294628815957260523}
   m_Layer: 5
-  m_Name: Image (3)
+  m_Name: FillImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -364,7 +381,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -12, y: -97.9}
+  m_AnchoredPosition: {x: -14.9, y: -97.9}
   m_SizeDelta: {x: 130, y: 14.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1654460981596117804
@@ -417,7 +434,7 @@ GameObject:
   - component: {fileID: 5482660089302814119}
   - component: {fileID: 159043986530855459}
   m_Layer: 5
-  m_Name: Image
+  m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

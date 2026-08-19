@@ -1,12 +1,13 @@
+using Configs.Tasks;
 using Initializers;
-using Meta.Quests.Configs;
 using Meta.Quests.Interfaces;
-using Meta.Quests.Providers;
 using Meta.Quests.Services;
-using Meta.Quests.Views;
 using Presenters;
 using Providers;
+using Services.Tasks;
 using Sirenix.OdinInspector;
+using Systems.CurrencySystem;
+using Systems.CurrencySystem.Interfaces;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -38,49 +39,57 @@ namespace Scopes
         [SerializeField] private bool enableLegacyDailyRewards;
         [SerializeField] private CameraProvider cameraProvider;
 
-        [SerializeField] private DailyQuestSettings dailyQuestSettings;
-        [SerializeField] private QuestTemplate questTemplate;
-
-        [SerializeField] private DailyQuestProvider dailyQuestProvider;
+        [FormerlySerializedAs("dailyQuestSettings")]
+        [SerializeField] private TasksListSO tasksListSO;
 
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(islandProvider);
             builder.RegisterComponent(cameraProvider);
-            builder.RegisterComponent(dailyQuestProvider);
-            builder.RegisterInstance(dailyQuestSettings);
-            builder.RegisterInstance(questTemplate);
+            if (tasksListSO != null) builder.RegisterInstance(tasksListSO);
 
+            builder.Register<ITaskService, TaskService>(Lifetime.Singleton);
             builder.Register<RewardService>(Lifetime.Singleton);
-            
-            builder.Register<CoinPresenter>(Lifetime.Scoped)
-                .As<IInitializable>()
-                .WithParameter(coinTextView);
 
-            builder.Register<StarPresenter>(Lifetime.Scoped)
-                .As<IInitializable>()
-                .WithParameter(starTextView);
+            if (coinTextView != null)
+            {
+                builder.Register<CurrencyPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .WithParameter<ICurrencyView>(coinTextView)
+                    .WithParameter(CurrencyType.Cash);
+            }
 
-            builder.Register<GemPresenter>(Lifetime.Scoped)
-                .As<IInitializable>()
-                .WithParameter(gemTextView);
+            if (starTextView != null)
+            {
+                builder.Register<CurrencyPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .WithParameter<ICurrencyView>(starTextView)
+                    .WithParameter(CurrencyType.Star);
+            }
 
-            if(enableLegacyDailyRewards && dailyButton != null)
+            if (gemTextView != null)
+            {
+                builder.Register<CurrencyPresenter>(Lifetime.Scoped)
+                    .As<IInitializable>()
+                    .WithParameter<ICurrencyView>(gemTextView)
+                    .WithParameter(CurrencyType.Diamond);
+            }
+
+            if (enableLegacyDailyRewards && dailyButton != null)
             {
                 builder.Register<DailyRewardsPresenter>(Lifetime.Scoped)
                     .As<IInitializable>()
                     .WithParameter(dailyButton);
             }
-            
 
-            builder.Register<IDailyQuestService, DailyQuestService>(Lifetime.Singleton);
-            builder.Register<IQuestProgressTracker, DailyQuestService>(Lifetime.Singleton);
-            builder.Register<IQuestDataStorage, PlayerPrefsQuestStorage>(Lifetime.Singleton);
-            builder.Register<IQuestGenerator, QuestGenerator>(Lifetime.Singleton);
-            
-            builder.Register<DailyQuestPresenter>(Lifetime.Scoped)
-                .As<IInitializable>();
-            
+            if (tasksListSO != null)
+            {
+                builder.Register<IDailyQuestService, DailyQuestService>(Lifetime.Singleton);
+                builder.Register<IQuestProgressTracker, DailyQuestService>(Lifetime.Singleton);
+                builder.Register<IQuestDataStorage, PlayerPrefsQuestStorage>(Lifetime.Singleton);
+                builder.Register<IQuestGenerator, QuestGenerator>(Lifetime.Singleton);
+            }
+
             builder.RegisterEntryPoint<IslandInitializer>();
         }
     }

@@ -1,18 +1,22 @@
 using System;
 using Configs;
+using Configs.Tasks;
 using Initializers;
-using Meta.Quests.Configs;
 using Meta.Quests.Interfaces;
-using Meta.Quests.Providers;
 using Meta.Quests.Services;
 using Models;
 using Monobehaviours.Buildings;
 using Presenters;
 using Providers;
 using Services;
+using Services.Tasks;
 using Sirenix.OdinInspector;
+using Systems.CurrencySystem;
+using Systems.CurrencySystem.Interfaces;
 using UI;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 using VContainer;
 using VContainer.Unity;
 using Views;
@@ -21,165 +25,133 @@ namespace Scopes.Country
 {
     public class BaseCountryLifetimeScope : LifetimeScope
     {
-        [Title("Core Components")]
-        [BoxGroup("CountrySection")]
-        [VerticalGroup("CountrySection/Row")]
-        [LabelWidth(130)]
-        [LabelText("Country Config")]
-        [Tooltip("Configuration settings for countries")]
-        [SerializeField]
-        private CountryConfig countryConfig;
+        [SerializeField] private MainMenuPanel _mainMenuPanel;
 
-        [VerticalGroup("CountrySection/Row")]
-        [ShowIf("@countryConfig == null")]
-        [Button("Create")]
-        [GUIColor(0.7f, 0.9f, 0.7f)]
-        private void CreateCountryConfig()
-        {
-#if UNITY_EDITOR
-            // Create a new CountryConfig ScriptableObject
-            CountryConfig newConfig = ScriptableObject.CreateInstance<CountryConfig>();
-
-            // Create a save file dialog to let the user choose where to save
-            string path = UnityEditor.EditorUtility.SaveFilePanelInProject(
-                "Save Country Config",
-                "NewCountryConfig",
-                "asset",
-                "Please enter a file name to save the country configuration to");
-
-            if(!string.IsNullOrEmpty(path))
-            {
-                // Save the asset and refresh the AssetDatabase
-                UnityEditor.AssetDatabase.CreateAsset(newConfig, path);
-                UnityEditor.AssetDatabase.SaveAssets();
-                UnityEditor.AssetDatabase.Refresh();
-
-                // Assign the newly created config to our field
-                countryConfig = newConfig;
-
-                // Ping the new asset in the Project window
-                UnityEditor.EditorGUIUtility.PingObject(newConfig);
-            }
-#endif
-        }
-
-        [Tooltip("Main menu view controller")] [SerializeField]
-        private MenuView menuView;
-
-        [Tooltip("Enable old Gley DailyRewards Calendar on the assigned daily button.")]
-        [SerializeField] private bool enableLegacyDailyRewards;
-
-        [Tooltip("Manager for the building shop system")] [SerializeField]
-        private BuildingShopManager buildingShopManager;
-
-        [Space(10)] [Title("UI Components")] [LabelWidth(130)] [LabelText("Coins Display")] [Tooltip("Text view for displaying player's coins")] [SerializeField]
-        private TextView coinTextView;
-
-        [LabelText("Stars Display")] [Tooltip("Text view for displaying player's stars")] [SerializeField]
-        private TextView starTextView;
-
-        [LabelText("Gems Display")] [Tooltip("Text view for displaying player's gems")] [SerializeField]
-        private TextView gemTextView;
-
-        [LabelText("Lifes Display")] [Tooltip("Text view for displaying player's lifes")] [SerializeField]
-        private TextView lifeTextView;
-
-        [SerializeField] private InAppView inAppView;
-
-        [SerializeField] private HideUnhideScript hideUnhideScript;
-
-        [SerializeField] private RegionUIProvider regionUIProvider;
+        [SerializeField] private CountryConfig countryConfig;
         [SerializeField] private RegionConfig regionConfig;
+        [SerializeField] private Transform regionParent;
 
-        [SerializeField] private MenuNavigationProvider menuNavigationProvider;
-
-        [SerializeField] private LifePopup lifePopup;
-        [SerializeField] private RewardPopup rewardPopup;
-        [SerializeField] private BuildingAnimationSettingsProvider settingsProvider;
-
-        [Title("Daily Quests")]
-        [SerializeField] private DailyQuestSettings dailyQuestSettings;
-        [SerializeField] private DailyQuestProvider dailyQuestProvider;
+        [Title("Tasks")]
+        [FormerlySerializedAs("dailyQuestSettings")]
+        [SerializeField] private TasksListSO tasksListSO;
 
         protected override void Configure(IContainerBuilder builder)
         {
             ResolveOptionalSceneReferences();
 
-            RegisterComponentIfPresent(builder, menuView);
-            RegisterComponentIfPresent(builder, buildingShopManager);
-            RegisterComponentIfPresent(builder, inAppView);
-            RegisterComponentIfPresent(builder, hideUnhideScript);
-            RegisterComponentIfPresent(builder, regionUIProvider);
-            RegisterComponentIfPresent(builder, menuNavigationProvider);
+            RegisterComponentIfPresent(builder, _mainMenuPanel);
+
+            var lifePopup = _mainMenuPanel != null ? _mainMenuPanel.LifePopup : null;
             RegisterComponentIfPresent(builder, lifePopup);
+
+            var rewardPopup = _mainMenuPanel != null ? _mainMenuPanel.RewardPopup : null;
             RegisterComponentIfPresent(builder, rewardPopup);
-            RegisterComponentIfPresent(builder, settingsProvider);
-            RegisterComponentIfPresent(builder, dailyQuestProvider);
 
             RegisterInstanceIfPresent(builder, countryConfig);
-            RegisterInstanceIfPresent(builder, dailyQuestSettings);
             RegisterInstanceIfPresent(builder, regionConfig);
+            RegisterInstanceIfPresent(builder, tasksListSO);
 
-            if(coinTextView != null)
+            builder.Register<ITaskService, TaskService>(Lifetime.Singleton);
+
+            var topBarPanel = (_mainMenuPanel != null && _mainMenuPanel.TopBarPanel != null)
+                ? _mainMenuPanel.TopBarPanel
+                : FindObjectOfType<TopBarPanel>(true);
+
+            var settingsPanel = (_mainMenuPanel != null && _mainMenuPanel.SettingsPanel != null)
+                ? _mainMenuPanel.SettingsPanel
+                : FindObjectOfType<SettingsPanel>(true);
+
+            if(settingsPanel != null)
             {
-                builder.Register<CoinPresenter>(Lifetime.Scoped)
+                var settingsButton = topBarPanel != null ? topBarPanel.SettingsButton : null;
+
+                builder.Register<SettingsPresenter>(Lifetime.Scoped)
                     .As<IInitializable>()
-                    .WithParameter(coinTextView);
+                    .WithParameter(settingsPanel)
+                    .WithParameter(settingsButton);
             }
 
-            if(starTextView != null)
+            var taskPanel = (_mainMenuPanel != null && _mainMenuPanel.TaskPanel != null)
+                ? _mainMenuPanel.TaskPanel
+                : FindObjectOfType<TaskPanel>(true);
+
+            if(taskPanel != null)
             {
-                builder.Register<StarPresenter>(Lifetime.Scoped)
+                var taskButton = topBarPanel != null ? topBarPanel.TaskButton : null;
+
+                builder.Register<TaskPresenter>(Lifetime.Scoped)
                     .As<IInitializable>()
-                    .WithParameter(starTextView);
+                    .WithParameter(taskPanel)
+                    .WithParameter(taskButton);
             }
 
-            if(gemTextView != null)
+            var menuNavPanel = (_mainMenuPanel != null && _mainMenuPanel.MenuNavPanel != null)
+                ? _mainMenuPanel.MenuNavPanel
+                : FindObjectOfType<MenuNavPanel>(true);
+            RegisterComponentIfPresent(builder, menuNavPanel);
+
+            var shopPanel = _mainMenuPanel != null ? _mainMenuPanel.ShopPanel : null;
+            RegisterComponentIfPresent(builder, shopPanel);
+
+            if(shopPanel != null)
             {
-                builder.Register<GemPresenter>(Lifetime.Scoped)
+                Button navShopButton = null;
+                var otherNavButtons = new System.Collections.Generic.List<Button>();
+
+                if(menuNavPanel != null)
+                {
+                    navShopButton = menuNavPanel.ShopButton;
+                    if(menuNavPanel.MenuButton != null) otherNavButtons.Add(menuNavPanel.MenuButton);
+                    if(menuNavPanel.IslandButton != null) otherNavButtons.Add(menuNavPanel.IslandButton);
+                }
+
+                builder.Register<ShopPresenter>(Lifetime.Scoped)
                     .As<IInitializable>()
-                    .WithParameter(gemTextView);
+                    .WithParameter(shopPanel)
+                    .WithParameter(navShopButton)
+                    .WithParameter<System.Collections.Generic.IEnumerable<Button>>(otherNavButtons);
             }
 
-            if(buildingShopManager != null && countryConfig != null)
+            if(topBarPanel != null)
             {
-                builder.Register<BuildingShopInitializer>(Lifetime.Scoped)
-                    .As<IInitializable>()
-                    .AsSelf();
+                if(topBarPanel.StarView != null)
+                {
+                    builder.Register<CurrencyPresenter>(Lifetime.Scoped)
+                        .As<IInitializable>()
+                        .WithParameter<ICurrencyView>(topBarPanel.StarView)
+                        .WithParameter(CurrencyType.Star);
+                }
+
+                if(topBarPanel.GemView != null)
+                {
+                    builder.Register<CurrencyPresenter>(Lifetime.Scoped)
+                        .As<IInitializable>()
+                        .WithParameter<ICurrencyView>(topBarPanel.GemView)
+                        .WithParameter(CurrencyType.Diamond);
+                }
+
+                if(topBarPanel.HealthBarView != null)
+                {
+                    builder.Register<LifePresenter>(Lifetime.Scoped)
+                        .As<IInitializable>()
+                        .WithParameter(topBarPanel.HealthBarView);
+                }
             }
 
-            if(enableLegacyDailyRewards && menuView != null && menuView.DailyRewardsButton != null)
-            {
-                builder.Register<DailyRewardsPresenter>(Lifetime.Scoped)
-                    .As<IInitializable>()
-                    .WithParameter(menuView.DailyRewardsButton);
-            }
+            builder.Register<DailyCardsPresenter>(Lifetime.Scoped)
+                .As<IInitializable>();
 
-            if(menuView != null)
+            if(regionConfig != null)
             {
-                builder.Register<DailyCardsPresenter>(Lifetime.Scoped)
-                    .As<IInitializable>();
-            }
+                builder.Register<RegionService>(Lifetime.Singleton)
+                    .WithParameter(regionConfig)
+                    .WithParameter(regionParent);
 
-            if(lifeTextView != null)
-            {
-                builder.Register<LifePresenter>(Lifetime.Scoped)
-                    .As<IInitializable>()
-                    .WithParameter(lifeTextView);
-            }
-
-            if(settingsProvider != null)
-            {
                 builder.Register<RegionModel>(Lifetime.Singleton);
                 builder.Register<RegionUpgradeService>(Lifetime.Singleton);
             }
 
-            if(menuNavigationProvider != null)
-            {
-                builder.Register<MenuTabs>(Lifetime.Singleton);
-            }
-
-            if(dailyQuestSettings != null && dailyQuestProvider != null)
+            if(tasksListSO != null)
             {
                 builder.Register<RewardService>(Lifetime.Singleton);
 
@@ -187,9 +159,6 @@ namespace Scopes.Country
                 builder.Register<IQuestProgressTracker, DailyQuestService>(Lifetime.Singleton);
                 builder.Register<IQuestDataStorage, PlayerPrefsQuestStorage>(Lifetime.Singleton);
                 builder.Register<IQuestGenerator, QuestGenerator>(Lifetime.Singleton);
-
-                builder.Register<DailyQuestPresenter>(Lifetime.Scoped)
-                    .As<IInitializable>();
             }
 
             ConfigureCountry(builder);
@@ -197,9 +166,18 @@ namespace Scopes.Country
 
         private void ResolveOptionalSceneReferences()
         {
-            if(inAppView == null)
+            if(_mainMenuPanel == null)
             {
-                inAppView = GetComponentInChildren<InAppView>(true);
+                _mainMenuPanel = FindObjectOfType<MainMenuPanel>(true);
+            }
+
+            if(regionParent == null)
+            {
+                var worldObj = transform.Find("World");
+                if(worldObj != null)
+                {
+                    regionParent = worldObj;
+                }
             }
         }
 

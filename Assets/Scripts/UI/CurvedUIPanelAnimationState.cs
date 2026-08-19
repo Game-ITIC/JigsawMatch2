@@ -6,14 +6,22 @@ namespace UI
     {
         private bool _captured;
 
-        public Vector3 ShownScale { get; private set; }
+        public Vector3 ShownScale { get; private set; } = Vector3.one;
         public CanvasGroup CanvasGroup { get; private set; }
 
         public void Capture()
         {
             if(!_captured)
             {
-                ShownScale = transform.localScale;
+                var currentScale = transform.localScale;
+                if(currentScale.sqrMagnitude > 0.001f)
+                {
+                    ShownScale = currentScale;
+                }
+                else
+                {
+                    ShownScale = Vector3.one;
+                }
                 _captured = true;
             }
 

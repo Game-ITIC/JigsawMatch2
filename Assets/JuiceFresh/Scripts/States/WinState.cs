@@ -128,7 +128,7 @@ public class WinState : GameStateBase
             }
         }
 
-        levelManager.StarModel.Increase(levelManager.stars);
+        levelManager.CurrencyService.AddCurrency(Systems.CurrencySystem.CurrencyType.Star, levelManager.stars);
     }
 
     private void OnNextLevelClicked()

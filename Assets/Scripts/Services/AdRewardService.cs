@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Configs;
 using Interfaces;
 using Models;
@@ -13,8 +13,7 @@ namespace Services
     public class AdRewardService : IInitializable, IDisposable
     {
         private readonly AdEventModel _adEventModel;
-        private readonly CoinModel _coinModel;
-        private readonly GemModel _gemModel;
+        private readonly Systems.CurrencySystem.Interfaces.ICurrencyService _currencyService;
         private readonly BoostersProvider _boostersProvider;
         private readonly HealthSystem _healthSystem;
         private readonly GameConfig _gameConfig;
@@ -30,16 +29,14 @@ namespace Services
 
         public AdRewardService(
             AdEventModel adEventModel,
-            CoinModel coinModel,
-            GemModel gemModel,
+            Systems.CurrencySystem.Interfaces.ICurrencyService currencyService,
             BoostersProvider boostersProvider,
             HealthSystem healthSystem,
             GameConfig gameConfig
         )
         {
             _adEventModel = adEventModel;
-            _coinModel = coinModel;
-            _gemModel = gemModel;
+            _currencyService = currencyService;
             _boostersProvider = boostersProvider;
             _healthSystem = healthSystem;
             _gameConfig = gameConfig;
@@ -59,10 +56,10 @@ namespace Services
             switch (_adRewardType)
             {
                 case AdRewardType.Coin:
-                    _coinModel.Increase(50);
+                    _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Cash, 50);
                     break;
                 case AdRewardType.Gem:
-                    _gemModel.Increase(50);
+                    _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Diamond, 50);
                     break;
                 case AdRewardType.Booster:
                     var booster = _boostersProvider.GetBoosterModel(_boostType);
@@ -71,11 +68,11 @@ namespace Services
                 case AdRewardType.X2:
                     if(LevelManager.THIS.stars >= 3)
                     {
-                        _coinModel.Increase(_gameConfig.CoinRewardForLevelPass + _gameConfig.CoinRewardFor3StarPass);
+                        _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Cash, _gameConfig.CoinRewardForLevelPass + _gameConfig.CoinRewardFor3StarPass);
                     }
                     else
                     {
-                        _coinModel.Increase(_gameConfig.CoinRewardForLevelPass);
+                        _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Cash, _gameConfig.CoinRewardForLevelPass);
                     }
                     break;
                 case AdRewardType.Life:

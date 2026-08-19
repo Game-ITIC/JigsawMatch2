@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Meta.Quests.Configs;
+using Configs.Tasks;
 using Meta.Quests.Events;
 using Meta.Quests.Interfaces;
 using Meta.Quests.Models;
@@ -12,7 +12,7 @@ namespace Meta.Quests.Services
 {
     public class DailyQuestService : IDailyQuestService, IQuestProgressTracker, IDisposable
     {
-        private readonly DailyQuestSettings _settings;
+        private readonly TasksListSO _settings;
         private readonly IQuestDataStorage _storage;
         private readonly IQuestGenerator _generator;
 
@@ -25,7 +25,7 @@ namespace Meta.Quests.Services
         public event Action<IReadOnlyList<DailyQuest>> OnQuestsRefreshed;
 
         public DailyQuestService(
-            DailyQuestSettings settings,
+            TasksListSO settings,
             IQuestDataStorage storage,
             IQuestGenerator generator
         )

@@ -467,11 +467,10 @@ public class AnimationManager : MonoBehaviour
         SoundBase.Instance.PlaySound(SoundBase.Instance.click);
         if (gameObject.name == "MenuPreGameOver")
         {
-            if (LevelManager.THIS.CoinModel.Coins.Value >= 12)
+            var currencyService = LevelManager.THIS.CurrencyService;
+            if (currencyService != null && currencyService.GetCurrency(Systems.CurrencySystem.CurrencyType.Cash)?.Value >= 12)
             {
-                //InitScript.Instance.SpendGems(12);
-                LevelManager.THIS.CoinModel.Decrease(12);
-                //                LevelData.LimitAmount += 12;
+                currencyService.SpendCurrency(Systems.CurrencySystem.CurrencyType.Cash, 12);
                 LevelManager.Instance.gameStatus = GameState.WaitAfterClose;
                 gameObject.SetActive(false);
             }
@@ -659,20 +658,12 @@ public class AnimationManager : MonoBehaviour
 
     public void BuyFailed(GameObject button)
     {
-        //if (GetComponent<Animation>()["bannerFailed"].speed == 0)
-        //{
-        if (LevelManager.THIS.CoinModel.Coins.Value >= LevelManager.THIS.FailedCost)
+        var currencyService = LevelManager.THIS.CurrencyService;
+        if (currencyService != null && currencyService.GetCurrency(Systems.CurrencySystem.CurrencyType.Cash)?.Value >= LevelManager.THIS.FailedCost)
         {
-            LevelManager.THIS.CoinModel.Decrease(LevelManager.THIS.FailedCost);
-            // InitScript.Instance.SpendGems(LevelManager.THIS.FailedCost);
-            //button.GetComponent<Button>().interactable = false;
+            currencyService.SpendCurrency(Systems.CurrencySystem.CurrencyType.Cash, LevelManager.THIS.FailedCost);
             GoOnFailed();
         }
-        // else
-        // {
-        //     GameObject.Find("CanvasGlobal").transform.Find("GemsShop").gameObject.SetActive(true);
-        // }
-        //}
     }
 
     public void GoOnFailed()
@@ -686,7 +677,6 @@ public class AnimationManager : MonoBehaviour
 
         if (LevelManager.THIS.target == Target.BOMBS) //1.3
             LevelManager.THIS.RechargeBombs();
-        //GetComponent<Animation>()["bannerFailed"].speed = 1;
         keepGaming = true;
         MusicBase.Instance.GetComponent<AudioSource>().Play();
         CloseMenu();
@@ -713,20 +703,16 @@ public class AnimationManager : MonoBehaviour
     public void BuyBoost(BoostType boostType, int price, int count, Sprite icon)
     {
         SoundBase.Instance.PlaySound(SoundBase.Instance.click);
-        // if (InitScript.Gems >= price)
-        var coinModel = LevelManager.THIS.CoinModel;
+        var currencyService = LevelManager.THIS.CurrencyService;
 
-        if (coinModel.Coins.Value >= price)
+        if (currencyService != null && currencyService.GetCurrency(Systems.CurrencySystem.CurrencyType.Cash)?.Value >= price)
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.cash);
             var booster = LevelManager.THIS.BoostersProvider.BoostersModels.AsValueEnumerable()
                 .First(v => v.Type == boostType);
             booster.Add(count);
-            coinModel.Decrease(price);
+            currencyService.SpendCurrency(Systems.CurrencySystem.CurrencyType.Cash, price);
 
-            // InitScript.Instance.SpendGems(price);
-            // InitScript.Instance.BuyBoost(boostType, price, count);
-            //InitScript.Instance.SpendBoost(boostType);
             CloseMenu();
             LevelManager.THIS.GameProvider.RewardPopup.Init(new RewardInfo { Icon = icon, Description = $"You got {boostType}" });
             LevelManager.THIS.GameProvider.RewardPopup.Show();

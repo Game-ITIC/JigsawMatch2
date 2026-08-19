@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Configs;
 using Cysharp.Threading.Tasks;
@@ -13,6 +14,7 @@ using Services.InApp;
 using Systems;
 using UI;
 using UnityEngine;
+using UnityEngine.UI;
 using VContainer;
 using VContainer.Unity;
 using Views;
@@ -25,37 +27,31 @@ namespace Initializers
     {
         private const string OneTimeProductBoughtPrefix = "in-app-one-time-bought-";
 
-        private readonly MenuView _menuView;
         private readonly SceneLoader _sceneLoader;
         private readonly InAppView _inAppView;
-        private readonly CoinModel _coinModel;
-        private readonly GemModel _gemModel;
-        private readonly StarModel _starModel;
+        private readonly Systems.CurrencySystem.Interfaces.ICurrencyService _currencyService;
         private readonly InternetState _internetState;
         private readonly InAppConfig _inAppConfig;
         private readonly BoostersProvider _boostersProvider;
         private readonly LevelConfig _levelConfig;
         private readonly RegionModel _regionModel;
         private readonly RegionUpgradeService _regionUpgradeService;
-        private readonly HideUnhideScript _hideUnhideScript;
         private readonly HealthSystem _healthSystem;
-        private readonly RegionUIProvider _regionUIProvider;
         private readonly RegionConfig _regionConfig;
-        private readonly MenuTabs _menuTabs;
         private readonly LifePopup _lifePopup;
         private readonly AdRewardService _adRewardService;
         private readonly IronSourceManager _ironSourceManager;
         private readonly AdEventModel _adEventModel;
         private readonly RewardPopup _rewardPopup;
+        private readonly MainMenuPanel _mainMenuPanel;
+        private readonly RegionService _regionService;
 
         private CompositeDisposable _disposable = new();
-        private BuildingAnimationSettingsProvider _settingsProvider;
+        private bool _isUpgrading;
 
-        public CountryInitializer(MenuView menuView,
+        public CountryInitializer(
             SceneLoader sceneLoader,
-            CoinModel coinModel,
-            GemModel gemModel,
-            StarModel starModel,
+            Systems.CurrencySystem.Interfaces.ICurrencyService currencyService,
             InternetState internetState,
             InAppConfig inAppConfig,
             BoostersProvider boostersProvider,
@@ -66,11 +62,8 @@ namespace Initializers
             AdEventModel adEventModel,
             IObjectResolver resolver)
         {
-            _menuView = menuView;
             _sceneLoader = sceneLoader;
-            _coinModel = coinModel;
-            _gemModel = gemModel;
-            _starModel = starModel;
+            _currencyService = currencyService;
             _internetState = internetState;
             _inAppConfig = inAppConfig;
             _boostersProvider = boostersProvider;
@@ -82,13 +75,11 @@ namespace Initializers
             _inAppView = resolver.ResolveOrDefault<InAppView>();
             _regionModel = resolver.ResolveOrDefault<RegionModel>();
             _regionUpgradeService = resolver.ResolveOrDefault<RegionUpgradeService>();
-            _hideUnhideScript = resolver.ResolveOrDefault<HideUnhideScript>();
-            _regionUIProvider = resolver.ResolveOrDefault<RegionUIProvider>();
             _regionConfig = resolver.ResolveOrDefault<RegionConfig>();
-            _menuTabs = resolver.ResolveOrDefault<MenuTabs>();
             _lifePopup = resolver.ResolveOrDefault<LifePopup>();
             _rewardPopup = resolver.ResolveOrDefault<RewardPopup>();
-            _settingsProvider = resolver.ResolveOrDefault<BuildingAnimationSettingsProvider>();
+            _regionService = resolver.ResolveOrDefault<RegionService>();
+            _mainMenuPanel = resolver.ResolveOrDefault<MainMenuPanel>();
         }
 
         public async UniTask StartAsync(CancellationToken cancellation = new CancellationToken())
@@ -98,18 +89,26 @@ namespace Initializers
 
             try
             {
-                if(_settingsProvider != null)
+                if(_regionService != null)
                 {
                     var stepSw = System.Diagnostics.Stopwatch.StartNew();
-                    await _settingsProvider.Warmup();
-                    Debug.Log($"[CountryInitializer] _settingsProvider.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
-                }
+                    await _regionService.Warmup();
+                    Debug.Log($"[CountryInitializer] _regionService.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
 
-                if(_menuView != null)
-                {
-                    var stepSw = System.Diagnostics.Stopwatch.StartNew();
-                    await _menuView.Warmup();
-                    Debug.Log($"[CountryInitializer] _menuView.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
+                    if(_regionUpgradeService != null && _regionModel != null && _regionModel.RegionService?.ActiveRegion != null)
+                    {
+                        _regionUpgradeService.Initialize(_regionModel);
+                        _regionUpgradeService.JumpToFrame(0);
+
+                        if(_regionModel.CurrentLevelProgress != 0
+                           && _regionModel.RegionService.ActiveRegion.data != null
+                           && _regionModel.CurrentLevelProgress <= _regionModel.RegionService.ActiveRegion.data.Count)
+                        {
+                            int endFrame = _regionModel.RegionService.ActiveRegion.data[_regionModel.CurrentLevelProgress - 1]
+                                .endFrame;
+                            _regionUpgradeService.JumpToFrame(endFrame);
+                        }
+                    }
                 }
 
                 if(_inAppView != null)
@@ -119,102 +118,79 @@ namespace Initializers
                     Debug.Log($"[CountryInitializer] _inAppView.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
                 }
 
-                if(_menuTabs != null)
+                var topBar = _mainMenuPanel?.TopBarPanel;
+                if(topBar != null && _inAppView != null)
                 {
-                    var stepSw = System.Diagnostics.Stopwatch.StartNew();
-                    await _menuTabs.Warmup();
-                    Debug.Log($"[CountryInitializer] _menuTabs.Warmup() finished in {stepSw.ElapsedMilliseconds} ms");
+                    BindShopButtons(topBar.HealthBarView);
+                    BindShopButtons(topBar.StarView);
+                    BindShopButtons(topBar.GemView);
                 }
 
-                if(_menuView != null && _menuView.StartGame != null)
+                var playButton = _mainMenuPanel?.MenuActionPanel?.PlayButton?.Button
+                                 ?? FindButtonInScene("PlayButton", "Play Button", "Play", "StartGame", "Start Game");
+                if(playButton != null)
                 {
-                    _menuView.StartGame.onClick.RemoveAllListeners();
-                    _menuView.StartGame.onClick.AddListener(StartGame);
+                    Debug.Log($"[CountryInitializer] Bound Play button: {playButton.gameObject.name}");
+                    playButton.onClick.RemoveAllListeners();
+                    playButton.onClick.AddListener(StartGame);
+                }
+                else
+                {
+                    Debug.LogWarning("[CountryInitializer] Play button could not be found!");
                 }
 
                 InitializeLifePopup();
 
-                if(_menuView != null && _menuView.BuildButton != null && _regionModel != null && _regionUpgradeService != null)
+                var buildActionButton = _mainMenuPanel?.MenuActionPanel?.BuildButton;
+                var buildButton = buildActionButton?.Button
+                                  ?? FindButtonInScene("BuildButton", "Build Button", "Build");
+                if(buildButton != null && _regionModel != null && _regionUpgradeService != null)
                 {
-                    _menuView.BuildButton.onClick.RemoveAllListeners();
-                    _menuView.BuildButton.onClick.AddListener(() => { Upgrade().Forget(); });
+                    Debug.Log($"[CountryInitializer] Bound Build button: {buildButton.gameObject.name}");
+                    buildButton.onClick.RemoveAllListeners();
+                    buildButton.onClick.AddListener(() => { Upgrade().Forget(); });
+                }
+                else if(buildButton == null)
+                {
+                    Debug.LogWarning("[CountryInitializer] Build button could not be found!");
                 }
 
                 if(_inAppView != null && _inAppConfig != null && _inAppView.ButtonsParent != null)
                 {
-                    foreach (var inAppProduct in _inAppConfig.InAppProducts)
-                    {
-                        if(IsOneTimeProductBought(inAppProduct))
-                        {
-                            continue;
-                        }
-
-                        var price = ResolvePriceLabel(inAppProduct);
-                        var rewardText = string.IsNullOrWhiteSpace(inAppProduct.rewardText)
-                            ? inAppProduct.amount.ToString()
-                            : inAppProduct.rewardText;
-
-                        var parent = _inAppView.ButtonsParent;
-
-                        var product = Object.Instantiate(_inAppConfig.ProductViewPrefab, parent);
-                        product.Init(inAppProduct.productName,
-                                     inAppProduct.icon,
-                                     price,
-                                     rewardText);
-
-                        product.BuyButton.onClick.RemoveAllListeners();
-                        product.BuyButton.onClick.AddListener(() =>
-                                                             {
-                                                                 HandlePurchaseInApp(inAppProduct.product, product)
-                                                                     .Forget();
-                                                             });
-                    }
+                    InitializeInAppProducts();
                 }
 
                 var nextLevel = PlayerPrefs.GetInt("OpenLevel", 1);
-                if(_menuView != null && _menuView.StartGameText != null)
+                var playActionButton = _mainMenuPanel?.MenuActionPanel?.PlayButton;
+                if(playActionButton != null)
                 {
-                    _menuView.StartGameText.SetText("LEVEL " + nextLevel);
+                    playActionButton.SetLabel("LEVEL " + nextLevel);
+                }
+                else if(playButton != null)
+                {
+                    var tmp = playButton.GetComponentInChildren<TMPro.TMP_Text>(true);
+                    if(tmp != null) tmp.text = "LEVEL " + nextLevel;
                 }
 
-                if(_regionConfig != null && _regionUIProvider != null && _regionModel != null)
+                var upgradeStars = _regionModel != null ? _regionModel.UpgradeCost : Models.RegionModel.DefaultUpgradeCost;
+                if(buildActionButton != null)
                 {
-                    foreach (var regionName in _regionConfig.Regions)
+                    buildActionButton.SetSubLabel(upgradeStars.ToString());
+                }
+                else if(buildButton != null)
+                {
+                    var actionButton = buildButton.GetComponent<MenuActionButton>() ?? buildButton.GetComponentInParent<MenuActionButton>();
+                    if(actionButton != null)
                     {
-                        var region = Object.Instantiate(_regionUIProvider.RegionUIViewPrefab,
-                                                        _regionUIProvider.RegionUIViewParent);
-                        region.SetName(regionName);
-
-                        if(regionName != "Soon" && _regionModel._settingsProvider.ActiveRegion != null)
-                        {
-                            var max = _regionModel._settingsProvider.ActiveRegion.data.Count - 1;
-                            var current = _regionModel.CurrentLevelProgress;
-
-                            region.SetProgress(current, max);
-                            _regionModel.CurrentLevelProgressReactiveProperty.Subscribe(v =>
-                                                                                        {
-                                                                                            var max = _regionModel._settingsProvider.ActiveRegion.data.Count - 1;
-                                                                                            var current = _regionModel.CurrentLevelProgress;
-
-                                                                                            region.SetProgress(current, max);
-                                                                                        })
-                                .AddTo(region);
-                        }
+                        actionButton.SetSubLabel(upgradeStars.ToString());
                     }
-                }
-
-                if(_regionUpgradeService != null
-                   && _regionModel != null
-                   && _regionModel._settingsProvider.ActiveRegion != null)
-                {
-                    _regionUpgradeService.Initialize(_regionModel);
-                    _regionUpgradeService.JumpToFrame(0);
-
-                    if(_regionModel.CurrentLevelProgress != 0)
+                    else
                     {
-                        int endFrame = _regionModel._settingsProvider.ActiveRegion.data[_regionModel.CurrentLevelProgress - 1]
-                            .endFrame;
-                        _regionUpgradeService.JumpToFrame(endFrame);
+                        var texts = buildButton.GetComponentsInChildren<TMPro.TMP_Text>(true);
+                        if(texts.Length > 1)
+                        {
+                            texts[1].text = upgradeStars.ToString();
+                        }
                     }
                 }
 
@@ -258,10 +234,11 @@ namespace Initializers
                 _lifePopup.BuyButton.onClick.RemoveAllListeners();
                 _lifePopup.BuyButton.onClick.AddListener(() =>
                                                          {
-                                                             if(_gemModel.Gems.Value >= 200)
+                                                             var diamonds = (int)(_currencyService?.GetCurrency(Systems.CurrencySystem.CurrencyType.Diamond)?.Value ?? 0);
+                                                             if(diamonds >= 200)
                                                              {
                                                                  _healthSystem.AddLives(5);
-                                                                 _gemModel.Decrease(200);
+                                                                 _currencyService?.SpendCurrency(Systems.CurrencySystem.CurrencyType.Diamond, 200);
                                                                  _lifePopup.Hide();
                                                              }
                                                          });
@@ -270,27 +247,56 @@ namespace Initializers
 
         private async UniTask Upgrade()
         {
-            if(_regionModel.CanLoadNewRegion())
+            if (_isUpgrading)
             {
-                // _regionModel.LoadNewRegion();
-            }
-            else
-            {
+                Debug.Log("[CountryInitializer] Upgrade is already in progress, ignoring click.");
                 return;
             }
-            
-            if(_regionModel.CanUpgrade())
+
+            _isUpgrading = true;
+            try
             {
-                _regionModel.Upgrade();
+                if (_regionModel == null || _regionUpgradeService == null) return;
 
-                int endFrame = _regionModel._settingsProvider.ActiveRegion.data[_regionModel.CurrentLevelProgress - 1]
-                    .endFrame;
+                int prevProgress = _regionModel.CurrentLevelProgress;
+                int totalSteps = _regionModel.TotalSteps;
 
-                _hideUnhideScript?.OnEyeButtonClick();
+                if (_regionModel.CanLoadNewRegion())
+                {
+                    if (prevProgress >= totalSteps && totalSteps > 0)
+                    {
+                        _regionUpgradeService.Initialize(_regionModel);
+                        _regionUpgradeService.JumpToFrame(0);
+                    }
+                }
+                else
+                {
+                    return;
+                }
 
-                await _regionUpgradeService.PlayToFrame(endFrame);
+                if (_regionModel.CanUpgrade())
+                {
+                    _regionModel.Upgrade();
 
-                _hideUnhideScript?.OnEyeButtonClick();
+                    var activeData = _regionModel.RegionService?.ActiveRegion?.data;
+                    if (activeData != null && _regionModel.CurrentLevelProgress > 0 && _regionModel.CurrentLevelProgress <= activeData.Count)
+                    {
+                        var currentStepData = activeData[_regionModel.CurrentLevelProgress - 1];
+                        int startFrame = currentStepData.startFrame;
+                        int endFrame = currentStepData.endFrame;
+
+                        Debug.Log($"[CountryInitializer] 🏗️ Build triggered: Step {_regionModel.CurrentLevelProgress}/{_regionModel.TotalSteps} (Configured startFrame: {startFrame}, endFrame: {endFrame})");
+
+                        _regionUpgradeService.JumpToFrame(startFrame);
+                        await _regionUpgradeService.PlayToFrame(endFrame);
+
+                        Debug.Log($"[CountryInitializer] ✅ Build step {_regionModel.CurrentLevelProgress} completed.");
+                    }
+                }
+            }
+            finally
+            {
+                _isUpgrading = false;
             }
         }
 
@@ -302,6 +308,21 @@ namespace Initializers
         private void ShowInAppView()
         {
             _inAppView?.Show();
+        }
+
+        private void BindShopButtons(Component view)
+        {
+            if(view == null || _inAppView == null) return;
+
+            var buttons = view.GetComponentsInChildren<Button>(true);
+            for(var i = 0; i < buttons.Length; i++)
+            {
+                var button = buttons[i];
+                if(button == null) continue;
+
+                button.onClick.RemoveAllListeners();
+                button.onClick.AddListener(ShowInAppView);
+            }
         }
 
         private void StartGame()
@@ -363,7 +384,7 @@ namespace Initializers
         {
             if(productConfig.gems > 0)
             {
-                _gemModel.Increase(productConfig.gems);
+                _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Diamond, productConfig.gems);
             }
 
             AddBooster(BoostType.Bomb, productConfig.bombs);
@@ -401,6 +422,143 @@ namespace Initializers
         private static string GetOneTimeProductKey(ShopProductNames shopProduct)
         {
             return OneTimeProductBoughtPrefix + shopProduct;
+        }
+
+        private void InitializeInAppProducts()
+        {
+            if (_inAppConfig.InAppProducts == null || _inAppConfig.InAppProducts.Count == 0)
+            {
+                return;
+            }
+
+            var mainParent = _inAppView.ButtonsParent;
+
+            if (_inAppConfig.SmartFilling)
+            {
+                SpawnSmartInAppProducts(_inAppConfig, mainParent);
+            }
+            else
+            {
+                SpawnSequentialInAppProducts(_inAppConfig, mainParent);
+            }
+        }
+
+        private void SpawnSequentialInAppProducts(InAppConfig config, Transform mainParent)
+        {
+            Transform currentHlgRow = null;
+            int currentUnits = 0;
+
+            foreach (var inAppProduct in config.InAppProducts)
+            {
+                if (IsOneTimeProductBought(inAppProduct))
+                {
+                    continue;
+                }
+
+                int units = inAppProduct.columnWidth.GetUnits();
+
+                if (currentHlgRow == null || currentUnits + units > 3)
+                {
+                    currentHlgRow = CreateHlgRow(config, mainParent);
+                    currentUnits = 0;
+                }
+
+                SpawnAndInitProductView(config, currentHlgRow, inAppProduct);
+                currentUnits += units;
+            }
+        }
+
+        private void SpawnSmartInAppProducts(InAppConfig config, Transform mainParent)
+        {
+            var remaining = new List<InAppProduct>();
+            foreach (var product in config.InAppProducts)
+            {
+                if (!IsOneTimeProductBought(product))
+                {
+                    remaining.Add(product);
+                }
+            }
+
+            while (remaining.Count > 0)
+            {
+                Transform currentHlgRow = CreateHlgRow(config, mainParent);
+                int currentUnits = 0;
+
+                int i = 0;
+                while (i < remaining.Count)
+                {
+                    int units = remaining[i].columnWidth.GetUnits();
+                    if (currentUnits + units <= 3)
+                    {
+                        SpawnAndInitProductView(config, currentHlgRow, remaining[i]);
+                        currentUnits += units;
+                        remaining.RemoveAt(i);
+
+                        if (currentUnits >= 3)
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+            }
+        }
+
+        private Transform CreateHlgRow(InAppConfig config, Transform mainParent)
+        {
+            if (config.HLGParentPrefab != null)
+            {
+                return Object.Instantiate(config.HLGParentPrefab, mainParent, false);
+            }
+            return mainParent;
+        }
+
+        private void SpawnAndInitProductView(InAppConfig config, Transform hlgRow, InAppProduct inAppProduct)
+        {
+            var prefab = config.GetProductViewPrefab(inAppProduct.columnWidth);
+            if (prefab == null) return;
+
+            var product = Object.Instantiate(prefab, hlgRow, false);
+
+            var price = ResolvePriceLabel(inAppProduct);
+            var rewardText = inAppProduct.gems > 0 ? inAppProduct.gems.ToString() : string.Empty;
+
+            product.Init(inAppProduct.productName, inAppProduct.icon, price, rewardText);
+
+            if (product.BuyButton != null)
+            {
+                product.BuyButton.onClick.RemoveAllListeners();
+                product.BuyButton.onClick.AddListener(() => HandlePurchaseInApp(inAppProduct.product, product).Forget());
+            }
+        }
+
+        private static Button FindButtonInScene(params string[] names)
+        {
+            for (var sceneIndex = 0; sceneIndex < UnityEngine.SceneManagement.SceneManager.sceneCount; sceneIndex++)
+            {
+                var scene = UnityEngine.SceneManagement.SceneManager.GetSceneAt(sceneIndex);
+                if (!scene.isLoaded) continue;
+
+                foreach (var root in scene.GetRootGameObjects())
+                {
+                    var buttons = root.GetComponentsInChildren<Button>(true);
+                    foreach (var button in buttons)
+                    {
+                        foreach (var name in names)
+                        {
+                            if (string.Equals(button.gameObject.name.Trim(), name.Trim(), System.StringComparison.OrdinalIgnoreCase))
+                            {
+                                return button;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         public void Dispose()

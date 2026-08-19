@@ -11,9 +11,7 @@ namespace Utils.Debug
     public class SystemDebug : MonoBehaviour
     {
         [Inject] private HealthSystem _healthSystem;
-        [Inject] private CoinModel _coinModel;
-        [Inject] private GemModel _gemModel;
-        [Inject] private Models.StarModel _starModel;
+        [Inject] private Systems.CurrencySystem.Interfaces.ICurrencyService _currencyService;
         [Inject] private BoostersProvider _boostersProvider;
 
         [Title("Keyboard Cheats")]
@@ -73,19 +71,19 @@ namespace Utils.Debug
         [Button("Add Coins")]
         public void AddCoins(int amount = 10000)
         {
-            _coinModel.Increase(Mathf.Max(0, amount));
+            _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Cash, Mathf.Max(0, amount));
         }
 
         [Button("Add Gems")]
         public void AddGems(int amount = 1000)
         {
-            _gemModel.Increase(Mathf.Max(0, amount));
+            _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Diamond, Mathf.Max(0, amount));
         }
 
         [Button("Add Stars")]
         public void AddStars(int amount = 100)
         {
-            _starModel.Increase(Mathf.Max(0, amount));
+            _currencyService?.AddCurrency(Systems.CurrencySystem.CurrencyType.Star, Mathf.Max(0, amount));
         }
 
         [Button("Add All Boosters")]

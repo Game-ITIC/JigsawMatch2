@@ -1,5 +1,7 @@
+using System;
 using Configs;
 using R3;
+using Services;
 using UnityEngine;
 using Utils.Save;
 
@@ -7,8 +9,38 @@ namespace Models
 {
     public class RegionModel
     {
-        private readonly StarModel _starModel;
-        public readonly BuildingAnimationSettingsProvider _settingsProvider;
+        public const int DefaultUpgradeCost = 5;
+
+        private readonly Systems.CurrencySystem.Interfaces.ICurrencyService _currencyService;
+        private readonly RegionService _regionService;
+
+        public RegionService RegionService => _regionService;
+
+        public int UpgradeCost
+        {
+            get
+            {
+                if (_regionService?.ActiveRegionData != null && _regionService.ActiveRegionData.starCost > 0)
+                {
+                    return _regionService.ActiveRegionData.starCost;
+                }
+                return DefaultUpgradeCost;
+            }
+        }
+
+        public int RequiredStars => UpgradeCost;
+
+        public int TotalSteps
+        {
+            get
+            {
+                if (_regionService?.ActiveRegion?.data != null)
+                {
+                    return _regionService.ActiveRegion.data.Count;
+                }
+                return 0;
+            }
+        }
 
         public int CurrentLevelProgress
         {
@@ -19,27 +51,29 @@ namespace Models
         public readonly ReactiveProperty<int> CurrentLevelProgressReactiveProperty = new();
 
         public RegionModel(
-            StarModel starModel,
-            BuildingAnimationSettingsProvider settingsProvider
+            Systems.CurrencySystem.Interfaces.ICurrencyService currencyService,
+            RegionService regionService
         )
         {
-            _starModel = starModel;
-            _settingsProvider = settingsProvider;
+            _currencyService = currencyService;
+            _regionService = regionService;
             Load();
         }
 
         public bool CanUpgrade()
         {
-            if(_starModel.Stars.CurrentValue >= 5 && _settingsProvider.ActiveRegion.data.Count > CurrentLevelProgress) return true;
-            return false;
+            var stars = _currencyService?.GetCurrency(Systems.CurrencySystem.CurrencyType.Star)?.Value ?? 0f;
+            return stars >= UpgradeCost && TotalSteps > CurrentLevelProgress;
         }
 
         public bool CanLoadNewRegion()
         {
-            if(_starModel.Stars.CurrentValue >= 5 && CurrentLevelProgress >= _settingsProvider.ActiveRegion.data.Count)
+            var stars = _currencyService?.GetCurrency(Systems.CurrencySystem.CurrencyType.Star)?.Value ?? 0f;
+            if (stars >= UpgradeCost && CurrentLevelProgress >= TotalSteps)
             {
-                if(!_settingsProvider.CanLoadNextRegion()) return false;
-                _settingsProvider.LoadNextRegion();
+                if (!_regionService.CanLoadNextRegion()) return false;
+
+                _regionService.LoadNextRegion();
                 CurrentLevelProgress = 0;
                 Save();
             }
@@ -49,17 +83,18 @@ namespace Models
 
         public void Upgrade()
         {
+            var cost = UpgradeCost;
             CurrentLevelProgress++;
-            _starModel.Decrease(5);
+            _currencyService?.SpendCurrency(Systems.CurrencySystem.CurrencyType.Star, cost);
             Save();
         }
 
-        void Load()
+        private void Load()
         {
             CurrentLevelProgress = PlayerPrefs.GetInt(PlayerPrefsKeys.AsiaBuildingsAnimation, 0);
         }
 
-        void Save()
+        private void Save()
         {
             PlayerPrefs.SetInt(PlayerPrefsKeys.AsiaBuildingsAnimation, CurrentLevelProgress);
             PlayerPrefs.Save();

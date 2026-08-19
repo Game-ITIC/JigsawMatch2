@@ -12,15 +12,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e5c0debd4dc43b18b003f6143ae72f7, type: 3}
   m_Name: InAppConfig
   m_EditorClassIdentifier: 
-  <ProductViewPrefab>k__BackingField: {fileID: 8265125675956515580, guid: 254392b870b4a1c49961fec9f5ab05b4,
+  ProductViewPrefab: {fileID: 922322034667700273, guid: bbcb6427797495247a954ca5941ee997,
     type: 3}
-  <InAppProducts>k__BackingField:
+  ProductViewMediumPrefab: {fileID: -4850147976124601583, guid: 5aa3c8c000233f44faf53dba8cf3acfe,
+    type: 3}
+  ProductViewLargePrefab: {fileID: 4731670650653829450, guid: 243c40a5a7b787c4b9d021dd3038d45e,
+    type: 3}
+  HLGParentPrefab: {fileID: 3614084017784094916, guid: 29e66597285bf074d898ad786659b102,
+    type: 3}
+  SmartFilling: 1
+  InAppProducts:
+  - product: 6
+    productName: Royal Crystals
+    columnWidth: 0
+    icon: {fileID: 21300000, guid: cf12d3f646285054d984f96bafe086ef, type: 3}
+    priceLabel: $49.99
+    gems: 20000
+    bombs: 0
+    butterflies: 0
+    extraMoves: 0
+    lives: 0
+    unlimitedLivesMinutes: 0
+    oneTimePurchase: 0
   - product: 1
     productName: Starter Crystals
+    columnWidth: 2
     icon: {fileID: 21300000, guid: 28b534dae36d2574ba3d10830551192d, type: 3}
-    amount: 300
     priceLabel: $0.99
-    rewardText: 300 Gems
     gems: 300
     bombs: 0
     butterflies: 0
@@ -30,10 +48,9 @@ MonoBehaviour:
     oneTimePurchase: 0
   - product: 2
     productName: Small Crystals
+    columnWidth: 0
     icon: {fileID: 21300000, guid: 28b534dae36d2574ba3d10830551192d, type: 3}
-    amount: 800
     priceLabel: $2.99
-    rewardText: 800 Gems
     gems: 800
     bombs: 0
     butterflies: 0
@@ -43,10 +60,9 @@ MonoBehaviour:
     oneTimePurchase: 0
   - product: 3
     productName: Medium Crystals
+    columnWidth: 1
     icon: {fileID: 21300000, guid: 28b534dae36d2574ba3d10830551192d, type: 3}
-    amount: 1800
     priceLabel: $4.99
-    rewardText: 1800 Gems
     gems: 1800
     bombs: 0
     butterflies: 0
@@ -56,10 +72,9 @@ MonoBehaviour:
     oneTimePurchase: 0
   - product: 4
     productName: Big Crystals
+    columnWidth: 1
     icon: {fileID: 21300000, guid: cf12d3f646285054d984f96bafe086ef, type: 3}
-    amount: 4000
     priceLabel: $9.99
-    rewardText: 4000 Gems
     gems: 4000
     bombs: 0
     butterflies: 0
@@ -69,24 +84,10 @@ MonoBehaviour:
     oneTimePurchase: 0
   - product: 5
     productName: Huge Crystals
+    columnWidth: 0
     icon: {fileID: 21300000, guid: cf12d3f646285054d984f96bafe086ef, type: 3}
-    amount: 9000
     priceLabel: $19.99
-    rewardText: 9000 Gems
     gems: 9000
-    bombs: 0
-    butterflies: 0
-    extraMoves: 0
-    lives: 0
-    unlimitedLivesMinutes: 0
-    oneTimePurchase: 0
-  - product: 6
-    productName: Royal Crystals
-    icon: {fileID: 21300000, guid: cf12d3f646285054d984f96bafe086ef, type: 3}
-    amount: 20000
-    priceLabel: $49.99
-    rewardText: 20000 Gems
-    gems: 20000
     bombs: 0
     butterflies: 0
     extraMoves: 0
@@ -95,10 +96,9 @@ MonoBehaviour:
     oneTimePurchase: 0
   - product: 7
     productName: Starter Bundle
+    columnWidth: 0
     icon: {fileID: 21300000, guid: 28b534dae36d2574ba3d10830551192d, type: 3}
-    amount: 500
     priceLabel: $1.99
-    rewardText: 500 Gems + Bomb x3 + Butterfly x3 + Moves x2 + Lives 30m
     gems: 500
     bombs: 3
     butterflies: 3
@@ -108,10 +108,9 @@ MonoBehaviour:
     oneTimePurchase: 1
   - product: 8
     productName: Beginner Bundle
+    columnWidth: 2
     icon: {fileID: 21300000, guid: 5a81773906caf7f4db5aa95f798750f0, type: 3}
-    amount: 1000
     priceLabel: $4.99
-    rewardText: 1000 Gems + Bomb x5 + Butterfly x5 + Moves x3
     gems: 1000
     bombs: 5
     butterflies: 5
@@ -121,10 +120,9 @@ MonoBehaviour:
     oneTimePurchase: 0
   - product: 9
     productName: Builder Bundle
+    columnWidth: 1
     icon: {fileID: 21300000, guid: 28b534dae36d2574ba3d10830551192d, type: 3}
-    amount: 1500
     priceLabel: $5.99
-    rewardText: 1500 Gems + Lives 1h + Bomb x5
     gems: 1500
     bombs: 5
     butterflies: 0
@@ -134,10 +132,9 @@ MonoBehaviour:
     oneTimePurchase: 0
   - product: 10
     productName: Master Bundle
+    columnWidth: 1
     icon: {fileID: 21300000, guid: cf12d3f646285054d984f96bafe086ef, type: 3}
-    amount: 3000
     priceLabel: $9.99
-    rewardText: 3000 Gems + Bomb x10 + Butterfly x10 + Moves x10 + Lives 2h
     gems: 3000
     bombs: 10
     butterflies: 10
@@ -147,10 +144,9 @@ MonoBehaviour:
     oneTimePurchase: 0
   - product: 11
     productName: Need More Moves
+    columnWidth: 0
     icon: {fileID: 21300000, guid: 6001e70faa5447842987b513f1b3bcd2, type: 3}
-    amount: 300
     priceLabel: $0.99
-    rewardText: Moves x3 + Bomb x2 + 300 Gems
     gems: 300
     bombs: 2
     butterflies: 0
@@ -160,10 +156,9 @@ MonoBehaviour:
     oneTimePurchase: 0
   - product: 12
     productName: Out Of Lives
+    columnWidth: 0
     icon: {fileID: 21300000, guid: 28b534dae36d2574ba3d10830551192d, type: 3}
-    amount: 500
     priceLabel: $1.99
-    rewardText: Lives 30m + 500 Gems
     gems: 500
     bombs: 0
     butterflies: 0
@@ -173,10 +168,9 @@ MonoBehaviour:
     oneTimePurchase: 0
   - product: 13
     productName: Hard Level Pack
+    columnWidth: 0
     icon: {fileID: 21300000, guid: 5a81773906caf7f4db5aa95f798750f0, type: 3}
-    amount: 500
     priceLabel: $2.99
-    rewardText: Bomb x5 + Butterfly x5 + Moves x3 + 500 Gems
     gems: 500
     bombs: 5
     butterflies: 5
@@ -186,10 +180,9 @@ MonoBehaviour:
     oneTimePurchase: 0
   - product: 14
     productName: Daily Gems Deal
+    columnWidth: 0
     icon: {fileID: 21300000, guid: 28b534dae36d2574ba3d10830551192d, type: 3}
-    amount: 300
     priceLabel: $0.69
-    rewardText: 300 Gems -30%
     gems: 300
     bombs: 0
     butterflies: 0
@@ -199,10 +192,9 @@ MonoBehaviour:
     oneTimePurchase: 0
   - product: 15
     productName: Daily Booster Deal
+    columnWidth: 0
     icon: {fileID: 21300000, guid: 5a81773906caf7f4db5aa95f798750f0, type: 3}
-    amount: 0
     priceLabel: $1.99
-    rewardText: Bomb x3 + Butterfly x3
     gems: 0
     bombs: 3
     butterflies: 3
@@ -212,10 +204,9 @@ MonoBehaviour:
     oneTimePurchase: 0
   - product: 16
     productName: Daily Lives Deal
+    columnWidth: 0
     icon: {fileID: 21300000, guid: 28b534dae36d2574ba3d10830551192d, type: 3}
-    amount: 60
     priceLabel: $0.99
-    rewardText: Unlimited Lives 1h
     gems: 0
     bombs: 0
     butterflies: 0
@@ -225,10 +216,9 @@ MonoBehaviour:
     oneTimePurchase: 0
   - product: 17
     productName: Daily Moves Deal
+    columnWidth: 0
     icon: {fileID: 21300000, guid: 6001e70faa5447842987b513f1b3bcd2, type: 3}
-    amount: 5
     priceLabel: $2.99
-    rewardText: Moves x5
     gems: 0
     bombs: 0
     butterflies: 0
