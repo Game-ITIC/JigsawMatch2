@@ -48,6 +48,11 @@
     "SKAdNetworkIdXmlURL": "https://s3.amazonaws.com/ssa.public/Unity/SKAdNetwork-IDs/All/skadnetworks.ironsource.plist.xml",
     "updateMessage": "LevelPlay SDK 9.0.0 update: a new version is now available, and includes a streamlined API,\nimproved clarity, and removal of deprecated components for a smoother developer experience.\nTo update your Unity package and SDK to the latest version, please follow this guide:\n<a href=\"https://docs.unity.com/grow/levelplay/sdk/unity/migrate-to-9-0-0/\">https://docs.unity.com/grow/levelplay/sdk/unity/migrate-to-9-0-0/</a>",
     "versions": {
+      "8.13.0": {
+        "androidSdkVersion": "8.12.0",
+        "iosSdkVersion": "8.13.0.0",
+        "message": "LevelPlay SDK 9.0.0 update: a new version is now available, and includes a streamlined API,\nimproved clarity, and removal of deprecated components for a smoother developer experience.\nTo update your Unity package and SDK to the latest, please follow this guide:\n<a href=\"https://developers.is.com/ironsource-mobile/unity/unity-plugin/unity-package-migration-9-0-0/\">https://developers.is.com/ironsource-mobile/unity/unity-plugin/unity-package-migration-9-0-0/</a>"
+      },
       "8.12.0": {
         "androidSdkVersion": "8.12.0",
         "iosSdkVersion": "8.12.0.0",
@@ -2306,6 +2311,28 @@
       "dependencyXmlFileName": "ISFacebookAdapterDependencies.xml",
       "SKAdNetworkIdXmlURL": "https://s3.amazonaws.com/ssa.public/Unity/SKAdNetwork-IDs/All/skadnetworks.meta.plist.xml",
       "versions": {
+        "4.3.77.0": {
+          "ironSourceSdkVersion": "[8.9.0, 9.0[",
+          "android": {
+            "adapterVersion": "4.3.52",
+            "adNetworkVersion": "6.21.0"
+          },
+          "ios": {
+            "adapterVersion": "4.3.53.0",
+            "adNetworkVersion": "6.21.1"
+          }
+        },
+        "4.3.76.0": {
+          "ironSourceSdkVersion": "[8.9.0, 9.0[",
+          "android": {
+            "adapterVersion": "4.3.52",
+            "adNetworkVersion": "6.21.0"
+          },
+          "ios": {
+            "adapterVersion": "4.3.52.0",
+            "adNetworkVersion": "6.20.1"
+          }
+        },
         "4.3.75.0": {
           "ironSourceSdkVersion": "[8.9.0, 9.0[",
           "android": {

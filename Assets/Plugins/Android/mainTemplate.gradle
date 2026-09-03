@@ -83,7 +83,7 @@ android {
 android {
     ndkPath "**NDKPATH**"
     compileSdkVersion **APIVERSION**
-    buildToolsVersion '**BUILDTOOLS**'
+    buildToolsVersion '36.0.0'
 
     defaultConfig {
         multiDexEnabled true
